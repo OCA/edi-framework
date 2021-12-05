@@ -4,7 +4,7 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 14.0\n"
+"Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -266,7 +266,6 @@ msgstr ""
 #. module: edi_oca
 #: model:ir.model.fields,field_description:edi_oca.field_edi_backend__display_name
 #: model:ir.model.fields,field_description:edi_oca.field_edi_backend_type__display_name
-#: model:ir.model.fields,field_description:edi_oca.field_edi_exchange_consumer_mixin__display_name
 #: model:ir.model.fields,field_description:edi_oca.field_edi_exchange_record__display_name
 #: model:ir.model.fields,field_description:edi_oca.field_edi_exchange_record_create_wiz__display_name
 #: model:ir.model.fields,field_description:edi_oca.field_edi_exchange_type__display_name
@@ -283,7 +282,6 @@ msgstr ""
 #: model:ir.model,name:edi_oca.model_edi_backend
 #: model_terms:ir.ui.view,arch_db:edi_oca.edi_backend_view_form
 #: model_terms:ir.ui.view,arch_db:edi_oca.edi_backend_view_search
-#: model_terms:ir.ui.view,arch_db:edi_oca.edi_backend_view_tree
 msgid "EDI Backend"
 msgstr ""
 
@@ -293,7 +291,6 @@ msgstr ""
 #: model:ir.ui.menu,name:edi_oca.menu_edi_backend_type
 #: model_terms:ir.ui.view,arch_db:edi_oca.edi_backend_type_view_form
 #: model_terms:ir.ui.view,arch_db:edi_oca.edi_backend_type_view_search
-#: model_terms:ir.ui.view,arch_db:edi_oca.edi_backend_type_view_tree
 msgid "EDI Backend Type"
 msgstr ""
 
@@ -306,7 +303,6 @@ msgstr ""
 #: model:ir.actions.act_window,name:edi_oca.act_open_edi_exchange_record_view
 #: model_terms:ir.ui.view,arch_db:edi_oca.edi_exchange_record_view_form
 #: model_terms:ir.ui.view,arch_db:edi_oca.edi_exchange_record_view_search
-#: model_terms:ir.ui.view,arch_db:edi_oca.edi_exchange_record_view_tree
 msgid "EDI Exchange Record"
 msgstr ""
 
@@ -316,7 +312,6 @@ msgstr ""
 #: model:ir.ui.menu,name:edi_oca.menu_edi_exchange_type
 #: model_terms:ir.ui.view,arch_db:edi_oca.edi_exchange_type_view_form
 #: model_terms:ir.ui.view,arch_db:edi_oca.edi_exchange_type_view_search
-#: model_terms:ir.ui.view,arch_db:edi_oca.edi_exchange_type_view_tree
 msgid "EDI Exchange Type"
 msgstr ""
 
@@ -376,6 +371,11 @@ msgid "Exchabge record ID=%d already has a file to process!"
 msgstr ""
 
 #. module: edi_oca
+#: model:ir.model.fields,field_description:edi_oca.field_edi_exchange_record__exchange_error
+msgid "Exchange Error"
+msgstr ""
+
+#. module: edi_oca
 #: model:ir.model.fields,field_description:edi_oca.field_edi_exchange_record__exchange_file
 msgid "Exchange File"
 msgstr ""
@@ -413,11 +413,6 @@ msgstr ""
 #. module: edi_oca
 #: model:ir.model.fields,field_description:edi_oca.field_edi_exchange_record_create_wiz__exchange_type_id
 msgid "Exchange Type"
-msgstr ""
-
-#. module: edi_oca
-#: model:ir.model.fields,field_description:edi_oca.field_edi_exchange_record__exchange_error
-msgid "Exchange error"
 msgstr ""
 
 #. module: edi_oca
@@ -487,7 +482,7 @@ msgstr ""
 
 #. module: edi_oca
 #: model:ir.model.fields,field_description:edi_oca.field_edi_exchange_record__exchanged_on
-msgid "Exchanged on"
+msgid "Exchanged On"
 msgstr ""
 
 #. module: edi_oca
@@ -516,20 +511,8 @@ msgid "Followers"
 msgstr ""
 
 #. module: edi_oca
-#: model:ir.model.fields,field_description:edi_oca.field_edi_exchange_record__message_channel_ids
-msgid "Followers (Channels)"
-msgstr ""
-
-#. module: edi_oca
 #: model:ir.model.fields,field_description:edi_oca.field_edi_exchange_record__message_partner_ids
 msgid "Followers (Partners)"
-msgstr ""
-
-#. module: edi_oca
-#: model:ir.model.fields,help:edi_oca.field_edi_exchange_type__exchange_filename_pattern
-msgid ""
-"For output exchange types this should be a formatting string with the following variables available (to be used between brackets, `{}`): `exchange_record`, `record_name`, `type` and `dt`. For instance, a valid string would be {record_name}-{type.code}-{dt}\n"
-"For input exchange types related to storage backends it should be a regex expression to filter the files to be fetched from the pending directory in the related storage. E.g: `.*my-type-[0-9]*.\\.csv`"
 msgstr ""
 
 #. module: edi_oca
@@ -555,9 +538,13 @@ msgid "Has Expected Edi Configuration"
 msgstr ""
 
 #. module: edi_oca
+#: model:ir.model.fields,field_description:edi_oca.field_edi_exchange_record__has_message
+msgid "Has Message"
+msgstr ""
+
+#. module: edi_oca
 #: model:ir.model.fields,field_description:edi_oca.field_edi_backend__id
 #: model:ir.model.fields,field_description:edi_oca.field_edi_backend_type__id
-#: model:ir.model.fields,field_description:edi_oca.field_edi_exchange_consumer_mixin__id
 #: model:ir.model.fields,field_description:edi_oca.field_edi_exchange_record__id
 #: model:ir.model.fields,field_description:edi_oca.field_edi_exchange_record_create_wiz__id
 #: model:ir.model.fields,field_description:edi_oca.field_edi_exchange_type__id
@@ -606,7 +593,6 @@ msgstr ""
 #. module: edi_oca
 #: model:ir.model.fields,field_description:edi_oca.field_edi_backend____last_update
 #: model:ir.model.fields,field_description:edi_oca.field_edi_backend_type____last_update
-#: model:ir.model.fields,field_description:edi_oca.field_edi_exchange_consumer_mixin____last_update
 #: model:ir.model.fields,field_description:edi_oca.field_edi_exchange_record____last_update
 #: model:ir.model.fields,field_description:edi_oca.field_edi_exchange_record_create_wiz____last_update
 #: model:ir.model.fields,field_description:edi_oca.field_edi_exchange_type____last_update
