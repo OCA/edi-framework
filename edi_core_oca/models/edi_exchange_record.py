@@ -216,13 +216,32 @@ class EDIExchangeRecord(models.Model):
             result.append((rec.id, name))
         return result
 
-    @api.model
-    def create(self, vals):
-        vals["identifier"] = self._get_identifier()
-        return super().create(vals)
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+            vals["identifier"] = self._get_identifier()
+        records = super().create(vals_list)
+        for rec in records:
+            if rec._quick_exec_enabled():
+                rec._execute_next_action()
+        return records
 
     def _get_identifier(self):
         return self.env["ir.sequence"].next_by_code("edi.exchange")
+
+    def _quick_exec_enabled(self):
+        if self.env.context.get("edi__skip_quick_exec"):
+            return False
+        return self.type_id.quick_exec
+
+    def _execute_next_action(self):
+        # The backend already knows how to handle records
+        # according to their direction and status.
+        # Let it decide.
+        if self.type_id.direction == "output":
+            self.backend_id._check_output_exchange_sync(record_ids=self.ids)
+        else:
+            self.backend_id._check_input_exchange_sync(record_ids=self.ids)
 
     @api.constrains("backend_id", "type_id")
     def _constrain_backend(self):
@@ -308,6 +327,8 @@ class EDIExchangeRecord(models.Model):
         self.message_post(
             body=_("Action retry: state moved back to '%s'") % display_state
         )
+        if self._quick_exec_enabled():
+            self._execute_next_action()
         return True
 
     def action_open_related_record(self):
