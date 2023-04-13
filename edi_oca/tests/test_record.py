@@ -155,9 +155,9 @@ class EDIRecordTestCase(EDIBackendCommonTestCase):
         record0 = self.backend.create_record("test_csv_output", vals)
         record1 = record0.exchange_create_child_record()
         record2 = record0.exchange_create_child_record()
-        record3 = record2.exchange_create_child_record(model="sale.order", res_id=1)
-        record0.invalidate_cache()
-        record2.invalidate_cache()
+        record3 = record2.exchange_create_child_record(model="res.users", res_id=1)
+        record0.invalidate_recordset()
+        record2.invalidate_recordset()
         self.assertIn(record1, record0.related_exchange_ids)
         self.assertIn(record2, record0.related_exchange_ids)
         self.assertIn(record3, record2.related_exchange_ids)
@@ -185,7 +185,7 @@ class EDIRecordTestCase(EDIBackendCommonTestCase):
         }
         record0 = self.backend.create_record("test_csv_output", vals)
         ack = record0.exchange_create_ack_record()
-        record0.invalidate_cache()
+        record0.invalidate_recordset()
         self.assertIn(ack, record0.related_exchange_ids)
         self.assertRecordValues(
             ack,
