@@ -10,7 +10,7 @@
     basic automation and views for handling EDI exchanges.
     """,
     "version": "16.0.1.0.0",
-    "website": "https://github.com/OCA/edi",
+    "website": "https://github.com/OCA/edi-framework",
     "development_status": "Beta",
     "license": "LGPL-3",
     "author": "ACSONE,Creu Blanca,Camptocamp,Odoo Community Association (OCA)",
