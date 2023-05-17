@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <menuitem
+        id="menu_edi_state_root"
+        parent="edi_oca.menu_edi_config"
+        sequence="100"
+        name="States"
+    />
+    <menuitem
+        id="menu_edi_state_workflow"
+        parent="menu_edi_state_root"
+        sequence="110"
+        action="act_open_edi_state_workflow_view"
+    />
+    <menuitem
+        id="menu_edi_state"
+        parent="menu_edi_state_root"
+        sequence="120"
+        action="act_open_edi_state_view"
+    />
+</odoo>
