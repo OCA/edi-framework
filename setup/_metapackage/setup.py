@@ -8,6 +8,7 @@ setuptools.setup(
     description="Meta package for oca-edi-framework Odoo addons",
     version=version,
     install_requires=[
+        'odoo14-addon-edi_record_metadata_oca',
         'odoo14-addon-edi_state_oca',
     ],
     classifiers=[
