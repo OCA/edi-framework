@@ -1,4 +1,0 @@
-odoo_test_helper
-
-# Adding 16.0-mig-edi_oca PR: https://github.com/OCA/edi-framework/pull/5/commits/c3b7ec28bdf6ed0c2c82722f91aaaa47f124e3ff
-odoo-addon-edi_oca@git+https://github.com/OCA/edi-framework.git@c3b7ec28bdf6ed0c2c82722f91aaaa47f124e3ff#subdirectory=setup/edi_oca
