@@ -5,10 +5,10 @@
 {
     "name": "EDI Account Invoice Import",
     "summary": """Plug account_invoice_import into EDI machinery.""",
-    "version": "14.0.1.1.0",
+    "version": "16.0.1.1.0",
     "development_status": "Alpha",
     "license": "AGPL-3",
-    "website": "https://github.com/OCA/edi",
+    "website": "https://github.com/OCA/edi-framework",
     "author": "ForgeFlow,Odoo Community Association (OCA)",
     "maintainers": ["LoisRForgeFlow"],
     "depends": ["edi_oca", "account_invoice_import"],
