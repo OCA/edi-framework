@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo noupdate="1">
+
+    <!--
+    NOTE: you must assign a backend to this endpoint in invoice to work.
+     -->
+    <record id="endpoint_demo_1" model="edi.endpoint">
+        <field name="backend_type_id" ref="edi_ubl_oca.edi_backend_type_ubl" />
+        <field
+            name="exchange_type_id"
+            ref="edi_account_invoice_import_ubl.edi_exchange_type_invoice_ubl"
+        />
+        <!-- Enable it when ready to be used -->
+        <field name="active" eval="0" />
+        <field name="name">UBL import Invoice</field>
+        <field name="route">/edi/ubl/input/account_invoice</field>
+        <field name="request_method">POST</field>
+        <field name="request_content_type">application/xml</field>
+        <field name="exec_mode">code</field>
+        <field name="code_snippet">
+xml_data = request.httprequest.get_data()
+parsed = env["account.invoice.import"].parse_xml_invoice(xml_data)
+error = False
+if error:
+    raise werkzeug.exceptions.BadRequest(error)
+
+exchange_record = endpoint.create_exchange_record(
+    file_content=xml_data,
+    edi_exchange_state="input_received"
+)
+
+result = {
+    "payload": {
+        "ok": True,
+        "message": "Your invoice will be processed shortly",
+        "data": {
+            "REF": exchange_record.identifier,
+        }
+    }
+}
+        </field>
+    </record>
+
+</odoo>
