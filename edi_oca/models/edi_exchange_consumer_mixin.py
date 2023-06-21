@@ -8,7 +8,7 @@
 from lxml import etree
 
 from odoo import api, fields, models
-from odoo.tools import safe_eval, frozendict
+from odoo.tools import frozendict, safe_eval
 
 from odoo.addons.base_sparse_field.models.fields import Serialized
 
