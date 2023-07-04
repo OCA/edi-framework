@@ -5,7 +5,7 @@
 import logging
 
 from odoo import _, api, models
-from odoo.tools import frozendict
+from odoo.tools import frozendict, safe_eval
 
 _logger = logging.getLogger("edi_exchange_auto")
 
@@ -138,51 +138,66 @@ class EDIAutoExchangeConsumerMixin(models.AbstractModel):
                     if k in new_vals:
                         trigger = k
                         break
-                if trigger:
-                    if trigger not in tracked:
-                        tracked.append(trigger)
-                    checker = None
-                    if action_conf.get("if", {}).get("callable"):
-                        callable_name = action_conf["if"]["callable"]
-                        try:
-                            checker = getattr(self, callable_name)
-                        except AttributeError:
-                            skip_reason = f"Invalid callable={callable_name}"
-                            self._edi_auto_log_skip(
-                                operation, skip_reason, exc_type=exc_type
-                            )
-                            continue
-                    vals = frozendict(
-                        {k: v for k, v in new_vals.items() if k in tracked}
+                if not trigger:
+                    continue
+                if trigger not in tracked:
+                    tracked.append(trigger)
+                checker = None
+                if action_conf.get("if", {}).get("callable"):
+                    callable_name = action_conf["if"]["callable"]
+                    try:
+                        checker = getattr(self, callable_name)
+                    except AttributeError:
+                        skip_reason = f"Invalid callable={callable_name}"
+                        self._edi_auto_log_skip(
+                            operation, skip_reason, exc_type=exc_type
+                        )
+                        continue
+                snippet = ""
+                if action_conf.get("if", {}).get("snippet"):
+                    snippet = action_conf["if"]["snippet"]
+                vals = frozendict({k: v for k, v in new_vals.items() if k in tracked})
+                # TODO: group by record in case `target_record` is different
+                # or let it trigger N exchanges for sub models?
+                for rec in records:
+                    target_record = self._edi_auto_get_target_record(rec, action_conf)
+                    old_vals = frozendict({k: rec[k] for k in tracked})
+                    todo = self._edi_auto_prepare_info(
+                        edi_type=exc_type,
+                        edi_action=action_name,
+                        conf=action_conf,
+                        triggered_by=trigger,
+                        record=rec,
+                        target_record=target_record,
+                        vals=vals,
+                        old_vals=old_vals,
+                        force=action_conf.get("force", False),
+                        event_only=action_conf.get("event_only", False),
                     )
-                    # TODO: group by record in case `target_record` is different
-                    # or let it trigger N exchanges for sub models?
-                    for rec in records:
-                        target_record = self._edi_auto_get_target_record(
-                            rec, action_conf
+                    if checker and not checker(todo):
+                        skip_reason = f"Checker {checker.__func__.__name__} skip action"
+                        self._edi_auto_log_skip(
+                            operation, skip_reason, exc_type=exc_type
                         )
-                        old_vals = frozendict({k: rec[k] for k in tracked})
-                        todo = self._edi_auto_prepare_info(
-                            edi_type=exc_type,
-                            edi_action=action_name,
-                            conf=action_conf,
-                            triggered_by=trigger,
-                            record=rec,
-                            target_record=target_record,
-                            vals=vals,
-                            old_vals=old_vals,
-                            force=action_conf.get("force", False),
-                            event_only=action_conf.get("event_only", False),
-                        )
-                        if checker and not checker(todo):
-                            skip_reason = (
-                                f"Checker {checker.__func__.__name__} skip action"
+                        continue
+                    if snippet:
+                        try:
+                            evaluated = self._edi_auto_evaluate_snippet(
+                                snippet, rec, target_record, todo
                             )
+                            if not evaluated:
+                                skip_reason = "Snippet skip action"
+                                self._edi_auto_log_skip(
+                                    operation, skip_reason, exc_type=exc_type
+                                )
+                                continue
+                        except ValueError:
+                            skip_reason = f"Invalid snippet={snippet}"
                             self._edi_auto_log_skip(
                                 operation, skip_reason, exc_type=exc_type
                             )
                             continue
-                        res.append(todo)
+                    res.append(todo)
         return res
 
     def _edi_auto_collect_records_by_type(self, operation, new_vals_list):
@@ -223,6 +238,29 @@ class EDIAutoExchangeConsumerMixin(models.AbstractModel):
                     }
                 rec_by_type[exc_type]["records"].append(rec)
         return rec_by_type
+
+    def _edi_auto_snippet_eval_context(self, record, target_record, todo):
+        """Prepare the context used when evaluating python code
+
+        :returns: dict -- evaluation context given to safe_eval
+        """
+        ctx = {
+            "uid": self.env.uid,
+            "user": self.env.user,
+            "record": record,
+            "target_record": target_record,
+            "todo": todo,
+        }
+        return ctx
+
+    def _edi_auto_evaluate_snippet(self, code, rec, target_record, todo):
+        eval_ctx = self._edi_auto_snippet_eval_context(rec, target_record, todo)
+        safe_eval.safe_eval(code, eval_ctx, mode="exec", nocopy=True)
+        result = eval_ctx.get("result", False)
+        if not isinstance(result, bool):
+            _logger.error("code snippet should return a boolean into `result`")
+            return {}
+        return result
 
     def _edi_auto_log_skip(self, operation, reason, exc_type=None):
         log_msg = "Skip model=%(model)s op=%(op)s"
