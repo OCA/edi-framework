@@ -97,6 +97,7 @@ class EDIAutoExchangeConsumerMixin(models.AbstractModel):
         #         if:
         #           - domain: $domain TODO: support domain
         #           - callable: $callable_on_model
+        #           - snippet: $code
         #         event_only: false
         #         force: true
         #         target_record: order_id
@@ -110,95 +111,129 @@ class EDIAutoExchangeConsumerMixin(models.AbstractModel):
         rec_by_type = self._edi_auto_collect_records_by_type(operation, new_vals_list)
         for exc_type, data in rec_by_type.items():
             conf = data["conf"]
-            records = data["records"]
-            new_vals = data["new_vals"]
             if not exc_type.backend_id:
                 # TODO: add validation on adv settings?
                 skip_reason = f"Backend required, not set on type={exc_type.code}"
                 self._edi_auto_log_skip(operation, skip_reason, exc_type=exc_type)
                 continue
-            backend = exc_type.backend_id
             for action_name, action_conf in conf.get("actions", {}).items():
-                if not backend._is_valid_edi_action(action_name):
-                    skip_reason = f"EDI action not allowed ={action_name}"
-                    self._edi_auto_log_skip(operation, skip_reason, exc_type=exc_type)
-                    continue
-                if operation not in action_conf.get("when", []):
-                    skip_reason = f"Operation not allowed for action={action_name}"
-                    self._edi_auto_log_skip(operation, skip_reason, exc_type=exc_type)
-                    continue
-                triggers = action_conf.get("trigger_fields", [])
-                if not triggers:
-                    skip_reason = f"No trigger set for action={action_name}"
-                    self._edi_auto_log_skip(operation, skip_reason, exc_type=exc_type)
-                    continue
-                tracked = action_conf.get("tracked_fields", [])
-                trigger = None
-                for k in triggers:
-                    if k in new_vals:
-                        trigger = k
-                        break
-                if not trigger:
-                    continue
-                if trigger not in tracked:
-                    tracked.append(trigger)
-                checker = None
-                if action_conf.get("if", {}).get("callable"):
-                    callable_name = action_conf["if"]["callable"]
-                    try:
-                        checker = getattr(self, callable_name)
-                    except AttributeError:
-                        skip_reason = f"Invalid callable={callable_name}"
-                        self._edi_auto_log_skip(
-                            operation, skip_reason, exc_type=exc_type
-                        )
-                        continue
-                snippet = ""
-                if action_conf.get("if", {}).get("snippet"):
-                    snippet = action_conf["if"]["snippet"]
-                vals = frozendict({k: v for k, v in new_vals.items() if k in tracked})
-                # TODO: group by record in case `target_record` is different
-                # or let it trigger N exchanges for sub models?
-                for rec in records:
-                    target_record = self._edi_auto_get_target_record(rec, action_conf)
-                    old_vals = frozendict({k: rec[k] for k in tracked})
-                    todo = self._edi_auto_prepare_info(
-                        edi_type=exc_type,
-                        edi_action=action_name,
-                        conf=action_conf,
-                        triggered_by=trigger,
-                        record=rec,
-                        target_record=target_record,
-                        vals=vals,
-                        old_vals=old_vals,
-                        force=action_conf.get("force", False),
-                        event_only=action_conf.get("event_only", False),
+                try:
+                    todo = self._edi_auto_collect_todo_for_action(
+                        operation, exc_type, action_name, action_conf, data
                     )
-                    if checker and not checker(todo):
-                        skip_reason = f"Checker {checker.__func__.__name__} skip action"
-                        self._edi_auto_log_skip(
-                            operation, skip_reason, exc_type=exc_type
-                        )
-                        continue
-                    if snippet:
-                        try:
-                            evaluated = self._edi_auto_evaluate_snippet(
-                                snippet, rec, target_record, todo
-                            )
-                            if not evaluated:
-                                skip_reason = "Snippet skip action"
-                                self._edi_auto_log_skip(
-                                    operation, skip_reason, exc_type=exc_type
-                                )
-                                continue
-                        except ValueError:
-                            skip_reason = f"Invalid snippet={snippet}"
-                            self._edi_auto_log_skip(
-                                operation, skip_reason, exc_type=exc_type
-                            )
-                            continue
-                    res.append(todo)
+                    res.extend(todo)
+                except EDIAutoSkipException as exc:
+                    self._edi_auto_log_skip(
+                        exc.operation, exc.reason, exc_type=exc.exc_type
+                    )
         return res
+
+    def _edi_auto_collect_todo_for_action(
+        self, operation, exc_type, action_name, action_conf, data
+    ):
+        backend = exc_type.backend_id
+        skip_reason = None
+        if not backend._is_valid_edi_action(action_name):
+            skip_reason = f"EDI action not allowed ={action_name}"
+        if operation not in action_conf.get("when", []):
+            skip_reason = f"Operation not allowed for action={action_name}"
+        triggers = action_conf.get("trigger_fields", [])
+        if not triggers:
+            skip_reason = f"No trigger set for action={action_name}"
+        if skip_reason:
+            raise EDIAutoSkipException(operation, skip_reason, exc_type=exc_type)
+        tracked = action_conf.get("tracked_fields", [])
+        trigger = None
+        for k in triggers:
+            if k in data["new_vals"]:
+                trigger = k
+                break
+        if not trigger:
+            return None
+        if trigger not in tracked:
+            tracked.append(trigger)
+        checker = None
+        if action_conf.get("if", {}).get("callable"):
+            callable_name = action_conf["if"]["callable"]
+            try:
+                checker = getattr(self, callable_name)
+            except AttributeError:
+                skip_reason = f"Invalid callable={callable_name}"
+                raise EDIAutoSkipException(operation, skip_reason, exc_type=exc_type)
+        snippet = action_conf.get("if", {}).get("snippet")
+        new_vals = frozendict(
+            {k: v for k, v in data["new_vals"].items() if k in tracked}
+        )
+        # TODO: group by record in case `target_record` is different
+        # or let it trigger N exchanges for sub models?
+        res = []
+        for rec in data["records"]:
+            old_vals = frozendict({k: rec[k] for k in tracked})
+            try:
+                todo = self._edi_auto_collect_todo_for_action_for_record(
+                    operation,
+                    exc_type,
+                    action_name,
+                    action_conf,
+                    trigger,
+                    new_vals,
+                    old_vals,
+                    rec,
+                    checker=checker,
+                    snippet=snippet,
+                )
+                res.append(todo)
+            except EDIAutoSkipException as exc:
+                self._edi_auto_log_skip(
+                    exc.operation, exc.reason, exc_type=exc.exc_type
+                )
+        return res
+
+    def _edi_auto_collect_todo_for_action_for_record(
+        self,
+        operation,
+        exc_type,
+        action_name,
+        action_conf,
+        trigger,
+        new_vals,
+        old_vals,
+        rec,
+        checker=None,
+        snippet=None,
+    ):
+        target_record = self._edi_auto_get_target_record(rec, action_conf)
+        todo = self._edi_auto_prepare_info(
+            edi_type=exc_type,
+            edi_action=action_name,
+            conf=action_conf,
+            triggered_by=trigger,
+            record=rec,
+            target_record=target_record,
+            vals=new_vals,
+            old_vals=old_vals,
+            force=action_conf.get("force", False),
+            event_only=action_conf.get("event_only", False),
+        )
+        if checker and not checker(todo):
+            skip_reason = f"Checker {checker.__func__.__name__} skip action"
+            raise EDIAutoSkipException(operation, skip_reason, exc_type=exc_type)
+        if snippet:
+            try:
+                evaluated = self._edi_auto_evaluate_snippet(
+                    snippet, rec, target_record, todo
+                )
+                if not evaluated:
+                    skip_reason = "Snippet skip action"
+                    raise EDIAutoSkipException(
+                        operation, skip_reason, exc_type=exc_type
+                    )
+            except ValueError as err:
+                skip_reason = f"Invalid snippet={snippet}"
+                raise EDIAutoSkipException(
+                    operation, skip_reason, exc_type=exc_type
+                ) from err
+        return todo
 
     def _edi_auto_collect_records_by_type(self, operation, new_vals_list):
         skip_type_ids = set()
@@ -406,3 +441,12 @@ class EDIAutoInfo:
     def get_target_record(self, env):
         target = self._records["target"]
         return env[target["model"]].browse(target["id"])
+
+
+class EDIAutoSkipException(Exception):
+    __slots__ = ("operation", "reason", "exc_type")
+
+    def __init__(self, operation, reason, exc_type=None):
+        self.operation = operation
+        self.reason = reason
+        self.exc_type = exc_type
