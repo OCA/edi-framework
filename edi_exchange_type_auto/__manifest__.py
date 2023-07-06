@@ -14,4 +14,7 @@
     "author": "Camptocamp,Odoo Community Association (OCA)",
     "maintainers": ["simahawk"],
     "depends": ["edi_oca"],
+    "data": [
+        "views/edi_exchange_type_rule.xml",
+    ],
 }
