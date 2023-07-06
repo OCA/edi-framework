@@ -30,9 +30,15 @@ class TestConsumerAutoMixinCase(EDIBackendCommonTestCase):
             direction="output",
             exchange_file_ext="xml",
             exchange_filename_pattern="{record.id}.test",
-            model_ids=[(4, cls.env["ir.model"]._get_id(cls.model._name))],
-            enable_domain="[]",
-            enable_snippet="",
+        )
+        cls.type_rule = cls.env["edi.exchange.type.rule"].create(
+            {
+                "name": "Auto test",
+                "type_id": cls.auto_exchange_type.id,
+                "model_id": cls.env["ir.model"]._get_id(cls.model._name),
+                "kind": "auto",
+                "auto_conf_edit": "",
+            }
         )
         cls.partner1 = cls.env["res.partner"].create({"name": "Avg Customer 1"})
         cls.partner2 = cls.env["res.partner"].create({"name": "Avg Customer 2"})
@@ -100,13 +106,7 @@ class TestConsumerAutoMixinCase(EDIBackendCommonTestCase):
                 mocked_trigger.assert_not_called()
 
     def test_conf_disable_no_trigger(self):
-        self.auto_exchange_type.advanced_settings_edit = textwrap.dedent(
-            f"""
-        auto:
-            '{self.model._name}':
-                disable: true
-        """
-        )
+        self.type_rule.auto_conf_edit = textwrap.dedent("disable: true")
         with self.assertLogs("edi_exchange_auto", level="DEBUG") as watcher:
             with mock.patch.object(
                 type(self.model), "_edi_auto_trigger_event"
@@ -127,12 +127,10 @@ class TestConsumerAutoMixinCase(EDIBackendCommonTestCase):
                 mocked_trigger.assert_not_called()
 
     def test_edi_disable_flag_no_trigger(self):
-        self.auto_exchange_type.advanced_settings_edit = textwrap.dedent(
-            f"""
-        auto:
-            '{self.model._name}':
-                when:
-                    - write
+        self.type_rule.auto_conf_edit = textwrap.dedent(
+            """
+        when:
+            - write
         """
         )
         with self.assertLogs("edi_exchange_auto", level="DEBUG") as watcher:
@@ -155,11 +153,9 @@ class TestConsumerAutoMixinCase(EDIBackendCommonTestCase):
                 mocked_trigger.assert_not_called()
 
     def test_conf_no_action_no_trigger(self):
-        self.auto_exchange_type.advanced_settings_edit = textwrap.dedent(
-            f"""
-        auto:
-            '{self.model._name}':
-                actions:
+        self.type_rule.auto_conf_edit = textwrap.dedent(
+            """
+            actions:
         """
         )
         with self.assertLogs("edi_exchange_auto", level="DEBUG") as watcher:
@@ -182,16 +178,14 @@ class TestConsumerAutoMixinCase(EDIBackendCommonTestCase):
                 mocked_trigger.assert_not_called()
 
     def test_conf_when_trigger(self):
-        self.auto_exchange_type.advanced_settings_edit = textwrap.dedent(
-            f"""
-        auto:
-            '{self.model._name}':
-                actions:
-                    generate:
-                        when:
-                            - create
-                        trigger_fields:
-                            - name
+        self.type_rule.auto_conf_edit = textwrap.dedent(
+            """
+        actions:
+            generate:
+                when:
+                    - create
+                trigger_fields:
+                    - name
         """
         )
         with self.assertLogs("edi_exchange_auto", level="DEBUG") as watcher:
@@ -214,18 +208,16 @@ class TestConsumerAutoMixinCase(EDIBackendCommonTestCase):
                 mocked_handler.assert_not_called()
 
     def test_conf_if_trigger_callable(self):
-        self.auto_exchange_type.advanced_settings_edit = textwrap.dedent(
-            f"""
-        auto:
-            '{self.model._name}':
-                actions:
-                    generate:
-                        when:
-                            - create
-                        trigger_fields:
-                            - name
-                        if:
-                            callable: _edi_test_check_generate
+        self.type_rule.auto_conf_edit = textwrap.dedent(
+            """
+        actions:
+            generate:
+                when:
+                    - create
+                trigger_fields:
+                    - name
+                if:
+                    callable: _edi_test_check_generate
         """
         )
         with self.assertLogs("edi_exchange_auto", level="DEBUG") as watcher:
@@ -280,10 +272,8 @@ class TestConsumerAutoMixinCase(EDIBackendCommonTestCase):
                 self.assertEqual(watcher.output[0], expected_msg % "create")
 
     def test_conf_if_trigger_snippet(self):
-        self.auto_exchange_type.advanced_settings_edit = textwrap.dedent(
-            f"""
-        auto:
-            '{self.model._name}':
+        self.type_rule.auto_conf_edit = textwrap.dedent(
+            """
                 actions:
                     generate:
                         when:
@@ -313,10 +303,8 @@ class TestConsumerAutoMixinCase(EDIBackendCommonTestCase):
                 self.assertEqual(watcher.output[0], expected_msg % "create")
 
     def test_conf_skip_partner(self):
-        self.auto_exchange_type.advanced_settings_edit = textwrap.dedent(
-            f"""
-        auto:
-            '{self.model._name}':
+        self.type_rule.auto_conf_edit = textwrap.dedent(
+            """
                 actions:
                     generate:
                         when:

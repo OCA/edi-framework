@@ -18,10 +18,10 @@ class EDIAutoExchangeConsumerMixin(models.AbstractModel):
     _description = __doc__
 
     @api.model
-    def _edi_get_exchange_type_conf(self, exchange_type):
-        conf = super()._edi_get_exchange_type_conf(exchange_type)
-        auto_conf = exchange_type.get_settings().get("auto", {}).get(self._name, {})
-        conf.update({"auto": auto_conf})
+    def _edi_get_exchange_type_rule_conf(self, rule):
+        conf = super()._edi_get_exchange_type_rule_conf(rule)
+        if rule.kind == "auto":
+            conf.update({"auto": rule.auto_conf or {}})
         return conf
 
     """Disable automatic EDI programmatically on models.
@@ -86,8 +86,7 @@ class EDIAutoExchangeConsumerMixin(models.AbstractModel):
         :param new_vals: list of new values for current record(s)
         """
         res = []
-        # auto:
-        #   "model.to.handle":
+        # Example of configuration on type rule `auto_conf_edit`:
         #     actions:
         #       generate:
         #         when:
@@ -149,7 +148,7 @@ class EDIAutoExchangeConsumerMixin(models.AbstractModel):
                 trigger = k
                 break
         if not trigger:
-            return None
+            return []
         if trigger not in tracked:
             tracked.append(trigger)
         checker = None
@@ -236,16 +235,22 @@ class EDIAutoExchangeConsumerMixin(models.AbstractModel):
         return todo
 
     def _edi_auto_collect_records_by_type(self, operation, new_vals_list):
-        skip_type_ids = set()
+        skip_type_rule_ids = set()
         skip_rec_ids = set()
+        # TODO: here we group by type
+        # but we could have potentially several auto rule for the same type
+        # into `edi_config` -> control or limit this
         rec_by_type = {}
+        # Make sure config is freshly computed
+        self.invalidate_cache(["edi_config"])
         for rec, new_vals in zip(self, new_vals_list):
             if rec.id in skip_rec_ids:
                 continue
-            for type_id, conf in rec.edi_config.items():
-                if type_id in skip_type_ids:
+            for rule_id, conf in rec.edi_config.items():
+                if rule_id in skip_type_rule_ids:
                     continue
-                exc_type = self.env["edi.exchange.type"].browse(int(type_id))
+                exc_type_rule = self.env["edi.exchange.type.rule"].browse(int(rule_id))
+                exc_type = exc_type_rule.type_id
                 if "partner_id" in rec._fields and not exc_type.is_partner_enabled(
                     rec.partner_id
                 ):
@@ -262,10 +267,10 @@ class EDIAutoExchangeConsumerMixin(models.AbstractModel):
                 elif not actions:
                     skip_reason = "Auto-conf has no action configured"
                 if skip_reason:
-                    skip_type_ids.add(type_id)
+                    skip_type_rule_ids.add(rule_id)
                     self._edi_auto_log_skip(operation, skip_reason, exc_type=exc_type)
                     continue
-                if type_id not in rec_by_type:
+                if exc_type.id not in rec_by_type:
                     rec_by_type[exc_type] = {
                         "conf": auto_conf,
                         "records": [],
