@@ -4,6 +4,8 @@
 
 from odoo_test_helper import FakeModelLoader
 
+from odoo import fields
+
 from odoo.addons.edi_oca.tests.common import EDIBackendCommonTestCase
 
 
@@ -48,18 +50,21 @@ class TestEDIMetadata(EDIBackendCommonTestCase):
         self.assertFalse(self.exc_record.get_metadata())
 
     def test_store(self):
+        vals = {
+            "name": "Test Consumer",
+            "number": 10.0,
+            "origin_exchange_record_id": self.exc_record.id,
+            "a_date": fields.Date.today(),
+            "a_datetime": fields.Datetime.now(),
+        }
         consumer_record = self.consumer_model.with_context(
             edi_framework_action="generate"
-        ).create(
-            {
-                "name": "Test Consumer",
-                "number": 10.0,
-                "origin_exchange_record_id": self.exc_record.id,
-            }
-        )
+        ).create(vals)
         expected = {
             "name": "Test Consumer",
             "number": 10.0,
+            "a_date": fields.Date.to_string(vals["a_date"]),
+            "a_datetime": fields.Datetime.to_string(vals["a_datetime"]),
             "origin_exchange_record_id": self.exc_record.id,
             "additional": True,
         }
