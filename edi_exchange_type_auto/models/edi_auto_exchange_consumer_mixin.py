@@ -373,7 +373,8 @@ class EDIAutoExchangeConsumerMixin(models.AbstractModel):
         target_record = info.get_target_record(self.env)
         exc_type = info.get_type(self.env)
         exchange_record = self._edi_auto_get_or_create_record(target_record, exc_type)
-        exchange_record.action_exchange_generate()
+        if not exchange_record.exchange_file:
+            exchange_record.action_exchange_generate()
         msg = _("EDI auto: output generated.")
         trigger_msg = _("Triggered by: %s") % info.triggered_by
         # TODO: post changed values in msg?
