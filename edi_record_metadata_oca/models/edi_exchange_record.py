@@ -1,19 +1,18 @@
 # Copyright 2023 Camptocamp SA
 # @author Simone Orsi <simahawk@gmail.com>
 # License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl).
-
 import json
 
 from odoo import api, fields, models
 
-from odoo.addons.base_sparse_field.models.fields import Serialized
+from ..fields import BetterSerialized
 
 
 class EDIExchangeRecord(models.Model):
 
     _inherit = "edi.exchange.record"
 
-    metadata = Serialized(
+    metadata = BetterSerialized(
         help="JSON-like metadata used for technical purposes.",
         default={},
     )

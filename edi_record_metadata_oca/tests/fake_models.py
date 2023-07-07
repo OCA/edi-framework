@@ -14,6 +14,8 @@ class EDIMetadataConsumerFake(models.Model):
 
     name = fields.Char()
     number = fields.Float()
+    a_date = fields.Date()
+    a_datetime = fields.Datetime()
 
     def _edi_get_metadata_to_store(self, orig_vals):
         data = super()._edi_get_metadata_to_store(orig_vals)
