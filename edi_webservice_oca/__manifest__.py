@@ -9,7 +9,7 @@
     "license": "AGPL-3",
     "development_status": "Beta",
     "author": "Creu Blanca,Odoo Community Association (OCA)",
-    "website": "https://github.com/OCA/edi",
+    "website": "https://github.com/OCA/edi-framework",
     "depends": ["edi_oca", "webservice"],
     "data": ["views/edi_backend.xml", "security/ir.model.access.csv"],
 }
