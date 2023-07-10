@@ -14,16 +14,19 @@ class EDIMetadataConsumerMixin(models.AbstractModel):
     def create(self, vals_list):
         do_store_metadata = self.env.context.get("edi_framework_action")
         if do_store_metadata:
-            # Default create machinert will pollute values: let's freeze them.
-            orig_vals = [vals.copy() for vals in vals_list]
-        records = super().create(vals_list)
-        if do_store_metadata:
-            for rec, vals in zip(records, orig_vals):
-                metadata = rec._edi_get_metadata_to_store(vals)
-                if metadata:
-                    rec._edi_store_metadata(metadata)
-        return records
+            # If an origin record is already given at creation
+            # let's store metadata immediately before the creation really happens.
+            # This way, if you have logic relying on metadata to be present at create
+            # you will be able to make it work.
+            # If the origin is set later, you'll need to handle it by yourself.
+            for vals in vals_list:
+                origin_id = vals.get("origin_exchange_record_id")
+                metadata = self._edi_get_metadata_to_store(vals)
+                if origin_id and metadata:
+                    self._edi_store_metadata_before_create(origin_id, metadata)
+        return super().create(vals_list)
 
+    @api.model
     def _edi_get_metadata_to_store(self, orig_vals):
         """Hook here to customize which values will be stored.
 
@@ -34,6 +37,10 @@ class EDIMetadataConsumerMixin(models.AbstractModel):
     def _edi_store_metadata(self, metadata):
         if self.origin_exchange_record_id:
             self.origin_exchange_record_id.set_metadata(metadata)
+
+    @api.model
+    def _edi_store_metadata_before_create(self, origin_id, metadata):
+        self.env["edi.exchange.record"].browse(origin_id).set_metadata(metadata)
 
     def _edi_get_metadata(self):
         return self.origin_exchange_record_id.get_metadata()
