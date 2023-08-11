@@ -238,6 +238,7 @@ class EDIExchangeRecord(models.Model):
                 rec._execute_next_action()
         return records
 
+    @api.model
     def _get_identifier(self):
         return self.env["ir.sequence"].next_by_code("edi.exchange")
 
