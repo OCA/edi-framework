@@ -136,7 +136,7 @@ result = not record._has_exchange_record(exchange_type, exchange_type.backend_id
             make_config_data(),
         )
         # enable it
-        self.exchange_type_out.model_manual_btn = True
+        self.exchange_type_out.rule_ids[0].kind = "form_btn"
         self.consumer_record.invalidate_cache(["edi_has_form_config", "edi_config"])
         self.assertEqual(
             self.consumer_record.edi_config[str(rule.id)],
