@@ -45,4 +45,5 @@
         "web.assets_qweb": ["edi_oca/static/src/xml/widget_edi.xml"],
     },
     "demo": ["demo/edi_backend_demo.xml"],
+    "installable": False,
 }
