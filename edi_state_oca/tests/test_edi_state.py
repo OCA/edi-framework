@@ -89,6 +89,17 @@ class TestEDIState(EDIBackendCommonTestCase):
             self.consumer_record.edi_find_state(code="OK_1"), self.wf1_ok.state_ids[0]
         )
 
+    def test_mixin_edi_set_state_no_origin_pass_gracefully(self):
+        self.consumer_record.origin_exchange_record_id = False
+        logger_name = "odoo.addons.edi_state_oca.models.edi_state_consumer_mixin"
+        with self.assertLogs(logger_name, level="WARN") as logs:
+            self.consumer_record._edi_set_state(self.wf1_ok.state_ids[0])
+            err = (
+                f"No exchange type given for "
+                f"{self.consumer_record._name}#{self.consumer_record.id}"
+            )
+            self.assertIn(err, logs.output[0])
+
     def test_mixin_edi_find_state(self):
         with self.assertRaises(AssertionError):
             self.assertEqual(self.consumer_model.edi_find_state())
