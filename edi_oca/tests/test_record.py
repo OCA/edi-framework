@@ -3,7 +3,8 @@
 # @author: Simone Orsi <simahawk@gmail.com>
 # License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl).
 
-import mock
+from unittest import mock
+
 from freezegun import freeze_time
 
 from odoo import exceptions, fields
@@ -174,7 +175,7 @@ class EDIRecordTestCase(EDIBackendCommonTestCase):
                     "model": "res.partner",
                     "res_id": self.partner.id,
                 },
-                {"parent_id": record2.id, "model": "sale.order", "res_id": 1},
+                {"parent_id": record2.id, "model": "res.users", "res_id": 1},
             ],
         )
 
