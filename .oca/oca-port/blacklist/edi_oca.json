@@ -1,0 +1,29 @@
+{
+  "pull_requests": {
+    "OCA/edi#407": "Nothing to port from PR #OCA/edi#407",
+    "OCA/edi#448": "Nothing to port from PR #OCA/edi#448",
+    "OCA/edi#470": "Nothing to port from PR #OCA/edi#470",
+    "OCA/edi#519": "Nothing to port from PR #OCA/edi#519",
+    "OCA/edi#540": "already ported",
+    "OCA/edi#579": "already ported",
+    "OCA/edi#549": "already ported",
+    "OCA/edi#524": "Already ported in commit b64ed15f77de4a54a71eeb90c2c7ffb59699ace7",
+    "OCA/edi#614": "ported in 3a55366ffc7ec901c333e8e69bd12cefb924db42",
+    "OCA/edi#634": "nothing to port",
+    "OCA/edi#647": "already ported",
+    "OCA/edi#652": "already ported",
+    "OCA/edi#651": "already ported",
+    "OCA/edi#653": "already ported",
+    "OCA/edi#666": "already ported",
+    "OCA/edi#672": "already ported",
+    "OCA/edi#762": "already ported",
+    "OCA/edi#765": "already ported",
+    "OCA/edi#763": "already ported",
+    "OCA/edi#764": "already ported",
+    "OCA/edi#767": "already ported",
+    "OCA/edi#774": "already ported",
+    "OCA/edi#778": "already ported",
+    "OCA/edi#797": "already ported",
+    "OCA/edi#790": "Nothing to port from PR #OCA/edi#790"
+  }
+}
