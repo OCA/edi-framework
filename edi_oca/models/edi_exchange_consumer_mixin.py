@@ -44,8 +44,7 @@ class EDIExchangeConsumerMixin(models.AbstractModel):
         default={},
     )
     edi_has_form_config = fields.Boolean(compute="_compute_edi_config")
-    # TODO: rename to `edi_disable_auto`
-    disable_edi_auto = fields.Boolean(
+    edi_disable_auto = fields.Boolean(
         string="Disable auto",
         help="When marked, EDI automatic processing will be avoided",
         # Each extending module should override `states` as/if needed.
