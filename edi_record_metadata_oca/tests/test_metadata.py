@@ -12,7 +12,7 @@ from odoo.addons.edi_oca.tests.common import EDIBackendCommonTestCase
 class TestEDIMetadata(EDIBackendCommonTestCase):
     @classmethod
     def _setup_records(cls):
-        super()._setup_records()
+        res = super()._setup_records()
         # Load fake models ->/
         cls.loader = FakeModelLoader(cls.env, cls.__module__)
         cls.loader.backup_registry()
@@ -27,6 +27,7 @@ class TestEDIMetadata(EDIBackendCommonTestCase):
             direction="output",
         )
         cls.exc_record = cls.backend.create_record(cls.exc_type.code, {})
+        return res
 
     @classmethod
     def tearDownClass(cls):
