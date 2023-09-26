@@ -12,7 +12,7 @@ from odoo.addons.edi_oca.tests.common import EDIBackendCommonTestCase
 class TestEDIState(EDIBackendCommonTestCase):
     @classmethod
     def _setup_records(cls):
-        super()._setup_records()
+        res = super()._setup_records()
         # Load fake models ->/
         cls.loader = FakeModelLoader(cls.env, cls.__module__)
         cls.loader.backup_registry()
@@ -61,6 +61,7 @@ class TestEDIState(EDIBackendCommonTestCase):
         }
         record = cls.backend.create_record("state_test", vals)
         cls.consumer_record._edi_set_origin(record)
+        return res
 
     @classmethod
     def tearDownClass(cls):
