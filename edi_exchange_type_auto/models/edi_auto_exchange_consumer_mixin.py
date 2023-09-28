@@ -72,7 +72,7 @@ class EDIAutoExchangeConsumerMixin(models.AbstractModel):
             skip_reason = "edi__skip_auto_handle ctx key found"
         elif operation in self._edi_no_auto_for_operation:
             skip_reason = f"{operation} disabled attr _edi_no_auto_for_operation"
-        elif self.disable_edi_auto:
+        elif self.edi_disable_auto:
             skip_reason = f"EDI auto disabled for rec={self.id}"
         if skip_reason:
             self._edi_auto_log_skip(operation, skip_reason)
@@ -156,9 +156,11 @@ class EDIAutoExchangeConsumerMixin(models.AbstractModel):
             callable_name = action_conf["if"]["callable"]
             try:
                 checker = getattr(self, callable_name)
-            except AttributeError:
+            except AttributeError as exc:
                 skip_reason = f"Invalid callable={callable_name}"
-                raise EDIAutoSkipException(operation, skip_reason, exc_type=exc_type)
+                raise EDIAutoSkipException(
+                    operation, skip_reason, exc_type=exc_type
+                ) from exc
         snippet = action_conf.get("if", {}).get("snippet")
         new_vals = frozendict(
             {k: v for k, v in data["new_vals"].items() if k in tracked}
@@ -242,7 +244,7 @@ class EDIAutoExchangeConsumerMixin(models.AbstractModel):
         # into `edi_config` -> control or limit this
         rec_by_type = {}
         # Make sure config is freshly computed
-        self.invalidate_cache(["edi_config"])
+        self.invalidate_model(["edi_config"])
         for rec, new_vals in zip(self, new_vals_list):
             if rec.id in skip_rec_ids:
                 continue

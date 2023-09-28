@@ -2,8 +2,8 @@
 # @author Simone Orsi <simahawk@gmail.com>
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 import textwrap
+from unittest import mock
 
-import mock
 from odoo_test_helper import FakeModelLoader
 
 from odoo.addons.edi_oca.tests.common import EDIBackendCommonTestCase
@@ -12,7 +12,7 @@ from odoo.addons.edi_oca.tests.common import EDIBackendCommonTestCase
 class TestConsumerAutoMixinCase(EDIBackendCommonTestCase):
     @classmethod
     def _setup_records(cls):
-        super()._setup_records()
+        res = super()._setup_records()
         # Load fake models ->/
         cls.loader = FakeModelLoader(cls.env, cls.__module__)
         cls.loader.backup_registry()
@@ -30,12 +30,10 @@ class TestConsumerAutoMixinCase(EDIBackendCommonTestCase):
             direction="output",
             exchange_file_ext="xml",
             exchange_filename_pattern="{record.id}.test",
-            model_ids=[(4, cls.env["ir.model"]._get_id(cls.model._name))],
-            enable_domain="[]",
-            enable_snippet="",
         )
         cls.partner1 = cls.env["res.partner"].create({"name": "Avg Customer 1"})
         cls.partner2 = cls.env["res.partner"].create({"name": "Avg Customer 2"})
+        return res
 
     @classmethod
     def tearDownClass(cls):
@@ -140,7 +138,7 @@ class TestConsumerAutoMixinCase(EDIBackendCommonTestCase):
                 type(self.model), "_edi_auto_trigger_event"
             ) as mocked_trigger:
                 record = self.model.create(
-                    {"name": "Test auto 2", "disable_edi_auto": True}
+                    {"name": "Test auto 2", "edi_disable_auto": True}
                 )
                 expected_msg = (
                     f"DEBUG:edi_exchange_auto:"
