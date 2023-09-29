@@ -16,8 +16,8 @@ class EDIBackend(models.Model):
     _inherit = "edi.backend"
 
     storage_id = fields.Many2one(
-        string="Storage backend",
-        comodel_name="storage.backend",
+        string="FS Storage",
+        comodel_name="fs.storage",
         help="Storage for in-out files",
         ondelete="restrict",
     )
@@ -67,21 +67,19 @@ class EDIBackend(models.Model):
         return ["storage.{}".format(key)] + candidates
 
     def _component_match_attrs(self, exchange_record, key):
-        # Override to inject storage_backend_type
+        # Override to inject storage_type
         res = super()._component_match_attrs(exchange_record, key)
         if not self.storage_id or key not in self._storage_actions:
             return res
-        res["storage_backend_type"] = self.storage_id.backend_type
+        res["storage_type"] = self.storage_id.protocol
         return res
 
     def _component_sort_key(self, component_class):
         res = super()._component_sort_key(component_class)
-        # Override to give precedence by storage_backend_type when needed.
+        # Override to give precedence by storage_type when needed.
         if not self.storage_id:
             return res
-        return (
-            1 if getattr(component_class, "_storage_backend_type", False) else 0,
-        ) + res
+        return (1 if getattr(component_class, "_storage_type", False) else 0,) + res
 
     def _storage_cron_check_pending_input(self, **kw):
         for backend in self:
