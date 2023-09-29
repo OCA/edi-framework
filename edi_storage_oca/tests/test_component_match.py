@@ -24,28 +24,28 @@ class EDIBackendTestCase(EDIBackendCommonComponentRegistryTestCase):
             _inherit = "edi.storage.component.check"
             _usage = "storage.check"
             # _backend_type = "demo_backend"
-            _storage_backend_type = "sftp"
+            _storage_type = "sftp"
 
         class SFTPSend(Component):
             _name = "sftp.send"
             _inherit = "edi.storage.component.send"
             _usage = "storage.send"
             # _backend_type = "demo_backend"
-            _storage_backend_type = "sftp"
+            _storage_type = "sftp"
 
         class S3Check(Component):
             _name = "s3.check"
             _inherit = "edi.storage.component.check"
             _usage = "storage.check"
             # _exchange_type = "test_csv_output"
-            _storage_backend_type = "s3"
+            _storage_type = "s3"
 
         class S3Send(Component):
             _name = "s3.send"
             _inherit = "edi.storage.component.send"
             _usage = "storage.send"
             # _exchange_type = "test_csv_output"
-            _storage_backend_type = "s3"
+            _storage_type = "s3"
 
         self._build_components(SFTPCheck, SFTPSend, S3Check, S3Send)
 
@@ -58,7 +58,7 @@ class EDIBackendTestCase(EDIBackendCommonComponentRegistryTestCase):
             work_ctx=work_ctx,
             backend_type="demo_backend",
             exchange_type="test_csv_output",
-            storage_backend_type="s3",
+            storage_type="s3",
         )
         self.assertEqual(component._name, S3Check._name)
 
@@ -68,7 +68,7 @@ class EDIBackendTestCase(EDIBackendCommonComponentRegistryTestCase):
             work_ctx=work_ctx,
             backend_type="demo_backend",
             exchange_type="test_csv_output",
-            storage_backend_type="sftp",
+            storage_type="sftp",
         )
         self.assertEqual(component._name, SFTPCheck._name)
 
@@ -78,7 +78,7 @@ class EDIBackendTestCase(EDIBackendCommonComponentRegistryTestCase):
             work_ctx=work_ctx,
             backend_type="demo_backend",
             exchange_type="test_csv_output",
-            storage_backend_type="sftp",
+            storage_type="sftp",
         )
         self.assertEqual(component._name, SFTPSend._name)
 
@@ -88,6 +88,6 @@ class EDIBackendTestCase(EDIBackendCommonComponentRegistryTestCase):
             work_ctx=work_ctx,
             backend_type="demo_backend",
             exchange_type="test_csv_output",
-            storage_backend_type="s3",
+            storage_type="s3",
         )
         self.assertEqual(component._name, S3Send._name)
