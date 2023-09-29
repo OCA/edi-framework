@@ -39,7 +39,7 @@ class TestEDIBackendOutput(TestEDIStorageBase):
         self.record.edi_exchange_state = "output_sent"
         mocked_paths = {self._file_fullpath("done"): self.fakepath}
         # TODO: test send only w/out cron (make sure check works)
-        self._test_run_cron(mocked_paths)
+        self._test_run_cron(mocked_paths, skip_sent=False)
         # As we simulate to find a file in `done` folder,
         # we should get the final good state
         # and only one call to ftp
@@ -118,7 +118,7 @@ class TestEDIBackendOutput(TestEDIStorageBase):
             self._file_fullpath("error"): self.fakepath,
             self._file_fullpath("error-report"): self.fakepath_error,
         }
-        self._test_run_cron(mocked_paths)
+        self._test_run_cron(mocked_paths, skip_sent=False)
         # As we simulate to find a file in `error` folder,
         # we should get a call for: done, error and then the read of the report.
         self._test_result(
@@ -148,6 +148,7 @@ class TestEDIBackendOutput(TestEDIStorageBase):
                 "model": partner2._name,
                 "res_id": partner2.id,
                 "exchange_filename": "rec2.csv",
+                "edi_exchange_state": "output_sent",
             }
         )
         rec3 = self.record.copy(
@@ -164,7 +165,7 @@ class TestEDIBackendOutput(TestEDIStorageBase):
             self._file_fullpath("error-report", record=rec2): self.fakepath_error,
             self._file_fullpath("done", record=rec3): self.fakepath,
         }
-        self._test_run_cron(mocked_paths)
+        self._test_run_cron(mocked_paths, skip_sent=False)
         self._test_result(
             rec1,
             {"edi_exchange_state": "output_sent_and_processed"},
@@ -223,7 +224,7 @@ class TestEDIBackendOutput(TestEDIStorageBase):
         )
         # Run cron action:
         found_files = [input_dir + fname for fname in file_names]
-        with self._mock_storage_backend_find_files(found_files):
+        with self._mock_fs_storage_find_files(found_files):
             self._test_run_cron_pending_input(mocked_paths)
         new_records = self.env["edi.exchange.record"].search(
             [

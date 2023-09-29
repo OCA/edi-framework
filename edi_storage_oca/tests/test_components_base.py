@@ -2,9 +2,9 @@
 # @author: Simone Orsi <simahawk@gmail.com>
 # License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl).
 
-import mock
+from unittest import mock
 
-from .common import STORAGE_BACKEND_MOCK_PATH, TestEDIStorageBase
+from .common import FS_STORAGE_MOCK_PATH, TestEDIStorageBase
 
 
 class EDIStorageComponentTestCase(TestEDIStorageBase):
@@ -30,7 +30,7 @@ class EDIStorageComponentTestCase(TestEDIStorageBase):
             self.checker_input._get_remote_file_path("WHATEVER", "foo.csv")
 
     def test_get_remote_file(self):
-        with mock.patch(STORAGE_BACKEND_MOCK_PATH + ".get") as mocked:
+        with mock.patch(FS_STORAGE_MOCK_PATH + ".get") as mocked:
             self.checker._get_remote_file("pending")
             mocked.assert_called_with(
                 "demo_out/pending/{}".format(self._filename(self.record)), binary=False

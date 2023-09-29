@@ -15,5 +15,6 @@ class EDIStorageReceiveComponent(Component):
 
     def receive(self):
         path = self._get_remote_file_path("pending")
+        # TODO: clean this up, .get is deprecated in fs_storage
         filedata = self.storage.get(path.as_posix())
         return filedata
