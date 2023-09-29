@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <odoo noupdate="1">
-    <record model="ir.model.access" id="access_storage_backend_edi_manager">
-        <field name="name">access_storage_backend EDI manager</field>
-        <field name="model_id" ref="storage_backend.model_storage_backend" />
+    <record model="ir.model.access" id="access_fs_storage_edi_manager">
+        <field name="name">access_fs_storage EDI manager</field>
+        <field name="model_id" ref="fs_storage.model_fs_storage" />
         <field name="group_id" ref="base_edi.group_edi_manager" />
         <field name="perm_read" eval="1" />
         <field name="perm_create" eval="1" />

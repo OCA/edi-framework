@@ -2,6 +2,7 @@
 # License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl).
 
 import functools
+import os
 from pathlib import PurePath
 
 from odoo.addons.component.core import Component
@@ -14,19 +15,23 @@ class EdiStorageListener(Component):
     def _move_file(self, storage, from_dir_str, to_dir_str, filename):
         from_dir = PurePath(from_dir_str)
         to_dir = PurePath(to_dir_str)
-        if filename not in storage.list_files(from_dir.as_posix()):
-            # The file might have been moved after a previous error.
+        # - storage.list_files now includes path in fs_storage, breaking change
+        # - we remove path
+        # TODO: clean this up, .list_files is deprecated in fs_storage
+        files = storage.list_files(from_dir.as_posix())
+        files = [os.path.basename(f) for f in files]
+        if filename not in files:
             return False
-        self._add_after_commit_hook(
-            storage._move_files, [(from_dir / filename).as_posix()], to_dir.as_posix()
+        # TODO: clean this up, .move_files is deprecated in fs_storage
+        self._add_post_commit_hook(
+            storage.move_files, [(from_dir / filename).as_posix()], to_dir.as_posix()
         )
         return True
 
-    def _add_after_commit_hook(self, move_func, sftp_filepath, sftp_destination_path):
+    def _add_post_commit_hook(self, move_func, sftp_filepath, sftp_destination_path):
         """Add hook after commit to move the file when transaction is over."""
-        self.env.cr.after(
-            "commit",
-            functools.partial(move_func, sftp_filepath, sftp_destination_path),
+        self.env.cr.postcommit.add(
+            functools.partial(move_func, sftp_filepath, sftp_destination_path)
         )
 
     def on_edi_exchange_done(self, record):

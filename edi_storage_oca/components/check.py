@@ -69,24 +69,3 @@ class EDIStorageCheckComponentMixin(Component):
                 self.exchange_record._notify_error("process_ko")
             return False
         return True
-
-    # FIXME: this is not used ATM -> should be refactored
-    # into an incoming exchange.
-    # The backend will look for records needing an ack
-    # and generate and ack record.
-    def _exchange_output_handle_ack(self):
-        ack_type = self.exchange_record.type_id.ack_type_id
-        filename = ack_type._make_exchange_filename(self.exchange_record)
-        ack_file = self._get_remote_file("done", filename=filename)
-        if ack_file:
-            self.backend.create_record(
-                ack_type.code,
-                {
-                    "parent_id": self.exchange_record.id,
-                    "exchange_file": ack_file,
-                    "edi_exchange_state": "input_received",
-                },
-            )
-            self.exchange_record._notify_ack_received()
-        else:
-            self.exchange_record._notify_ack_missing()

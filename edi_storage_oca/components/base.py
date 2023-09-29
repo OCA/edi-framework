@@ -14,16 +14,16 @@ class EDIStorageComponentMixin(AbstractComponent):
 
     _name = "edi.storage.component.mixin"
     _inherit = "edi.component.mixin"
-    # Components having `_storage_backend_type` will have precedence.
+    # Components having `_storage_type` will have precedence.
     # If the value is not set, generic components will be used.
-    _storage_backend_type = None
+    _storage_type = None
 
     @classmethod
     def _component_match(cls, work, usage=None, model_name=None, **kw):
         res = super()._component_match(work, usage=usage, model_name=model_name, **kw)
-        storage_type = kw.get("storage_backend_type")
-        if storage_type and cls._storage_backend_type:
-            return cls._storage_backend_type == storage_type
+        storage_type = kw.get("storage_type")
+        if storage_type and cls._storage_type:
+            return cls._storage_type == storage_type
         return res
 
     @property
@@ -42,20 +42,6 @@ class EDIStorageComponentMixin(AbstractComponent):
         return PurePath(
             (self.backend[direction + "_dir_" + state] or "").strip().rstrip("/")
         )
-
-    def _remote_file_path(self, direction, state, filename):
-        """Return remote file path by direction and state for give filename.
-
-        :param direction: string stating direction of the exchange
-        :param state: string stating state of the exchange
-        :param filename: string for file name
-        :return: PurePath object
-        """
-        _logger.warning(
-            "Call of deprecated function `_remote_file_path`. "
-            "Please use `_get_remote_file_path` instead.",
-        )
-        return self._dir_by_state(direction, state) / filename.strip("/ ")
 
     def _get_remote_file_path(self, state, filename=None):
         """Retrieve remote path for current exchange record."""
@@ -79,6 +65,7 @@ class EDIStorageComponentMixin(AbstractComponent):
             # TODO: support match via pattern (eg: filename-prefix-*)
             # otherwise is impossible to retrieve input files and acks
             # (the date will never match)
+            # TODO: clean this up, .get is deprecated in fs_storage
             return self.storage.get(path.as_posix(), binary=binary)
         except FileNotFoundError:
             _logger.info(
