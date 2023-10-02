@@ -3,7 +3,8 @@
 # @author: Simone Orsi <simahawk@gmail.com>
 # License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl).
 
-import mock
+from unittest import mock
+
 from freezegun import freeze_time
 
 from odoo import exceptions, fields
@@ -139,7 +140,7 @@ class EDIRecordTestCase(EDIBackendCommonTestCase):
         )
         self.exchange_type_in.job_channel_id = channel
         # re-enable job delayed feature
-        delayed = record.with_context(test_queue_job_no_delay=False).with_delay()
+        delayed = record.with_context(queue_job__no_delay=False).with_delay()
         # Silent useless warning
         # `Delayable Delayable(edi.exchange.record*) was prepared but never delayed`
         delayed.delayable._generated_job = object()
@@ -155,9 +156,9 @@ class EDIRecordTestCase(EDIBackendCommonTestCase):
         record0 = self.backend.create_record("test_csv_output", vals)
         record1 = record0.exchange_create_child_record()
         record2 = record0.exchange_create_child_record()
-        record3 = record2.exchange_create_child_record(model="sale.order", res_id=1)
-        record0.invalidate_cache()
-        record2.invalidate_cache()
+        record3 = record2.exchange_create_child_record(model="res.users", res_id=1)
+        record0.invalidate_recordset()
+        record2.invalidate_recordset()
         self.assertIn(record1, record0.related_exchange_ids)
         self.assertIn(record2, record0.related_exchange_ids)
         self.assertIn(record3, record2.related_exchange_ids)
@@ -174,7 +175,7 @@ class EDIRecordTestCase(EDIBackendCommonTestCase):
                     "model": "res.partner",
                     "res_id": self.partner.id,
                 },
-                {"parent_id": record2.id, "model": "sale.order", "res_id": 1},
+                {"parent_id": record2.id, "model": "res.users", "res_id": 1},
             ],
         )
 
@@ -185,7 +186,7 @@ class EDIRecordTestCase(EDIBackendCommonTestCase):
         }
         record0 = self.backend.create_record("test_csv_output", vals)
         ack = record0.exchange_create_ack_record()
-        record0.invalidate_cache()
+        record0.invalidate_recordset()
         self.assertIn(ack, record0.related_exchange_ids)
         self.assertRecordValues(
             ack,
