@@ -17,11 +17,11 @@
 
 [//]: # (addons)
 
-Unported addons
----------------
+Available addons
+----------------
 addon | version | maintainers | summary
 --- | --- | --- | ---
-[edi_oca](edi_oca/) | 15.0.1.5.0 (unported) | [![simahawk](https://github.com/simahawk.png?size=30px)](https://github.com/simahawk) [![etobella](https://github.com/etobella.png?size=30px)](https://github.com/etobella) | Define backends, exchange types, exchange records, basic automation and views for handling EDI exchanges.
+[edi_oca](edi_oca/) | 16.0.1.0.0 | [![simahawk](https://github.com/simahawk.png?size=30px)](https://github.com/simahawk) [![etobella](https://github.com/etobella.png?size=30px)](https://github.com/etobella) | Define backends, exchange types, exchange records, basic automation and views for handling EDI exchanges.
 
 [//]: # (end addons)
 
