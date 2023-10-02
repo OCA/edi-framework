@@ -2,7 +2,11 @@
 # @author Simone Orsi <simahawk@gmail.com>
 # License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl).
 
+import logging
+
 from odoo import _, api, exceptions, fields, models
+
+_logger = logging.getLogger(__name__)
 
 
 class EDIStateConsumerMixin(models.AbstractModel):
@@ -34,7 +38,9 @@ class EDIStateConsumerMixin(models.AbstractModel):
             return True
         # TODO: this implies we have `origin_exchange_type_id` from exchange.consumer.mixin
         exc_type = exc_type or self.origin_exchange_type_id
-        assert exc_type, f"No exchange type given for {self._name}#{self.id}"
+        if not exc_type:
+            _logger.warning("No exchange type given for %s#%s", self._name, self.id)
+            return True
         return (
             state.workflow_id.is_valid_for_model(self._name)
             and state.id in exc_type.state_workflow_ids.state_ids.ids
