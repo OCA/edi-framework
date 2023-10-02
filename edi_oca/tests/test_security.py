@@ -99,7 +99,7 @@ class TestEDIExchangeRecordSecurity(EDIBackendCommonTestCase):
 
     @mute_logger("odoo.addons.base.models.ir_model")
     def test_no_group_no_create(self):
-        with self.assertRaises(AccessError):
+        with self.assertRaisesRegex(AccessError, "You are not allowed to modify"):
             self.create_record(self.user)
 
     @mute_logger("odoo.addons.base.models.ir_model")
@@ -124,7 +124,7 @@ class TestEDIExchangeRecordSecurity(EDIBackendCommonTestCase):
     @mute_logger("odoo.addons.base.models.ir_model")
     def test_no_group_no_unlink(self):
         exchange_record = self.create_record()
-        with self.assertRaises(AccessError):
+        with self.assertRaisesRegex(AccessError, "You are not allowed to modify"):
             exchange_record.with_user(self.user).unlink()
 
     @mute_logger("odoo.models.unlink")
@@ -211,7 +211,7 @@ class TestEDIExchangeRecordSecurity(EDIBackendCommonTestCase):
     @mute_logger("odoo.addons.base.models.ir_model")
     def test_no_group_no_write(self):
         exchange_record = self.create_record()
-        with self.assertRaises(AccessError):
+        with self.assertRaisesRegex(AccessError, "You are not allowed to modify"):
             exchange_record.with_user(self.user).write({"external_identifier": "1234"})
 
     def test_group_write(self):
