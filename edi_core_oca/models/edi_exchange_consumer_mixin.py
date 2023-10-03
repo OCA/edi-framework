@@ -116,7 +116,9 @@ class EDIExchangeConsumerMixin(models.AbstractModel):
         res = super().get_view(view_id, view_type, **options)
         if view_type == "form":
             doc = etree.XML(res["arch"])
-            for node in doc.xpath("//sheet"):
+            # Select main `sheet` only as they can be nested into fields custom forms.
+            # I'm looking at you `account.view_move_line_form` on v16 :S
+            for node in doc.xpath("//sheet[not(ancestor::field)]"):
                 # TODO: add a default group
                 group = False
                 if hasattr(self, "_edi_generate_group"):
