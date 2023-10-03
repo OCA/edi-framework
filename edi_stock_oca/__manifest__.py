@@ -8,7 +8,7 @@
     "version": "15.0.1.0.0",
     "license": "AGPL-3",
     "author": "Odoo Community Association,Odoo Community Association (OCA)",
-    "website": "https://github.com/OCA/edi",
+    "website": "https://github.com/OCA/edi-framework",
     "depends": ["stock", "edi_oca", "component_event"],
     "data": ["views/stock_picking.xml", "views/res_partner.xml"],
     "demo": [],
