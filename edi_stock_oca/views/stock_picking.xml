@@ -11,7 +11,7 @@
             <page name="extra" position="after">
                 <page name="edi" string="EDI">
                     <group name="edi_stock_group" string="Electronic Data Interchange">
-                        <field name="edi_auto_disabled" string="Disable" />
+                        <field name="edi_disable_auto" />
                     </group>
                 </page>
             </page>
@@ -23,12 +23,11 @@
                     attrs="{'invisible': [('exchange_record_count', '=', 0)]}"
                     name="action_view_edi_records"
                 >
-                    <div class="o_form_field o_stat_info">
-                        <span class="o_stat_value">
-                            <field name="exchange_record_count" />
-                        </span>
-                        <span class="o_stat_text">EDI</span>
-                    </div>
+                    <field
+                        string="EDI"
+                        name="exchange_record_count"
+                        widget="statinfo"
+                    />
                 </button>
             </xpath>
         </field>
