@@ -20,8 +20,14 @@ class EDIBackendTestCase(TestStockCommon, TransactionComponentRegistryCase):
             _name = "stock.picking.event.listener.demo"
             _inherit = "base.event.listener"
 
-            def on_validate(self, picking):
+            def on_validate_picking(self, picking):
                 picking.name = "picking_done"
+
+            def on_confirm_picking(self, picking):
+                picking.name = "picking_confirmed"
+
+            def on_cancel_picking(self, picking):
+                picking.name = "picking_cancelled"
 
         StockPickingEventListenerDemo._build_component(cls.comp_registry)
         cls.comp_registry._cache.clear()
@@ -34,7 +40,7 @@ class EDIBackendTestCase(TestStockCommon, TransactionComponentRegistryCase):
                 "location_dest_id": cls.stock_location,
             }
         )
-        move_a = cls.MoveObj.create(
+        cls.move_a = cls.MoveObj.create(
             {
                 "name": cls.productA.name,
                 "product_id": cls.productA.id,
@@ -45,11 +51,19 @@ class EDIBackendTestCase(TestStockCommon, TransactionComponentRegistryCase):
                 "location_dest_id": cls.stock_location,
             }
         )
-        cls.picking_in.refresh()
-        cls.picking_in.action_confirm()
-        cls.picking_in.action_assign()
-        move_a.move_line_ids.qty_done = 4
+        cls.picking_in.invalidate_recordset()
+
+    def test_confirm_picking(self):
+        self.picking_in.action_confirm()
+        self.assertEqual(self.picking_in.name, "picking_confirmed")
 
     def test_validate_picking(self):
+        self.picking_in.action_confirm()
+        self.move_a.move_line_ids.qty_done = 4
         self.picking_in._action_done()
         self.assertEqual(self.picking_in.name, "picking_done")
+
+    def test_cancel_picking(self):
+        self.picking_in.action_confirm()
+        self.picking_in.action_cancel()
+        self.assertEqual(self.picking_in.name, "picking_cancelled")
