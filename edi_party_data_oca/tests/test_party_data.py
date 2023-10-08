@@ -2,6 +2,8 @@
 # @author: Simone Orsi <simahawk@gmail.com>
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
+from odoo_test_helper import FakeModelLoader
+
 from odoo.addons.edi_oca.tests.common import EDIBackendCommonComponentTestCase
 
 from ..utils import get_party_data_component
@@ -11,6 +13,12 @@ class PartyDataTestCase(EDIBackendCommonComponentTestCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
+
+        # force reload of the registry that is impacted by edi_oca tests
+        cls.loader = FakeModelLoader(cls.env, cls.__module__)
+        cls.loader.backup_registry()
+        cls.loader.update_registry(())
+
         cls.backend = cls.env.ref("edi_oca.demo_edi_backend")
         cls.cat_model = cls.env["res.partner.id_category"]
         cls.all_cat = cls.cat_model.browse()
