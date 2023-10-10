@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="edi_state_workflow_view_tree" model="ir.ui.view">
+        <field name="model">edi.state.workflow</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name" />
+                <field name="description" />
+            </tree>
+        </field>
+    </record>
+    <record id="edi_state_workflow_view_form" model="ir.ui.view">
+        <field name="model">edi.state.workflow</field>
+        <field name="arch" type="xml">
+            <form string="EDI state workflow">
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name" class="oe_edit_only" />
+                        <h1>
+                            <field name="name" />
+                        </h1>
+                        <label for="description" class="oe_edit_only" />
+                        <h2>
+                            <field name="description" />
+                        </h2>
+                    </div>
+                    <group name="wrapper">
+                        <group name="main">
+                            <field name="backend_type_id" />
+                            <field name="model_id" />
+                        </group>
+                    </group>
+                    <notebook>
+                        <page name="main" string="States">
+                            <field name="state_ids">
+                                <tree editable="bottom">
+                                    <field name="code" />
+                                    <field name="name" />
+                                    <field name="description" />
+                                    <field name="is_default" />
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="edi_state_workflow_view_search" model="ir.ui.view">
+        <field name="model">edi.state.workflow</field>
+        <field name="arch" type="xml">
+            <search string="EDI state workflow">
+                <field name="name" />
+                <field name="model_id" />
+                <field name="state_ids" />
+                <group expand="0" string="Group By">
+                    <filter
+                        name="group_by_model"
+                        string="Model"
+                        context="{'group_by': 'model_id'}"
+                    />
+                    <filter
+                        name="group_by_backend_type"
+                        string="Backend type"
+                        context="{'group_by': 'backend_type_id'}"
+                    />
+                </group>
+            </search>
+        </field>
+    </record>
+    <record model="ir.actions.act_window" id="act_open_edi_state_workflow_view">
+        <field name="name">EDI state workflow</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">edi.state.workflow</field>
+        <field name="view_mode">tree,form</field>
+        <field name="search_view_id" ref="edi_state_workflow_view_search" />
+        <field name="domain">[]</field>
+        <field name="context">{}</field>
+    </record>
+    <record
+        model="ir.actions.act_window.view"
+        id="act_open_edi_state_workflow_view_form"
+    >
+        <field name="act_window_id" ref="act_open_edi_state_workflow_view" />
+        <field name="sequence" eval="20" />
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="edi_state_workflow_view_form" />
+    </record>
+    <record
+        model="ir.actions.act_window.view"
+        id="act_open_edi_state_workflow_view_tree"
+    >
+        <field name="act_window_id" ref="act_open_edi_state_workflow_view" />
+        <field name="sequence" eval="10" />
+        <field name="view_mode">tree</field>
+        <field name="view_id" ref="edi_state_workflow_view_tree" />
+    </record>
+</odoo>
