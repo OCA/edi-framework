@@ -9,6 +9,7 @@ setuptools.setup(
     version=version,
     install_requires=[
         'odoo-addon-edi_oca>=16.0dev,<16.1dev',
+        'odoo-addon-edi_record_metadata_oca>=16.0dev,<16.1dev',
     ],
     classifiers=[
         'Programming Language :: Python',
