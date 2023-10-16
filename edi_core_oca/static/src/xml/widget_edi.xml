@@ -1,22 +1,19 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <templates id="template" xml:space="preserve">
-    <t t-name="edi_oca.FieldEdiConfiguration">
-        <div>
-            <t t-foreach="widget.value" t-as="rule_id">
-                <t t-set="rule" t-value="widget.value[rule_id]" />
-                <t t-if="!_.isEmpty(rule.form)">
-                    <t t-set="btn" t-value="rule.form.btn" />
-                    <button
-                        t-if="btn"
-                        t-att-data-type-id="rule.type.id"
-                        t-att-title="btn.tooltip"
-                        t-attf-class="o_edi_create_exchange_record btn #{btn.class != null ? btn.class : 'btn-sm btn-secondary'}"
-                        type="object"
-                    >
-                        <t t-esc="btn.label" />
-                    </button>
-                </t>
+    <div t-name="edi_oca.EdiConfigurationWidget" owl="1">
+        <t t-foreach="props.value" t-as="rule_id" t-key="rule_index">
+            <t t-set="rule" t-value="props.value[rule_id]" />
+            <t t-if="rule.form">
+                <t t-set="btn" t-value="rule.form.btn" />
+                <button
+                    t-if="btn"
+                    t-on-click="(ev) => this.onClick(ev, rule)"
+                    t-att-title="btn.tooltip"
+                    t-attf-class="o_edi_action btn #{btn.class != null ? btn.class : 'btn-sm btn-secondary'}"
+                >
+                    <t t-esc="btn.label" />
+                </button>
             </t>
-        </div>
-    </t>
+        </t>
+    </div>
 </templates>
