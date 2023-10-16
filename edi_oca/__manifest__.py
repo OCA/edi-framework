@@ -41,8 +41,10 @@
         "templates/exchange_mixin_buttons.xml",
     ],
     "assets": {
-        "web.assets_backend": ["edi_oca/static/src/js/widget_edi.js"],
-        "web.assets_qweb": ["edi_oca/static/src/xml/widget_edi.xml"],
+        "web.assets_backend": [
+            "edi_oca/static/src/js/widget_edi.esm.js",
+            "edi_oca/static/src/xml/widget_edi.xml",
+        ],
     },
     "demo": ["demo/edi_backend_demo.xml"],
     "installable": True,

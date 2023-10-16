@@ -9,6 +9,7 @@ from lxml import etree
 
 from odoo import api, fields, models
 from odoo.tools import safe_eval
+from odoo.tools.misc import frozendict
 
 from odoo.addons.base_sparse_field.models.fields import Serialized
 
@@ -115,7 +116,15 @@ class EDIExchangeConsumerMixin(models.AbstractModel):
     def get_view(self, view_id=None, view_type="form", **options):
         res = super().get_view(view_id, view_type, **options)
         if view_type == "form":
+            View = self.env["ir.ui.view"]
+            if view_id and res.get("base_model", self._name) != self._name:
+                View = View.with_context(base_model_name=res["base_model"])
             doc = etree.XML(res["arch"])
+            all_models = res["models"].copy()
+            # We need to check if the new view modifies or adds new models
+            # Theoretically, it should not be modified, but it is wise to keep it
+            # Basically we will add new ones later
+
             # Select main `sheet` only as they can be nested into fields custom forms.
             # I'm looking at you `account.view_move_line_form` on v16 :S
             for node in doc.xpath("//sheet[not(ancestor::field)]"):
@@ -127,18 +136,15 @@ class EDIExchangeConsumerMixin(models.AbstractModel):
                     "edi_oca.edi_exchange_consumer_mixin_buttons",
                     {"group": group},
                 )
-                node.addprevious(etree.fromstring(str_element))
-            View = self.env["ir.ui.view"]
-
-            # Override context for postprocessing
-            if view_id and res.get("base_model", self._name) != self._name:
-                View = View.with_context(base_model_name=res["base_model"])
-            new_arch, new_models = View.postprocess_and_fields(doc, self._name)
-            res["arch"] = new_arch
-            # We don't want to lose previous configuration, so, we only want to add
-            # the new fields
-            new_models.update(res["models"])
-            res["models"] = new_models
+                new_node = etree.fromstring(str_element)
+                new_arch, new_models = View.postprocess_and_fields(new_node, self._name)
+                for model in new_models:
+                    if model in all_models:
+                        continue
+                    all_models[model] = new_models[model]
+                node.addprevious(etree.fromstring(new_arch))
+            res["arch"] = etree.tostring(doc)
+            res["models"] = frozendict(all_models)
         return res
 
     def _edi_create_exchange_record_vals(self, exchange_type):
