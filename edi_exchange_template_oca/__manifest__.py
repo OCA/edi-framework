@@ -10,7 +10,7 @@
     "license": "LGPL-3",
     "author": "ACSONE,Odoo Community Association (OCA)",
     "maintainers": ["simahawk"],
-    "website": "https://github.com/OCA/edi",
+    "website": "https://github.com/OCA/edi-framework",
     "depends": ["edi_oca", "component"],
     "data": [
         "security/ir_model_access.xml",
