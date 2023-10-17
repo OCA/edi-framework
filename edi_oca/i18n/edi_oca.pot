@@ -1197,6 +1197,16 @@ msgid "Waiting to be sent"
 msgstr ""
 
 #. module: edi_oca
+#: model:ir.model.fields,field_description:edi_oca.field_edi_exchange_record__website_message_ids
+msgid "Website Messages"
+msgstr ""
+
+#. module: edi_oca
+#: model:ir.model.fields,help:edi_oca.field_edi_exchange_record__website_message_ids
+msgid "Website communication history"
+msgstr ""
+
+#. module: edi_oca
 #: model:ir.model.fields,help:edi_oca.field_edi_exchange_type__quick_exec
 msgid ""
 "When active, records of this type will be processed immediately without "
