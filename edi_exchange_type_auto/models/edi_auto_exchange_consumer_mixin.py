@@ -4,7 +4,7 @@
 
 import logging
 
-from odoo import _, api, models
+from odoo import api, models
 from odoo.tools import frozendict, safe_eval
 
 _logger = logging.getLogger("edi_exchange_auto")
@@ -369,37 +369,48 @@ class EDIAutoExchangeConsumerMixin(models.AbstractModel):
     # For instance: how do we prevent to generate 10 exports
     # when 10 sale order lines are updated one after each other?
     def _edi_auto_handle_generate(self, info_dict):
+        msg = None
         info = EDIAutoInfo.from_dict(info_dict)
         target_record = info.get_target_record(self.env)
         exc_type = info.get_type(self.env)
-        exchange_record = self._edi_auto_get_or_create_record(target_record, exc_type)
-        if not exchange_record.exchange_file:
-            exchange_record.action_exchange_generate()
-        msg = _("EDI auto: output generated.")
-        trigger_msg = _("Triggered by: %s") % info.triggered_by
-        # TODO: post changed values in msg?
-        exchange_record._notify_related_record(msg + "\n" + trigger_msg)
+        created, exchange_record = self._edi_auto_get_or_create_record(
+            target_record, exc_type
+        )
+        if not created:
+            # Nothing to do. Return a nice msg for the job result.
+            msg = "Exchange record already exists."
+            return msg
+        msg = (
+            f"Exchange record {exchange_record.identifier} created. "
+            f"Triggered by: {info.triggered_by}"
+        )
         # Trigger event on exchange record
-        exchange_record._trigger_edi_event("generated", suffix="auto", info=info)
+        exchange_record._trigger_edi_event("auto_handle_generate", info=info)
         # Trigger event on current record
         self._edi_auto_trigger_event(target_record, info)
+        return msg
 
     def _edi_auto_get_or_create_record(self, target_record, exchange_type):
         # TODO: here we must filter acks that are not valued yet.
         # We should take control via conf on
-        # wether the ack has to be generated immediately or not
+        # whether the ack has to be generated immediately or not
         # by the cron of the backend.
         parent = target_record._edi_get_origin()
         exchange_record = target_record._get_exchange_record(exchange_type).filtered(
             lambda x: not x.exchange_file
         )
+        created = False
         if not exchange_record:
             vals = exchange_record._exchange_child_record_values()
             vals["parent_id"] = parent.id
+            # NOTE: to fully automatize this,
+            # is recommended to enable `quick_exec` on the type
+            # otherwise records will have to wait for the cron to pass by.
             exchange_record = target_record._edi_create_exchange_record(
                 exchange_type, vals=vals
             )
-        return exchange_record
+            created = True
+        return created, exchange_record
 
     def _edi_auto_trigger_event(self, target_record, info):
         self._event(self._edi_auto_make_event_name(info)).notify(
