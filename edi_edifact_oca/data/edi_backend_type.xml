@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="edi_backend_type_edifact" model="edi.backend.type">
+        <field name="name">EDIFACT</field>
+        <field name="code">edifact</field>
+    </record>
+</odoo>
