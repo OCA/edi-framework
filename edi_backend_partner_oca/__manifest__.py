@@ -9,7 +9,7 @@
     "author": "ForgeFlow, Odoo Community Association (OCA)",
     "maintainers": ["LoisRForgeFlow"],
     "development_status": "Beta",
-    "website": "https://github.com/OCA/edi",
+    "website": "https://github.com/OCA/edi-framework",
     "depends": ["edi_oca"],
     "data": ["views/res_partner_views.xml", "views/edi_backend_views.xml"],
     "demo": [],
