@@ -327,6 +327,11 @@ msgid "Code"
 msgstr "Code"
 
 #. module: edi_oca
+#: model:ir.model.fields,field_description:edi_oca.field_edi_exchange_record__company_id
+msgid "Company"
+msgstr ""
+
+#. module: edi_oca
 #: model:ir.ui.menu,name:edi_oca.menu_edi_config
 msgid "Config"
 msgstr "Paramètres de configuration"
@@ -830,7 +835,6 @@ msgstr ""
 
 #. module: edi_oca
 #: model:ir.model.fields,help:edi_oca.field_edi_exchange_record__message_has_error
-#: model:ir.model.fields,help:edi_oca.field_edi_exchange_record__message_has_sms_error
 msgid "If checked, some messages have a delivery error."
 msgstr ""
 
@@ -1104,11 +1108,6 @@ msgstr ""
 #. module: edi_oca
 #: model:ir.model.fields,help:edi_oca.field_edi_exchange_type__rule_ids
 msgid "Rules to handle exchanges and UI automatically"
-msgstr ""
-
-#. module: edi_oca
-#: model:ir.model.fields,field_description:edi_oca.field_edi_exchange_record__message_has_sms_error
-msgid "SMS Delivery error"
 msgstr ""
 
 #. module: edi_oca
