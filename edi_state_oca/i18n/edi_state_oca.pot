@@ -83,7 +83,6 @@ msgstr ""
 #: model:ir.ui.menu,name:edi_state_oca.menu_edi_state
 #: model_terms:ir.ui.view,arch_db:edi_state_oca.edi_state_view_form
 #: model_terms:ir.ui.view,arch_db:edi_state_oca.edi_state_view_search
-#: model_terms:ir.ui.view,arch_db:edi_state_oca.edi_state_view_tree
 msgid "EDI state"
 msgstr ""
 
@@ -92,7 +91,6 @@ msgstr ""
 #: model:ir.ui.menu,name:edi_state_oca.menu_edi_state_workflow
 #: model_terms:ir.ui.view,arch_db:edi_state_oca.edi_state_workflow_view_form
 #: model_terms:ir.ui.view,arch_db:edi_state_oca.edi_state_workflow_view_search
-#: model_terms:ir.ui.view,arch_db:edi_state_oca.edi_state_workflow_view_tree
 msgid "EDI state workflow"
 msgstr ""
 
