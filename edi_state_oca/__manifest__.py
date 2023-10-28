@@ -7,7 +7,7 @@
     "summary": """
     Allow to assign specific EDI states to related records.
     """,
-    "version": "14.0.1.0.1",
+    "version": "14.0.1.0.2",
     "development_status": "Alpha",
     "license": "LGPL-3",
     "website": "https://github.com/OCA/edi-framework",
