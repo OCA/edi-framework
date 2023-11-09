@@ -15,6 +15,7 @@ setuptools.setup(
         'odoo-addon-edi_party_data_oca>=16.0dev,<16.1dev',
         'odoo-addon-edi_record_metadata_oca>=16.0dev,<16.1dev',
         'odoo-addon-edi_state_oca>=16.0dev,<16.1dev',
+        'odoo-addon-edi_webservice_oca>=16.0dev,<16.1dev',
     ],
     classifiers=[
         'Programming Language :: Python',

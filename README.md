@@ -28,6 +28,7 @@ addon | version | maintainers | summary
 [edi_party_data_oca](edi_party_data_oca/) | 16.0.1.0.0 | [![simahawk](https://github.com/simahawk.png?size=30px)](https://github.com/simahawk) | Allow to configure and retrieve party information for EDI exchanges.
 [edi_record_metadata_oca](edi_record_metadata_oca/) | 16.0.1.0.0 | [![simahawk](https://github.com/simahawk.png?size=30px)](https://github.com/simahawk) | Allow to store metadata for related records.
 [edi_state_oca](edi_state_oca/) | 16.0.1.0.0 | [![simahawk](https://github.com/simahawk.png?size=30px)](https://github.com/simahawk) | Allow to assign specific EDI states to related records.
+[edi_webservice_oca](edi_webservice_oca/) | 16.0.1.0.0 |  | Defines webservice integration from EDI Exchange records
 
 [//]: # (end addons)
 
