@@ -25,6 +25,7 @@ class EDIExchangeTypeTestCase(EDIBackendCommonTestCase):
             self.exchange_type_out_ack.ack_for_type_ids.ids,
         )
 
+    @mute_logger("odoo.sql_db")
     def test_same_code_same_backend(self):
         with mute_logger("odoo.sql_db"):
             with self.assertRaises(Exception) as err:
