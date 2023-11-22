@@ -235,3 +235,23 @@ class EDIRecordTestCase(EDIBackendCommonTestCase):
         record0.exchange_file = filecontent
         self.assertEqual(record0.exchange_filechecksum, checksum2)
         self.assertNotEqual(record0.exchange_filechecksum, checksum1)
+
+    def test_related_records(self):
+        vals = {
+            "model": self.partner._name,
+            "res_id": self.partner.id,
+        }
+        record = self.backend.create_record("test_csv_output", vals)
+        self.assertEqual(record.record, self.partner)
+        self.assertTrue(record.related_record_ids)
+        self.assertEqual(record.related_record_ids.record, self.partner)
+        # We will link exchange record to another model record
+        spain = self.env.ref("base.es")
+        # Link consumer model to exchange record
+        record._set_related_record(spain)
+        # Main record is still the same as before
+        self.assertEqual(record.record, self.partner)
+        # Check related records
+        self.assertEqual(len(record.related_record_ids), 2)
+        self.assertEqual(record.related_record_ids[0].record, self.partner)
+        self.assertEqual(record.related_record_ids[1].record, spain)
