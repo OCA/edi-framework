@@ -8,7 +8,7 @@ import logging
 from ast import literal_eval
 from collections import defaultdict
 
-from odoo import api, exceptions, fields, models
+from odoo import Command, api, exceptions, fields, models
 from odoo.exceptions import AccessError
 
 from ..utils import exchange_record_job_identity_exact, get_checksum
@@ -39,14 +39,25 @@ class EDIExchangeRecord(models.Model):
     )
     direction = fields.Selection(related="type_id.direction")
     backend_id = fields.Many2one(comodel_name="edi.backend", required=True)
-    model = fields.Char(index=True, required=False, readonly=True, copy=False)
+    model = fields.Char(
+        index=True,
+        required=False,
+        readonly=False,
+        compute="_compute_record",
+        inverse="_inverse_record",
+        store=True,
+        copy=False,
+    )
     res_id = fields.Many2oneReference(
         string="Record",
         index=True,
         required=False,
-        readonly=True,
+        readonly=False,
         model_field="model",
         copy=False,
+        compute="_compute_record",
+        inverse="_inverse_record",
+        store=True,
     )
     related_record_exists = fields.Boolean(compute="_compute_related_record_exists")
     related_name = fields.Char(compute="_compute_related_name", compute_sudo=True)
@@ -97,9 +108,14 @@ class EDIExchangeRecord(models.Model):
         help="Original exchange which originated this record",
     )
     related_exchange_ids = fields.One2many(
-        string="Related records",
+        string="Related exchanges",
         comodel_name="edi.exchange.record",
         inverse_name="parent_id",
+    )
+    related_record_ids = fields.One2many(
+        string="Related records",
+        comodel_name="edi.exchange.related.record",
+        inverse_name="exchange_record_id",
     )
     ack_expected = fields.Boolean(compute="_compute_ack_expected")
     # TODO: shall we add a constrain on the direction?
@@ -187,6 +203,75 @@ class EDIExchangeRecord(models.Model):
     def _compute_ack_expected(self):
         for rec in self:
             rec.ack_expected = bool(self.type_id.ack_type_id)
+
+    def _get_edi_first_related_record_query(self):
+        query = """
+            WITH related_records AS (
+                SELECT
+                    exchange_record_id,
+                    res_id,
+                    model,
+                    ROW_NUMBER() OVER
+                    (PARTITION BY exchange_record_id ORDER BY id)
+                    AS row_num
+                FROM
+                    edi_exchange_related_record
+                WHERE
+                    exchange_record_id in %s
+            )
+            SELECT
+                exchange_record_id,
+                res_id,
+                model
+            FROM
+                related_records
+            WHERE
+                row_num = 1;
+        """
+        params = (tuple(self.ids),)
+        return query, params
+
+    def _get_edi_first_related_record_dict(self):
+        """
+        Returns a dictionary with exchange_record_id as key and
+        the first related record res_id and model as value.
+        """
+        self.env["edi.exchange.related.record"].flush_model()
+        query, params = self._get_edi_first_related_record_query()
+        self.env.cr.execute(query, params)
+        return {
+            rec[0]: {"res_id": rec[1], "model": rec[2]}
+            for rec in self.env.cr.fetchall()
+        }
+
+    @api.depends("related_record_ids")
+    def _compute_record(self):
+        """
+        Main related record is computed as the first related record created
+        for the exchange.
+        """
+        data = self._get_edi_first_related_record_dict()
+        for rec in self:
+            rec.res_id = data.get(rec.id, {}).get("res_id", False)
+            rec.model = data.get(rec.id, {}).get("model", False)
+
+    def _inverse_record(self):
+        """
+        Create related record when writing the main record for the exchange.
+        """
+        for rec in self:
+            if (
+                not rec.res_id
+                or not rec.model
+                or any(
+                    rel.res_id == rec.res_id and rel.model == rec.model
+                    for rel in rec.related_record_ids
+                )
+            ):
+                continue
+            rec.related_record_ids = [
+                Command.create({"res_id": rec.res_id, "model": rec.model})
+            ]
 
     @api.depends("res_id", "model")
     def _compute_related_record_exists(self):
@@ -389,7 +474,10 @@ class EDIExchangeRecord(models.Model):
         return self.record.get_formview_action()
 
     def _set_related_record(self, odoo_record):
-        self.sudo().update({"model": odoo_record._name, "res_id": odoo_record.id})
+        commands = []
+        for rec in odoo_record:
+            commands.append(Command.create({"model": rec._name, "res_id": rec.id}))
+        self.sudo().update({"related_record_ids": commands})
 
     def action_open_related_exchanges(self):
         self.ensure_one()
@@ -419,21 +507,9 @@ class EDIExchangeRecord(models.Model):
             self._trigger_edi_event(event_name, target=self.record)
 
     def _notify_related_record(self, message, level="info"):
-        """Post notification on the original record."""
-        if not self.related_record_exists or not hasattr(
-            self.record, "message_post_with_source"
-        ):
-            return
-        self.record.message_post_with_source(
-            "edi_oca.message_edi_exchange_link",
-            render_values={
-                "backend": self.backend_id,
-                "exchange_record": self,
-                "message": message,
-                "level": level,
-            },
-            subtype_id=self.env.ref("mail.mt_note").id,
-        )
+        """Post notification on the original records."""
+        for rec in self.related_record_ids:
+            rec._notify_related_record(message, level)
 
     def _trigger_edi_event_make_name(self, name, suffix=None):
         return "on_edi_exchange_{name}{suffix}".format(
