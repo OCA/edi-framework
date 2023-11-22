@@ -7,7 +7,7 @@ import base64
 import logging
 from collections import defaultdict
 
-from odoo import _, api, exceptions, fields, models
+from odoo import Command, _, api, exceptions, fields, models
 
 _logger = logging.getLogger(__name__)
 
@@ -35,7 +35,14 @@ class EDIExchangeRecord(models.Model):
     )
     direction = fields.Selection(related="type_id.direction")
     backend_id = fields.Many2one(comodel_name="edi.backend", required=True)
-    model = fields.Char(index=True, required=False, readonly=True)
+    model = fields.Char(
+        index=True,
+        required=False,
+        readonly=True,
+        compute="_compute_record",
+        inverse="_inverse_record",
+        store=True,
+    )
     res_id = fields.Many2oneReference(
         string="Record",
         index=True,
@@ -43,6 +50,9 @@ class EDIExchangeRecord(models.Model):
         readonly=True,
         model_field="model",
         copy=False,
+        compute="_compute_record",
+        inverse="_inverse_record",
+        store=True,
     )
     related_record_exists = fields.Boolean(compute="_compute_related_record_exists")
     related_name = fields.Char(compute="_compute_related_name", compute_sudo=True)
@@ -87,9 +97,14 @@ class EDIExchangeRecord(models.Model):
         help="Original exchange which originated this record",
     )
     related_exchange_ids = fields.One2many(
-        string="Related records",
+        string="Related exchanges",
         comodel_name="edi.exchange.record",
         inverse_name="parent_id",
+    )
+    related_record_ids = fields.One2many(
+        string="Related records",
+        comodel_name="edi.exchange.related.record",
+        inverse_name="exchange_record_id",
     )
     ack_expected = fields.Boolean(compute="_compute_ack_expected")
     # TODO: shall we add a constrain on the direction?
@@ -166,6 +181,31 @@ class EDIExchangeRecord(models.Model):
     def _compute_ack_expected(self):
         for rec in self:
             rec.ack_expected = bool(self.type_id.ack_type_id)
+
+    @api.depends("related_record_ids")
+    def _compute_record(self):
+        """
+        Main related record is computed as the first related record created
+        for the exchange.
+        """
+        for rec in self:
+            rec.res_id = (
+                rec.related_record_ids[0].res_id if rec.related_record_ids else False
+            )
+            rec.model = (
+                rec.related_record_ids[0].model if rec.related_record_ids else False
+            )
+
+    def _inverse_record(self):
+        """
+        Create related record when writing the main record for the exchange.
+        """
+        for rec in self:
+            if not rec.res_id or not rec.model or rec.related_record_ids:
+                continue
+            rec.related_record_ids = [
+                Command.create({"res_id": rec.res_id, "model": rec.model})
+            ]
 
     @api.depends("res_id", "model")
     def _compute_related_record_exists(self):
@@ -352,7 +392,15 @@ class EDIExchangeRecord(models.Model):
         return self.record.get_formview_action()
 
     def _set_related_record(self, odoo_record):
-        self.sudo().update({"model": odoo_record._name, "res_id": odoo_record.id})
+        self._set_related_records(odoo_record)
+
+    def _set_related_records(self, odoo_records):
+        commands = []
+        for odoo_record in odoo_records:
+            commands.append(
+                Command.create({"model": odoo_record._name, "res_id": odoo_record.id})
+            )
+        self.sudo().update({"related_record_ids": commands})
 
     def action_open_related_exchanges(self):
         self.ensure_one()
@@ -382,21 +430,9 @@ class EDIExchangeRecord(models.Model):
             self._trigger_edi_event(event_name, target=self.record)
 
     def _notify_related_record(self, message, level="info"):
-        """Post notification on the original record."""
-        if not self.related_record_exists or not hasattr(
-            self.record, "message_post_with_view"
-        ):
-            return
-        self.record.message_post_with_view(
-            "edi_oca.message_edi_exchange_link",
-            values={
-                "backend": self.backend_id,
-                "exchange_record": self,
-                "message": message,
-                "level": level,
-            },
-            subtype_id=self.env.ref("mail.mt_note").id,
-        )
+        """Post notification on the original records."""
+        for rec in self.related_record_ids:
+            rec._notify_related_record(message, level)
 
     def _trigger_edi_event_make_name(self, name, suffix=None):
         return "on_edi_exchange_{name}{suffix}".format(

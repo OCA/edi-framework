@@ -168,6 +168,25 @@
                               </tree>
                             </field>
                         </page>
+                        <page
+                            name="related_records"
+                            string="Related Records"
+                            attrs="{'invisible': [('related_record_ids', '=', False)]}"
+                        >
+                            <field name="related_record_ids" nolabel="1" colspan="4">
+                              <tree create="false">
+                                <field name="model" />
+                                <field name="res_id" />
+                                <button
+                                        name="action_open_related_record"
+                                        type="object"
+                                        icon="fa-arrow-right"
+                                        string="Open Record"
+                                        attrs="{'invisible': ['|', ('model', '=', False), ('res_id', '=', False)]}"
+                                    />
+                              </tree>
+                            </field>
+                        </page>
                     </notebook>
                 </sheet>
                 <div class="oe_chatter">

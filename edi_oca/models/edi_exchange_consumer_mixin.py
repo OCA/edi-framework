@@ -34,10 +34,14 @@ class EDIExchangeConsumerMixin(models.AbstractModel):
         # Store it to ease searching by type
         store=True,
     )
-    exchange_record_ids = fields.One2many(
-        "edi.exchange.record",
+    exchange_related_record_ids = fields.One2many(
+        "edi.exchange.related.record",
         inverse_name="res_id",
         domain=lambda r: [("model", "=", r._name)],
+    )
+    exchange_record_ids = fields.One2many(
+        "edi.exchange.record",
+        compute="_compute_exchange_record_ids",
     )
     exchange_record_count = fields.Integer(compute="_compute_exchange_record_count")
     edi_config = Serialized(
@@ -56,6 +60,13 @@ class EDIExchangeConsumerMixin(models.AbstractModel):
             config = record._edi_get_exchange_type_config()
             record.edi_config = config
             record.edi_has_form_config = any([x.get("form") for x in config.values()])
+
+    @api.depends("exchange_related_record_ids")
+    def _compute_exchange_record_ids(self):
+        for rec in self:
+            rec.exchange_record_ids = rec.mapped(
+                "exchange_related_record_ids.exchange_record_id"
+            )
 
     def _edi_get_exchange_type_config(self):
         # TODO: move this machinery to the rule model
@@ -233,7 +244,7 @@ class EDIExchangeConsumerMixin(models.AbstractModel):
 
     @api.depends("exchange_record_ids")
     def _compute_exchange_record_count(self):
-        data = self.env["edi.exchange.record"].read_group(
+        data = self.env["edi.exchange.related.record"].read_group(
             [("res_id", "in", self.ids), ("model", "=", self._name)],
             ["res_id"],
             ["res_id"],
@@ -246,7 +257,7 @@ class EDIExchangeConsumerMixin(models.AbstractModel):
         self.ensure_one()
         xmlid = "edi_oca.act_open_edi_exchange_record_view"
         action = self.env["ir.actions.act_window"]._for_xml_id(xmlid)
-        action["domain"] = [("model", "=", self._name), ("res_id", "=", self.id)]
+        action["domain"] = [("id", "in", self.exchange_record_ids.ids)]
         # Purge default search filters from ctx to avoid hiding records
         ctx = action.get("context", {})
         if isinstance(ctx, str):
