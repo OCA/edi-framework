@@ -142,3 +142,19 @@ class EDIBackendTestOutputJobsCase(EDIBackendCommonComponentRegistryTestCase):
             trap.assert_enqueued_job(
                 self.record.action_exchange_send,
             )
+            # No matter how many times we schedule jobs
+            self.record.with_delay().action_exchange_generate()
+            self.record.with_delay().action_exchange_generate()
+            self.record.with_delay().action_exchange_generate()
+            # identity key should prevent having new jobs for same record same file
+            trap.assert_jobs_count(2)
+            # but if we change the content
+            self.record._set_file_content("something different")
+            # 1st call will schedule another job
+            self.record.with_delay().action_exchange_generate()
+            # the 2nd one not
+            self.record.with_delay().action_exchange_generate()
+            trap.assert_jobs_count(3)
+            self.record.with_delay().action_exchange_send()
+            trap.assert_jobs_count(4)
+        # TODO: test input in the same way
