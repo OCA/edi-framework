@@ -116,6 +116,10 @@
                             <field name="exchanged_on" />
                             <field name="exchange_file" filename="exchange_filename" />
                             <field name="exchange_filename" invisible="exchange_file" />
+                            <field
+                                name="exchange_filechecksum"
+                                invisible="exchange_file"
+                            />
                         </group>
                         <group name="ack" string="ACK" invisible="not ack_expected">
                             <field name="ack_expected" />
