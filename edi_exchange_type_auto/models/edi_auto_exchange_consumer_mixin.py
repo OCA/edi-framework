@@ -7,7 +7,7 @@ import logging
 from odoo import api, models
 from odoo.tools import frozendict, safe_eval
 
-_logger = logging.getLogger("edi_exchange_auto")
+_logger = logging.getLogger("edi_exchange_auto.mixin")
 
 
 class EDIAutoExchangeConsumerMixin(models.AbstractModel):

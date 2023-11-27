@@ -92,7 +92,7 @@ class TestConsumerAutoMixinCase(EDIBackendCommonTestCase):
             ) as mocked_trigger:
                 record = self.model.create({"name": "Test auto 2"})
                 expected_msg = (
-                    f"DEBUG:edi_exchange_auto:"
+                    f"DEBUG:edi_exchange_auto.mixin:"
                     f"Skip model={self.model._name} "
                     f"op=%s "
                     f"type={self.auto_exchange_type.code}: "
@@ -113,7 +113,7 @@ class TestConsumerAutoMixinCase(EDIBackendCommonTestCase):
             ) as mocked_trigger:
                 record = self.model.create({"name": "Test auto 2"})
                 expected_msg = (
-                    f"DEBUG:edi_exchange_auto:"
+                    f"DEBUG:edi_exchange_auto.mixin:"
                     f"Skip model={self.model._name} "
                     f"op=%s "
                     f"type={self.auto_exchange_type.code}: "
@@ -141,7 +141,7 @@ class TestConsumerAutoMixinCase(EDIBackendCommonTestCase):
                     {"name": "Test auto 2", "disable_edi_auto": True}
                 )
                 expected_msg = (
-                    f"DEBUG:edi_exchange_auto:"
+                    f"DEBUG:edi_exchange_auto.mixin:"
                     f"Skip model={self.model._name} "
                     f"op=%s: EDI auto disabled for rec={record.id}"
                 )
@@ -164,7 +164,7 @@ class TestConsumerAutoMixinCase(EDIBackendCommonTestCase):
             ) as mocked_trigger:
                 record = self.model.create({"name": "Test auto 2"})
                 expected_msg = (
-                    f"DEBUG:edi_exchange_auto:"
+                    f"DEBUG:edi_exchange_auto.mixin:"
                     f"Skip model={self.model._name} "
                     f"op=%s "
                     f"type={self.auto_exchange_type.code}: "
@@ -198,7 +198,7 @@ class TestConsumerAutoMixinCase(EDIBackendCommonTestCase):
                 vals = {"name": "New name"}
                 record.write(vals)
                 expected_msg = (
-                    f"DEBUG:edi_exchange_auto:"
+                    f"DEBUG:edi_exchange_auto.mixin:"
                     f"Skip model={self.model._name} "
                     f"op=%s "
                     f"type={self.auto_exchange_type.code}: "
@@ -263,7 +263,7 @@ class TestConsumerAutoMixinCase(EDIBackendCommonTestCase):
                 mocked_handler.assert_not_called()
                 info = record._edi_test_check_generate_called_with.pop()
                 expected_msg = (
-                    f"DEBUG:edi_exchange_auto:"
+                    f"DEBUG:edi_exchange_auto.mixin:"
                     f"Skip model={self.model._name} "
                     f"op=%s "
                     f"type={self.auto_exchange_type.code}: "
@@ -294,7 +294,7 @@ class TestConsumerAutoMixinCase(EDIBackendCommonTestCase):
                 self.model.create({"name": "Test auto 3"})
                 mocked_handler.assert_not_called()
                 expected_msg = (
-                    f"DEBUG:edi_exchange_auto:"
+                    f"DEBUG:edi_exchange_auto.mixin:"
                     f"Skip model={self.model._name} "
                     f"op=%s "
                     f"type={self.auto_exchange_type.code}: "
@@ -322,7 +322,7 @@ class TestConsumerAutoMixinCase(EDIBackendCommonTestCase):
                     {"name": "Test auto 2", "partner_id": self.partner1.id}
                 )
                 expected_msg = (
-                    f"DEBUG:edi_exchange_auto:"
+                    f"DEBUG:edi_exchange_auto.mixin:"
                     f"Skip model={self.model._name} "
                     f"op=%s "
                     f"type={self.auto_exchange_type.code}: "
