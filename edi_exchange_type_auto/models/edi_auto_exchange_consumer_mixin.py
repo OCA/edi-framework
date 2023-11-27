@@ -339,6 +339,7 @@ class EDIAutoExchangeConsumerMixin(models.AbstractModel):
         # TODO: serialize old_vals in case of relations
         return EDIAutoInfo(**kw)
 
+    # TODO: add tests
     def _edi_auto_handle(self, todo):
         """Handle automatic EDI actions to do.
 
@@ -363,11 +364,6 @@ class EDIAutoExchangeConsumerMixin(models.AbstractModel):
     def _edi_auto_handle_job_options(self, info):
         return {}
 
-    # TODO: Define job identity_key
-    # so that we don't create multiple records on multiple edits.
-    # This is tied to the problem of avoiding too many jobs to be created.
-    # For instance: how do we prevent to generate 10 exports
-    # when 10 sale order lines are updated one after each other?
     def _edi_auto_handle_generate(self, info_dict):
         msg = None
         info = EDIAutoInfo.from_dict(info_dict)
@@ -377,13 +373,16 @@ class EDIAutoExchangeConsumerMixin(models.AbstractModel):
             target_record, exc_type
         )
         if not created:
+            # TODO: what if the file has to be updated?
             # Nothing to do. Return a nice msg for the job result.
-            msg = "Exchange record already exists."
+            msg = f"Exchange record already exists for type: {exc_type.code}"
+            _logger.debug(msg)
             return msg
         msg = (
             f"Exchange record {exchange_record.identifier} created. "
             f"Triggered by: {info.triggered_by}"
         )
+        _logger.debug(msg)
         # Trigger event on exchange record
         exchange_record._trigger_edi_event("auto_handle_generate", info=info)
         # Trigger event on current record
@@ -400,7 +399,14 @@ class EDIAutoExchangeConsumerMixin(models.AbstractModel):
             lambda x: not x.exchange_file
         )
         created = False
-        if not exchange_record:
+        # If the record has not been sent out yet for whatever reason
+        # (job delayed, job failed, send failed, etc)
+        # we still want to generate a new up to date record to be sent.
+        still_pending = exchange_record.edi_exchange_state in (
+            "output_pending",
+            "output_error_on_send",
+        )
+        if not exchange_record or still_pending:
             vals = exchange_record._exchange_child_record_values()
             vals["parent_id"] = parent.id
             # NOTE: to fully automatize this,
