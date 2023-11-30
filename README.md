@@ -27,6 +27,7 @@ addon | version | maintainers | summary
 [edi_oca](edi_oca/) | 16.0.1.0.4 | [![simahawk](https://github.com/simahawk.png?size=30px)](https://github.com/simahawk) [![etobella](https://github.com/etobella.png?size=30px)](https://github.com/etobella) | Define backends, exchange types, exchange records, basic automation and views for handling EDI exchanges.
 [edi_party_data_oca](edi_party_data_oca/) | 16.0.1.0.0 | [![simahawk](https://github.com/simahawk.png?size=30px)](https://github.com/simahawk) | Allow to configure and retrieve party information for EDI exchanges.
 [edi_record_metadata_oca](edi_record_metadata_oca/) | 16.0.1.0.0 | [![simahawk](https://github.com/simahawk.png?size=30px)](https://github.com/simahawk) | Allow to store metadata for related records.
+[edi_sale_edifact_oca](edi_sale_edifact_oca/) | 16.0.1.0.0 |  | Provide a demo exchange type setting and common tests for EDIFACT standard in EDI on sales.
 [edi_sale_oca](edi_sale_oca/) | 16.0.1.0.0 | [![simahawk](https://github.com/simahawk.png?size=30px)](https://github.com/simahawk) | Configuration and special behaviors for EDI on sales.
 [edi_state_oca](edi_state_oca/) | 16.0.1.0.0 | [![simahawk](https://github.com/simahawk.png?size=30px)](https://github.com/simahawk) | Allow to assign specific EDI states to related records.
 [edi_webservice_oca](edi_webservice_oca/) | 16.0.1.0.0 |  | Defines webservice integration from EDI Exchange records
