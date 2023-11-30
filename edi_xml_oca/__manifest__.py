@@ -12,7 +12,7 @@
     "license": "LGPL-3",
     "author": "ACSONE,Camptocamp,Odoo Community Association (OCA)",
     "maintainers": ["simahawk"],
-    "website": "https://github.com/OCA/edi",
+    "website": "https://github.com/OCA/edi-framework",
     "depends": ["edi_oca", "component"],
     "external_dependencies": {"python": ["xmlschema"]},
 }
