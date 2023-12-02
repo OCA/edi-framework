@@ -4,7 +4,7 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.0\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -14,13 +14,8 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: edi_stock_oca
-#: model_terms:ir.ui.view,arch_db:edi_stock_oca.stock_picking_form_view
-msgid "<span class=\"o_stat_text\">EDI</span>"
-msgstr ""
-
-#. module: edi_stock_oca
-#: model_terms:ir.ui.view,arch_db:edi_stock_oca.stock_picking_form_view
-msgid "Disable"
+#: model:ir.model.fields,field_description:edi_stock_oca.field_stock_picking__edi_disable_auto
+msgid "Disable auto"
 msgstr ""
 
 #. module: edi_stock_oca
@@ -34,8 +29,18 @@ msgid "EDI Configuration"
 msgstr ""
 
 #. module: edi_stock_oca
-#: model:ir.model.fields,field_description:edi_stock_oca.field_stock_picking__edi_auto_disabled
-msgid "Edi Auto Disabled"
+#: model:ir.model.fields,field_description:edi_stock_oca.field_stock_picking__origin_exchange_type_id
+msgid "EDI origin exchange type"
+msgstr ""
+
+#. module: edi_stock_oca
+#: model:ir.model.fields,field_description:edi_stock_oca.field_stock_picking__origin_exchange_record_id
+msgid "EDI origin record"
+msgstr ""
+
+#. module: edi_stock_oca
+#: model:ir.model.fields,help:edi_stock_oca.field_stock_picking__origin_exchange_record_id
+msgid "EDI record that originated this document."
 msgstr ""
 
 #. module: edi_stock_oca
@@ -66,4 +71,9 @@ msgstr ""
 #. module: edi_stock_oca
 #: model:ir.model,name:edi_stock_oca.model_stock_picking
 msgid "Transfer"
+msgstr ""
+
+#. module: edi_stock_oca
+#: model:ir.model.fields,help:edi_stock_oca.field_stock_picking__edi_disable_auto
+msgid "When marked, EDI automatic processing will be avoided"
 msgstr ""
