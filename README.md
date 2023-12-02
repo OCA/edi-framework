@@ -31,6 +31,7 @@ addon | version | maintainers | summary
 [edi_sale_edifact_oca](edi_sale_edifact_oca/) | 16.0.1.0.0 |  | Provide a demo exchange type setting and common tests for EDIFACT standard in EDI on sales.
 [edi_sale_oca](edi_sale_oca/) | 16.0.1.0.0 | [![simahawk](https://github.com/simahawk.png?size=30px)](https://github.com/simahawk) | Configuration and special behaviors for EDI on sales.
 [edi_state_oca](edi_state_oca/) | 16.0.1.0.0 | [![simahawk](https://github.com/simahawk.png?size=30px)](https://github.com/simahawk) | Allow to assign specific EDI states to related records.
+[edi_stock_oca](edi_stock_oca/) | 16.0.1.0.0 |  | Define EDI Configuration for Stock
 [edi_webservice_oca](edi_webservice_oca/) | 16.0.1.0.0 |  | Defines webservice integration from EDI Exchange records
 
 [//]: # (end addons)
