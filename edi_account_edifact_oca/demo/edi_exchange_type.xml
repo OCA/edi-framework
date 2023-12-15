@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="demo_edi_exc_type_edifact_invoice_out" model="edi.exchange.type">
+      <field name="backend_id" ref="edi_edifact_oca.edi_backend_edifact_demo" />
+      <field name="backend_type_id" ref="edi_edifact_oca.edi_backend_type_edifact" />
+      <field name="name">Demo EDIFACT Invoice</field>
+      <field name="code">demo_EDIFACT_Invoice_out</field>
+      <field name="direction">output</field>
+      <field name="exchange_file_ext">txt</field>
+      <field name="exchange_file_auto_generate">True</field>
+      <field name="advanced_settings_edit">
+components:
+  generate:
+    usage: output.generate.account.move
+      </field>
+  </record>
+</odoo>
