@@ -34,8 +34,8 @@ class XMLHandler(Component):
         """Lookup for XSD schema."""
         try:
             mod_name, path = self.work.schema_path.split(":")
-        except ValueError:
-            raise ValueError("Path must be in the form `module:path`")
+        except ValueError as exc:
+            raise ValueError("Path must be in the form `module:path`") from exc
         return modules.get_resource_path(mod_name, path)
 
     def _parse_xml(self, file_obj, **kw):
