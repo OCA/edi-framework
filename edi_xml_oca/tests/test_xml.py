@@ -2,7 +2,7 @@
 # @author: Simone Orsi <simahawk@gmail.com>
 # License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl).
 
-from odoo.addons.component.tests.common import SavepointComponentCase
+from odoo.addons.component.tests.common import TransactionComponentCase
 
 from .common import XMLTestCaseMixin
 
@@ -15,7 +15,7 @@ TEST_XML = """<?xml version="1.0" encoding="UTF-8"?>
 """
 
 
-class XMLTestCase(SavepointComponentCase, XMLTestCaseMixin):
+class XMLTestCase(TransactionComponentCase, XMLTestCaseMixin):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
