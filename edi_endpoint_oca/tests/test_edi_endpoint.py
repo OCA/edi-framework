@@ -9,7 +9,7 @@ from odoo.addons.endpoint.tests.common import CommonEndpoint
 
 class TestEndpoint(CommonEndpoint):
     @classmethod
-    def _setup_records(cls):
+    def _setup_records(cls):  # pylint: disable=missing-return
         super()._setup_records()
         cls.endpoint = cls.env.ref("edi_endpoint_oca.edi_endpoint_demo_1")
 
