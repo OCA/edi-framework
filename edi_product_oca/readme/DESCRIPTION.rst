@@ -1,1 +1,1 @@
-Provide basic configuration for products with EDI framework.
+Provide basic configuration for products and product packaging with EDI framework.

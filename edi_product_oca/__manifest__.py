@@ -4,7 +4,7 @@
 {
     "name": "EDI Product",
     "summary": """
-       EDI framework configuration and base logic for products""",
+       EDI framework configuration and base logic for products and products packaging""",
     "version": "16.0.1.0.0",
     "license": "AGPL-3",
     "author": "ForgeFlow, Odoo Community Association (OCA)",
@@ -13,5 +13,8 @@
         "product",
         "edi_oca",
     ],
-    "data": ["views/product_views.xml"],
+    "data": [
+        "views/product_views.xml",
+        "views/product_packaging_views.xml",
+    ],
 }
