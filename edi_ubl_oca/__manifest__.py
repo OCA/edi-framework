@@ -5,10 +5,10 @@
 {
     "name": "EDI UBL",
     "summary": """Define EDI backend type for UBL.""",
-    "version": "14.0.1.0.0",
+    "version": "16.0.1.0.0",
     "development_status": "Alpha",
     "license": "AGPL-3",
-    "website": "https://github.com/OCA/edi",
+    "website": "https://github.com/OCA/edi-framework",
     "author": "Camptocamp,Odoo Community Association (OCA)",
     "maintainers": ["simahawk"],
     "depends": ["edi_oca", "base_ubl"],
