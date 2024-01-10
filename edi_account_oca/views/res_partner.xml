@@ -9,6 +9,7 @@
         <field name="arch" type="xml">
             <group name="accounting_entries" position="after">
                 <group name="edi_configuration" string="EDI Configuration" />
+                    <field name="edi_account_move_out_exchange_type_id" />
             </group>
         </field>
     </record>
