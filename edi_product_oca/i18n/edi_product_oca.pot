@@ -14,53 +14,62 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: edi_product_oca
+#: model:ir.model.fields,field_description:edi_product_oca.field_product_packaging__edi_disable_auto
 #: model:ir.model.fields,field_description:edi_product_oca.field_product_product__edi_disable_auto
 #: model:ir.model.fields,field_description:edi_product_oca.field_product_template__edi_disable_auto
 msgid "Disable auto"
 msgstr ""
 
 #. module: edi_product_oca
+#: model_terms:ir.ui.view,arch_db:edi_product_oca.product_packaging_form_view
 #: model_terms:ir.ui.view,arch_db:edi_product_oca.product_template_form_view
 msgid "EDI"
 msgstr ""
 
 #. module: edi_product_oca
+#: model:ir.model.fields,field_description:edi_product_oca.field_product_packaging__origin_exchange_type_id
 #: model:ir.model.fields,field_description:edi_product_oca.field_product_product__origin_exchange_type_id
 #: model:ir.model.fields,field_description:edi_product_oca.field_product_template__origin_exchange_type_id
 msgid "EDI origin exchange type"
 msgstr ""
 
 #. module: edi_product_oca
+#: model:ir.model.fields,field_description:edi_product_oca.field_product_packaging__origin_exchange_record_id
 #: model:ir.model.fields,field_description:edi_product_oca.field_product_product__origin_exchange_record_id
 #: model:ir.model.fields,field_description:edi_product_oca.field_product_template__origin_exchange_record_id
 msgid "EDI origin record"
 msgstr ""
 
 #. module: edi_product_oca
+#: model:ir.model.fields,help:edi_product_oca.field_product_packaging__origin_exchange_record_id
 #: model:ir.model.fields,help:edi_product_oca.field_product_product__origin_exchange_record_id
 #: model:ir.model.fields,help:edi_product_oca.field_product_template__origin_exchange_record_id
 msgid "EDI record that originated this document."
 msgstr ""
 
 #. module: edi_product_oca
+#: model:ir.model.fields,field_description:edi_product_oca.field_product_packaging__edi_config
 #: model:ir.model.fields,field_description:edi_product_oca.field_product_product__edi_config
 #: model:ir.model.fields,field_description:edi_product_oca.field_product_template__edi_config
 msgid "Edi Config"
 msgstr ""
 
 #. module: edi_product_oca
+#: model:ir.model.fields,field_description:edi_product_oca.field_product_packaging__edi_has_form_config
 #: model:ir.model.fields,field_description:edi_product_oca.field_product_product__edi_has_form_config
 #: model:ir.model.fields,field_description:edi_product_oca.field_product_template__edi_has_form_config
 msgid "Edi Has Form Config"
 msgstr ""
 
 #. module: edi_product_oca
+#: model:ir.model.fields,field_description:edi_product_oca.field_product_packaging__exchange_record_ids
 #: model:ir.model.fields,field_description:edi_product_oca.field_product_product__exchange_record_ids
 #: model:ir.model.fields,field_description:edi_product_oca.field_product_template__exchange_record_ids
 msgid "Exchange Record"
 msgstr ""
 
 #. module: edi_product_oca
+#: model:ir.model.fields,field_description:edi_product_oca.field_product_packaging__exchange_record_count
 #: model:ir.model.fields,field_description:edi_product_oca.field_product_product__exchange_record_count
 #: model:ir.model.fields,field_description:edi_product_oca.field_product_template__exchange_record_count
 msgid "Exchange Record Count"
@@ -72,11 +81,17 @@ msgid "Product"
 msgstr ""
 
 #. module: edi_product_oca
+#: model:ir.model,name:edi_product_oca.model_product_packaging
+msgid "Product Packaging"
+msgstr ""
+
+#. module: edi_product_oca
 #: model:ir.model,name:edi_product_oca.model_product_product
 msgid "Product Variant"
 msgstr ""
 
 #. module: edi_product_oca
+#: model:ir.model.fields,help:edi_product_oca.field_product_packaging__edi_disable_auto
 #: model:ir.model.fields,help:edi_product_oca.field_product_product__edi_disable_auto
 #: model:ir.model.fields,help:edi_product_oca.field_product_template__edi_disable_auto
 msgid "When marked, EDI automatic processing will be avoided"
