@@ -394,6 +394,11 @@ msgid "Domain"
 msgstr ""
 
 #. module: edi_oca
+#: model_terms:ir.ui.view,arch_db:edi_oca.view_partner_form
+msgid "EDI"
+msgstr ""
+
+#. module: edi_oca
 #: model:res.groups,name:edi_oca.group_edi_advanced_settings_manager
 msgid "EDI Advanced Settings Manager"
 msgstr ""
