@@ -15,12 +15,12 @@
                     </group>
                 </page>
             </page>
-           <xpath expr="//div[@name='button_box']" position="inside">
+            <xpath expr="//div[@name='button_box']" position="inside">
                 <button
                     type="object"
                     class="oe_stat_button"
                     icon="fa-retweet"
-                    attrs="{'invisible': [('exchange_record_count', '=', 0)]}"
+                    invisible="not exchange_record_count"
                     name="action_view_edi_records"
                 >
                     <div class="o_form_field o_stat_info">
@@ -33,7 +33,4 @@
             </xpath>
         </field>
     </record>
-
-
-
 </odoo>
