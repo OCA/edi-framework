@@ -139,7 +139,7 @@ class TestEDIBackendOutput(TestEDIBackendOutputBase):
 
     def test_generate_file(self):
         output = self.backend.exchange_generate(self.record1)
-        expected = "{0.ref} - {0.name}".format(self.partner)
+        expected = f"{self.partner.ref} - {self.partner.name}"
         self.assertEqual(output.strip().decode("utf-8"), expected)
         file_content = base64.b64decode(self.record1.exchange_file).decode()
         self.assertEqual(file_content.strip(), expected)
