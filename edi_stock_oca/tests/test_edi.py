@@ -45,10 +45,9 @@ class EDIBackendTestCase(TestStockCommon, TransactionComponentRegistryCase):
                 "location_dest_id": cls.stock_location,
             }
         )
-        cls.picking_in.refresh()
         cls.picking_in.action_confirm()
         cls.picking_in.action_assign()
-        move_a.move_line_ids.qty_done = 4
+        move_a.move_line_ids.quantity = 4
 
     def test_validate_picking(self):
         self.picking_in._action_done()
