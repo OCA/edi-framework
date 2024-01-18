@@ -191,9 +191,10 @@ result = not record._has_exchange_record(exchange_type, exchange_type.backend_id
 
         Unfortunately we are unable to test the buttons here
         """
+        view = self.env[self.consumer_record._name].get_view(False, "form")
         with Form(self.consumer_record) as f:
             self.assertIn("edi_has_form_config", f._values)
             self.assertIn("edi_config", f._values)
-            form = etree.fromstring(f._view["arch"])
+            form = etree.fromstring(view["arch"])
             self.assertTrue(form.xpath("//field[@name='edi_has_form_config']"))
             self.assertTrue(form.xpath("//field[@name='edi_config']"))

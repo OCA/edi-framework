@@ -219,15 +219,13 @@ class EDIExchangeRecord(models.Model):
             return res.decode() if not as_bytes else res
         return self[field_name]
 
-    def name_get(self):
-        result = []
+    @api.depends("identifier", "res_id", "model", "type_id")
+    def _compute_display_name(self):
         for rec in self:
-            rec_name = rec.identifier
-            if rec.res_id and rec.model:
-                rec_name = rec.record.display_name
-            name = f"[{rec.type_id.name}] {rec_name}"
-            result.append((rec.id, name))
-        return result
+            rec_name = (
+                rec.record.display_name if rec.res_id and rec.model else rec.identifier
+            )
+            rec.display_name = f"[{rec.type_id.name}] {rec_name}"
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -439,46 +437,36 @@ class EDIExchangeRecord(models.Model):
         self._trigger_edi_event("done", suffix="ack_received_error")
 
     @api.model
-    def _search(
-        self,
-        args,
-        offset=0,
-        limit=None,
-        order=None,
-        count=False,
-        access_rights_uid=None,
-    ):
-        ids = super()._search(
-            args,
+    def _search(self, domain, offset=0, limit=None, order=None, access_rights_uid=None):
+        query = super()._search(
+            domain=domain,
             offset=offset,
             limit=limit,
             order=order,
-            count=False,
             access_rights_uid=access_rights_uid,
         )
         if self.env.is_system():
             # restrictions do not apply to group "Settings"
-            return len(ids) if count else ids
+            return query
 
         # TODO highlight orphaned EDI records in UI:
         #  - self.model + self.res_id are set
         #  - self.record returns empty recordset
         # Remark: self.record is @property, not field
 
-        if not ids:
-            return 0 if count else []
-        orig_ids = ids
-        ids = set(ids)
+        if query.is_empty():
+            return query
+        orig_ids = list(query)
+        ids = set(orig_ids)
         result = []
-        model_data = defaultdict(
-            lambda: defaultdict(set)
-        )  # {res_model: {res_id: set(ids)}}
+        model_data = defaultdict(lambda: defaultdict(set))
         for sub_ids in self._cr.split_for_in_conditions(ids):
             self._cr.execute(
                 """
-                            SELECT id, res_id, model
-                            FROM "%s"
-                            WHERE id = ANY (%%(ids)s)"""
+                    SELECT id, res_id, model
+                    FROM "%s"
+                    WHERE id = ANY (%%(ids)s)
+                """
                 % self._table,
                 dict(ids=list(sub_ids)),
             )
@@ -510,19 +498,22 @@ class EDIExchangeRecord(models.Model):
             for target_id in allowed:
                 result += list(targets[target_id])
         if len(orig_ids) == limit and len(result) < len(orig_ids):
-            result.extend(
-                self._search(
-                    args,
-                    offset=offset + len(orig_ids),
-                    limit=limit,
-                    order=order,
-                    count=count,
-                    access_rights_uid=access_rights_uid,
-                )[: limit - len(result)]
+            extend_query = self._search(
+                domain,
+                offset=offset + len(orig_ids),
+                limit=limit,
+                order=order,
+                access_rights_uid=access_rights_uid,
             )
+            extend_ids = list(extend_query)
+            result.extend(extend_ids[: limit - len(result)])
+
         # Restore original ordering
         result = [x for x in orig_ids if x in result]
-        return len(result) if count else list(result)
+        if set(orig_ids) != set(result):
+            # Create a virgin query
+            query = self.browse(result)._as_query()
+        return query
 
     def read(self, fields=None, load="_classic_read"):
         """Override to explicitely call check_access_rule, that is not called

@@ -39,27 +39,26 @@
                         name="action_open_related_record"
                         type="object"
                         string="Related record"
-                        attrs="{'invisible': [('related_record_exists', '=', False)]}"
+                        invisible="not related_record_exists"
                         groups="base.group_no_one"
                     />
-                    <!-- FIXME: this `invisible` domain does not work -->
                     <button
                         name="action_open_related_exchanges"
                         type="object"
                         string="Related exchanges"
-                        attrs="{'invisible': [('related_exchange_ids', '=', False)]}"
+                        invisible="not related_exchange_ids"
                     />
                     <button
                         name="action_retry"
                         type="object"
                         string="Retry"
-                        attrs="{'invisible': [('retryable', '=', False)]}"
+                        invisible="not retryable"
                     />
                     <!-- FIXME: colors are ignored...
                     and can't find how they are supposed to work.
                     Probably not supported at all. -->
                     <field
-                        attrs="{'invisible': [('direction', 'in', ('input', False))]}"
+                        invisible="direction in ('input', False)"
                         name="edi_exchange_state"
                         widget="statusbar"
                         statusbar_visible="new,validate_error,output_pending,output_error_on_send,output_sent,output_sent_and_processed,output_sent_and_error"
@@ -73,7 +72,7 @@
                         }'
                     />
                     <field
-                        attrs="{'invisible': [('direction', 'in', ('output', False))]}"
+                        invisible="direction in ('output', False)"
                         name="edi_exchange_state"
                         widget="statusbar"
                         statusbar_visible="new,validate_error,input_pending,input_received,input_receive_error,input_processed,input_processed_error"
@@ -110,16 +109,9 @@
                         <group name="status" string="Status">
                             <field name="exchanged_on" />
                             <field name="exchange_file" filename="exchange_filename" />
-                            <field
-                                name="exchange_filename"
-                                attrs="{'invisible': [('exchange_file', '!=', False)]}"
-                            />
+                            <field name="exchange_filename" invisible="exchange_file" />
                         </group>
-                        <group
-                            name="ack"
-                            string="ACK"
-                            attrs="{'invisible': [('ack_expected', '!=', True)]}"
-                        >
+                        <group name="ack" string="ACK" invisible="not ack_expected">
                             <field name="ack_expected" />
                             <field name="ack_exchange_id" />
                             <field name="ack_received_on" />
@@ -128,44 +120,43 @@
                             name="related_odoo_record"
                             string="Related record"
                             groups="base.group_no_one"
-                            attrs="{'invisible': [('res_id', '=', 0)]}"
+                            invisible="res_id == 0"
                         >
-                          <field name="res_id" />
-                          <field name="model" />
-                          <span
+                            <field name="res_id" />
+                            <field name="model" />
+                            <span
                                 class="text-warning"
-                                attrs="{'invisible': [('related_record_exists', '=', True)]}"
+                                invisible="related_record_exists"
                             >
-                            The related record is not available anymore.
-                            Consider deleting this record too or fixing its relation.
-                          </span>
+                                The related record is not available anymore.
+                                Consider deleting this record too or fixing its relation.
+                            </span>
                         </group>
                     </group>
                     <notebook>
                         <page
                             name="error"
                             string="Error"
-                            attrs="{'invisible': [('exchange_error', '=', False)]}"
+                            invisible="not exchange_error"
                         >
                             <field name="exchange_error" />
                         </page>
-                        <!-- FIXME: this `invisible` domain does not work -->
                         <page
                             name="related_exchanges"
                             string="Related exchanges"
-                            attrs="{'invisible': [('related_exchange_ids', '=', False), ('parent_id', '=', False)]}"
+                            invisible="not related_exchange_ids or not parent_id"
                         >
                             <group name="rel_exchanges">
-                              <field name="parent_id" />
+                                <field name="parent_id" />
                             </group>
                             <field name="related_exchange_ids" nolabel="1" colspan="4">
-                              <tree>
-                                <field name="type_id" />
-                                <field name="identifier" />
-                                <field name="exchanged_on" />
-                                <field name="ack_received_on" />
-                                <field name="edi_exchange_state" />
-                              </tree>
+                                <tree>
+                                    <field name="type_id" />
+                                    <field name="identifier" />
+                                    <field name="exchanged_on" />
+                                    <field name="ack_received_on" />
+                                    <field name="edi_exchange_state" />
+                                </tree>
                             </field>
                         </page>
                     </notebook>
