@@ -207,7 +207,7 @@ class EDIExchangeConsumerMixin(models.AbstractModel):
         self, exchange_type, backend=False, extra_domain=False
     ):
         if isinstance(exchange_type, str):
-            # Backward compat: allow passing the code when this method is called directly
+            # Backward compat: allow passing the code when method is called directly
             type_leaf = [("type_id.code", "=", exchange_type)]
         else:
             type_leaf = [("type_id", "=", exchange_type.id)]

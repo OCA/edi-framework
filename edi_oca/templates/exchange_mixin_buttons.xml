@@ -6,7 +6,7 @@
             class="alert alert-warning"
             role="alert"
             style="margin-bottom:0px;"
-            attrs="{'invisible': [('edi_has_form_config', '=', False)]}"
+            invisible="not edi_has_form_config"
         >
             <div>
                 <span class="pr-4"><i class="fa fa-retweet" /> EDI actions</span>
