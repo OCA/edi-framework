@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates id="template" xml:space="preserve">
+    <div t-name="edi_oca.EdiConfigurationWidget">
+        <t t-foreach="props.value" t-as="rule_id" t-key="rule_index">
+            <t t-set="rule" t-value="props.value[rule_id]" />
+            <t t-if="rule.form">
+                <t t-set="btn" t-value="rule.form.btn" />
+                <button
+                    t-if="btn"
+                    t-on-click="(ev) => this.onClick(ev, rule)"
+                    t-att-title="btn.tooltip"
+                    t-attf-class="o_edi_action btn #{btn.class != null ? btn.class : 'btn-sm btn-secondary'}"
+                >
+                    <t t-esc="btn.label" />
+                </button>
+            </t>
+        </t>
+    </div>
+</templates>
