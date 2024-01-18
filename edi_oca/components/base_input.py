@@ -16,7 +16,6 @@ class EDIBackendInputComponentMixin(AbstractComponent):
 
 
 class EDIBackendReceiveComponentMixin(AbstractComponent):
-
     _name = "edi.component.receive.mixin"
     _inherit = "edi.component.mixin"
 
