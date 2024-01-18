@@ -28,7 +28,6 @@ class EDIBackendSendComponentMixin(AbstractComponent):
 
 
 class EDIBackendCheckComponentMixin(AbstractComponent):
-
     _name = "edi.component.check.mixin"
     _inherit = "edi.component.mixin"
     _usage = "edi.output.check.*"
