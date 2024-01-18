@@ -607,7 +607,10 @@ class EDIBackend(models.Model):
             ("backend_id", "=", self.id),
             ("type_id", "=", exchange_type.id),
         ] + extra_domain or []
-        return self.env["edi.exchange.record"].search(domain, count=count_only)
+        if count_only:
+            return self.env["edi.exchange.record"].search_count(domain)
+        else:
+            return self.env["edi.exchange.record"].search(domain)
 
     def action_view_exchanges(self):
         xmlid = "edi_oca.act_open_edi_exchange_record_view"

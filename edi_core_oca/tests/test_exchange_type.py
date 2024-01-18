@@ -5,6 +5,8 @@
 
 from freezegun import freeze_time
 
+from odoo.tools import mute_logger
+
 from .common import EDIBackendCommonTestCase
 
 
@@ -24,8 +26,9 @@ class EDIExchangeTypeTestCase(EDIBackendCommonTestCase):
         )
 
     def test_same_code_same_backend(self):
-        with self.assertRaises(Exception) as err:
-            self.exchange_type_in.copy({"code": "test_csv_input"})
+        with mute_logger("odoo.sql_db"):
+            with self.assertRaises(Exception) as err:
+                self.exchange_type_in.copy({"code": "test_csv_input"})
         err_msg = err.exception.args[0]
         self.assertTrue(
             err_msg.startswith("duplicate key value violates unique constraint")
