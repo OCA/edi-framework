@@ -131,7 +131,7 @@ class EDIBackend(models.Model):
                 break
         if not component and not safe:
             raise NoComponentError(
-                "No component found matching any of: {}".format(usage_candidates)
+                f"No component found matching any of: {usage_candidates}"
             )
         return component or None
 
