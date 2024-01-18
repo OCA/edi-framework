@@ -4,7 +4,7 @@
         <field name="model">edi.exchange.type.rule</field>
         <field name="arch" type="xml">
             <tree decoration-muted="(not active)">
-                <field name="active" invisible="1" />
+                <field name="active" column_invisible="True" />
                 <field name="type_id" />
                 <field name="model_id" />
                 <field name="name" />
@@ -22,7 +22,7 @@
                         name="web_ribbon"
                         title="Archived"
                         bg_color="bg-danger"
-                        attrs="{'invisible': [('active', '=', True)]}"
+                        invisible="active"
                     />
                     <div class="oe_title">
                         <label for="name" class="oe_edit_only" />
@@ -40,11 +40,7 @@
                             <field name="model" invisible="1" />
                             <field name="kind" />
                         </group>
-                        <group
-                            name="form"
-                            string="Form"
-                            attrs="{'invisible': [('kind', '!=', 'form_btn')]}"
-                        >
+                        <group name="form" string="Form" invisible="kind != 'form_btn'">
                             <field name="form_btn_label" />
                             <field name="form_btn_tooltip" />
                         </group>
