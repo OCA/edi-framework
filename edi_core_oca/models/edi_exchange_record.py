@@ -225,7 +225,7 @@ class EDIExchangeRecord(models.Model):
             rec_name = rec.identifier
             if rec.res_id and rec.model:
                 rec_name = rec.record.display_name
-            name = "[{}] {}".format(rec.type_id.name, rec_name)
+            name = f"[{rec.type_id.name}] {rec_name}"
             result.append((rec.id, name))
         return result
 
@@ -533,7 +533,7 @@ class EDIExchangeRecord(models.Model):
     def check_access_rule(self, operation):
         """In order to check if we can access a record, we are checking if we can access
         the related document"""
-        super(EDIExchangeRecord, self).check_access_rule(operation)
+        super().check_access_rule(operation)
         if self.env.is_superuser():
             return
         default_checker = self.env["edi.exchange.consumer.mixin"].get_edi_access
