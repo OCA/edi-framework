@@ -2,7 +2,8 @@
 # @author: Simone Orsi <simahawk@gmail.com>
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
-import mock
+from unittest import mock
+
 from requests.exceptions import ConnectionError as ReqConnectionError
 
 from odoo.addons.queue_job.exception import RetryableJobError
@@ -14,7 +15,7 @@ from .common import EDIBackendCommonTestCase
 class EDIBackendTestJobsCase(EDIBackendCommonTestCase, JobMixin):
     @classmethod
     def _setup_context(cls):
-        return dict(super()._setup_context(), queue_job__no_delay=None)
+        return dict(super()._setup_context(), test_queue_job_no_delay=None)
 
     def test_output(self):
         job_counter = self.job_counter()

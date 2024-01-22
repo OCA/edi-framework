@@ -44,7 +44,7 @@ class EDIBackendTestOutputCase(EDIBackendCommonComponentRegistryTestCase):
 
     def test_generate_record_output_pdf(self):
         pdf_content = tools.file_open(
-            "result.pdf", subdir="addons/edi_oca/tests", mode="rb"
+            "addons/edi_oca/tests/result.pdf", mode="rb"
         ).read()
         self.record.with_context(fake_output=pdf_content).action_exchange_generate()
 
