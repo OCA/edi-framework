@@ -575,6 +575,11 @@ msgid "Exchange Filename Pattern"
 msgstr "Modèle de nom de fichier Exchange"
 
 #. module: edi_oca
+#: model:ir.model.fields,field_description:edi_oca.field_edi_exchange_type__exchange_filename_sequence_id
+msgid "Exchange Filename Sequence"
+msgstr ""
+
+#. module: edi_oca
 #: model:ir.model.fields,field_description:edi_oca.field_edi_exchange_consumer_mixin__exchange_record_ids
 msgid "Exchange Record"
 msgstr ""
@@ -762,6 +767,22 @@ msgid "Followers (Partners)"
 msgstr ""
 
 #. module: edi_oca
+#: model:ir.model.fields,help:edi_oca.field_edi_exchange_type__exchange_filename_pattern
+msgid ""
+"For output exchange types this should be a formatting string with the "
+"following variables available (to be used between brackets, `{}`): "
+"`exchange_record`, `record_name`, `type`, `dt` and `seq`. For instance, a "
+"valid string would be {record_name}-{type.code}-{dt}-{seq}\n"
+"For more information:\n"
+"- `exchange_record` means exchange record\n"
+"- `record_name` means name of the exchange record\n"
+"- `type` means code of the exchange record type\n"
+"- `dt` means datetime\n"
+"- `seq` means sequence. You need a sequence to be defined in `Exchange "
+"Filename Sequence` to use `seq`\n"
+msgstr ""
+
+#. module: edi_oca
 #: model_terms:ir.ui.view,arch_db:edi_oca.edi_exchange_type_rule_view_form
 msgid "Form"
 msgstr ""
@@ -841,6 +862,13 @@ msgstr ""
 #. module: edi_oca
 #: model:ir.model.fields,help:edi_oca.field_edi_exchange_record__message_has_error
 msgid "If checked, some messages have a delivery error."
+msgstr ""
+
+#. module: edi_oca
+#: model:ir.model.fields,help:edi_oca.field_edi_exchange_type__exchange_filename_sequence_id
+msgid ""
+"If the `Exchange Filename Pattern` has `{seq}`, you should define a sequence "
+"in this field to show the sequence in your filename"
 msgstr ""
 
 #. module: edi_oca
