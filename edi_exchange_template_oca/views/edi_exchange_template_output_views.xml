@@ -32,6 +32,10 @@
                             <field name="output_type" />
                             <field name="generator" />
                             <field
+                                name="prettify"
+                                attrs="{'invisible': [('generator', '!=', 'qweb')]}"
+                            />
+                            <field
                                 name="template_id"
                                 attrs="{'required': [('generator', '=', 'qweb')], 'invisible': [('generator', '!=', 'qweb')]}"
                             />
@@ -132,7 +136,7 @@
     </record>
     <menuitem
         id="menu_edi_exchange_template_root"
-        parent="base_edi.menu_edi_root"
+        parent="edi_oca.menu_edi_config"
         sequence="200"
         action="act_open_edi_exchange_template_output_view"
         name="EDI Exchange Templates"
