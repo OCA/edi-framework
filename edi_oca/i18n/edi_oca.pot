@@ -406,7 +406,6 @@ msgstr ""
 #. module: edi_oca
 #: model:ir.actions.act_window,name:edi_oca.act_open_edi_backend_view
 #: model:ir.model,name:edi_oca.model_edi_backend
-#: model_terms:ir.ui.view,arch_db:edi_oca.edi_backend_view_form
 #: model_terms:ir.ui.view,arch_db:edi_oca.edi_backend_view_search
 msgid "EDI Backend"
 msgstr ""
@@ -449,6 +448,11 @@ msgid "EDI Exchange type rule"
 msgstr ""
 
 #. module: edi_oca
+#: model:ir.model.fields,field_description:edi_oca.field_edi_id_mixin__edi_id
+msgid "EDI ID"
+msgstr ""
+
+#. module: edi_oca
 #: model:ir.model,name:edi_oca.model_edi_id_mixin
 msgid "EDI ID mixin"
 msgstr ""
@@ -483,11 +487,6 @@ msgstr ""
 #. module: edi_oca
 #: model:ir.model.fields,help:edi_oca.field_edi_exchange_consumer_mixin__origin_exchange_record_id
 msgid "EDI record that originated this document."
-msgstr ""
-
-#. module: edi_oca
-#: model:ir.model.fields,field_description:edi_oca.field_edi_id_mixin__edi_id
-msgid "Edi"
 msgstr ""
 
 #. module: edi_oca
@@ -551,6 +550,11 @@ msgid "Exchange File Ext"
 msgstr ""
 
 #. module: edi_oca
+#: model:ir.model.fields,field_description:edi_oca.field_edi_exchange_record__exchange_filechecksum
+msgid "Exchange Filechecksum"
+msgstr ""
+
+#. module: edi_oca
 #: model:ir.model.fields,field_description:edi_oca.field_edi_exchange_record__exchange_filename
 msgid "Exchange Filename"
 msgstr ""
@@ -581,6 +585,13 @@ msgid "Exchange Type"
 msgstr ""
 
 #. module: edi_oca
+#. odoo-python
+#: code:addons/edi_oca/models/edi_exchange_record.py:0
+#, python-format
+msgid "Exchange data generated"
+msgstr ""
+
+#. module: edi_oca
 #: model_terms:ir.ui.view,arch_db:edi_oca.edi_exchange_record_view_search
 msgid "Exchange date"
 msgstr ""
@@ -608,7 +619,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/edi_oca/models/edi_exchange_record.py:0
 #, python-format
-msgid "Exchange processed successfully "
+msgid "Exchange processed successfully"
 msgstr ""
 
 #. module: edi_oca
@@ -622,7 +633,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/edi_oca/models/edi_exchange_record.py:0
 #, python-format
-msgid "Exchange received successfully "
+msgid "Exchange received successfully"
 msgstr ""
 
 #. module: edi_oca
@@ -931,11 +942,15 @@ msgstr ""
 #. module: edi_oca
 #: model:ir.model.fields,field_description:edi_oca.field_edi_exchange_record__model
 #: model:ir.model.fields,field_description:edi_oca.field_edi_exchange_record_create_wiz__model
-#: model:ir.model.fields,field_description:edi_oca.field_edi_exchange_type_rule__model
 #: model:ir.model.fields,field_description:edi_oca.field_edi_exchange_type_rule__model_id
 #: model_terms:ir.ui.view,arch_db:edi_oca.edi_exchange_record_view_search
 #: model_terms:ir.ui.view,arch_db:edi_oca.edi_exchange_type_rule_view_search
 msgid "Model"
+msgstr ""
+
+#. module: edi_oca
+#: model:ir.model.fields,field_description:edi_oca.field_edi_exchange_type_rule__model
+msgid "Model code"
 msgstr ""
 
 #. module: edi_oca
