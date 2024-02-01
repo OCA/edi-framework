@@ -7,6 +7,8 @@ from pathlib import PurePath
 
 from odoo.addons.component.core import Component
 
+from .. import utils
+
 
 class EdiStorageListener(Component):
     _name = "edi.storage.component.listener"
@@ -17,21 +19,24 @@ class EdiStorageListener(Component):
         to_dir = PurePath(to_dir_str)
         # - storage.list_files now includes path in fs_storage, breaking change
         # - we remove path
-        # TODO: clean this up, .list_files is deprecated in fs_storage
-        files = storage.list_files(from_dir.as_posix())
+        files = utils.list_files(storage, from_dir.as_posix())
         files = [os.path.basename(f) for f in files]
         if filename not in files:
             return False
-        # TODO: clean this up, .move_files is deprecated in fs_storage
         self._add_post_commit_hook(
-            storage.move_files, [(from_dir / filename).as_posix()], to_dir.as_posix()
+            utils.move_files,
+            storage,
+            [(from_dir / filename).as_posix()],
+            to_dir.as_posix(),
         )
         return True
 
-    def _add_post_commit_hook(self, move_func, sftp_filepath, sftp_destination_path):
+    def _add_post_commit_hook(
+        self, move_func, storage, sftp_filepath, sftp_destination_path
+    ):
         """Add hook after commit to move the file when transaction is over."""
         self.env.cr.postcommit.add(
-            functools.partial(move_func, sftp_filepath, sftp_destination_path)
+            functools.partial(move_func, storage, sftp_filepath, sftp_destination_path)
         )
 
     def on_edi_exchange_done(self, record):
