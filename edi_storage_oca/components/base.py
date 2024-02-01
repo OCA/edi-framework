@@ -7,6 +7,8 @@ from pathlib import PurePath
 
 from odoo.addons.component.core import AbstractComponent
 
+from .. import utils
+
 _logger = logging.getLogger(__file__)
 
 
@@ -65,8 +67,7 @@ class EDIStorageComponentMixin(AbstractComponent):
             # TODO: support match via pattern (eg: filename-prefix-*)
             # otherwise is impossible to retrieve input files and acks
             # (the date will never match)
-            # TODO: clean this up, .get is deprecated in fs_storage
-            return self.storage.get(path.as_posix(), binary=binary)
+            return utils.get_file(self.storage, path.as_posix(), binary=binary)
         except FileNotFoundError:
             _logger.info(
                 "Ignored FileNotFoundError when trying "
