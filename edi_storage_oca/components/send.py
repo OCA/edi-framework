@@ -2,7 +2,10 @@
 # @author: Simone Orsi <simahawk@gmail.com>
 # License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl).
 
+
 from odoo.addons.component.core import Component
+
+from .. import utils
 
 
 class EDIStorageSendComponent(Component):
@@ -25,8 +28,7 @@ class EDIStorageSendComponent(Component):
             return True
         filedata = self.exchange_record.exchange_file
         path = self._get_remote_file_path("pending")
-        # TODO: clean this up, .add is deprecated in fs_storage
-        self.storage.add(path.as_posix(), filedata, binary=False)
+        utils.add_file(self.storage, path.as_posix(), filedata)
         # TODO: delegate this to generic storage backend
         # except paramiko.ssh_exception.AuthenticationException:
         #     # TODO this exc handling should be moved to sftp backend IMO
