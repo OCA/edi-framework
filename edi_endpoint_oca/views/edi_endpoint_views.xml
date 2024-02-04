@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2021 Camptocamp SA
+     License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl). -->
+<odoo>
+
+    <record model="ir.ui.view" id="edi_endpoint_form_view">
+        <field name="model">edi.endpoint</field>
+        <field name="inherit_id" ref="endpoint.endpoint_endpoint_form_view" />
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <xpath expr="//div[hasclass('alert')]" position="before">
+                <div class="oe_button_box" name="button_box">
+                    <button
+                        type="object"
+                        class="oe_stat_button"
+                        icon="fa-retweet"
+                        name="action_view_edi_records"
+                    >
+                        <div class="o_form_field o_stat_info">
+                            <span class="o_stat_text">Exchanges</span>
+                        </div>
+                    </button>
+                </div>
+            </xpath>
+            <notebook position="before">
+                <separator string="EDI" />
+                <div name="backend">
+                    <label for="backend_type_id" class="oe_edit_only" />
+                    <field name="backend_type_id" class="oe_inline" />
+                </div>
+                <div name="backend_type">
+                    <label for="backend_id" class="oe_edit_only" />
+                    <field name="backend_id" class="oe_inline" required="1" />
+                </div>
+                <div name="exchange_type">
+                    <label for="exchange_type_id" class="oe_edit_only" />
+                    <field name="exchange_type_id" class="oe_inline" required="1" />
+                </div>
+            </notebook>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="edi_endpoint_search_view">
+        <field name="model">edi.endpoint</field>
+        <field name="inherit_id" ref="endpoint.endpoint_endpoint_search_view" />
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <field name="exec_mode" position="after">
+                <field name="backend_id" />
+                <field name="backend_type_id" />
+                <field name="exchange_type_id" />
+                <group expand="0" string="Group By">
+                    <filter
+                        name="group_by_backend_type_id"
+                        string="Backend type"
+                        context="{'group_by': 'backend_type_id'}"
+                    />
+                    <filter
+                        name="group_by_backend_id"
+                        string="Backend"
+                        context="{'group_by': 'backend_id'}"
+                    />
+                    <filter
+                        name="group_by_exchange_type_id"
+                        string="Exchange type"
+                        context="{'group_by': 'exchange_type_id'}"
+                    />
+                </group>
+            </field>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="edi_endpoint_tree_view">
+        <field name="model">edi.endpoint</field>
+        <field name="inherit_id" ref="endpoint.endpoint_endpoint_tree_view" />
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <field name="exec_mode" position="after">
+                <field name="backend_id" />
+                <field name="backend_type_id" />
+                <field name="exchange_type_id" />
+            </field>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="edi_endpoint_act_window">
+        <field name="name">EDI Endpoints</field>
+        <field name="res_model">edi.endpoint</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[]</field>
+        <field name="context">{"search_default_all": 1}</field>
+    </record>
+
+    <record model="ir.ui.menu" id="edi_endpoint_menu">
+        <field name="name">EDI Endpoints</field>
+        <field name="parent_id" ref="edi_oca.menu_edi_config" />
+        <field name="action" ref="edi_endpoint_act_window" />
+        <field name="sequence" eval="100" />
+    </record>
+
+</odoo>
