@@ -19,6 +19,11 @@ msgid "Disable auto"
 msgstr ""
 
 #. module: edi_product_multi_barcode_oca
+#: model:ir.model.fields,field_description:edi_product_multi_barcode_oca.field_product_barcode__origin_edi_endpoint_id
+msgid "EDI origin endpoint"
+msgstr ""
+
+#. module: edi_product_multi_barcode_oca
 #: model:ir.model.fields,field_description:edi_product_multi_barcode_oca.field_product_barcode__origin_exchange_type_id
 msgid "EDI origin exchange type"
 msgstr ""
@@ -56,6 +61,11 @@ msgstr ""
 #. module: edi_product_multi_barcode_oca
 #: model:ir.model,name:edi_product_multi_barcode_oca.model_product_barcode
 msgid "Individual item in a product's barcode list"
+msgstr ""
+
+#. module: edi_product_multi_barcode_oca
+#: model:ir.model.fields,help:edi_product_multi_barcode_oca.field_product_barcode__origin_edi_endpoint_id
+msgid "Record generated via this endpoint"
 msgstr ""
 
 #. module: edi_product_multi_barcode_oca
