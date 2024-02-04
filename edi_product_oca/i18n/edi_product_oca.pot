@@ -27,6 +27,13 @@ msgid "EDI"
 msgstr ""
 
 #. module: edi_product_oca
+#: model:ir.model.fields,field_description:edi_product_oca.field_product_packaging__origin_edi_endpoint_id
+#: model:ir.model.fields,field_description:edi_product_oca.field_product_product__origin_edi_endpoint_id
+#: model:ir.model.fields,field_description:edi_product_oca.field_product_template__origin_edi_endpoint_id
+msgid "EDI origin endpoint"
+msgstr ""
+
+#. module: edi_product_oca
 #: model:ir.model.fields,field_description:edi_product_oca.field_product_packaging__origin_exchange_type_id
 #: model:ir.model.fields,field_description:edi_product_oca.field_product_product__origin_exchange_type_id
 #: model:ir.model.fields,field_description:edi_product_oca.field_product_template__origin_exchange_type_id
@@ -88,6 +95,13 @@ msgstr ""
 #. module: edi_product_oca
 #: model:ir.model,name:edi_product_oca.model_product_product
 msgid "Product Variant"
+msgstr ""
+
+#. module: edi_product_oca
+#: model:ir.model.fields,help:edi_product_oca.field_product_packaging__origin_edi_endpoint_id
+#: model:ir.model.fields,help:edi_product_oca.field_product_product__origin_edi_endpoint_id
+#: model:ir.model.fields,help:edi_product_oca.field_product_template__origin_edi_endpoint_id
+msgid "Record generated via this endpoint"
 msgstr ""
 
 #. module: edi_product_oca
