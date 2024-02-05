@@ -327,6 +327,7 @@ msgid "Code"
 msgstr "Code"
 
 #. module: edi_oca
+#: model:ir.model.fields,field_description:edi_oca.field_edi_backend__company_id
 #: model:ir.model.fields,field_description:edi_oca.field_edi_exchange_record__company_id
 msgid "Company"
 msgstr ""
