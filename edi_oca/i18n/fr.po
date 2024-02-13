@@ -383,6 +383,11 @@ msgid "Custom"
 msgstr ""
 
 #. module: edi_oca
+#: model:ir.model.fields,field_description:edi_oca.field_edi_exchange_type__encoding_in_error_handler
+msgid "Decoding Error Handler"
+msgstr ""
+
+#. module: edi_oca
 #: model:ir.model.fields,field_description:edi_oca.field_edi_exchange_record__direction
 #: model:ir.model.fields,field_description:edi_oca.field_edi_exchange_type__direction
 msgid "Direction"
@@ -527,6 +532,23 @@ msgstr "Activation sur l'extrait"
 #. module: edi_oca
 #: model:ir.model.fields,field_description:edi_oca.field_edi_exchange_type__partner_ids
 msgid "Enabled for partners"
+msgstr ""
+
+#. module: edi_oca
+#: model:ir.model.fields,field_description:edi_oca.field_edi_exchange_type__encoding
+msgid "Encoding"
+msgstr ""
+
+#. module: edi_oca
+#: model:ir.model.fields,field_description:edi_oca.field_edi_exchange_type__encoding_out_error_handler
+msgid "Encoding Error Handler"
+msgstr ""
+
+#. module: edi_oca
+#: model:ir.model.fields,help:edi_oca.field_edi_exchange_type__encoding
+msgid ""
+"Encoding to be applied to generate/process the exchanged file.\n"
+"Example: UTF-8, Windows-1252, ASCII...(default is always 'UTF-8')"
 msgstr ""
 
 #. module: edi_oca
@@ -829,6 +851,18 @@ msgid "Group By"
 msgstr "Grouper par"
 
 #. module: edi_oca
+#: model:ir.model.fields,help:edi_oca.field_edi_exchange_type__encoding_in_error_handler
+msgid ""
+"Handling of decoding errors on process (default is always 'Raise Error')."
+msgstr ""
+
+#. module: edi_oca
+#: model:ir.model.fields,help:edi_oca.field_edi_exchange_type__encoding_out_error_handler
+msgid ""
+"Handling of encoding errors on generate (default is always 'Raise Error')."
+msgstr ""
+
+#. module: edi_oca
 #: model:ir.model.fields,field_description:edi_oca.field_edi_exchange_record__has_message
 #, fuzzy
 msgid "Has Message"
@@ -877,6 +911,12 @@ msgstr ""
 msgid ""
 "If the `Exchange Filename Pattern` has `{seq}`, you should define a sequence "
 "in this field to show the sequence in your filename"
+msgstr ""
+
+#. module: edi_oca
+#: model:ir.model.fields.selection,name:edi_oca.selection__edi_exchange_type__encoding_in_error_handler__ignore
+#: model:ir.model.fields.selection,name:edi_oca.selection__edi_exchange_type__encoding_out_error_handler__ignore
+msgid "Ignore"
 msgstr ""
 
 #. module: edi_oca
@@ -1058,6 +1098,12 @@ msgid "Quick execution"
 msgstr ""
 
 #. module: edi_oca
+#: model:ir.model.fields.selection,name:edi_oca.selection__edi_exchange_type__encoding_in_error_handler__strict
+#: model:ir.model.fields.selection,name:edi_oca.selection__edi_exchange_type__encoding_out_error_handler__strict
+msgid "Raise Error"
+msgstr ""
+
+#. module: edi_oca
 #: model:ir.model.fields.selection,name:edi_oca.selection__edi_exchange_record__edi_exchange_state__input_received
 msgid "Received"
 msgstr "Reçu"
@@ -1128,6 +1174,29 @@ msgstr ""
 #. module: edi_oca
 #: model:ir.model.fields,field_description:edi_oca.field_edi_exchange_record__related_exchange_ids
 msgid "Related records"
+msgstr ""
+
+#. module: edi_oca
+#: model:ir.model.fields.selection,name:edi_oca.selection__edi_exchange_type__encoding_in_error_handler__surrogateescape
+#: model:ir.model.fields.selection,name:edi_oca.selection__edi_exchange_type__encoding_out_error_handler__surrogateescape
+msgid "Replace Byte with Individual Surrogate Code"
+msgstr ""
+
+#. module: edi_oca
+#: model:ir.model.fields.selection,name:edi_oca.selection__edi_exchange_type__encoding_in_error_handler__backslashreplace
+#: model:ir.model.fields.selection,name:edi_oca.selection__edi_exchange_type__encoding_out_error_handler__backslashreplace
+msgid "Replace with Backslashed Escape Sequences"
+msgstr ""
+
+#. module: edi_oca
+#: model:ir.model.fields.selection,name:edi_oca.selection__edi_exchange_type__encoding_in_error_handler__replace
+#: model:ir.model.fields.selection,name:edi_oca.selection__edi_exchange_type__encoding_out_error_handler__replace
+msgid "Replace with Replacement Marker"
+msgstr ""
+
+#. module: edi_oca
+#: model:ir.model.fields.selection,name:edi_oca.selection__edi_exchange_type__encoding_out_error_handler__xmlcharrefreplace
+msgid "Replace with XML/HTML Numeric Character Reference"
 msgstr ""
 
 #. module: edi_oca
