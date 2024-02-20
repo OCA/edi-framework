@@ -9,11 +9,11 @@ import mock
 
 from odoo import exceptions
 
-from odoo.addons.component.tests.common import SavepointComponentCase
+from odoo.addons.component.tests.common import TransactionComponentCase
 from odoo.addons.edi_oca.tests.common import EDIBackendTestMixin
 
 
-class TestProcessComponent(SavepointComponentCase, EDIBackendTestMixin):
+class TestProcessComponent(TransactionComponentCase, EDIBackendTestMixin):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
