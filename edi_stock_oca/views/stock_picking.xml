@@ -8,6 +8,10 @@
         <field name="model">stock.picking</field>
         <field name="inherit_id" ref="stock.view_picking_form" />
         <field name="arch" type="xml">
+            <xpath expr="//header" position="before">
+               <field name="edi_config" invisible="1" />
+               <field name="edi_has_form_config" invisible="1" />
+            </xpath>
             <page name="extra" position="after">
                 <page name="edi" string="EDI">
                     <group name="edi_stock_group" string="Electronic Data Interchange">
