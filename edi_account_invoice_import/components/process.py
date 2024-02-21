@@ -9,7 +9,7 @@ from odoo.exceptions import UserError
 from odoo.addons.component.core import Component
 
 
-class EDIExchangeSOInput(Component):
+class EDIExchangeInvoiceInput(Component):
     """Process Invoices (journal entries)."""
 
     _name = "edi.input.account.invoice.process"
