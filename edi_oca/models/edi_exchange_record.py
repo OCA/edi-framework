@@ -70,6 +70,7 @@ class EDIExchangeRecord(models.Model):
         selection=[
             # Common states
             ("new", "New"),
+            ("obsolete", "Obsolete"),
             ("validate_error", "Error on validation"),
             # output exchange states
             ("output_pending", "Waiting to be sent"),
@@ -113,6 +114,10 @@ class EDIExchangeRecord(models.Model):
         compute="_compute_retryable",
         help="The record state can be rolled back manually in case of failure.",
     )
+    is_obsolete = fields.Boolean(
+        default=False,
+        compute="_compute_is_obsolete",
+    )
     company_id = fields.Many2one("res.company", string="Company")
 
     _sql_constraints = [
@@ -155,7 +160,7 @@ class EDIExchangeRecord(models.Model):
     @api.constrains("edi_exchange_state")
     def _constrain_edi_exchange_state(self):
         for rec in self:
-            if rec.edi_exchange_state in ("new", "validate_error"):
+            if rec.edi_exchange_state in ("new", "obsolete", "validate_error"):
                 continue
             if not rec.edi_exchange_state.startswith(rec.direction):
                 raise exceptions.ValidationError(
@@ -603,3 +608,26 @@ class EDIExchangeRecord(models.Model):
 
     def _job_retry_params(self):
         return {}
+
+    def _compute_is_obsolete(self):
+        for rec in self:
+            rec.is_obsolete = (
+                rec.type_id.deduplicate_on_send and rec.has_fresher_duplicates()
+            )
+
+    def get_fresher_duplicates(self, count=None):
+        self.ensure_one()
+        fresher_duplicates = self.search(
+            [
+                ("id", ">", self.id),
+                ("res_id", "=", self.res_id),
+                ("model", "=", self.model),
+                ("type_id", "=", self.type_id.id),
+                ("exchange_file", "!=", False),
+            ],
+            count=count,
+        )
+        return fresher_duplicates
+
+    def has_fresher_duplicates(self):
+        return bool(self.get_fresher_duplicates(count=True))

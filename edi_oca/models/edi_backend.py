@@ -284,6 +284,10 @@ class EDIBackend(models.Model):
         check = self._output_check_send(exchange_record)
         if not check:
             return "Nothing to do. Likely already sent."
+        # In case obsolete: skip sending
+        is_obsolete = self._check_obsolete(exchange_record)
+        if is_obsolete:
+            return "Nothing to do. Likely obsolete."
         state = exchange_record.edi_exchange_state
         error = False
         message = None
@@ -670,3 +674,43 @@ class EDIBackend(models.Model):
             if raise_if_not:
                 raise
             return False
+
+    def _check_obsolete(self, exchange_record):
+        res = False
+        if exchange_record.is_obsolete:
+            exchange_record.write({"edi_exchange_state": "obsolete"})
+            res = True
+        return res
+
+    def _cron_delete_obsolete_records(self, **kw):
+        for backend in self:
+            backend._delete_obsolete_records(**kw)
+
+    def _delete_obsolete_records(self, record_ids=None, **kw):
+        """Cleanup obsolete records.
+
+        Go through types with `delete_obsolete_records` flag on
+        and delete their obsolete records if any.
+        """
+        obsolete_records = self.exchange_record_model.search(
+            self._obsolete_records_domain(record_ids=record_ids)
+        )
+        _logger.info(
+            "EDI Exchange delete records: found %d obsolete records to delete.",
+            len(obsolete_records),
+        )
+        if obsolete_records:
+            obsolete_records.unlink()
+
+    def _obsolete_records_domain(self, record_ids=None):
+        """Domain for obsolete records need to delete."""
+        domain = [
+            ("backend_id", "=", self.id),
+            ("type_id.direction", "=", "output"),
+            ("type_id.delete_obsolete_records", "=", True),
+            ("edi_exchange_state", "=", "obsolete"),
+            ("exchange_file", "!=", False),
+        ]
+        if record_ids:
+            domain.append(("id", "in", record_ids))
+        return domain
