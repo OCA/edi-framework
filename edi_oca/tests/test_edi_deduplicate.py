@@ -85,3 +85,31 @@ class EDIDeduplicateTestCase(EDIBackendCommonComponentRegistryTestCase):
         for record in self.records:
             self.assertEqual(record.edi_exchange_state, "obsolete")
         self.assertEqual(self.record4.edi_exchange_state, "output_sent")
+
+    def test_block_obsolescence(self):
+        # Create new record
+        self.record5 = self.backend.create_record(
+            "test_csv_output",
+            {
+                "model": self.partner._name,
+                "res_id": self.partner.id,
+            },
+        )
+        self.record4.write(
+            {
+                "block_obsolescence": True,
+            }
+        )
+        self.exchange_type_out.write(
+            {
+                "deduplicate_on_send": True,
+            }
+        )
+        self.backend._check_output_exchange_sync()
+        # Normally, record4 has been "obsolete"
+        # But with block_obsolescence = True, it will be "output_sent" too
+        self.records = self.records - self.record4 - self.record5
+        for record in self.records:
+            self.assertEqual(record.edi_exchange_state, "obsolete")
+        self.assertEqual(self.record4.edi_exchange_state, "output_sent")
+        self.assertEqual(self.record5.edi_exchange_state, "output_sent")
