@@ -48,7 +48,12 @@ class EDIBackendTestCase(EDIBackendCommonComponentRegistryTestCase):
 
     def test_01_process_record_success(self):
         with self._mock_listener_move_file():
-            self.record.write({"edi_exchange_state": "input_received"})
+            self.record.write(
+                {
+                    "edi_exchange_state": "input_received",
+                    "storage_id": self.backend.storage_id.id,
+                }
+            )
             self.record.action_exchange_process()
             storage, from_dir_str, to_dir_str, filename = self.fake_move_args
             self.assertEqual(storage, self.backend.storage_id)
@@ -58,7 +63,12 @@ class EDIBackendTestCase(EDIBackendCommonComponentRegistryTestCase):
 
     def test_02_process_record_with_error(self):
         with self._mock_listener_move_file():
-            self.record.write({"edi_exchange_state": "input_received"})
+            self.record.write(
+                {
+                    "edi_exchange_state": "input_received",
+                    "storage_id": self.backend.storage_id.id,
+                }
+            )
             self.record._set_file_content("TEST %d" % self.record.id)
             self.record.with_context(
                 test_break_process="OOPS! Something went wrong :("
