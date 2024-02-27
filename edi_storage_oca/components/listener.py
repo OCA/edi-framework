@@ -55,6 +55,12 @@ class EdiStorageListener(Component):
             ).as_posix()
             if not done_dir:
                 return res
+            if record.edi_endpoint_id:
+                file_name = str(record.exchange_filename).replace("/", "")
+                path = done_dir + "/" + file_name
+                storage.add(
+                    path, record.exchange_file, mimetype="text/plain", binary=False
+                )
             res = self._move_file(storage, pending_dir, done_dir, file)
             if not res:
                 # If a file previously failed it should have been previously
