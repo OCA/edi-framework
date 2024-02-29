@@ -35,7 +35,7 @@ addon | version | maintainers | summary
 [edi_sale_oca](edi_sale_oca/) | 16.0.1.2.0 | [![simahawk](https://github.com/simahawk.png?size=30px)](https://github.com/simahawk) | Configuration and special behaviors for EDI on sales.
 [edi_state_oca](edi_state_oca/) | 16.0.1.0.0 | [![simahawk](https://github.com/simahawk.png?size=30px)](https://github.com/simahawk) | Allow to assign specific EDI states to related records.
 [edi_stock_oca](edi_stock_oca/) | 16.0.1.1.0 |  | Define EDI Configuration for Stock
-[edi_storage_oca](edi_storage_oca/) | 16.0.1.0.1 |  | Base module to allow exchanging files via storage backend (eg: SFTP).
+[edi_storage_oca](edi_storage_oca/) | 16.0.1.1.0 |  | Base module to allow exchanging files via storage backend (eg: SFTP).
 [edi_ubl_oca](edi_ubl_oca/) | 16.0.1.0.0 | [![simahawk](https://github.com/simahawk.png?size=30px)](https://github.com/simahawk) | Define EDI backend type for UBL.
 [edi_webservice_oca](edi_webservice_oca/) | 16.0.1.0.0 |  | Defines webservice integration from EDI Exchange records
 [edi_xml_oca](edi_xml_oca/) | 16.0.1.0.0 | [![simahawk](https://github.com/simahawk.png?size=30px)](https://github.com/simahawk) | Base module for EDI exchange using XML files.
