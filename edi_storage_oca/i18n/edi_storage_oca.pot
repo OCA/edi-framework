@@ -30,12 +30,18 @@ msgid "EDI backend storage check pending input"
 msgstr ""
 
 #. module: edi_storage_oca
+#: model:ir.model,name:edi_storage_oca.model_edi_exchange_record
+msgid "EDI exchange Record"
+msgstr ""
+
+#. module: edi_storage_oca
 #: model:ir.model.fields,field_description:edi_storage_oca.field_edi_exchange_type__exchange_filename_pattern
 msgid "Exchange Filename Pattern"
 msgstr ""
 
 #. module: edi_storage_oca
 #: model:ir.model.fields,field_description:edi_storage_oca.field_edi_backend__storage_id
+#: model:ir.model.fields,field_description:edi_storage_oca.field_edi_exchange_record__storage_id
 msgid "FS Storage"
 msgstr ""
 
@@ -92,6 +98,11 @@ msgstr ""
 #: model:ir.model.fields,help:edi_storage_oca.field_edi_backend__input_dir_pending
 #: model:ir.model.fields,help:edi_storage_oca.field_edi_backend__output_dir_pending
 msgid "Path to folder for pending operations"
+msgstr ""
+
+#. module: edi_storage_oca
+#: model:ir.model.fields,help:edi_storage_oca.field_edi_exchange_record__storage_id
+msgid "Record created from a file found in this FS storage"
 msgstr ""
 
 #. module: edi_storage_oca
