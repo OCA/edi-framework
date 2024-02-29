@@ -40,7 +40,7 @@ class EdiStorageListener(Component):
         )
 
     def on_edi_exchange_done(self, record):
-        storage = record.backend_id.storage_id
+        storage = record.storage_id
         res = False
         if record.direction == "input" and storage:
             file = record.exchange_filename
@@ -64,7 +64,7 @@ class EdiStorageListener(Component):
         return res
 
     def on_edi_exchange_error(self, record):
-        storage = record.backend_id.storage_id
+        storage = record.storage_id
         res = False
         if record.direction == "input" and storage:
             file = record.exchange_filename
