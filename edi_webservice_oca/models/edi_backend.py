@@ -5,7 +5,6 @@ from odoo import fields, models
 
 
 class EdiBackend(models.Model):
-
     _inherit = "edi.backend"
 
     webservice_backend_id = fields.Many2one("webservice.backend")
@@ -15,7 +14,7 @@ class EdiBackend(models.Model):
         candidates = super()._get_component_usage_candidates(exchange_record, key)
         if not self.webservice_backend_id or key not in self._webservice_actions:
             return candidates
-        return ["webservice.{}".format(key)] + candidates
+        return [f"webservice.{key}"] + candidates
 
     def _component_match_attrs(self, exchange_record, key):
         # Override to inject `webservice_protocol` as match attribute
