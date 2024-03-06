@@ -1,0 +1,4 @@
+responses
+odoo-test-helper
+odoo-addon-edi_oca @ git+https://github.com/OCA/edi-framework.git@refs/pull/47/head#subdirectory=edi_oca
+odoo-addon-webservice @ git+https://github.com/OCA/web-api.git@refs/pull/34/head#subdirectory=webservice
