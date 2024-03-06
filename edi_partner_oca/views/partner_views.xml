@@ -6,6 +6,8 @@
         <field name="inherit_id" ref="edi_oca.view_partner_form" />
         <field name="arch" type="xml">
             <group name="edi_main" position="inside">
+                <field name="edi_config" invisible="1" />
+                <field name="edi_has_form_config" invisible="1" />
                 <field name="edi_disable_auto" />
             </group>
             <div name="button_box" position="inside">
