@@ -3,6 +3,10 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 import base64
 
+from requests import PreparedRequest, Session
+
+from odoo.tests.common import _super_send
+
 from odoo.addons.edi_oca.tests.common import EDIBackendCommonComponentTestCase
 
 
@@ -22,3 +26,11 @@ class TestEDIWebserviceBase(EDIBackendCommonComponentTestCase):
         }
         cls.record = cls.backend.create_record("test_csv_output", vals)
         return result
+
+    @classmethod
+    def _request_handler(cls, s: Session, r: PreparedRequest, /, **kw):
+        if r.url.startswith("http://localhost.demo.odoo") or r.url.startswith(
+            "https://foo.test"
+        ):
+            return _super_send(s, r, **kw)
+        return super()._request_handler(s, r, **kw)
