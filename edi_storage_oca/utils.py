@@ -26,7 +26,7 @@ def find_files(storage, pattern, relative_path="", **kw) -> list[str]:
     if not fs.exists(relative_path):
         return []
     regex = re.compile(pattern)
-    for file_path in fs.ls(relative_path, detail=False):
+    for file_path in fs.ls(relative_path):
         # fs.ls returns a relative path
         if regex.match(os.path.basename(file_path)):
             result.append(file_path)
