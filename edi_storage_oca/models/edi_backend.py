@@ -152,9 +152,9 @@ class EDIBackend(models.Model):
         if not exchange_type.exchange_filename_pattern:
             # If there is not pattern, return everything
             filenames = [
-                x
+                x["name"]
                 for x in utils.list_files(self.storage_id, full_input_dir_pending)
-                if x.strip("/")
+                if x["name"].strip("/")
             ]
             return filenames
 
