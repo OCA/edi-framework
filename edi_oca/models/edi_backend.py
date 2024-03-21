@@ -706,10 +706,8 @@ class EDIBackend(models.Model):
         """Domain for obsolete records need to delete."""
         domain = [
             ("backend_id", "=", self.id),
-            ("type_id.direction", "=", "output"),
             ("type_id.delete_obsolete_records", "=", True),
             ("edi_exchange_state", "=", "obsolete"),
-            ("exchange_file", "!=", False),
         ]
         if record_ids:
             domain.append(("id", "in", record_ids))
