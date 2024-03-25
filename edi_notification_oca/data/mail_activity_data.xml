@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo noupdate="1">
+        <record
+        id="mail_activity_failed_exchange_record_warning"
+        model="mail.activity.type"
+    >
+            <field name="name">EDI Exchange Record: Failed</field>
+            <field name="icon">fa-warning</field>
+            <field name="res_model">edi.exchange.record</field>
+            <field name="decoration_type">warning</field>
+        </record>
+</odoo>
