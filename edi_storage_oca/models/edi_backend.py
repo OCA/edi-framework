@@ -73,7 +73,7 @@ class EDIBackend(models.Model):
         res = super()._component_match_attrs(exchange_record, key)
         if not self.storage_id or key not in self._storage_actions:
             return res
-        res["storage_type"] = self.storage_id.protocol
+        res["storage_type"] = self.sudo().storage_id.protocol
         return res
 
     def _component_sort_key(self, component_class):
