@@ -20,7 +20,7 @@ class EdiStorageListener(Component):
         # - storage.list_files now includes path in fs_storage, breaking change
         # - we remove path
         files = utils.list_files(storage, from_dir.as_posix())
-        files = [os.path.basename(f) for f in files]
+        files = [os.path.basename(f["name"]) for f in files]
         if filename not in files:
             return False
         self._add_post_commit_hook(
