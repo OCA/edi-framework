@@ -10,6 +10,7 @@
             <!-- TODO: Move this conf inside `edi` page from edi_oca. -->
             <group name="accounting_entries" position="after">
                 <group name="edi_configuration" string="EDI Configuration" />
+                    <field name="edi_account_move_out_exchange_type_id" />
             </group>
         </field>
     </record>
