@@ -154,7 +154,9 @@ class EDIExchangeTypeTestCase(EDIBackendCommonTestCase):
             }
         )
         exc_type.active = False
-        rule1.invalidate_recordset()
-        rule2.invalidate_recordset()
         self.assertFalse(rule1.active)
         self.assertFalse(rule2.active)
+        # Enable the type
+        exc_type.active = True
+        self.assertTrue(rule1.active)
+        self.assertTrue(rule2.active)

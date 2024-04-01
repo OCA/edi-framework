@@ -2,7 +2,7 @@
 # @author Simone Orsi <simahawk@gmail.com>
 # License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl).
 
-from odoo import fields, models
+from odoo import api, fields, models
 
 KIND_HELP = """
 * Form button: show a button on the related model form
@@ -20,7 +20,9 @@ class EDIExchangeTypeRule(models.Model):
     _name = "edi.exchange.type.rule"
     _description = "EDI Exchange type rule"
 
-    active = fields.Boolean(default=True)
+    active = fields.Boolean(
+        default=True, compute="_compute_active", store=True, readonly=False
+    )
     name = fields.Char(required=True)
     type_id = fields.Many2one(
         comodel_name="edi.exchange.type",
@@ -60,3 +62,8 @@ class EDIExchangeTypeRule(models.Model):
         translate=True,
         help="Help message visible as tooltip on button h-over",
     )
+
+    @api.depends("type_id.active")
+    def _compute_active(self):
+        for rec in self:
+            rec.active = rec.type_id.active
