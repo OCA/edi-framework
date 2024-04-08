@@ -5,6 +5,10 @@
         <field name="model">product.template</field>
         <field name="inherit_id" ref="product.product_template_form_view" />
         <field name="arch" type="xml">
+            <xpath expr="//header" position="before">
+                <field name="edi_config" invisible="1" />
+                <field name="edi_has_form_config" invisible="1" />
+            </xpath>
 
             <page name="inventory" position="after">
                 <page name="edi" string="EDI">
