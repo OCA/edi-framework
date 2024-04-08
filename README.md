@@ -29,7 +29,7 @@ addon | version | maintainers | summary
 [edi_partner_oca](edi_partner_oca/) | 16.0.1.0.1 |  | EDI framework configuration and base logic for partners
 [edi_party_data_oca](edi_party_data_oca/) | 16.0.1.0.0 | [![simahawk](https://github.com/simahawk.png?size=30px)](https://github.com/simahawk) | Allow to configure and retrieve party information for EDI exchanges.
 [edi_product_multi_barcode_oca](edi_product_multi_barcode_oca/) | 16.0.1.0.0 |  | EDI framework configuration and base logic for product barcodes.
-[edi_product_oca](edi_product_oca/) | 16.0.1.1.0 |  | EDI framework configuration and base logic for products and products packaging
+[edi_product_oca](edi_product_oca/) | 16.0.1.1.1 |  | EDI framework configuration and base logic for products and products packaging
 [edi_record_metadata_oca](edi_record_metadata_oca/) | 16.0.1.0.0 | [![simahawk](https://github.com/simahawk.png?size=30px)](https://github.com/simahawk) | Allow to store metadata for related records.
 [edi_sale_edifact_oca](edi_sale_edifact_oca/) | 16.0.1.1.0 |  | Provide a demo exchange type setting and common tests for EDIFACT standard in EDI on sales.
 [edi_sale_oca](edi_sale_oca/) | 16.0.1.2.0 | [![simahawk](https://github.com/simahawk.png?size=30px)](https://github.com/simahawk) | Configuration and special behaviors for EDI on sales.

@@ -5,7 +5,7 @@
     "name": "EDI Product",
     "summary": """
        EDI framework configuration and base logic for products and products packaging""",
-    "version": "16.0.1.1.0",
+    "version": "16.0.1.1.1",
     "license": "AGPL-3",
     "author": "ForgeFlow, Odoo Community Association (OCA)",
     "website": "https://github.com/OCA/edi-framework",
