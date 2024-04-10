@@ -149,6 +149,10 @@ class EDIBackend(models.Model):
         full_input_dir_pending = exchange_type._storage_fullpath(
             self.input_dir_pending
         ).as_posix()
+        if not full_input_dir_pending.endswith("/"):
+            # When looking for files into a folder ensure it has a trailing slash
+            # otherwise the fs won't find any file.
+            full_input_dir_pending += "/"
         if not exchange_type.exchange_filename_pattern:
             # If there is not pattern, return everything
             filenames = [
