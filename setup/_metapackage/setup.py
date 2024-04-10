@@ -9,6 +9,7 @@ setuptools.setup(
     version=version,
     install_requires=[
         'odoo-addon-edi_account_oca>=16.0dev,<16.1dev',
+        'odoo-addon-edi_backend_partner_oca>=16.0dev,<16.1dev',
         'odoo-addon-edi_edifact_oca>=16.0dev,<16.1dev',
         'odoo-addon-edi_endpoint_oca>=16.0dev,<16.1dev',
         'odoo-addon-edi_exchange_template_oca>=16.0dev,<16.1dev',
