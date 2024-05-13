@@ -6,38 +6,40 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"Last-Translator: Automatically generated\n"
+"PO-Revision-Date: 2024-05-13 12:34+0000\n"
+"Last-Translator: mymage <stefano.consolaro@mymage.it>\n"
 "Language-Team: none\n"
 "Language: it\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 4.17\n"
 
 #. module: edi_backend_partner_oca
 #: model:ir.model,name:edi_backend_partner_oca.model_res_partner
 msgid "Contact"
-msgstr ""
+msgstr "Contatto"
 
 #. module: edi_backend_partner_oca
 #: model:ir.model,name:edi_backend_partner_oca.model_edi_backend
 #: model_terms:ir.ui.view,arch_db:edi_backend_partner_oca.view_partner_form
 msgid "EDI Backend"
-msgstr ""
+msgstr "Backend EDI"
 
 #. module: edi_backend_partner_oca
 #: model:ir.model.fields,field_description:edi_backend_partner_oca.field_res_partner__edi_backend_ids
 #: model:ir.model.fields,field_description:edi_backend_partner_oca.field_res_users__edi_backend_ids
 msgid "Edi Backend"
-msgstr ""
+msgstr "Backend EDI"
 
 #. module: edi_backend_partner_oca
 #: model:ir.model.fields,field_description:edi_backend_partner_oca.field_res_partner__edi_backend_count
 #: model:ir.model.fields,field_description:edi_backend_partner_oca.field_res_users__edi_backend_count
 msgid "Edi Backend Count"
-msgstr ""
+msgstr "Conteggio backend EDI"
 
 #. module: edi_backend_partner_oca
 #: model:ir.model.fields,field_description:edi_backend_partner_oca.field_edi_backend__partner_id
 msgid "Partner"
-msgstr ""
+msgstr "Partner"
