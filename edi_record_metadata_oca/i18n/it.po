@@ -6,41 +6,43 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"Last-Translator: Automatically generated\n"
+"PO-Revision-Date: 2024-05-29 08:30+0000\n"
+"Last-Translator: mymage <stefano.consolaro@mymage.it>\n"
 "Language-Team: none\n"
 "Language: it\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 4.17\n"
 
 #. module: edi_record_metadata_oca
 #: model:ir.model,name:edi_record_metadata_oca.model_edi_exchange_consumer_mixin
 msgid "Abstract record where exchange records can be assigned"
-msgstr ""
+msgstr "Record astratto dove i recod di scambio possono essere assegnati"
 
 #. module: edi_record_metadata_oca
 #: model:ir.model,name:edi_record_metadata_oca.model_edi_exchange_record
 msgid "EDI exchange Record"
-msgstr ""
+msgstr "Scambio record EDI"
 
 #. module: edi_record_metadata_oca
 #: model:ir.model.fields,help:edi_record_metadata_oca.field_edi_exchange_record__metadata_display
 msgid "Enable debug mode to be able to inspect data."
-msgstr ""
+msgstr "Abilitare la modalità debug per poter ispezionare i dati."
 
 #. module: edi_record_metadata_oca
 #: model:ir.model.fields,help:edi_record_metadata_oca.field_edi_exchange_record__metadata
 msgid "JSON-like metadata used for technical purposes."
-msgstr ""
+msgstr "Metadati simili a JSON utilizzati per motivi tecnici."
 
 #. module: edi_record_metadata_oca
 #: model:ir.model.fields,field_description:edi_record_metadata_oca.field_edi_exchange_record__metadata
 #: model_terms:ir.ui.view,arch_db:edi_record_metadata_oca.edi_exchange_record_view_form
 msgid "Metadata"
-msgstr ""
+msgstr "Metadati"
 
 #. module: edi_record_metadata_oca
 #: model:ir.model.fields,field_description:edi_record_metadata_oca.field_edi_exchange_record__metadata_display
 msgid "Metadata Display"
-msgstr ""
+msgstr "Metadata visualizzati"
