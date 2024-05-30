@@ -221,6 +221,11 @@ msgid "All"
 msgstr ""
 
 #. module: edi_oca
+#: model:ir.model.fields,field_description:edi_oca.field_edi_exchange_type__allow_empty_files_on_receive
+msgid "Allow Empty Files"
+msgstr ""
+
+#. module: edi_oca
 #. odoo-python
 #: code:addons/edi_oca/models/edi_exchange_record.py:0
 #, python-format
@@ -518,6 +523,13 @@ msgstr ""
 #. module: edi_oca
 #: model:ir.model.fields,field_description:edi_oca.field_edi_exchange_consumer_mixin__edi_has_form_config
 msgid "Edi Has Form Config"
+msgstr ""
+
+#. module: edi_oca
+#. odoo-python
+#: code:addons/edi_oca/models/edi_backend.py:0
+#, python-format
+msgid "Empty files are not allowed for this exchange type"
 msgstr ""
 
 #. module: edi_oca
