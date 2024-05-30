@@ -1205,6 +1205,7 @@ msgid "Res"
 msgstr ""
 
 #. module: edi_oca
+#: model:ir.actions.server,name:edi_oca.action_retry_edi_exchange_record
 #: model_terms:ir.ui.view,arch_db:edi_oca.edi_exchange_record_view_form
 msgid "Retry"
 msgstr ""
