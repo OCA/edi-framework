@@ -54,6 +54,12 @@
                         string="Retry"
                         invisible="not retryable"
                     />
+                    <button
+                        name="action_regenerate"
+                        type="object"
+                        string="Regenerate"
+                        invisible="direction in ('input', False) or edi_exchange_state != 'validate_error'"
+                    />
                     <!-- FIXME: colors are ignored...
                     and can't find how they are supposed to work.
                     Probably not supported at all. -->
