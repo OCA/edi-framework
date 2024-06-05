@@ -31,6 +31,9 @@ class EDIEndpoint(models.Model):
         comodel_name="edi.exchange.type",
         domain="[('backend_type_id','=', backend_type_id)]",
     )
+    company_id = fields.Many2one(
+        "res.company", string="Company", related="backend_id.company_id", store=True
+    )
 
     # TODO: add unit tests
 
