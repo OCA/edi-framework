@@ -16,6 +16,7 @@
     "data": [
         "data/server_action.xml",
         "security/ir.model.access.csv",
+        "security/ir_rule.xml",
         "views/edi_backend_views.xml",
         "views/edi_endpoint_views.xml",
         "views/edi_exchange_record_views.xml",
