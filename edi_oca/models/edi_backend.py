@@ -539,7 +539,6 @@ class EDIBackend(models.Model):
         content = None
         try:
             content = self._exchange_receive(exchange_record)
-            # Ignore result of FileNotFoundError/OSError
             if content is not None:
                 exchange_record._set_file_content(content)
                 self._validate_data(exchange_record)

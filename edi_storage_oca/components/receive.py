@@ -14,4 +14,4 @@ class EDIStorageReceiveComponent(Component):
     _usage = "storage.receive"
 
     def receive(self):
-        return self._get_remote_file("pending", binary=True)
+        return self._get_remote_file("pending", binary=True, raise_if_not_found=True)
