@@ -8,10 +8,7 @@ class AccountMove(models.Model):
     _name = "account.move"
     _inherit = ["account.move", "edi.exchange.consumer.mixin"]
 
-    edi_disable_auto = fields.Boolean(
-        readonly=True,
-        states={"draft": [("readonly", False)]},
-    )
+    edi_disable_auto = fields.Boolean()
 
     def _post(self, soft=True):
         result = super()._post(soft=soft)
