@@ -15,7 +15,7 @@
     <record id="edi_exchange_template_output_view_form" model="ir.ui.view">
         <field name="model">edi.exchange.template.output</field>
         <field name="arch" type="xml">
-            <form string="EDI Exchange Template Output">
+            <form>
                 <sheet>
                     <div class="oe_title">
                         <label for="name" class="oe_edit_only" />
@@ -31,25 +31,20 @@
                             <field name="code" />
                             <field name="output_type" />
                             <field name="generator" />
-                            <field
-                                name="prettify"
-                                attrs="{'invisible': [('generator', '!=', 'qweb')]}"
-                            />
+                            <field name="prettify" invisible="generator != 'qweb'" />
                             <field
                                 name="template_id"
-                                attrs="{'required': [('generator', '=', 'qweb')], 'invisible': [('generator', '!=', 'qweb')]}"
+                                required="generator == 'qweb'"
+                                invisible="generator != 'qweb'"
                             />
                             <field
                                 name="report_id"
-                                attrs="{'required': [('generator', '=', 'report')], 'invisible': [('generator', '!=', 'report')]}"
+                                required="generator == 'report'"
+                                invisible="generator != 'report'"
                             />
                         </group>
                     </group>
-                    <group
-                        name="template_edit"
-                        col="4"
-                        attrs="{'invisible': [('generator', '!=', 'qweb')]}"
-                    >
+                    <group name="template_edit" col="4" invisible="generator != 'qweb'">
                         <separator string="Template" colspan="4" />
                         <field name="template_key" colspan="4" />
                         <field

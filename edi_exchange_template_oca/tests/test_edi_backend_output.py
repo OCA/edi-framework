@@ -1,6 +1,8 @@
 # Copyright 2020 ACSONE SA/NV (<http://acsone.eu>)
 # License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl.html).
+import datetime
 
+from freezegun import freeze_time
 from lxml import etree
 
 from odoo.addons.edi_oca.tests.common import EDIBackendCommonComponentTestCase
@@ -35,6 +37,7 @@ class TestEDIBackendOutputBase(EDIBackendCommonComponentTestCase):
                 "name": "Out 1",
                 "backend_type_id": cls.backend.backend_type_id.id,
                 "type_id": cls.type_out1.id,
+                "generator": "qweb",
                 "template_id": qweb_tmpl.id,
                 "output_type": "txt",
             }
@@ -75,6 +78,7 @@ class TestEDIBackendOutputBase(EDIBackendCommonComponentTestCase):
                 "name": "Out 2",
                 "backend_type_id": cls.backend.backend_type_id.id,
                 "type_id": cls.type_out2.id,
+                "generator": "qweb",
                 "template_id": qweb_tmpl.id,
                 "output_type": "xml",
                 "code_snippet": """
@@ -137,12 +141,11 @@ class TestEDIBackendOutput(TestEDIBackendOutputBase):
         )
 
     def test_generate_file(self):
-        output = self.backend.exchange_generate(self.record1)
+        self.backend.exchange_generate(self.record1)
         expected = f"{self.partner.ref} - {self.partner.name}"
-        self.assertEqual(output, "Exchange data generated")
         file_content = self.record1._get_file_content()
         self.assertEqual(file_content.strip(), expected)
-        output = self.backend.exchange_generate(self.record2)
+        self.backend.exchange_generate(self.record2)
         file_content = self.record2._get_file_content()
         doc = etree.fromstring(file_content)
         self.assertEqual(doc.tag, "Record")
@@ -164,8 +167,7 @@ class TestEDIBackendOutput(TestEDIBackendOutputBase):
         self.assertEqual(output, b"<root>\n  <a>1</a>\n</root>\n")
 
     def test_generate_file_report(self):
-        output = self.backend.exchange_generate(self.record3)
-        self.assertEqual(output, "Exchange data generated")
+        self.backend.exchange_generate(self.record3)
         file_content = self.record3._get_file_content()
         self.assertEqual(
             self.report._render(self.report, [self.record3.res_id])[0]
@@ -173,3 +175,28 @@ class TestEDIBackendOutput(TestEDIBackendOutputBase):
             .decode("UTF-8"),
             file_content.strip(),
         )
+
+    def test_date_to_string(self):
+        dt = datetime.date(2024, 9, 10)
+        no_dt = ""
+        converted_dt_utc = self.tmpl_out1._date_to_string(dt)
+        converted_dt_non_utc = self.tmpl_out1._date_to_string(dt, False)
+        converted_no_dt = self.tmpl_out1._date_to_string(no_dt)
+        self.assertEqual(converted_dt_utc, "2024-09-10")
+        self.assertEqual(converted_dt_non_utc, "2024-09-10")
+        self.assertEqual(converted_no_dt, "")
+
+    def test_datetime_to_string(self):
+        dt = datetime.datetime(2024, 9, 10, 11, 5, 49)
+        no_dt = ""
+        converted_dt_utc = self.tmpl_out1._datetime_to_string(dt)
+        converted_dt_non_utc = self.tmpl_out1._datetime_to_string(dt, False)
+        converted_no_dt = self.tmpl_out1._datetime_to_string(no_dt)
+        self.assertEqual(converted_dt_utc, "2024-09-10 00:00:00")
+        self.assertEqual(converted_dt_non_utc, "2024-09-10 11:05:49")
+        self.assertEqual(converted_no_dt, "")
+
+    @freeze_time("2024-07-27 10:00:00")
+    def test_utc_now(self):
+        utc_now_output = self.tmpl_out1._utc_now()
+        self.assertEqual(utc_now_output, "2024-07-27T10:00:00")
