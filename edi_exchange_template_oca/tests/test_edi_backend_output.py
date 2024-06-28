@@ -138,7 +138,7 @@ class TestEDIBackendOutput(TestEDIBackendOutputBase):
 
     def test_generate_file(self):
         output = self.backend.exchange_generate(self.record1)
-        expected = "{0.ref} - {0.name}".format(self.partner)
+        expected = f"{self.partner.ref} - {self.partner.name}"
         self.assertEqual(output, "Exchange data generated")
         file_content = self.record1._get_file_content()
         self.assertEqual(file_content.strip(), expected)
