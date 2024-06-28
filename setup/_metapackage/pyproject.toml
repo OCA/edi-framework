@@ -1,0 +1,11 @@
+[project]
+name = "odoo-addons-oca-edi-framework"
+version = "17.0.20240628.0"
+dependencies = [
+    "odoo-addon-edi_oca>=17.0dev,<17.1dev",
+]
+classifiers=[
+    "Programming Language :: Python",
+    "Framework :: Odoo",
+    "Framework :: Odoo :: 17.0",
+]
