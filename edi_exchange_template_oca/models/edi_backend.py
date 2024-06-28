@@ -12,7 +12,7 @@ class EDIBackend(models.Model):
         # Template take precedence over component lookup
         tmpl = self._get_output_template(exchange_record)
         if tmpl:
-            # FIXME: env_ctx is not propagated here because we bypass components completly.
+            # FIXME: env_ctx is not propagated here as we bypass components completely.
             # It would be better to move this machinery inside a `generate` component.
             exchange_record = exchange_record.with_context(
                 edi_framework_action="generate"
