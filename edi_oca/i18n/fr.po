@@ -83,12 +83,12 @@ msgstr ""
 #. module: edi_oca
 #: model_terms:ir.ui.view,arch_db:edi_oca.edi_exchange_record_view_form
 msgid ""
-"<span class=\"text-warning\" attrs=\"{'invisible': "
-"[('related_record_exists', '=', True)]}\">\n"
-"                            The related record is not available anymore.\n"
-"                            Consider deleting this record too or fixing its "
-"relation.\n"
-"                          </span>"
+"<span class=\"text-warning\" invisible=\"related_record_exists\">\n"
+"                                The related record is not available "
+"anymore.\n"
+"                                Consider deleting this record too or fixing "
+"its relation.\n"
+"                            </span>"
 msgstr ""
 
 #. module: edi_oca
@@ -474,13 +474,11 @@ msgstr ""
 
 #. module: edi_oca
 #: model:ir.actions.server,name:edi_oca.cron_edi_backend_check_input_exchange_ir_actions_server
-#: model:ir.cron,cron_name:edi_oca.cron_edi_backend_check_input_exchange
 msgid "EDI exchange check input sync"
 msgstr ""
 
 #. module: edi_oca
 #: model:ir.actions.server,name:edi_oca.cron_edi_backend_check_output_exchange_ir_actions_server
-#: model:ir.cron,cron_name:edi_oca.cron_edi_backend_check_output_exchange
 msgid "EDI exchange check output sync"
 msgstr ""
 
@@ -840,6 +838,7 @@ msgstr ""
 
 #. module: edi_oca
 #: model:ir.model.fields,help:edi_oca.field_edi_exchange_record__message_has_error
+#: model:ir.model.fields,help:edi_oca.field_edi_exchange_record__message_has_sms_error
 msgid "If checked, some messages have a delivery error."
 msgstr ""
 
@@ -877,16 +876,6 @@ msgid "Kind"
 msgstr ""
 
 #. module: edi_oca
-#: model:ir.model.fields,field_description:edi_oca.field_edi_backend____last_update
-#: model:ir.model.fields,field_description:edi_oca.field_edi_backend_type____last_update
-#: model:ir.model.fields,field_description:edi_oca.field_edi_exchange_record____last_update
-#: model:ir.model.fields,field_description:edi_oca.field_edi_exchange_record_create_wiz____last_update
-#: model:ir.model.fields,field_description:edi_oca.field_edi_exchange_type____last_update
-#: model:ir.model.fields,field_description:edi_oca.field_edi_exchange_type_rule____last_update
-msgid "Last Modified on"
-msgstr "Dernière modification le"
-
-#. module: edi_oca
 #: model:ir.model.fields,field_description:edi_oca.field_edi_backend__write_uid
 #: model:ir.model.fields,field_description:edi_oca.field_edi_backend_type__write_uid
 #: model:ir.model.fields,field_description:edi_oca.field_edi_exchange_record__write_uid
@@ -905,11 +894,6 @@ msgstr "Dernière mise à jour par"
 #: model:ir.model.fields,field_description:edi_oca.field_edi_exchange_type_rule__write_date
 msgid "Last Updated on"
 msgstr "Dernière mise à jour le"
-
-#. module: edi_oca
-#: model:ir.model.fields,field_description:edi_oca.field_edi_exchange_record__message_main_attachment_id
-msgid "Main Attachment"
-msgstr "Pièce jointe principale"
 
 #. module: edi_oca
 #: model:ir.model.fields,field_description:edi_oca.field_edi_exchange_record__message_has_error
@@ -1116,6 +1100,11 @@ msgid "Rules to handle exchanges and UI automatically"
 msgstr ""
 
 #. module: edi_oca
+#: model:ir.model.fields,field_description:edi_oca.field_edi_exchange_record__message_has_sms_error
+msgid "SMS Delivery error"
+msgstr ""
+
+#. module: edi_oca
 #: model:ir.model.fields.selection,name:edi_oca.selection__edi_exchange_record__edi_exchange_state__output_sent
 msgid "Sent"
 msgstr "Envoyé"
@@ -1217,16 +1206,6 @@ msgid "Waiting to be sent"
 msgstr ""
 
 #. module: edi_oca
-#: model:ir.model.fields,field_description:edi_oca.field_edi_exchange_record__website_message_ids
-msgid "Website Messages"
-msgstr ""
-
-#. module: edi_oca
-#: model:ir.model.fields,help:edi_oca.field_edi_exchange_record__website_message_ids
-msgid "Website communication history"
-msgstr ""
-
-#. module: edi_oca
 #: model:ir.model.fields,help:edi_oca.field_edi_exchange_type__quick_exec
 msgid ""
 "When active, records of this type will be processed immediately without "
@@ -1249,6 +1228,12 @@ msgstr ""
 #: model:ir.model.fields.selection,name:edi_oca.selection__edi_exchange_record__edi_exchange_state__output_error_on_send
 msgid "error on send"
 msgstr ""
+
+#~ msgid "Last Modified on"
+#~ msgstr "Dernière modification le"
+
+#~ msgid "Main Attachment"
+#~ msgstr "Pièce jointe principale"
 
 #, fuzzy
 #~ msgid "Exchange Error"
