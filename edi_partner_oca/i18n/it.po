@@ -6,75 +6,77 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"Last-Translator: Automatically generated\n"
+"PO-Revision-Date: 2024-07-18 09:58+0000\n"
+"Last-Translator: mymage <stefano.consolaro@mymage.it>\n"
 "Language-Team: none\n"
 "Language: it\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 5.6.2\n"
 
 #. module: edi_partner_oca
 #: model:ir.model,name:edi_partner_oca.model_res_partner
 msgid "Contact"
-msgstr ""
+msgstr "Contatto"
 
 #. module: edi_partner_oca
 #: model:ir.model.fields,field_description:edi_partner_oca.field_res_partner__edi_disable_auto
 msgid "Disable auto"
-msgstr ""
+msgstr "Disabilita automatico"
 
 #. module: edi_partner_oca
 #: model_terms:ir.ui.view,arch_db:edi_partner_oca.view_partner_form
 msgid "EDI"
-msgstr ""
+msgstr "EDI"
 
 #. module: edi_partner_oca
 #: model:ir.model.fields,field_description:edi_partner_oca.field_res_partner__origin_edi_endpoint_id
 msgid "EDI origin endpoint"
-msgstr ""
+msgstr "Endpoint origine EDI"
 
 #. module: edi_partner_oca
 #: model:ir.model.fields,field_description:edi_partner_oca.field_res_partner__origin_exchange_type_id
 msgid "EDI origin exchange type"
-msgstr ""
+msgstr "Tipo scambio origine EDI"
 
 #. module: edi_partner_oca
 #: model:ir.model.fields,field_description:edi_partner_oca.field_res_partner__origin_exchange_record_id
 msgid "EDI origin record"
-msgstr ""
+msgstr "Record origine EDI"
 
 #. module: edi_partner_oca
 #: model:ir.model.fields,help:edi_partner_oca.field_res_partner__origin_exchange_record_id
 msgid "EDI record that originated this document."
-msgstr ""
+msgstr "Record EDI che ha generato questo documento."
 
 #. module: edi_partner_oca
 #: model:ir.model.fields,field_description:edi_partner_oca.field_res_partner__edi_config
 msgid "Edi Config"
-msgstr ""
+msgstr "Configurazione EDI"
 
 #. module: edi_partner_oca
 #: model:ir.model.fields,field_description:edi_partner_oca.field_res_partner__edi_has_form_config
 msgid "Edi Has Form Config"
-msgstr ""
+msgstr "EDI ha una maschera di configurazione"
 
 #. module: edi_partner_oca
 #: model:ir.model.fields,field_description:edi_partner_oca.field_res_partner__exchange_record_ids
 msgid "Exchange Record"
-msgstr ""
+msgstr "Record scambio"
 
 #. module: edi_partner_oca
 #: model:ir.model.fields,field_description:edi_partner_oca.field_res_partner__exchange_record_count
 msgid "Exchange Record Count"
-msgstr ""
+msgstr "Conteggio record scambio"
 
 #. module: edi_partner_oca
 #: model:ir.model.fields,help:edi_partner_oca.field_res_partner__origin_edi_endpoint_id
 msgid "Record generated via this endpoint"
-msgstr ""
+msgstr "Record generato attraverso questo endpoint"
 
 #. module: edi_partner_oca
 #: model:ir.model.fields,help:edi_partner_oca.field_res_partner__edi_disable_auto
 msgid "When marked, EDI automatic processing will be avoided"
-msgstr ""
+msgstr "Quando selezionata, l'elaborazione EDI automatica verrà evitata"
