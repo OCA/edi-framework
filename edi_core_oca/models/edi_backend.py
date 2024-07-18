@@ -439,13 +439,8 @@ class EDIBackend(models.Model):
             "EDI Exchange output sync: found %d new records to process.",
             len(new_records),
         )
-        for rec in new_records:
-            job1 = rec.delayable().action_exchange_generate()
-            if not skip_send:
-                # Chain send job.
-                # Raise prio to max to send the record out as fast as possible.
-                job1.on_done(rec.delayable(priority=0).action_exchange_send())
-            job1.delay()
+        if new_records:
+            self.exchange_generate_send(new_records, skip_send=skip_send)
 
         if skip_send:
             return
