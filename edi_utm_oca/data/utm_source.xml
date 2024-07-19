@@ -1,0 +1,5 @@
+<odoo noupdate="1">
+  <record id="utm_source_edi" model="utm.source">
+    <field name="name">EDI</field>
+  </record>
+</odoo>
