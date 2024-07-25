@@ -14,6 +14,7 @@ setuptools.setup(
         'odoo-addon-edi_endpoint_oca>=16.0dev,<16.1dev',
         'odoo-addon-edi_exchange_deduplicate_oca>=16.0dev,<16.1dev',
         'odoo-addon-edi_exchange_template_oca>=16.0dev,<16.1dev',
+        'odoo-addon-edi_notification_oca>=16.0dev,<16.1dev',
         'odoo-addon-edi_oca>=16.0dev,<16.1dev',
         'odoo-addon-edi_partner_oca>=16.0dev,<16.1dev',
         'odoo-addon-edi_party_data_oca>=16.0dev,<16.1dev',
