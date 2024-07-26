@@ -328,6 +328,42 @@ class EDIExchangeRecord(models.Model):
         self.ensure_one()
         return self.backend_id.exchange_receive(self)
 
+    def action_exchange_send_on_max_retries_reached(self):
+        self.ensure_one()
+        self.write(
+            {
+                "edi_exchange_state": "output_error_on_send",
+                "exchange_error": self.env.context.get("exc_info", "Error on Send"),
+                "exchanged_on": fields.Datetime.now(),
+            }
+        )
+        self._notify_error("send_ko")
+        return None
+
+    def action_exchange_process_on_max_retries_reached(self):
+        self.ensure_one()
+        self.write(
+            {
+                "edi_exchange_state": "input_processed_error",
+                "exchange_error": self.env.context.get("exc_info", "Error on Process"),
+                "exchanged_on": fields.Datetime.now(),
+            }
+        )
+        self._notify_error("process_ko")
+        return None
+
+    def action_exchange_receive_on_max_retries_reached(self):
+        self.ensure_one()
+        self.write(
+            {
+                "edi_exchange_state": "input_receive_error",
+                "exchange_error": self.env.context.get("exc_info", "Error on Receive"),
+                "exchanged_on": fields.Datetime.now(),
+            }
+        )
+        self._notify_error("receive_ko")
+        return None
+
     def exchange_create_ack_record(self, **kw):
         return self.exchange_create_child_record(
             exc_type=self.type_id.ack_type_id, **kw

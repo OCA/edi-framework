@@ -6,7 +6,7 @@ from unittest import mock
 
 from requests.exceptions import ConnectionError as ReqConnectionError
 
-from odoo.addons.queue_job.exception import RetryableJobError
+from odoo.addons.queue_job.exception import FailedJobError, RetryableJobError
 from odoo.addons.queue_job.tests.common import JobMixin
 
 from .common import EDIBackendCommonTestCase
@@ -66,6 +66,31 @@ class EDIBackendTestJobsCase(EDIBackendCommonTestCase, JobMixin):
             with self.assertRaises(RetryableJobError):
                 job.perform()
 
+    def test_output_failed_record_on_max_retries_reached(self):
+        job_counter = self.job_counter()
+        vals = {
+            "model": self.partner._name,
+            "res_id": self.partner.id,
+            "edi_exchange_state": "output_pending",
+        }
+        record = self.backend.create_record("test_csv_output", vals)
+        record._set_file_content("ABC")
+        job = record.with_delay().action_exchange_send()
+        job_counter.search_created()
+        with mock.patch.object(type(self.backend), "_exchange_send") as mocked_1:
+            mocked_1.side_effect = ReqConnectionError("Connection broken")
+            job.exc_info = "Traceback of error:......"
+            job.max_retries = 1
+            # Job will be failed
+            with self.assertRaises(FailedJobError):
+                job.perform()
+            # But we want to check the record
+            try:
+                job.perform()
+            except FailedJobError:
+                self.assertEqual(record.edi_exchange_state, "output_error_on_send")
+                self.assertEqual(record.exchange_error, job.exc_info)
+
     def test_input(self):
         job_counter = self.job_counter()
         vals = {
@@ -116,3 +141,46 @@ class EDIBackendTestJobsCase(EDIBackendCommonTestCase, JobMixin):
         new_created = job_counter.search_created() - created
         # Should not create new job
         self.assertEqual(len(new_created), 0)
+
+    def test_input_failed_record_on_max_retries_reached(self):
+        # Test with receive exchange
+        job_counter = self.job_counter()
+        vals = {
+            "model": self.partner._name,
+            "res_id": self.partner.id,
+            "edi_exchange_state": "input_pending",
+        }
+        record = self.backend.create_record("test_csv_input", vals)
+        job = record.with_delay().action_exchange_receive()
+        job_counter.search_created()
+        with mock.patch.object(type(self.backend), "_exchange_receive") as mocked_1:
+            mocked_1.side_effect = ReqConnectionError("Connection broken")
+            job.exc_info = "Traceback of error:......receive error"
+            job.max_retries = 1
+            # Job will be failed
+            with self.assertRaises(FailedJobError):
+                job.perform()
+            # But we want to check the record
+            try:
+                job.perform()
+            except FailedJobError:
+                self.assertEqual(record.edi_exchange_state, "input_receive_error")
+                self.assertEqual(record.exchange_error, job.exc_info)
+        # Test with process exchange
+        record.edi_exchange_state = "input_received"
+        record._set_file_content("ABC")
+        job = record.with_delay().action_exchange_process()
+        job_counter.search_created()
+        with mock.patch.object(type(self.backend), "_exchange_process") as mocked_1:
+            mocked_1.side_effect = ReqConnectionError("Connection broken")
+            job.exc_info = "Traceback of error:......process error"
+            job.max_retries = 1
+            # Job will be failed
+            with self.assertRaises(FailedJobError):
+                job.perform()
+            # But we want to check the record
+            try:
+                job.perform()
+            except FailedJobError:
+                self.assertEqual(record.edi_exchange_state, "input_processed_error")
+                self.assertEqual(record.exchange_error, job.exc_info)

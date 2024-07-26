@@ -348,11 +348,20 @@ class EDIBackend(models.Model):
             exceptions.ValidationError,
         )
 
-    def _send_retryable_exceptions(self):
+    def _common_retryable_exceptions(self):
         # IOError is a base class for all connection errors
         # OSError is a base class for all errors
         # when dealing w/ internal or external systems or filesystems
         return (IOError, OSError)
+
+    def _receive_retryable_exceptions(self):
+        return self._common_retryable_exceptions()
+
+    def _process_retryable_exceptions(self):
+        return self._common_retryable_exceptions()
+
+    def _send_retryable_exceptions(self):
+        return self._common_retryable_exceptions()
 
     def _output_check_send(self, exchange_record):
         if exchange_record.direction != "output":
@@ -496,6 +505,14 @@ class EDIBackend(models.Model):
             error = _get_exception_msg()
             state = "input_processed_error"
             res = f"Error: {error}"
+        except self._process_retryable_exceptions() as err:
+            error = _get_exception_msg()
+            _logger.debug(
+                "%s process failed. To be retried.", exchange_record.identifier
+            )
+            raise RetryableJobError(
+                error, **exchange_record._job_retry_params()
+            ) from err
         else:
             error = None
             state = "input_processed"
@@ -554,6 +571,14 @@ class EDIBackend(models.Model):
             state = "input_receive_error"
             message = exchange_record._exchange_status_message("receive_ko")
             res = f"Input error: {error}"
+        except self._receive_retryable_exceptions() as err:
+            error = _get_exception_msg()
+            _logger.debug(
+                "%s receive failed. To be retried.", exchange_record.identifier
+            )
+            raise RetryableJobError(
+                error, **exchange_record._job_retry_params()
+            ) from err
         else:
             message = exchange_record._exchange_status_message("receive_ok")
             error = None
