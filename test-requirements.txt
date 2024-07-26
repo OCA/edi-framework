@@ -1,3 +1,4 @@
 odoo_test_helper
 responses
 xmlunittest
+odoo-addon-queue_job @ git+https://github.com/OCA/queue.git@refs/pull/674/head#subdirectory=setup/queue_job
