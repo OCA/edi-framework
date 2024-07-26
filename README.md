@@ -24,7 +24,7 @@ addon | version | maintainers | summary
 [edi_account_oca](edi_account_oca/) | 16.0.1.1.0 | [![etobella](https://github.com/etobella.png?size=30px)](https://github.com/etobella) | Define EDI Configuration for Account Moves
 [edi_backend_partner_oca](edi_backend_partner_oca/) | 16.0.1.0.0 | [![LoisRForgeFlow](https://github.com/LoisRForgeFlow.png?size=30px)](https://github.com/LoisRForgeFlow) | Add the a partner field to EDI backend
 [edi_edifact_oca](edi_edifact_oca/) | 16.0.1.0.0 | [![simahawk](https://github.com/simahawk.png?size=30px)](https://github.com/simahawk) | Define EDI backend type for EDIFACT.
-[edi_endpoint_oca](edi_endpoint_oca/) | 16.0.1.0.0 |  | Base module allowing configuration of custom endpoints for EDI framework.
+[edi_endpoint_oca](edi_endpoint_oca/) | 16.0.1.0.1 |  | Base module allowing configuration of custom endpoints for EDI framework.
 [edi_exchange_deduplicate_oca](edi_exchange_deduplicate_oca/) | 16.0.1.1.0 | [![simahawk](https://github.com/simahawk.png?size=30px)](https://github.com/simahawk) [![etobella](https://github.com/etobella.png?size=30px)](https://github.com/etobella) | Introduce a deduplication mechanism at the sending step
 [edi_exchange_template_oca](edi_exchange_template_oca/) | 16.0.1.1.1 | [![simahawk](https://github.com/simahawk.png?size=30px)](https://github.com/simahawk) | Allows definition of exchanges via templates.
 [edi_notification_oca](edi_notification_oca/) | 16.0.1.0.0 |  | Define notification activities on exchange records.
