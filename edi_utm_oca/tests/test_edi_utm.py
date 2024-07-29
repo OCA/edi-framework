@@ -25,6 +25,11 @@ class TestEDIUtm(EDIBackendCommonTestCase):
             cls.exchange_type_in.code, {"edi_exchange_state": "input_received"}
         )
 
+    @classmethod
+    def tearDownClass(cls):
+        cls.loader.restore_registry()
+        super().tearDownClass()
+
     def test_edi_update_source(self):
         consumer_record = self.consumer_model.create(
             {
