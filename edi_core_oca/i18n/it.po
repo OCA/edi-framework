@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-07-18 09:58+0000\n"
+"PO-Revision-Date: 2024-07-29 08:58+0000\n"
 "Last-Translator: mymage <stefano.consolaro@mymage.it>\n"
 "Language-Team: none\n"
 "Language: it\n"
@@ -493,7 +493,7 @@ msgstr "Tipo backend EDI"
 #: model_terms:ir.ui.view,arch_db:edi_oca.edi_exchange_record_view_form
 #: model_terms:ir.ui.view,arch_db:edi_oca.edi_exchange_record_view_search
 msgid "EDI Exchange Record"
-msgstr "Record scambio EDI"
+msgstr "Record di scambio EDI"
 
 #. module: edi_oca
 #: model:ir.actions.act_window,name:edi_oca.act_open_edi_exchange_type_view
@@ -521,7 +521,7 @@ msgstr "Mixin ID EDI"
 #. module: edi_oca
 #: model:ir.model,name:edi_oca.model_edi_exchange_record
 msgid "EDI exchange Record"
-msgstr "Record scambio EDI"
+msgstr "Record di scambio EDI"
 
 #. module: edi_oca
 #: model:ir.actions.server,name:edi_oca.cron_edi_backend_check_input_exchange_ir_actions_server
@@ -626,12 +626,12 @@ msgstr "Schema nome file scambio"
 #. module: edi_oca
 #: model:ir.model.fields,field_description:edi_oca.field_edi_exchange_consumer_mixin__exchange_record_ids
 msgid "Exchange Record"
-msgstr "Record scambio"
+msgstr "Record di scambio"
 
 #. module: edi_oca
 #: model:ir.model.fields,field_description:edi_oca.field_edi_exchange_consumer_mixin__exchange_record_count
 msgid "Exchange Record Count"
-msgstr "Conteggio record scambio"
+msgstr "Conteggio record di scambio"
 
 #. module: edi_oca
 #: model:ir.model.fields,field_description:edi_oca.field_edi_exchange_record_create_wiz__exchange_type_id
@@ -840,7 +840,7 @@ msgstr "Genera"
 #: model:ir.actions.act_window,name:edi_oca.edi_exchange_record_create_act_window
 #: model_terms:ir.ui.view,arch_db:edi_oca.edi_exchange_record_create_form_view
 msgid "Generate Exchange Record"
-msgstr "Genera record scambio"
+msgstr "Genera record di scambio"
 
 #. module: edi_oca
 #: model_terms:ir.ui.view,arch_db:edi_oca.edi_exchange_record_view_search
@@ -1104,7 +1104,7 @@ msgstr "Record ID=%d non è previsto che sia inviato!"
 #. module: edi_oca
 #: model_terms:ir.ui.view,arch_db:edi_oca.edi_exchange_record_view_form
 msgid "Regenerate"
-msgstr ""
+msgstr "Rigenera"
 
 #. module: edi_oca
 #: model:ir.model.fields,field_description:edi_oca.field_edi_exchange_record__related_name
@@ -1266,12 +1266,12 @@ msgstr "In attesa di essere inviato"
 #. module: edi_oca
 #: model:ir.model.fields,field_description:edi_oca.field_edi_exchange_record__website_message_ids
 msgid "Website Messages"
-msgstr ""
+msgstr "Messaggi sito web"
 
 #. module: edi_oca
 #: model:ir.model.fields,help:edi_oca.field_edi_exchange_record__website_message_ids
 msgid "Website communication history"
-msgstr ""
+msgstr "Cronologia comunicazioni sito web"
 
 #. module: edi_oca
 #: model:ir.model.fields,help:edi_oca.field_edi_exchange_type__quick_exec
