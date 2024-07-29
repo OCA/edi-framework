@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-07-18 09:58+0000\n"
+"PO-Revision-Date: 2024-07-29 08:58+0000\n"
 "Last-Translator: mymage <stefano.consolaro@mymage.it>\n"
 "Language-Team: none\n"
 "Language: it\n"
@@ -35,7 +35,7 @@ msgstr "Controllo ingressi in attesa deposito backend EDI"
 #. module: edi_storage_oca
 #: model:ir.model,name:edi_storage_oca.model_edi_exchange_record
 msgid "EDI exchange Record"
-msgstr "Record scambio EDI"
+msgstr "Record di scambio EDI"
 
 #. module: edi_storage_oca
 #: model:ir.model.fields,field_description:edi_storage_oca.field_edi_exchange_type__exchange_filename_pattern
