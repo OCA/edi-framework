@@ -6,192 +6,194 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"Last-Translator: Automatically generated\n"
+"PO-Revision-Date: 2024-07-30 08:58+0000\n"
+"Last-Translator: mymage <stefano.consolaro@mymage.it>\n"
 "Language-Team: none\n"
 "Language: it\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 5.6.2\n"
 
 #. module: edi_exchange_template_oca
 #: model:ir.model.fields,field_description:edi_exchange_template_oca.field_edi_exchange_template_mixin__backend_id
 #: model:ir.model.fields,field_description:edi_exchange_template_oca.field_edi_exchange_template_output__backend_id
 #: model_terms:ir.ui.view,arch_db:edi_exchange_template_oca.edi_exchange_template_output_view_search
 msgid "Backend"
-msgstr ""
+msgstr "Backend"
 
 #. module: edi_exchange_template_oca
 #: model_terms:ir.ui.view,arch_db:edi_exchange_template_oca.edi_exchange_template_output_view_search
 msgid "Backend type"
-msgstr ""
+msgstr "Tipo backend"
 
 #. module: edi_exchange_template_oca
 #: model:ir.model.fields,field_description:edi_exchange_template_oca.field_edi_exchange_template_mixin__code
 #: model:ir.model.fields,field_description:edi_exchange_template_oca.field_edi_exchange_template_output__code
 msgid "Code"
-msgstr ""
+msgstr "Codice"
 
 #. module: edi_exchange_template_oca
 #: model:ir.model.fields,field_description:edi_exchange_template_oca.field_edi_exchange_template_mixin__code_snippet
 #: model:ir.model.fields,field_description:edi_exchange_template_oca.field_edi_exchange_template_output__code_snippet
 msgid "Code Snippet"
-msgstr ""
+msgstr "Esempio codice"
 
 #. module: edi_exchange_template_oca
 #: model:ir.model.fields,field_description:edi_exchange_template_oca.field_edi_exchange_template_mixin__code_snippet_docs
 #: model:ir.model.fields,field_description:edi_exchange_template_oca.field_edi_exchange_template_output__code_snippet_docs
 msgid "Code Snippet Docs"
-msgstr ""
+msgstr "Documenti esempio codice"
 
 #. module: edi_exchange_template_oca
 #: model_terms:ir.ui.view,arch_db:edi_exchange_template_oca.edi_exchange_template_output_view_form
 msgid "Code snippet"
-msgstr ""
+msgstr "Esempio codice"
 
 #. module: edi_exchange_template_oca
 #: model_terms:ir.ui.view,arch_db:edi_exchange_template_oca.edi_exchange_template_output_view_form
 msgid "Code snippet docs"
-msgstr ""
+msgstr "Documenti esempio codice"
 
 #. module: edi_exchange_template_oca
 #: model:ir.model.fields,field_description:edi_exchange_template_oca.field_edi_exchange_template_output__create_uid
 msgid "Created by"
-msgstr ""
+msgstr "Creato da"
 
 #. module: edi_exchange_template_oca
 #: model:ir.model.fields,field_description:edi_exchange_template_oca.field_edi_exchange_template_output__create_date
 msgid "Created on"
-msgstr ""
+msgstr "Creato il"
 
 #. module: edi_exchange_template_oca
 #: model:ir.model.fields,field_description:edi_exchange_template_oca.field_edi_exchange_template_output__display_name
 msgid "Display Name"
-msgstr ""
+msgstr "Nome visualizzato"
 
 #. module: edi_exchange_template_oca
 #: model:ir.model,name:edi_exchange_template_oca.model_edi_backend
 msgid "EDI Backend"
-msgstr ""
+msgstr "Backend EDI"
 
 #. module: edi_exchange_template_oca
 #: model:ir.model.fields,field_description:edi_exchange_template_oca.field_edi_exchange_template_mixin__backend_type_id
 #: model:ir.model.fields,field_description:edi_exchange_template_oca.field_edi_exchange_template_output__backend_type_id
 msgid "EDI Backend type"
-msgstr ""
+msgstr "Tipo backend EDI"
 
 #. module: edi_exchange_template_oca
 #: model:ir.model,name:edi_exchange_template_oca.model_edi_exchange_template_mixin
 msgid "EDI Exchange Output Mixin"
-msgstr ""
+msgstr "Mixin output scambio EDI"
 
 #. module: edi_exchange_template_oca
 #: model:ir.model,name:edi_exchange_template_oca.model_edi_exchange_template_output
 msgid "EDI Exchange Output Template"
-msgstr ""
+msgstr "Modello output scambio EDI"
 
 #. module: edi_exchange_template_oca
 #: model:ir.actions.act_window,name:edi_exchange_template_oca.act_open_edi_exchange_template_output_view
 #: model:ir.ui.menu,name:edi_exchange_template_oca.menu_edi_exchange_template_output
 #: model_terms:ir.ui.view,arch_db:edi_exchange_template_oca.edi_exchange_template_output_view_search
 msgid "EDI Exchange Template Output"
-msgstr ""
+msgstr "Output modello scambio EDI"
 
 #. module: edi_exchange_template_oca
 #: model:ir.ui.menu,name:edi_exchange_template_oca.menu_edi_exchange_template_root
 msgid "EDI Exchange Templates"
-msgstr ""
+msgstr "Modelli scambio EDI"
 
 #. module: edi_exchange_template_oca
 #: model:ir.model.fields,field_description:edi_exchange_template_oca.field_edi_exchange_template_mixin__type_id
 #: model:ir.model.fields,field_description:edi_exchange_template_oca.field_edi_exchange_template_output__type_id
 msgid "EDI Exchange type"
-msgstr ""
+msgstr "Tipo scambio EDI"
 
 #. module: edi_exchange_template_oca
 #: model:ir.model.fields,field_description:edi_exchange_template_oca.field_edi_exchange_template_output__generator
 msgid "Generator"
-msgstr ""
+msgstr "Generatore"
 
 #. module: edi_exchange_template_oca
 #: model_terms:ir.ui.view,arch_db:edi_exchange_template_oca.edi_exchange_template_output_view_search
 msgid "Group By"
-msgstr ""
+msgstr "Raggruppa per"
 
 #. module: edi_exchange_template_oca
 #: model:ir.model.fields,field_description:edi_exchange_template_oca.field_edi_exchange_template_output__id
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: edi_exchange_template_oca
 #: model:ir.model.fields,help:edi_exchange_template_oca.field_edi_exchange_template_output__template_key
 msgid "ID of the view defined in xml file"
-msgstr ""
+msgstr "ID della vista definita nel file XML"
 
 #. module: edi_exchange_template_oca
 #: model:ir.model.fields,field_description:edi_exchange_template_oca.field_edi_exchange_template_output__write_uid
 msgid "Last Updated by"
-msgstr ""
+msgstr "Ultimo aggiornamento di"
 
 #. module: edi_exchange_template_oca
 #: model:ir.model.fields,field_description:edi_exchange_template_oca.field_edi_exchange_template_output__write_date
 msgid "Last Updated on"
-msgstr ""
+msgstr "Ultimo aggiornamento il"
 
 #. module: edi_exchange_template_oca
 #: model:ir.model.fields,field_description:edi_exchange_template_oca.field_edi_exchange_template_mixin__name
 #: model:ir.model.fields,field_description:edi_exchange_template_oca.field_edi_exchange_template_output__name
 msgid "Name"
-msgstr ""
+msgstr "Nome"
 
 #. module: edi_exchange_template_oca
 #: model:ir.model.fields,field_description:edi_exchange_template_oca.field_edi_exchange_template_output__output_type
 msgid "Output Type"
-msgstr ""
+msgstr "Tipo output"
 
 #. module: edi_exchange_template_oca
 #: model:ir.model.fields,field_description:edi_exchange_template_oca.field_edi_exchange_template_output__prettify
 msgid "Prettify"
-msgstr ""
+msgstr "Migliora"
 
 #. module: edi_exchange_template_oca
 #: model:ir.model.fields,help:edi_exchange_template_oca.field_edi_exchange_template_output__prettify
 msgid "Prettify output. Works for XML output only."
-msgstr ""
+msgstr "Migliora output. Funziona solo per output XML."
 
 #. module: edi_exchange_template_oca
 #: model:ir.model.fields,field_description:edi_exchange_template_oca.field_edi_exchange_template_output__template_arch
 msgid "QWeb arch"
-msgstr ""
+msgstr "Architettura QWeb"
 
 #. module: edi_exchange_template_oca
 #: model:ir.model.fields,field_description:edi_exchange_template_oca.field_edi_exchange_template_output__template_id
 #: model:ir.model.fields.selection,name:edi_exchange_template_oca.selection__edi_exchange_template_output__generator__qweb
 msgid "Qweb Template"
-msgstr ""
+msgstr "Modello QWeb"
 
 #. module: edi_exchange_template_oca
 #: model:ir.model.fields,field_description:edi_exchange_template_oca.field_edi_exchange_template_output__report_id
 #: model:ir.model.fields.selection,name:edi_exchange_template_oca.selection__edi_exchange_template_output__generator__report
 msgid "Report"
-msgstr ""
+msgstr "Resoconto"
 
 #. module: edi_exchange_template_oca
 #: model_terms:ir.ui.view,arch_db:edi_exchange_template_oca.edi_exchange_template_output_view_form
 msgid "Template"
-msgstr ""
+msgstr "Modello"
 
 #. module: edi_exchange_template_oca
 #: model:ir.model.fields,field_description:edi_exchange_template_oca.field_edi_exchange_template_output__template_key
 msgid "Template key"
-msgstr ""
+msgstr "Chiave modello"
 
 #. module: edi_exchange_template_oca
 #: model:ir.model.fields,help:edi_exchange_template_oca.field_edi_exchange_template_output__template_arch
 msgid "This field stores the view arch."
-msgstr ""
+msgstr "Questo file contiene l'architettura della vista."
 
 #. module: edi_exchange_template_oca
 #: model_terms:ir.ui.view,arch_db:edi_exchange_template_oca.edi_exchange_template_output_view_search
 msgid "Type"
-msgstr ""
+msgstr "Tipo"
