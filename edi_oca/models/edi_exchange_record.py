@@ -86,6 +86,9 @@ class EDIExchangeRecord(models.Model):
         ],
     )
     exchange_error = fields.Text(string="Exchange error", readonly=True, copy=False)
+    exchange_error_traceback = fields.Text(
+        string="Exchange error traceback", readonly=True, copy=False
+    )
     # Relations w/ other records
     parent_id = fields.Many2one(
         comodel_name="edi.exchange.record",
