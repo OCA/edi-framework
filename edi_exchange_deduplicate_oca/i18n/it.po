@@ -6,13 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"Last-Translator: Automatically generated\n"
+"PO-Revision-Date: 2024-08-07 17:58+0000\n"
+"Last-Translator: mymage <stefano.consolaro@mymage.it>\n"
 "Language-Team: none\n"
 "Language: it\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 5.6.2\n"
 
 #. module: edi_exchange_deduplicate_oca
 #: model:ir.model.fields,help:edi_exchange_deduplicate_oca.field_edi_exchange_type__deduplicate_on_send
@@ -20,59 +22,61 @@ msgid ""
 "Before sending an exchange record, check if a fresher one does not exist for"
 " same record; if so, mark oldest one as obsolete."
 msgstr ""
+"Prima di inviare un record di scambio, controlla se ne esiste uno più "
+"recente per lo stesso record; se così, marca il vecchio come obsoleto."
 
 #. module: edi_exchange_deduplicate_oca
 #: model:ir.model.fields,field_description:edi_exchange_deduplicate_oca.field_edi_exchange_record__block_obsolescence
 msgid "Block Obsolescence"
-msgstr ""
+msgstr "Obsolescenza blocco"
 
 #. module: edi_exchange_deduplicate_oca
 #: model:ir.model.fields,field_description:edi_exchange_deduplicate_oca.field_edi_exchange_type__deduplicate_on_send
 msgid "Deduplicate on Send"
-msgstr ""
+msgstr "Duplica alla spedizione"
 
 #. module: edi_exchange_deduplicate_oca
 #: model:ir.model.fields,field_description:edi_exchange_deduplicate_oca.field_edi_exchange_type__delete_obsolete_records
 msgid "Delete obsolete records"
-msgstr ""
+msgstr "Cancella record obsoleti"
 
 #. module: edi_exchange_deduplicate_oca
 #: model:ir.model.fields,help:edi_exchange_deduplicate_oca.field_edi_exchange_type__delete_obsolete_records
 msgid "Delete records marked as obsolete."
-msgstr ""
+msgstr "Cancella record marcati come obsoleti."
 
 #. module: edi_exchange_deduplicate_oca
 #: model:ir.model,name:edi_exchange_deduplicate_oca.model_edi_backend
 msgid "EDI Backend"
-msgstr ""
+msgstr "Backend EDI"
 
 #. module: edi_exchange_deduplicate_oca
 #: model:ir.model,name:edi_exchange_deduplicate_oca.model_edi_exchange_type
 msgid "EDI Exchange Type"
-msgstr ""
+msgstr "Tipo scambio EDI"
 
 #. module: edi_exchange_deduplicate_oca
 #: model:ir.model,name:edi_exchange_deduplicate_oca.model_edi_exchange_record
 msgid "EDI exchange Record"
-msgstr ""
+msgstr "Record di scambio EDI"
 
 #. module: edi_exchange_deduplicate_oca
 #: model:ir.actions.server,name:edi_exchange_deduplicate_oca.cron_edi_backend_delete_obsolete_records_ir_actions_server
 #: model:ir.cron,cron_name:edi_exchange_deduplicate_oca.cron_edi_backend_delete_obsolete_records
 msgid "EDI exchange delete obsolete records"
-msgstr ""
+msgstr "Scambio EDI cancella record obsoleti"
 
 #. module: edi_exchange_deduplicate_oca
 #: model:ir.model.fields,field_description:edi_exchange_deduplicate_oca.field_edi_exchange_record__edi_exchange_state
 msgid "Exchange state"
-msgstr ""
+msgstr "Stato scambio"
 
 #. module: edi_exchange_deduplicate_oca
 #: model:ir.model.fields,help:edi_exchange_deduplicate_oca.field_edi_exchange_record__block_obsolescence
 msgid "Flag record that can never be marked as obsolete"
-msgstr ""
+msgstr "Segna record che non devono mai essere marcati obsoleti"
 
 #. module: edi_exchange_deduplicate_oca
 #: model:ir.model.fields.selection,name:edi_exchange_deduplicate_oca.selection__edi_exchange_record__edi_exchange_state__obsolete
 msgid "Obsolete"
-msgstr ""
+msgstr "Obsoleto"
