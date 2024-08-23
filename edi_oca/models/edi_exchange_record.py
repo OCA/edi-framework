@@ -449,8 +449,8 @@ class EDIExchangeRecord(models.Model):
             order=order,
             access_rights_uid=access_rights_uid,
         )
-        if self.env.is_system():
-            # restrictions do not apply to group "Settings"
+        if self.env.is_superuser():
+            # restrictions do not apply for the superuser
             return query
 
         # TODO highlight orphaned EDI records in UI:
@@ -494,11 +494,14 @@ class EDIExchangeRecord(models.Model):
                         list(targets[res_id]),
                     )
                 recs = recs - missing
-            allowed = (
+            allowed = list(
                 self.env[model]
                 .with_context(active_test=False)
                 ._search([("id", "in", recs.ids)])
             )
+            if self.env.is_system():
+                # Group "Settings" can list exchanges where record is deleted
+                allowed.extend(missing.ids)
             for target_id in allowed:
                 result += list(targets[target_id])
         if len(orig_ids) == limit and len(result) < len(orig_ids):
