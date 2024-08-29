@@ -171,6 +171,7 @@ Contributors
 
 -  Simone Orsi <simahawk@gmail.com>
 -  Enric Tobella <etobella@creublanca.es>
+-  Manuel Regidor <manuel.regidor@sygel.es>
 
 Maintainers
 -----------
