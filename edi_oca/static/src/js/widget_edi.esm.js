@@ -23,8 +23,13 @@ export class EdiConfigurationWidget extends Component {
         );
         this.action.doAction(action);
     }
+    get info() {
+        return this.props.record.data[this.props.name];
+    }
 }
 
 EdiConfigurationWidget.template = "edi_oca.EdiConfigurationWidget";
 
-registry.category("fields").add("edi_configuration", EdiConfigurationWidget);
+registry.category("fields").add("edi_configuration", {
+    component: EdiConfigurationWidget,
+});

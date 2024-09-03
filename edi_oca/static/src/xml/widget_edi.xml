@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <templates id="template" xml:space="preserve">
     <div t-name="edi_oca.EdiConfigurationWidget">
-        <t t-foreach="props.value" t-as="rule_id" t-key="rule_index">
-            <t t-set="rule" t-value="props.value[rule_id]" />
+        <t t-foreach="info" t-as="rule_id" t-key="rule_index">
+            <t t-set="rule" t-value="info[rule_id]" />
             <t t-if="rule.form">
                 <t t-set="btn" t-value="rule.form.btn" />
                 <button
