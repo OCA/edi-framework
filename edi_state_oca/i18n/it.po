@@ -6,13 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"Last-Translator: Automatically generated\n"
+"PO-Revision-Date: 2024-09-10 14:06+0000\n"
+"Last-Translator: mymage <stefano.consolaro@mymage.it>\n"
 "Language-Team: none\n"
 "Language: it\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 5.6.2\n"
 
 #. module: edi_state_oca
 #: model:ir.model.fields,help:edi_state_oca.field_edi_exchange_type__state_workflow_ids
@@ -20,61 +22,63 @@ msgid ""
 "Allowed workflows that can be used by this type of exchanges. You can select"
 " only 1 workflow per model."
 msgstr ""
+"Flussi di lavoro consentiti che possono essere utilizzati da questo tipo di "
+"scambi. Si può selezionare solo un flusso di lavoro per modello."
 
 #. module: edi_state_oca
 #: model:ir.model.fields,field_description:edi_state_oca.field_edi_state_workflow__state_ids
 msgid "Available states"
-msgstr ""
+msgstr "Stati disponibili"
 
 #. module: edi_state_oca
 #: model:ir.model.fields,field_description:edi_state_oca.field_edi_state_workflow__backend_type_id
 #: model_terms:ir.ui.view,arch_db:edi_state_oca.edi_state_workflow_view_search
 msgid "Backend type"
-msgstr ""
+msgstr "Tipo backend"
 
 #. module: edi_state_oca
 #: model:ir.model.fields,field_description:edi_state_oca.field_edi_state__code
 msgid "Code"
-msgstr ""
+msgstr "Codice"
 
 #. module: edi_state_oca
 #: model:ir.model.constraint,message:edi_state_oca.constraint_edi_state_state_workflow_code_uniq
 msgid "Code must be unique per each workflow."
-msgstr ""
+msgstr "Il codice deve essere univoco per ogni flusso di lavoro."
 
 #. module: edi_state_oca
 #: model:ir.model.fields,field_description:edi_state_oca.field_edi_state__create_uid
 #: model:ir.model.fields,field_description:edi_state_oca.field_edi_state_workflow__create_uid
 msgid "Created by"
-msgstr ""
+msgstr "Creato da"
 
 #. module: edi_state_oca
 #: model:ir.model.fields,field_description:edi_state_oca.field_edi_state__create_date
 #: model:ir.model.fields,field_description:edi_state_oca.field_edi_state_workflow__create_date
 msgid "Created on"
-msgstr ""
+msgstr "Creato il"
 
 #. module: edi_state_oca
 #: model:ir.model.fields,field_description:edi_state_oca.field_edi_state__description
 #: model:ir.model.fields,field_description:edi_state_oca.field_edi_state_workflow__description
 msgid "Description"
-msgstr ""
+msgstr "Descrizione"
 
 #. module: edi_state_oca
 #: model:ir.model.fields,field_description:edi_state_oca.field_edi_state__display_name
 #: model:ir.model.fields,field_description:edi_state_oca.field_edi_state_workflow__display_name
 msgid "Display Name"
-msgstr ""
+msgstr "Nome visualizzato"
 
 #. module: edi_state_oca
 #: model:ir.model,name:edi_state_oca.model_edi_exchange_type
 msgid "EDI Exchange Type"
-msgstr ""
+msgstr "Tipo scambio EDI"
 
 #. module: edi_state_oca
 #: model:ir.model,name:edi_state_oca.model_edi_state
 msgid "EDI specific state."
-msgstr ""
+msgstr "Stato specifico EDI."
 
 #. module: edi_state_oca
 #: model:ir.actions.act_window,name:edi_state_oca.act_open_edi_state_view
@@ -83,7 +87,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:edi_state_oca.edi_state_view_form
 #: model_terms:ir.ui.view,arch_db:edi_state_oca.edi_state_view_search
 msgid "EDI state"
-msgstr ""
+msgstr "Stato EDI"
 
 #. module: edi_state_oca
 #: model:ir.actions.act_window,name:edi_state_oca.act_open_edi_state_workflow_view
@@ -91,100 +95,100 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:edi_state_oca.edi_state_workflow_view_form
 #: model_terms:ir.ui.view,arch_db:edi_state_oca.edi_state_workflow_view_search
 msgid "EDI state workflow"
-msgstr ""
+msgstr "Flusso di lavoro stato EDI"
 
 #. module: edi_state_oca
 #: model:ir.model,name:edi_state_oca.model_edi_state_workflow
 msgid "EDI state workflow."
-msgstr ""
+msgstr "Flusso di lavoro stato EDI."
 
 #. module: edi_state_oca
 #: model:ir.model.fields,field_description:edi_state_oca.field_edi_exchange_type__state_workflow_ids
 msgid "Enabled state workflows"
-msgstr ""
+msgstr "Abilita flussi di lavoro stato"
 
 #. module: edi_state_oca
 #: model_terms:ir.ui.view,arch_db:edi_state_oca.edi_state_view_search
 #: model_terms:ir.ui.view,arch_db:edi_state_oca.edi_state_workflow_view_search
 msgid "Group By"
-msgstr ""
+msgstr "Raggruppa per"
 
 #. module: edi_state_oca
 #: model:ir.model.fields,field_description:edi_state_oca.field_edi_state__id
 #: model:ir.model.fields,field_description:edi_state_oca.field_edi_state_workflow__id
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: edi_state_oca
 #: model:ir.model.fields,field_description:edi_state_oca.field_edi_state__is_default
 msgid "Is Default"
-msgstr ""
+msgstr "È predefinito"
 
 #. module: edi_state_oca
 #: model:ir.model.fields,field_description:edi_state_oca.field_edi_state____last_update
 #: model:ir.model.fields,field_description:edi_state_oca.field_edi_state_workflow____last_update
 msgid "Last Modified on"
-msgstr ""
+msgstr "Ultima modifica il"
 
 #. module: edi_state_oca
 #: model:ir.model.fields,field_description:edi_state_oca.field_edi_state__write_uid
 #: model:ir.model.fields,field_description:edi_state_oca.field_edi_state_workflow__write_uid
 msgid "Last Updated by"
-msgstr ""
+msgstr "Ultimo aggiornamento di"
 
 #. module: edi_state_oca
 #: model:ir.model.fields,field_description:edi_state_oca.field_edi_state__write_date
 #: model:ir.model.fields,field_description:edi_state_oca.field_edi_state_workflow__write_date
 msgid "Last Updated on"
-msgstr ""
+msgstr "Ultimo aggiornamento il"
 
 #. module: edi_state_oca
 #: model:ir.model.fields,field_description:edi_state_oca.field_edi_state_workflow__model_id
 #: model_terms:ir.ui.view,arch_db:edi_state_oca.edi_state_workflow_view_search
 msgid "Model"
-msgstr ""
+msgstr "Modello"
 
 #. module: edi_state_oca
 #: model:ir.model.fields,field_description:edi_state_oca.field_edi_state__name
 #: model:ir.model.fields,field_description:edi_state_oca.field_edi_state_workflow__name
 msgid "Name"
-msgstr ""
+msgstr "Nome"
 
 #. module: edi_state_oca
 #. odoo-python
 #: code:addons/edi_state_oca/models/edi_state.py:0
 #, python-format
 msgid "Only one state per workflow can be the default one."
-msgstr ""
+msgstr "Solo uno stato per flusso di lavoro può essere il predefinito."
 
 #. module: edi_state_oca
 #. odoo-python
 #: code:addons/edi_state_oca/models/edi_exchange_type.py:0
 #, python-format
 msgid "Only one workflow per model is allowed"
-msgstr ""
+msgstr "È consentito solo un modello per flusso di lavoro"
 
 #. module: edi_state_oca
 #: model:ir.model,name:edi_state_oca.model_edi_state_consumer_mixin
 msgid "Provide specific EDI states for related records."
-msgstr ""
+msgstr "Fornire stati EDI specifici per i record relativi."
 
 #. module: edi_state_oca
 #. odoo-python
 #: code:addons/edi_state_oca/models/edi_state_consumer_mixin.py:0
 #, python-format
 msgid "State %(name)s [%(code)s] not allowed"
-msgstr ""
+msgstr "Lo stato %(name)s %(code)s non è consentito"
 
 #. module: edi_state_oca
 #: model:ir.ui.menu,name:edi_state_oca.menu_edi_state_root
 #: model_terms:ir.ui.view,arch_db:edi_state_oca.edi_state_workflow_view_form
 msgid "States"
-msgstr ""
+msgstr "Stati"
 
 #. module: edi_state_oca
 #: model:ir.model.fields,field_description:edi_state_oca.field_edi_state__workflow_id
 #: model:ir.model.fields,field_description:edi_state_oca.field_edi_state_consumer_mixin__edi_state_workflow_id
 #: model_terms:ir.ui.view,arch_db:edi_state_oca.edi_state_view_search
 msgid "Workflow"
-msgstr ""
+msgstr "Flusso di lavoro"
