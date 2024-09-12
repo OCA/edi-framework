@@ -27,6 +27,7 @@ setuptools.setup(
         'odoo-addon-edi_stock_oca>=16.0dev,<16.1dev',
         'odoo-addon-edi_storage_oca>=16.0dev,<16.1dev',
         'odoo-addon-edi_ubl_oca>=16.0dev,<16.1dev',
+        'odoo-addon-edi_utm_oca>=16.0dev,<16.1dev',
         'odoo-addon-edi_webservice_oca>=16.0dev,<16.1dev',
         'odoo-addon-edi_xml_oca>=16.0dev,<16.1dev',
     ],
