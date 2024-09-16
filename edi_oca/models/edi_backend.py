@@ -20,7 +20,13 @@ from ..exceptions import EDIValidationError
 _logger = logging.getLogger(__name__)
 
 
-def _get_exception_msg():
+def _get_exception_msg(exc):
+    if hasattr(exc, "args") and isinstance(exc.args[0], str):
+        return exc.args[0]
+    return repr(exc)
+
+
+def _get_exception_traceback():
     buff = StringIO()
     traceback.print_exc(file=buff)
     traceback_txt = buff.getvalue()
@@ -228,12 +234,17 @@ class EDIBackend(models.Model):
             message = exchange_record._exchange_status_message("generate_ok")
             try:
                 self._validate_data(exchange_record, output)
-            except EDIValidationError:
-                error = _get_exception_msg()
+            except EDIValidationError as err:
+                traceback = _get_exception_traceback()
+                error = _get_exception_msg(err)
                 state = "validate_error"
                 message = exchange_record._exchange_status_message("validate_ko")
                 exchange_record.update(
-                    {"edi_exchange_state": state, "exchange_error": error}
+                    {
+                        "edi_exchange_state": state,
+                        "exchange_error": error,
+                        "exchange_error_traceback": traceback,
+                    }
                 )
         exchange_record.notify_action_complete("generate", message=message)
         return message
@@ -294,22 +305,24 @@ class EDIBackend(models.Model):
         if not check:
             return self._failed_output_check_send_msg()
         state = exchange_record.edi_exchange_state
-        error = False
+        error = traceback = False
         message = None
         res = ""
         try:
             self._exchange_send(exchange_record)
             _logger.debug("%s sent", exchange_record.identifier)
         except self._send_retryable_exceptions() as err:
-            error = _get_exception_msg()
+            traceback = _get_exception_traceback()
+            error = _get_exception_msg(err)
             _logger.debug("%s send failed. To be retried.", exchange_record.identifier)
             raise RetryableJobError(
                 error, **exchange_record._job_retry_params()
             ) from err
-        except self._swallable_exceptions():
+        except self._swallable_exceptions() as err:
             if self.env.context.get("_edi_send_break_on_error"):
                 raise
-            error = _get_exception_msg()
+            traceback = _get_exception_traceback()
+            error = _get_exception_msg(err)
             state = "output_error_on_send"
             message = exchange_record._exchange_status_message("send_ko")
             res = f"Error: {error}"
@@ -319,7 +332,7 @@ class EDIBackend(models.Model):
         else:
             # TODO: maybe the send handler should return desired message and state
             message = exchange_record._exchange_status_message("send_ok")
-            error = None
+            error = traceback = None
             state = (
                 "output_sent_and_processed"
                 if self.output_sent_processed_auto
@@ -331,6 +344,7 @@ class EDIBackend(models.Model):
                 {
                     "edi_exchange_state": state,
                     "exchange_error": error,
+                    "exchange_error_traceback": traceback,
                     # FIXME: this should come from _compute_exchanged_on
                     # but somehow it's failing in send tests (in record tests it works).
                     "exchanged_on": fields.Datetime.now(),
@@ -486,24 +500,26 @@ class EDIBackend(models.Model):
         if not check:
             return "Nothing to do. Likely already processed."
         old_state = state = exchange_record.edi_exchange_state
-        error = False
+        error = traceback = False
         message = None
         try:
             res = self._exchange_process(exchange_record)
-        except self._swallable_exceptions():
+        except self._swallable_exceptions() as err:
             if self.env.context.get("_edi_process_break_on_error"):
                 raise
-            error = _get_exception_msg()
+            traceback = _get_exception_traceback()
+            error = _get_exception_msg(err)
             state = "input_processed_error"
             res = f"Error: {error}"
         else:
-            error = None
+            error = traceback = None
             state = "input_processed"
         finally:
             exchange_record.write(
                 {
                     "edi_exchange_state": state,
                     "exchange_error": error,
+                    "exchange_error_traceback": traceback,
                     # FIXME: this should come from _compute_exchanged_on
                     # but somehow it's failing in send tests (in record tests it works).
                     "exchanged_on": fields.Datetime.now(),
@@ -534,7 +550,7 @@ class EDIBackend(models.Model):
         if not check:
             return "Nothing to do. Likely already received."
         state = exchange_record.edi_exchange_state
-        error = False
+        error = traceback = False
         message = None
         content = None
         try:
@@ -543,21 +559,23 @@ class EDIBackend(models.Model):
             if content is not None:
                 exchange_record._set_file_content(content)
                 self._validate_data(exchange_record)
-        except EDIValidationError:
-            error = _get_exception_msg()
+        except EDIValidationError as err:
+            traceback = _get_exception_traceback()
+            error = _get_exception_msg(err)
             state = "validate_error"
             message = exchange_record._exchange_status_message("validate_ko")
             res = f"Validation error: {error}"
-        except self._swallable_exceptions():
+        except self._swallable_exceptions() as err:
             if self.env.context.get("_edi_receive_break_on_error"):
                 raise
-            error = _get_exception_msg()
+            traceback = _get_exception_traceback()
+            error = _get_exception_msg(err)
             state = "input_receive_error"
             message = exchange_record._exchange_status_message("receive_ko")
             res = f"Input error: {error}"
         else:
             message = exchange_record._exchange_status_message("receive_ok")
-            error = None
+            error = traceback = None
             state = "input_received"
             res = message
         finally:
@@ -565,6 +583,7 @@ class EDIBackend(models.Model):
                 {
                     "edi_exchange_state": state,
                     "exchange_error": error,
+                    "exchange_error_traceback": traceback,
                     # FIXME: this should come from _compute_exchanged_on
                     # but somehow it's failing in send tests (in record tests it works).
                     "exchanged_on": fields.Datetime.now(),

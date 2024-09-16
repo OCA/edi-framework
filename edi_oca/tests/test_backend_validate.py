@@ -62,10 +62,11 @@ class EDIBackendTestValidateCase(EDIBackendCommonComponentRegistryTestCase):
             [
                 {
                     "edi_exchange_state": "validate_error",
+                    "exchange_error": "Data seems wrong!",
                 }
             ],
         )
-        self.assertIn("Data seems wrong!", self.record_in.exchange_error)
+        self.assertIn("Data seems wrong!", self.record_in.exchange_error_traceback)
 
     def test_generate_validate_record(self):
         self.record_out.write({"edi_exchange_state": "new"})
@@ -87,10 +88,11 @@ class EDIBackendTestValidateCase(EDIBackendCommonComponentRegistryTestCase):
             [
                 {
                     "edi_exchange_state": "validate_error",
+                    "exchange_error": "Data seems wrong!",
                 }
             ],
         )
-        self.assertIn("Data seems wrong!", self.record_out.exchange_error)
+        self.assertIn("Data seems wrong!", self.record_out.exchange_error_traceback)
 
     def test_validate_record_error_regenerate(self):
         self.record_out.write({"edi_exchange_state": "new"})

@@ -24,6 +24,7 @@
                     decoration-danger="edi_exchange_state in ['validate_error', 'output_error_on_send', 'output_sent_and_error', 'input_receive_error', 'input_processed_error']"
                     widget="badge"
                 />
+                <field name="exchange_error" optional="show" />
             </tree>
         </field>
     </record>
@@ -155,9 +156,10 @@
                         <page
                             name="error"
                             string="Error"
-                            attrs="{'invisible': [('exchange_error', '=', False)]}"
+                            attrs="{'invisible': [('exchange_error_traceback', '=', False)]}"
                         >
                             <field name="exchange_error" />
+                            <field name="exchange_error_traceback" />
                         </page>
                         <!-- FIXME: this `invisible` domain does not work -->
                         <page
