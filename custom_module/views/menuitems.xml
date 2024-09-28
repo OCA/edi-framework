@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <odoo>
     <menuitem
-        id="menu_edi_backend_group"
+        id="menu_edi_exchange_type_group"
         parent="edi_oca.menu_edi_config"
-        name="Backend groups"
-        sequence="25"
-        action="act_open_edi_backend_group_view"
+        name="Exchange type groups"
+        sequence="35"
+        action="act_open_edi_exchange_type_group_view"
     />
 </odoo>

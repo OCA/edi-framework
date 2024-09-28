@@ -5,8 +5,8 @@
     "summary": """
     Custom module
     """,
-    "version": "14.0.1.0.0",
-    "website": "https://github.com/OCA/edi",
+    "version": "16.0.1.0.0",
+    "website": "https://github.com/OCA/edi-framework",
     "development_status": "Beta",
     "license": "LGPL-3",
     "author": "ForgeFlow,Odoo Community Association (OCA)",
@@ -16,8 +16,8 @@
     ],
     "data": [
         "security/ir_model_access.xml",
-        "views/edi_backend_group_views.xml",
-        "views/edi_backend_views.xml",
+        "views/edi_exchange_type_group_views.xml",
+        "views/edi_exchange_type_views.xml",
         "views/menuitems.xml",
     ],
 }

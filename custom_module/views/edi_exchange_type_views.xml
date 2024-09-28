@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="edi_exchange_type_view_form" model="ir.ui.view">
+        <field name="model">edi.exchange.type</field>
+        <field name="inherit_id" ref="edi_oca.edi_exchange_type_view_form" />
+        <field name="arch" type="xml">
+            <field name="backend_type_id" position="after">
+                <field name="exchange_type_group_id" />
+            </field>
+        </field>
+    </record>
+    <record id="edi_exchange_type_view_search" model="ir.ui.view">
+        <field name="model">edi.exchange.type</field>
+        <field name="inherit_id" ref="edi_oca.edi_exchange_type_view_search" />
+        <field name="arch" type="xml">
+            <field name="backend_id" position="after">
+                <field name="exchange_type_group_id" />
+            </field>
+            <xpath expr="//group" position="inside">
+                <filter
+                    name="group_by_exchange_type_group_id"
+                    string="Exchange Type Group"
+                    context="{'group_by': 'exchange_type_group_id'}"
+                />
+            </xpath>
+        </field>
+    </record>
+</odoo>
