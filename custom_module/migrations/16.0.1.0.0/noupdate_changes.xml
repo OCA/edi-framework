@@ -1,0 +1,9 @@
+<?xml version='1.0' encoding='utf-8' ?>
+<odoo>
+  <record id="access_edi_exchange_type_group_manager" model="ir.model.access">
+    <field name="name">access_edi_exchange_type_group manager</field>
+  </record>
+  <record id="access_edi_exchange_type_group_user" model="ir.model.access">
+    <field name="name">access_edi_exchange_type_group user</field>
+  </record>
+</odoo>
