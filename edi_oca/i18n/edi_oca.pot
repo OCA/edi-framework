@@ -515,7 +515,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/edi_oca/models/edi_backend.py:0
 #, python-format
-msgid "Empty files are not allowed for this exchange type"
+msgid "Empty files are not allowed for exchange type %(name)s (%(code)s)"
 msgstr ""
 
 #. module: edi_oca
