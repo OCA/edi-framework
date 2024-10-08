@@ -55,7 +55,9 @@ class EDIStorageComponentMixin(AbstractComponent):
         )
         return path
 
-    def _get_remote_file(self, state, filename=None, binary=False):
+    def _get_remote_file(
+        self, state, filename=None, binary=False, raise_if_not_found=False
+    ):
         """Get file for current exchange_record in the given destination state.
 
         :param state: string ("pending", "done", "error")
@@ -63,23 +65,17 @@ class EDIStorageComponentMixin(AbstractComponent):
         :return: remote file content as string
         """
         path = self._get_remote_file_path(state, filename=filename)
+        # TODO: support match via pattern (eg: filename-prefix-*)
+        # otherwise is impossible to retrieve input files and acks
+        # (the date will never match)
         try:
-            # TODO: support match via pattern (eg: filename-prefix-*)
-            # otherwise is impossible to retrieve input files and acks
-            # (the date will never match)
             return utils.get_file(self.storage, path.as_posix(), binary=binary)
         except FileNotFoundError:
+            if raise_if_not_found:
+                raise
             _logger.info(
                 "Ignored FileNotFoundError when trying "
                 "to get file %s into path %s for state %s",
-                filename,
-                path,
-                state,
-            )
-            return None
-        except OSError:
-            _logger.info(
-                "Ignored OSError when trying to get file %s into path %s for state %s",
                 filename,
                 path,
                 state,
