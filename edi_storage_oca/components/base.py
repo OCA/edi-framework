@@ -77,11 +77,3 @@ class EDIStorageComponentMixin(AbstractComponent):
                 state,
             )
             return None
-        except OSError:
-            _logger.info(
-                "Ignored OSError when trying to get file %s into path %s for state %s",
-                filename,
-                path,
-                state,
-            )
-            return None
