@@ -13,7 +13,6 @@ _logger = logging.getLogger(__file__)
 
 
 class EDIStorageComponentMixin(AbstractComponent):
-
     _name = "edi.storage.component.mixin"
     _inherit = "edi.component.mixin"
     # Components having `_storage_type` will have precedence.

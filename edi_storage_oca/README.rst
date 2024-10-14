@@ -17,37 +17,38 @@ EDI Storage backend support
     :target: http://www.gnu.org/licenses/lgpl-3.0-standalone.html
     :alt: License: LGPL-3
 .. |badge3| image:: https://img.shields.io/badge/github-OCA%2Fedi--framework-lightgray.png?logo=github
-    :target: https://github.com/OCA/edi-framework/tree/16.0/edi_storage_oca
+    :target: https://github.com/OCA/edi-framework/tree/17.0/edi_storage_oca
     :alt: OCA/edi-framework
 .. |badge4| image:: https://img.shields.io/badge/weblate-Translate%20me-F47D42.png
-    :target: https://translation.odoo-community.org/projects/edi-framework-16-0/edi-framework-16-0-edi_storage_oca
+    :target: https://translation.odoo-community.org/projects/edi-framework-17-0/edi-framework-17-0-edi_storage_oca
     :alt: Translate me on Weblate
 .. |badge5| image:: https://img.shields.io/badge/runboat-Try%20me-875A7B.png
-    :target: https://runboat.odoo-community.org/builds?repo=OCA/edi-framework&target_branch=16.0
+    :target: https://runboat.odoo-community.org/builds?repo=OCA/edi-framework&target_branch=17.0
     :alt: Try me on Runboat
 
 |badge1| |badge2| |badge3| |badge4| |badge5|
 
-Allow exchange files using storage backends from `OCA/storage`.
+Allow exchange files using storage backends from OCA/storage.
 
-This module adds a storage backend relation on the EDI backend.
-There you can configure the backend to be used (most often and SFTP)
-and the paths where to read or put files.
+This module adds a storage backend relation on the EDI backend. There
+you can configure the backend to be used (most often and SFTP) and the
+paths where to read or put files.
 
-Often the convention when exchanging files via SFTP
-is to have one input forder (to receive files)
-and an output folder (to send files).
+Often the convention when exchanging files via SFTP is to have one input
+forder (to receive files) and an output folder (to send files).
 
-Inside this folder you have this hierarchy::
+Inside this folder you have this hierarchy:
 
-    input/output folder
-        |- pending
-        |- done
-        |- error
+::
 
-* `pending` folder contains files that have been just sent
-* `done` folder contains files that have been processes successfully
-* `error` folder contains files with errors and cannot be processed
+   input/output folder
+       |- pending
+       |- done
+       |- error
+
+-  pending folder contains files that have been just sent
+-  done folder contains files that have been processes successfully
+-  error folder contains files with errors and cannot be processed
 
 The storage handlers take care of reading files and putting files
 in/from the right place and update exchange records data accordingly.
@@ -60,12 +61,13 @@ in/from the right place and update exchange records data accordingly.
 Usage
 =====
 
-Go to "EDI -> EDI backend" then configure your backend to use a storage backend.
+Go to "EDI -> EDI backend" then configure your backend to use a storage
+backend.
 
 Known issues / Roadmap
 ======================
 
-* clean deprecated methods in the storage
+-  clean deprecated methods in the storage
 
 Bug Tracker
 ===========
@@ -73,7 +75,7 @@ Bug Tracker
 Bugs are tracked on `GitHub Issues <https://github.com/OCA/edi-framework/issues>`_.
 In case of trouble, please check there if your issue has already been reported.
 If you spotted it first, help us to smash it by providing a detailed and welcomed
-`feedback <https://github.com/OCA/edi-framework/issues/new?body=module:%20edi_storage_oca%0Aversion:%2016.0%0A%0A**Steps%20to%20reproduce**%0A-%20...%0A%0A**Current%20behavior**%0A%0A**Expected%20behavior**>`_.
+`feedback <https://github.com/OCA/edi-framework/issues/new?body=module:%20edi_storage_oca%0Aversion:%2017.0%0A%0A**Steps%20to%20reproduce**%0A-%20...%0A%0A**Current%20behavior**%0A%0A**Expected%20behavior**>`_.
 
 Do not contact contributors directly about support or help with technical issues.
 
@@ -81,25 +83,26 @@ Credits
 =======
 
 Authors
-~~~~~~~
+-------
 
 * ACSONE
 
 Contributors
-~~~~~~~~~~~~
+------------
 
-* Simone Orsi <simahawk@gmail.com>
-* Foram Shah <foram.shah@initos.com>
-* Lois Rilo <lois.rilo@forgeflow.com>
-* Duong (Tran Quoc) <duongtq@trobz.com>
+-  Simone Orsi <simahawk@gmail.com>
+-  Foram Shah <foram.shah@initos.com>
+-  Lois Rilo <lois.rilo@forgeflow.com>
+-  Duong (Tran Quoc) <duongtq@trobz.com>
 
 Other credits
-~~~~~~~~~~~~~
+-------------
 
-The migration of this module from 15.0 to 16.0 was financially supported by Camptocamp.
+The migration of this module from 15.0 to 16.0 was financially supported
+by Camptocamp.
 
 Maintainers
-~~~~~~~~~~~
+-----------
 
 This module is maintained by the OCA.
 
@@ -111,6 +114,6 @@ OCA, or the Odoo Community Association, is a nonprofit organization whose
 mission is to support the collaborative development of Odoo features and
 promote its widespread use.
 
-This module is part of the `OCA/edi-framework <https://github.com/OCA/edi-framework/tree/16.0/edi_storage_oca>`_ project on GitHub.
+This module is part of the `OCA/edi-framework <https://github.com/OCA/edi-framework/tree/17.0/edi_storage_oca>`_ project on GitHub.
 
 You are welcome to contribute. To learn how please visit https://odoo-community.org/page/Contribute.

@@ -9,7 +9,6 @@ from .. import utils
 
 
 class EDIStorageSendComponent(Component):
-
     _name = "edi.storage.component.send"
     _inherit = [
         "edi.component.send.mixin",

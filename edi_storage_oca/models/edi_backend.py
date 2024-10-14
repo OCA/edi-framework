@@ -14,7 +14,6 @@ _logger = logging.getLogger(__name__)
 
 
 class EDIBackend(models.Model):
-
     _inherit = "edi.backend"
 
     storage_id = fields.Many2one(
@@ -66,7 +65,7 @@ class EDIBackend(models.Model):
         candidates = super()._get_component_usage_candidates(exchange_record, key)
         if not self.storage_id or key not in self._storage_actions:
             return candidates
-        return ["storage.{}".format(key)] + candidates
+        return [f"storage.{key}"] + candidates
 
     def _component_match_attrs(self, exchange_record, key):
         # Override to inject storage_type
