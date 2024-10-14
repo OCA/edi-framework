@@ -1,0 +1,39 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* edi_webservice_oca
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 16.0\n"
+"Report-Msgid-Bugs-To: \n"
+"PO-Revision-Date: 2024-05-13 12:34+0000\n"
+"Last-Translator: mymage <stefano.consolaro@mymage.it>\n"
+"Language-Team: none\n"
+"Language: it\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 4.17\n"
+
+#. module: edi_webservice_oca
+#: model:ir.model,name:edi_webservice_oca.model_edi_backend
+msgid "EDI Backend"
+msgstr "Backend EDI"
+
+#. module: edi_webservice_oca
+#: model_terms:ir.ui.view,arch_db:edi_webservice_oca.edi_backend_view_form
+msgid "Webservice"
+msgstr "Servizio web"
+
+#. module: edi_webservice_oca
+#: model:ir.model.fields,field_description:edi_webservice_oca.field_edi_backend__webservice_backend_id
+msgid "Webservice Backend"
+msgstr "Backend servizio web"
+
+#. module: edi_webservice_oca
+#. odoo-python
+#: code:addons/edi_webservice_oca/components/send.py:0
+#, python-format
+msgid "`method` is required in `webservice` type settings."
+msgstr "`method` è richiesto nelle impostazioni tipo `webservice`."
