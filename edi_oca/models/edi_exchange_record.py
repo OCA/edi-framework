@@ -386,12 +386,12 @@ class EDIExchangeRecord(models.Model):
     def _notify_related_record(self, message, level="info"):
         """Post notification on the original record."""
         if not self.related_record_exists or not hasattr(
-            self.record, "message_post_with_view"
+            self.record, "message_post_with_source"
         ):
             return
-        self.record.message_post_with_view(
+        self.record.message_post_with_source(
             "edi_oca.message_edi_exchange_link",
-            values={
+            render_values={
                 "backend": self.backend_id,
                 "exchange_record": self,
                 "message": message,
