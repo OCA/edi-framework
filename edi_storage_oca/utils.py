@@ -26,7 +26,8 @@ def find_files(storage, pattern, relative_path="", **kw) -> list[str]:
     if not fs.exists(relative_path):
         return []
     regex = re.compile(pattern)
-    for file_path in fs.ls(relative_path, detail=False):
+    for item in fs.ls(relative_path):
+        file_path = item["name"]
         # fs.ls returns a relative path
         if regex.match(os.path.basename(file_path)):
             result.append(file_path)
@@ -48,7 +49,7 @@ def list_files(storage, relative_path="", pattern=False):
     if pattern:
         relative_path = fs.sep.join([relative_path, pattern])
         return fs.glob(relative_path)
-    return fs.ls(relative_path, detail=False)
+    return fs.ls(relative_path)
 
 
 def move_files(storage, files, destination_path, **kw):

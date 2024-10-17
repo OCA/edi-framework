@@ -99,7 +99,7 @@ class TestEDIStorageBase(EDIBackendCommonComponentTestCase):
         path_length = len(path)
         for p in mocked_paths.keys():
             if path in p and path != p:
-                files.append(p[path_length:])
+                files.append({"name": p[path_length:]})
         return files
 
     def _mock_fs_storage_get(self, mocked_paths):
