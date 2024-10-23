@@ -16,8 +16,8 @@ _logger = logging.getLogger(__name__)
 @tagged("-at_install", "post_install")
 class EDIBackendTestCase(AccountTestInvoicingCommon, TransactionComponentRegistryCase):
     @classmethod
-    def setUpClass(cls, chart_template_ref=None):
-        super().setUpClass(chart_template_ref=chart_template_ref)
+    def setUpClass(cls):
+        super().setUpClass()
         cls._setup_registry(cls)
         cls.env = cls.env(context=dict(cls.env.context, tracking_disable=True))
 
