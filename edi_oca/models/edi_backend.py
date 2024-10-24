@@ -279,7 +279,8 @@ class EDIBackend(models.Model):
             if not exchange_record.type_id.allow_empty_files_on_receive:
                 raise ValueError(
                     _(
-                        "Empty files are not allowed for exchange type %(name)s (%(code)s)"
+                        "Empty files are not allowed for exchange "
+                        "type %(name)s (%(code)s)"
                     )
                     % {
                         "name": exchange_record.type_id.name,

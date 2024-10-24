@@ -168,7 +168,8 @@ class EDIExchangeType(models.Model):
             ("surrogateescape", "Replace Byte with Individual Surrogate Code"),
             ("xmlcharrefreplace", "Replace with XML/HTML Numeric Character Reference"),
         ],
-        help="Handling of encoding errors on generate (default is always 'Raise Error').",
+        help="Handling of encoding errors on generate "
+        "(default is always 'Raise Error').",
     )
     # https://docs.python.org/3/library/codecs.html#codec-base-classes
     encoding_in_error_handler = fields.Selection(
@@ -180,7 +181,8 @@ class EDIExchangeType(models.Model):
             ("backslashreplace", "Replace with Backslashed Escape Sequences"),
             ("surrogateescape", "Replace Byte with Individual Surrogate Code"),
         ],
-        help="Handling of decoding errors on process (default is always 'Raise Error').",
+        help="Handling of decoding errors on process "
+        "(default is always 'Raise Error').",
     )
     allow_empty_files_on_receive = fields.Boolean(string="Allow Empty Files")
 
