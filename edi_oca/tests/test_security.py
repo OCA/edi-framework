@@ -5,7 +5,7 @@
 from odoo_test_helper import FakeModelLoader
 
 from odoo.exceptions import AccessError
-from odoo.tests.common import tagged
+from odoo.tests import tagged
 from odoo.tools import mute_logger
 
 from .common import EDIBackendCommonTestCase
@@ -195,12 +195,14 @@ class TestEDIExchangeRecordSecurity(EDIBackendCommonTestCase):
         exchange_record.res_id = -1
         admin_group = self.env.ref("base.group_system")
         self.user.write({"groups_id": [(4, self.group.id), (4, admin_group.id)]})
-        self.assertEqual(
-            1,
-            self.env["edi.exchange.record"]
-            .with_user(self.user)
-            .search_count([("id", "=", exchange_record.id)]),
-        )
+        logger_name = "odoo.addons.edi_oca.models.edi_exchange_record"
+        with self.assertLogs(logger_name, "WARNING"):
+            self.assertEqual(
+                1,
+                self.env["edi.exchange.record"]
+                .with_user(self.user)
+                .search_count([("id", "=", exchange_record.id)]),
+            )
 
     @mute_logger("odoo.addons.base.models.ir_model")
     def test_no_group_no_write(self):

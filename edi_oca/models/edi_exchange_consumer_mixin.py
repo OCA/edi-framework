@@ -252,7 +252,7 @@ class EDIExchangeConsumerMixin(models.AbstractModel):
         # Purge default search filters from ctx to avoid hiding records
         ctx = action.get("context", {})
         if isinstance(ctx, str):
-            ctx = safe_eval.safe_eval(ctx, self.env.context)
+            ctx = safe_eval.safe_eval(ctx, dict(self.env.context))
         action["context"] = {
             k: v for k, v in ctx.items() if not k.startswith("search_default_")
         }

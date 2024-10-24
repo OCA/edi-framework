@@ -3,7 +3,7 @@
     <record id="edi_exchange_type_view_tree" model="ir.ui.view">
         <field name="model">edi.exchange.type</field>
         <field name="arch" type="xml">
-            <tree decoration-muted="(not active)">
+            <list decoration-muted="(not active)">
                 <field name="backend_id" />
                 <field name="name" />
                 <field name="code" />
@@ -11,7 +11,7 @@
                 <field name="ack_type_id" />
                 <field name="ack_for_type_ids" optional="hide" />
                 <field name="active" />
-            </tree>
+            </list>
         </field>
     </record>
     <record id="edi_exchange_type_view_form" model="ir.ui.view">
@@ -81,14 +81,13 @@
                             string="Model rules"
                             groups="edi_oca.group_edi_advanced_settings_manager"
                         >
-                            <field name="id" invisible="1" />
                             <field name="rule_ids" context="{'default_type_id': id}">
-                                <tree decoration-muted="(not active)">
+                                <list decoration-muted="(not active)">
                                     <field name="active" widget="boolean_toggle" />
                                     <field name="name" />
                                     <field name="model_id" />
                                     <field name="kind" />
-                                </tree>
+                                </list>
                             </field>
                         </page>
                     </notebook>
@@ -144,7 +143,7 @@
         <field name="name">EDI Exchange Type</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">edi.exchange.type</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">list,form</field>
         <field name="search_view_id" ref="edi_exchange_type_view_search" />
         <field name="domain">[]</field>
         <!--
@@ -171,7 +170,7 @@
     >
         <field name="act_window_id" ref="act_open_edi_exchange_type_view" />
         <field name="sequence" eval="10" />
-        <field name="view_mode">tree</field>
+        <field name="view_mode">list</field>
         <field name="view_id" ref="edi_exchange_type_view_tree" />
     </record>
 </odoo>

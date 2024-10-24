@@ -9,6 +9,7 @@ from ast import literal_eval
 from collections import defaultdict
 
 from odoo import _, api, exceptions, fields, models
+from odoo.exceptions import AccessError
 
 from ..utils import exchange_record_job_identity_exact, get_checksum
 
@@ -465,13 +466,12 @@ class EDIExchangeRecord(models.Model):
         self._trigger_edi_event("done", suffix="ack_received_error")
 
     @api.model
-    def _search(self, domain, offset=0, limit=None, order=None, access_rights_uid=None):
+    def _search(self, domain, offset=0, limit=None, order=None):
         query = super()._search(
             domain=domain,
             offset=offset,
             limit=limit,
             order=order,
-            access_rights_uid=access_rights_uid,
         )
         if self.env.is_superuser():
             # restrictions do not apply for the superuser
@@ -488,14 +488,14 @@ class EDIExchangeRecord(models.Model):
         ids = set(orig_ids)
         result = []
         model_data = defaultdict(lambda: defaultdict(set))
+        sub_query = """
+            SELECT id, res_id, model
+            FROM %(table)s
+            WHERE id = ANY (%%(ids)s)
+        """
         for sub_ids in self._cr.split_for_in_conditions(ids):
             self._cr.execute(
-                """
-                    SELECT id, res_id, model
-                    FROM "%s"
-                    WHERE id = ANY (%%(ids)s)
-                """
-                % self._table,
+                sub_query % {"table": self._table},
                 dict(ids=list(sub_ids)),
             )
             for eid, res_id, model in self._cr.fetchall():
@@ -505,7 +505,9 @@ class EDIExchangeRecord(models.Model):
                 model_data[model][res_id].add(eid)
 
         for model, targets in model_data.items():
-            if not self.env[model].check_access_rights("read", False):
+            try:
+                self.env[model].check_access("read")
+            except AccessError:  # no read access rights
                 continue
             recs = self.env[model].browse(list(targets))
             missing = recs - recs.exists()
@@ -534,7 +536,6 @@ class EDIExchangeRecord(models.Model):
                 offset=offset + len(orig_ids),
                 limit=limit,
                 order=order,
-                access_rights_uid=access_rights_uid,
             )
             extend_ids = list(extend_query)
             result.extend(extend_ids[: limit - len(result)])
@@ -549,13 +550,13 @@ class EDIExchangeRecord(models.Model):
     def read(self, fields=None, load="_classic_read"):
         """Override to explicitely call check_access_rule, that is not called
         by the ORM. It instead directly fetches ir.rules and apply them."""
-        self.check_access_rule("read")
+        self.check_access("read")
         return super().read(fields=fields, load=load)
 
-    def check_access_rule(self, operation):
+    def check_access(self, operation):
         """In order to check if we can access a record, we are checking if we can access
         the related document"""
-        super().check_access_rule(operation)
+        super().check_access(operation)
         if self.env.is_superuser():
             return
         default_checker = self.env["edi.exchange.consumer.mixin"].get_edi_access
@@ -577,11 +578,10 @@ class EDIExchangeRecord(models.Model):
                 check_operation = checker(
                     [record.id], operation, model_name=record._name
                 )
-                record.check_access_rights(check_operation)
-                record.check_access_rule(check_operation)
+                record.check_access(check_operation)
 
     def write(self, vals):
-        self.check_access_rule("write")
+        self.check_access("write")
         return super().write(vals)
 
     def _job_delay_params(self):

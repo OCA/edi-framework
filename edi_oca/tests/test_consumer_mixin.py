@@ -10,7 +10,7 @@ import unittest
 from lxml import etree
 from odoo_test_helper import FakeModelLoader
 
-from odoo.tests.common import Form, tagged
+from odoo.tests import Form, tagged
 
 from .common import EDIBackendCommonTestCase
 

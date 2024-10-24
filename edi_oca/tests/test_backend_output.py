@@ -130,7 +130,7 @@ class EDIBackendTestOutputJobsCase(EDIBackendCommonComponentRegistryTestCase):
     @classmethod
     def _setup_context(cls):
         # Re-enable jobs
-        return dict(super()._setup_context(), test_queue_job_no_delay=False)
+        return dict(super()._setup_context(), queue_job__no_delay=False)
 
     def test_job(self):
         with trap_jobs() as trap:
