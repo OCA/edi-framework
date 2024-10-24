@@ -52,15 +52,15 @@
                             <field name="encoding" />
                             <field
                                 name="encoding_out_error_handler"
-                                attrs="{'invisible': [('direction', '=', 'input')]}"
+                                invisible="direction == 'input'"
                             />
                             <field
                                 name="encoding_in_error_handler"
-                                attrs="{'invisible': [('direction', '=', 'output')]}"
+                                invisible="direction == 'output'"
                             />
                             <field
                                 name="allow_empty_files_on_receive"
-                                attrs="{'invisible': [('direction', '=', 'output')]}"
+                                invisible="direction == 'output'"
                             />
                         </group>
                     </group>
