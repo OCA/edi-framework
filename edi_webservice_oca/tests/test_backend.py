@@ -13,7 +13,7 @@ class TestEdiWebService(EDIBackendCommonTestCase):
             {
                 "name": "WebService",
                 "protocol": "http",
-                "url": "http://localhost.demo.odoo/",
+                "url": "https://localhost.demo.odoo/",
                 "content_type": "application/xml",
                 "tech_name": "demo_ws",
                 "auth_type": "none",

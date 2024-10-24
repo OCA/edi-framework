@@ -1,7 +1,10 @@
 # Copyright 2022 Camptocamp SA
 # @author Simone Orsi <simahawk@gmail.com>
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
+from urllib.parse import urlparse
+
 import responses
+from requests import PreparedRequest, Session
 
 from odoo import exceptions
 
@@ -9,6 +12,11 @@ from .common import TestEDIWebserviceBase
 
 
 class TestSend(TestEDIWebserviceBase):
+    @classmethod
+    def setUpClass(cls):
+        cls._super_send = Session.send
+        super().setUpClass()
+
     @classmethod
     def _setup_records(cls):
         result = super()._setup_records()
@@ -41,6 +49,13 @@ class TestSend(TestEDIWebserviceBase):
         """
         cls.record.type_id.set_settings(cls.settings1)
         return result
+
+    @classmethod
+    def _request_handler(cls, s: Session, r: PreparedRequest, /, **kw):
+        # Allow request to test custom URL
+        if urlparse(r.url).netloc == "foo.test":
+            return cls._super_send(s, r)
+        return super()._request_handler(s, r, **kw)
 
     def test_find_component(self):
         component = self.backend._get_component(self.record, "send")
