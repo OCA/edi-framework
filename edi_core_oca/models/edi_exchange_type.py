@@ -12,7 +12,6 @@ from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT as DATETIME_FORMAT
 from odoo.tools import groupby
 
 from odoo.addons.base_sparse_field.models.fields import Serialized
-from odoo.addons.http_routing.models.ir_http import slugify
 
 _logger = logging.getLogger(__name__)
 
@@ -247,7 +246,7 @@ class EDIExchangeType(models.Model):
         date_pattern = pattern_settings.get("date_pattern", DATETIME_FORMAT)
         tz = timezone(force_tz) if force_tz else None
         now = datetime.now(utc).astimezone(tz)
-        return slugify(now.strftime(date_pattern))
+        return self.env["ir.http"]._slugify(now.strftime(date_pattern))
 
     def _make_exchange_filename_sequence(self):
         self.ensure_one()
@@ -281,10 +280,10 @@ class EDIExchangeType(models.Model):
 
     def _get_record_name(self, exchange_record):
         if not exchange_record.res_id or not exchange_record.model:
-            return slugify(exchange_record.display_name)
+            return self.env["ir.http"]._slugify(exchange_record.display_name or "")
         if hasattr(exchange_record.record, "_get_edi_exchange_record_name"):
             return exchange_record.record._get_edi_exchange_record_name(exchange_record)
-        return slugify(exchange_record.record.display_name)
+        return self.env["ir.http"]._slugify(exchange_record.record.display_name or "")
 
     def is_partner_enabled(self, partner):
         """Check if given partner record is allowed for the current type.

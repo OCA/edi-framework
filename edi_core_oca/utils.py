@@ -4,13 +4,12 @@
 
 import hashlib
 
-from odoo.addons.http_routing.models.ir_http import slugify
 from odoo.addons.queue_job.job import identity_exact_hasher
 
 
-def normalize_string(a_string, sep="_"):
+def normalize_string(cls, a_string, sep="_"):
     """Normalize given string, replace dashes with given separator."""
-    return slugify(a_string).replace("-", sep)
+    return cls.env["ir.http"]._slugify(a_string).replace("-", sep)
 
 
 def get_checksum(filecontent):

@@ -17,13 +17,13 @@ EDI
     :target: http://www.gnu.org/licenses/lgpl-3.0-standalone.html
     :alt: License: LGPL-3
 .. |badge3| image:: https://img.shields.io/badge/github-OCA%2Fedi--framework-lightgray.png?logo=github
-    :target: https://github.com/OCA/edi-framework/tree/17.0/edi_oca
+    :target: https://github.com/OCA/edi-framework/tree/18.0/edi_oca
     :alt: OCA/edi-framework
 .. |badge4| image:: https://img.shields.io/badge/weblate-Translate%20me-F47D42.png
-    :target: https://translation.odoo-community.org/projects/edi-framework-17-0/edi-framework-17-0-edi_oca
+    :target: https://translation.odoo-community.org/projects/edi-framework-18-0/edi-framework-18-0-edi_oca
     :alt: Translate me on Weblate
 .. |badge5| image:: https://img.shields.io/badge/runboat-Try%20me-875A7B.png
-    :target: https://runboat.odoo-community.org/builds?repo=OCA/edi-framework&target_branch=17.0
+    :target: https://runboat.odoo-community.org/builds?repo=OCA/edi-framework&target_branch=18.0
     :alt: Try me on Runboat
 
 |badge1| |badge2| |badge3| |badge4| |badge5|
@@ -55,23 +55,23 @@ proper implementations of components.
 
 In order to define a new Exchange Record, we need to configure:
 
-- Backend Type
-- Exchange Type
-- Backend
-- Components
+-  Backend Type
+-  Exchange Type
+-  Backend
+-  Components
 
 Jobs
 ----
 
-- (1) **Internal User**: might be an EDI user without even knowing about
-  it, triggering EDI flows by some of his actions on business records;
-  does not need access to related queue jobs.
+-  (1) **Internal User**: might be an EDI user without even knowing
+   about it, triggering EDI flows by some of his actions on business
+   records; does not need access to related queue jobs.
 
-- (2) **EDI User**: more conscious EDI user that might sometimes need to
-  debug things a bit further and thus needs access to related queue
-  jobs.
+-  (2) **EDI User**: more conscious EDI user that might sometimes need
+   to debug things a bit further and thus needs access to related queue
+   jobs.
 
-- (3) **EDI Manager**: full configuration access.
+-  (3) **EDI Manager**: full configuration access.
 
 Component definition
 --------------------
@@ -79,10 +79,10 @@ Component definition
 The component usage must be defined like edi.{direction}.{kind}.{code}
 where:
 
-- direction is output or input
-- kind can be: generate, send, check, process, receive
-- code is the {backend type code} or {backend type code}.{exchange type
-  code}
+-  direction is output or input
+-  kind can be: generate, send, check, process, receive
+-  code is the {backend type code} or {backend type code}.{exchange type
+   code}
 
 User EDI generation
 -------------------
@@ -132,11 +132,11 @@ Odoo to another system.
 
 The flow of an output record should be:
 
-- Creation
-- Generation of data
-- Validation of data
-- Sending data
-- Validation of data processed properly by the other party
+-  Creation
+-  Generation of data
+-  Validation of data
+-  Sending data
+-  Validation of data processed properly by the other party
 
 Input Exchange records
 ----------------------
@@ -146,10 +146,10 @@ system to odoo.
 
 The flow of an input record should be:
 
-- Creation
-- Reception of data
-- Checking data
-- Processing data
+-  Creation
+-  Reception of data
+-  Checking data
+-  Processing data
 
 Known issues / Roadmap
 ======================
@@ -165,7 +165,7 @@ Bug Tracker
 Bugs are tracked on `GitHub Issues <https://github.com/OCA/edi-framework/issues>`_.
 In case of trouble, please check there if your issue has already been reported.
 If you spotted it first, help us to smash it by providing a detailed and welcomed
-`feedback <https://github.com/OCA/edi-framework/issues/new?body=module:%20edi_oca%0Aversion:%2017.0%0A%0A**Steps%20to%20reproduce**%0A-%20...%0A%0A**Current%20behavior**%0A%0A**Expected%20behavior**>`_.
+`feedback <https://github.com/OCA/edi-framework/issues/new?body=module:%20edi_oca%0Aversion:%2018.0%0A%0A**Steps%20to%20reproduce**%0A-%20...%0A%0A**Current%20behavior**%0A%0A**Expected%20behavior**>`_.
 
 Do not contact contributors directly about support or help with technical issues.
 
@@ -182,9 +182,9 @@ Authors
 Contributors
 ------------
 
-- Simone Orsi <simahawk@gmail.com>
-- Enric Tobella <etobella@creublanca.es>
-- Manuel Regidor <manuel.regidor@sygel.es>
+-  Simone Orsi <simahawk@gmail.com>
+-  Enric Tobella <etobella@creublanca.es>
+-  Manuel Regidor <manuel.regidor@sygel.es>
 
 Maintainers
 -----------
@@ -210,6 +210,6 @@ Current `maintainers <https://odoo-community.org/page/maintainer-role>`__:
 
 |maintainer-simahawk| |maintainer-etobella| 
 
-This module is part of the `OCA/edi-framework <https://github.com/OCA/edi-framework/tree/17.0/edi_oca>`_ project on GitHub.
+This module is part of the `OCA/edi-framework <https://github.com/OCA/edi-framework/tree/18.0/edi_oca>`_ project on GitHub.
 
 You are welcome to contribute. To learn how please visit https://odoo-community.org/page/Contribute.
