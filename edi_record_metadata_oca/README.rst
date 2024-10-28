@@ -17,21 +17,24 @@ EDI record metadata
     :target: http://www.gnu.org/licenses/lgpl-3.0-standalone.html
     :alt: License: LGPL-3
 .. |badge3| image:: https://img.shields.io/badge/github-OCA%2Fedi--framework-lightgray.png?logo=github
-    :target: https://github.com/OCA/edi-framework/tree/16.0/edi_record_metadata_oca
+    :target: https://github.com/OCA/edi-framework/tree/17.0/edi_record_metadata_oca
     :alt: OCA/edi-framework
 .. |badge4| image:: https://img.shields.io/badge/weblate-Translate%20me-F47D42.png
-    :target: https://translation.odoo-community.org/projects/edi-framework-16-0/edi-framework-16-0-edi_record_metadata_oca
+    :target: https://translation.odoo-community.org/projects/edi-framework-17-0/edi-framework-17-0-edi_record_metadata_oca
     :alt: Translate me on Weblate
 .. |badge5| image:: https://img.shields.io/badge/runboat-Try%20me-875A7B.png
-    :target: https://runboat.odoo-community.org/builds?repo=OCA/edi-framework&target_branch=16.0
+    :target: https://runboat.odoo-community.org/builds?repo=OCA/edi-framework&target_branch=17.0
     :alt: Try me on Runboat
 
 |badge1| |badge2| |badge3| |badge4| |badge5|
 
-Technical module for the EDI suite to provide a way to store some technical data.
+Technical module for the EDI suite to provide a way to store some
+technical data.
 
-For instance, you receive a sale order via EDI and you want to store some original values from the incoming file
-without having to parse again the whole file or compute values that you need later to compite something else.
+For instance, you receive a sale order via EDI and you want to store
+some original values from the incoming file without having to parse
+again the whole file or compute values that you need later to compite
+something else.
 
 .. IMPORTANT::
    This is an alpha version, the data model and design can change at any time without warning.
@@ -47,21 +50,20 @@ Usage
 =====
 
 Get / set metadata
-~~~~~~~~~~~~~~~~~~
+------------------
 
-On a `edi.exchange.record`:
+On a \`edi.exchange.record\`:
 
-    exc_record.set_metadata({...})
-    exc_record.get_metadata()
-
+   exc_record.set_metadata({...}) exc_record.get_metadata()
 
 Automatically store metadata from consumer records
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+--------------------------------------------------
 
-* Make sure your model inherits from `edi.exchange.consumer.mixin`
-* Override `_edi_get_metadata_to_store`
+-  Make sure your model inherits from edi.exchange.consumer.mixin
+-  Override \_edi_get_metadata_to_store
 
-NOTE: automatic storage happens only when `create` gets called in an EDI framework session (`edi_framework_action` is in ctx).
+NOTE: automatic storage happens only when create gets called in an EDI
+framework session (edi_framework_action is in ctx).
 
 Bug Tracker
 ===========
@@ -69,7 +71,7 @@ Bug Tracker
 Bugs are tracked on `GitHub Issues <https://github.com/OCA/edi-framework/issues>`_.
 In case of trouble, please check there if your issue has already been reported.
 If you spotted it first, help us to smash it by providing a detailed and welcomed
-`feedback <https://github.com/OCA/edi-framework/issues/new?body=module:%20edi_record_metadata_oca%0Aversion:%2016.0%0A%0A**Steps%20to%20reproduce**%0A-%20...%0A%0A**Current%20behavior**%0A%0A**Expected%20behavior**>`_.
+`feedback <https://github.com/OCA/edi-framework/issues/new?body=module:%20edi_record_metadata_oca%0Aversion:%2017.0%0A%0A**Steps%20to%20reproduce**%0A-%20...%0A%0A**Current%20behavior**%0A%0A**Expected%20behavior**>`_.
 
 Do not contact contributors directly about support or help with technical issues.
 
@@ -77,23 +79,24 @@ Credits
 =======
 
 Authors
-~~~~~~~
+-------
 
 * Camptocamp
 
 Contributors
-~~~~~~~~~~~~
+------------
 
-* Simone Orsi <simone.orsi@camptocamp.com>
-* Duong (Tran Quoc) <duongtq@trobz.com>
+-  Simone Orsi <simone.orsi@camptocamp.com>
+-  Duong (Tran Quoc) <duongtq@trobz.com>
 
 Other credits
-~~~~~~~~~~~~~
+-------------
 
-The migration of this module from 14.0 to 16.0 was financially supported by Camptocamp.
+The migration of this module from 14.0 to 16.0 was financially supported
+by Camptocamp.
 
 Maintainers
-~~~~~~~~~~~
+-----------
 
 This module is maintained by the OCA.
 
@@ -113,6 +116,6 @@ Current `maintainer <https://odoo-community.org/page/maintainer-role>`__:
 
 |maintainer-simahawk| 
 
-This module is part of the `OCA/edi-framework <https://github.com/OCA/edi-framework/tree/16.0/edi_record_metadata_oca>`_ project on GitHub.
+This module is part of the `OCA/edi-framework <https://github.com/OCA/edi-framework/tree/17.0/edi_record_metadata_oca>`_ project on GitHub.
 
 You are welcome to contribute. To learn how please visit https://odoo-community.org/page/Contribute.
