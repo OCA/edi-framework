@@ -67,9 +67,9 @@ class EDIExchangeSOInput(Component):
 
     def _handle_existing_order(self, order, message):
         prev_record = self._get_previous_record(order)
-        self.exchange_record.message_post_with_view(
-            "edi_sale_oca.message_already_imported",
-            values={
+        self.exchange_record.message_post_with_source(
+            "edi_sale_import_oca.message_already_imported",
+            render_values={
                 "order": order,
                 "prev_record": prev_record,
                 "message": message,

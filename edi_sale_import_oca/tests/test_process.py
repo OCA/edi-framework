@@ -23,7 +23,8 @@ class TestProcessComponent(TransactionComponentCase, EDIBackendTestMixin):
             exchange_file_ext="xml",
             exchange_filename_pattern="{record.identifier}-{type.code}-{dt}",
             backend_id=cls.backend.id,
-            # Bypass required fields with default_import_type = 'xml' in sale_order_import
+            # Bypass required fields with
+            # default_import_type = 'xml' in sale_order_import
             advanced_settings_edit=textwrap.dedent(
                 """
             components:
@@ -112,8 +113,30 @@ class TestProcessComponent(TransactionComponentCase, EDIBackendTestMixin):
         )
 
     def test_metadata(self):
+        usd_pricelist = self.env["product.pricelist"].create(
+            {
+                "name": "USD test pricelist",
+                "currency_id": self.env.ref("base.USD").id,
+            }
+        )
+        self.env["res.partner"].create(
+            {
+                "name": "John Doe",
+                "email": "john.doe@test.example.com",
+                "mobile": "+1 202 555 0888",
+                "phone": "+1 202 555 0122",
+                "function": "Painter",
+                "street": "Cookieville Minimum-Security Orphanarium",
+                "city": "New York",
+                "country_id": self.env.ref("base.us").id,
+                "zip": "97648",
+                "website": "https://test.exemple.com",
+                "company_id": False,
+                "property_product_pricelist": usd_pricelist.id,
+            }
+        )
         parsed_order = {
-            "partner": {"email": "john.doe@example.com"},
+            "partner": {"email": "john.doe@test.example.com"},
             "date": "2023-05-18",
             "order_ref": "EDISALE",
             "lines": [

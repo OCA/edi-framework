@@ -6,11 +6,8 @@ from odoo import api, fields, models
 
 
 class SaleOrder(models.Model):
-    _name = "sale.order"
-    _inherit = [
-        "sale.order",
-        "edi.exchange.consumer.mixin",
-    ]
+    _inherit = "sale.order"
+
     # Receiver may send or not the response on create
     # then for each update IF required.
     # https://docs.oasis-open.org/ubl/os-UBL-2.3/UBL-2.3.html#S-ORDERING-POST-AWARD
@@ -21,11 +18,8 @@ class SaleOrder(models.Model):
     # can be complex to manage (also for the 3rd party).
     # Hence, we could block further modifications w/ sale exceptions
     # and ask the sender to issue a new order request.
-    # This approach seems suitable only for orders that do not get processed immediately.
-
-    edi_disable_auto = fields.Boolean(
-        states={"draft": [("readonly", False)]},
-    )
+    # This approach seems suitable only for orders that do not
+    # get processed immediately.
 
     # edi_record_metadata api
     def _edi_get_metadata_to_store(self, orig_vals):
@@ -42,14 +36,7 @@ class SaleOrder(models.Model):
 
 
 class SaleOrderLine(models.Model):
-    _name = "sale.order.line"
-    _inherit = [
-        "sale.order.line",
-        "edi.exchange.consumer.mixin",
-        "edi.id.mixin",
-    ]
-
-    edi_disable_auto = fields.Boolean(related="order_id.edi_disable_auto")
+    _inherit = "sale.order.line"
 
     # TODO: add test
     edi_exchange_ready = fields.Boolean(compute="_compute_edi_exchange_ready")
