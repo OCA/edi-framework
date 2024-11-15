@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-11-15 15:06+0000\n"
+"PO-Revision-Date: 2024-11-15 18:06+0000\n"
 "Last-Translator: mymage <stefano.consolaro@mymage.it>\n"
 "Language-Team: none\n"
 "Language: it\n"
@@ -925,7 +925,7 @@ msgstr "Canale lavoro"
 #: model:ir.model.fields,field_description:edi_oca.field_edi_exchange_type_rule__kind
 #: model_terms:ir.ui.view,arch_db:edi_oca.edi_exchange_type_rule_view_search
 msgid "Kind"
-msgstr "Tipo"
+msgstr "Genere"
 
 #. module: edi_oca
 #: model:ir.model.fields,field_description:edi_oca.field_edi_backend__write_uid
@@ -1164,12 +1164,12 @@ msgstr "Inviato"
 #. module: edi_oca
 #: model:ir.model.fields.selection,name:edi_oca.selection__edi_exchange_record__edi_exchange_state__output_sent_and_error
 msgid "Sent and error"
-msgstr "Inviato un errore"
+msgstr "Inviato ed errore"
 
 #. module: edi_oca
 #: model:ir.model.fields.selection,name:edi_oca.selection__edi_exchange_record__edi_exchange_state__output_sent_and_processed
 msgid "Sent and processed"
-msgstr "Inviato e elaborato"
+msgstr "Inviato ed elaborato"
 
 #. module: edi_oca
 #: model:ir.model.fields,help:edi_oca.field_edi_exchange_record__ack_received_on
@@ -1190,7 +1190,7 @@ msgstr "Visualizza tutti i record creati oggi"
 #. module: edi_oca
 #: model_terms:ir.ui.view,arch_db:edi_oca.edi_exchange_type_rule_view_form
 msgid "Snippet"
-msgstr "Snippet"
+msgstr "Esempio codice"
 
 #. module: edi_oca
 #: model:ir.model.fields,help:edi_oca.field_edi_exchange_type_rule__enable_snippet
@@ -1251,7 +1251,7 @@ msgstr "Tipo"
 #. module: edi_oca
 #: model:ir.model.fields,help:edi_oca.field_edi_exchange_type_rule__form_btn_label
 msgid "Type name used by default"
-msgstr "Nome tipo utilizzado in modo predefinito"
+msgstr "Nome tipo utilizzato in modo predefinito"
 
 #. module: edi_oca
 #: model:ir.model.fields.selection,name:edi_oca.selection__edi_exchange_record__edi_exchange_state__input_pending
@@ -1295,7 +1295,7 @@ msgid ""
 msgstr ""
 "Si può usare questo campo per limitare la generazione/elaborazione degli "
 "scambi per partner specifici. Utilizzarlo direttamente o all'interno delle "
-"regole dei modelli (dominio o snippet)."
+"regole dei modelli (dominio o esempio codice)."
 
 #. module: edi_oca
 #: model:ir.model.fields.selection,name:edi_oca.selection__edi_exchange_record__edi_exchange_state__output_error_on_send
