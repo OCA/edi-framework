@@ -39,6 +39,7 @@
         "views/edi_exchange_type_views.xml",
         "views/edi_exchange_type_rule_views.xml",
         "views/edi_configuration_views.xml",
+        "views/edi_configuration_trigger_views.xml",
         "views/res_partner.xml",
         "views/menuitems.xml",
         "templates/exchange_chatter_msg.xml",
