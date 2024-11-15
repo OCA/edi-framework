@@ -5,7 +5,7 @@
 # License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl).
 
 import os
-import unittest
+from unittest import mock, skipIf
 
 from lxml import etree
 from odoo_test_helper import FakeModelLoader
@@ -17,8 +17,8 @@ from .common import EDIBackendCommonTestCase
 
 # This clashes w/ some setup (eg: run tests w/ pytest when edi_storage is installed)
 # If you still want to run `edi` tests w/ pytest when this happens, set this env var.
-@unittest.skipIf(os.getenv("SKIP_EDI_CONSUMER_CASE"), "Consumer test case disabled.")
 @tagged("at_install", "-post_install")
+@skipIf(os.getenv("SKIP_EDI_CONSUMER_CASE"), "Consumer test case disabled.")
 class TestConsumerMixinCase(EDIBackendCommonTestCase):
     @classmethod
     def _setup_env(cls):
@@ -198,3 +198,74 @@ result = not record._has_exchange_record(exchange_type, exchange_type.backend_id
             form = etree.fromstring(view["arch"])
             self.assertTrue(form.xpath("//field[@name='edi_has_form_config']"))
             self.assertTrue(form.xpath("//field[@name='edi_config']"))
+
+    # Don't care about real data processing here
+    @mock.patch("odoo.addons.edi_oca.models.edi_backend.EDIBackend._validate_data")
+    @mock.patch("odoo.addons.edi_oca.models.edi_backend.EDIBackend._exchange_generate")
+    @mock.patch("odoo.addons.edi_oca.models.edi_backend.EDIBackend._exchange_send")
+    def test_edi_send_via_edi(self, mocked_send, mocked_generate, mocked_validate):
+        mocked_generate.return_value = "result"
+        self.assertEqual(self.consumer_record.exchange_record_count, 0)
+        self.consumer_record._edi_send_via_edi(
+            self.exchange_type_new, backend=self.backend
+        )
+        self.assertEqual(
+            self.consumer_record.exchange_record_ids[0].type_id, self.exchange_type_new
+        )
+        self.assertEqual(
+            self.consumer_record.exchange_record_ids[0]._get_file_content(), "result"
+        )
+
+    @mock.patch("odoo.addons.edi_oca.models.edi_backend.EDIBackend._validate_data")
+    @mock.patch("odoo.addons.edi_oca.models.edi_backend.EDIBackend._exchange_generate")
+    @mock.patch("odoo.addons.edi_oca.models.edi_backend.EDIBackend._exchange_send")
+    def test_edi_send_via_edi_ack(self, mocked_send, mocked_generate, mocked_validate):
+        mocked_generate.return_value = "result"
+        vals = {
+            "model": self.consumer_record._name,
+            "res_id": self.consumer_record.id,
+        }
+        origin_exchange_record = self.backend.create_record(
+            self.exchange_type_in.code, vals
+        )
+        origin_exchange_record._set_file_content("original file")
+        self.consumer_record._edi_set_origin(origin_exchange_record)
+        self.assertEqual(self.consumer_record.exchange_record_count, 1)
+        # Type out is an hack for the original record, they will be linked
+        self.exchange_type_in.ack_type_id = self.exchange_type_out
+        self.consumer_record._edi_send_via_edi(
+            self.exchange_type_out, backend=self.backend
+        )
+        self.assertEqual(self.consumer_record.exchange_record_count, 2)
+        ack_record = self.consumer_record.exchange_record_ids[1]
+        self.assertEqual(ack_record.parent_id, origin_exchange_record)
+        self.assertEqual(ack_record.type_id, self.exchange_type_out)
+        self.assertEqual(ack_record._get_file_content(), "result")
+
+    @mock.patch("odoo.addons.edi_oca.models.edi_backend.EDIBackend._validate_data")
+    @mock.patch("odoo.addons.edi_oca.models.edi_backend.EDIBackend._exchange_generate")
+    @mock.patch("odoo.addons.edi_oca.models.edi_backend.EDIBackend._exchange_send")
+    def test_edi_send_via_edi_invalid_ack(
+        self, mocked_send, mocked_generate, mocked_validate
+    ):
+        mocked_generate.return_value = "result"
+        vals = {
+            "model": self.consumer_record._name,
+            "res_id": self.consumer_record.id,
+        }
+        origin_exchange_record = self.backend.create_record(
+            self.exchange_type_in.code, vals
+        )
+        origin_exchange_record._set_file_content("original file")
+        self.consumer_record._edi_set_origin(origin_exchange_record)
+        self.assertEqual(self.consumer_record.exchange_record_count, 1)
+        # Type out is an hack for another type, they will not be linked
+        self.exchange_type_in.ack_type_id = self.exchange_type_out_ack
+        self.consumer_record._edi_send_via_edi(
+            self.exchange_type_out, backend=self.backend
+        )
+        self.assertEqual(self.consumer_record.exchange_record_count, 2)
+        ack_record = self.consumer_record.exchange_record_ids[1]
+        self.assertFalse(ack_record.parent_id)
+        self.assertEqual(ack_record.type_id, self.exchange_type_out)
+        self.assertEqual(ack_record._get_file_content(), "result")
