@@ -65,10 +65,9 @@ class TestEDIConfigurations(EDIBackendCommonComponentRegistryTestCase):
             {
                 "name": "Create Config",
                 "active": True,
-                "code": "create_config",
                 "backend_id": cls.backend.id,
                 "type_id": cls.exchange_type_out.id,
-                "trigger": "on_record_create",
+                "trigger_id": cls.env.ref("edi_oca.edi_conf_trigger_record_create").id,
                 "model_id": cls.env["ir.model"]._get_id("edi.exchange.consumer.test"),
                 "snippet_do": "record._edi_send_via_edi(conf.type_id)",
             }
@@ -77,10 +76,9 @@ class TestEDIConfigurations(EDIBackendCommonComponentRegistryTestCase):
             {
                 "name": "Write Config 1",
                 "active": True,
-                "code": "write_config",
                 "backend_id": cls.backend.id,
                 "type_id": cls.exchange_type_out.id,
-                "trigger": "on_record_write",
+                "trigger_id": cls.env.ref("edi_oca.edi_conf_trigger_record_write").id,
                 "model_id": cls.env["ir.model"]._get_id("edi.exchange.consumer.test"),
                 "snippet_do": "record._edi_send_via_edi(conf.type_id)",
             }
