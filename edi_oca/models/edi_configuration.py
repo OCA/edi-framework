@@ -33,7 +33,6 @@ class EdiConfiguration(models.Model):
 
     name = fields.Char(required=True)
     active = fields.Boolean(default=True)
-    code = fields.Char(required=True, copy=False, index=True, unique=True)
     description = fields.Char(help="Describe what the conf is for")
     backend_id = fields.Many2one(comodel_name="edi.backend")
     # Field `type_id` is not a mandatory field because we will create 2 common confs
@@ -52,22 +51,12 @@ class EdiConfiguration(models.Model):
         help="Model the conf applies to. Leave blank to apply for all models",
     )
     model_name = fields.Char(related="model_id.model", store=True)
-    trigger = fields.Selection(
-        # The selections below are intended to assist with basic operations
-        # and are used to setup common configuration.
-        [
-            ("on_record_write", "Update Record"),
-            ("on_record_create", "Create Record"),
-            ("on_send_via_email", "Send Via Email"),
-            ("on_send_via_edi", "Send Via EDI"),
-            ("disabled", "Disabled"),
-        ],
-        # The default selection will be disabled.
-        # which would allow to keep the conf visible but disabled.
-        required=True,
-        default="disabled",
-        ondelete="on default",
+    trigger_id = fields.Many2one(
+        comodel_name="edi.configuration.trigger",
+        help="Trigger that activates this configuration",
+        domain="['|', ('model_id', '=', model_id), ('model_id', '=', False)]",
     )
+    trigger = fields.Char(related="trigger_id.code")
     snippet_before_do = fields.Text(
         help="Snippet to validate the state and collect records to do",
     )
