@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-07-29 08:58+0000\n"
+"PO-Revision-Date: 2024-11-15 14:06+0000\n"
 "Last-Translator: mymage <stefano.consolaro@mymage.it>\n"
 "Language-Team: none\n"
 "Language: it\n"
@@ -19,106 +19,106 @@ msgstr ""
 #. module: edi_endpoint_oca
 #: model_terms:ir.ui.view,arch_db:edi_endpoint_oca.edi_endpoint_form_view
 msgid "<span class=\"o_stat_text\">Exchanges</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Scambi</span>"
 
 #. module: edi_endpoint_oca
 #: model:ir.model,name:edi_endpoint_oca.model_edi_exchange_consumer_mixin
 msgid "Abstract record where exchange records can be assigned"
-msgstr ""
+msgstr "Record astratto dove i recod di scambio possono essere assegnati"
 
 #. module: edi_endpoint_oca
 #: model:ir.model.fields,field_description:edi_endpoint_oca.field_edi_endpoint__active
 msgid "Active"
-msgstr ""
+msgstr "Attivo"
 
 #. module: edi_endpoint_oca
 #: model:ir.model.fields,field_description:edi_endpoint_oca.field_edi_endpoint__auth_type
 msgid "Auth Type"
-msgstr ""
+msgstr "Tipo autorizzazione"
 
 #. module: edi_endpoint_oca
 #: model:ir.model.fields,field_description:edi_endpoint_oca.field_edi_endpoint__backend_id
 #: model_terms:ir.ui.view,arch_db:edi_endpoint_oca.edi_endpoint_search_view
 msgid "Backend"
-msgstr ""
+msgstr "Backend"
 
 #. module: edi_endpoint_oca
 #: model:ir.model.fields,field_description:edi_endpoint_oca.field_edi_endpoint__backend_type_id
 msgid "Backend Type"
-msgstr ""
+msgstr "Tipo backend"
 
 #. module: edi_endpoint_oca
 #. odoo-python
 #: code:addons/edi_endpoint_oca/models/edi_endpoint.py:0
 #, python-format
 msgid "Backend and exchange type are mandatory"
-msgstr ""
+msgstr "Il backend e il tipo scambio sono obbligatori"
 
 #. module: edi_endpoint_oca
 #: model_terms:ir.ui.view,arch_db:edi_endpoint_oca.edi_endpoint_search_view
 msgid "Backend type"
-msgstr ""
+msgstr "Tipo backend"
 
 #. module: edi_endpoint_oca
 #: model:ir.model.fields,field_description:edi_endpoint_oca.field_edi_endpoint__code_snippet
 msgid "Code Snippet"
-msgstr ""
+msgstr "Esempio codice"
 
 #. module: edi_endpoint_oca
 #: model:ir.model.fields,field_description:edi_endpoint_oca.field_edi_endpoint__code_snippet_docs
 msgid "Code Snippet Docs"
-msgstr ""
+msgstr "Documenti esempio codice"
 
 #. module: edi_endpoint_oca
 #: model:ir.model.fields,field_description:edi_endpoint_oca.field_edi_endpoint__company_id
 msgid "Company"
-msgstr ""
+msgstr "Azienda"
 
 #. module: edi_endpoint_oca
 #: model:ir.model.fields,field_description:edi_endpoint_oca.field_edi_endpoint__create_uid
 msgid "Created by"
-msgstr ""
+msgstr "Creato da"
 
 #. module: edi_endpoint_oca
 #: model:ir.model.fields,field_description:edi_endpoint_oca.field_edi_endpoint__create_date
 msgid "Created on"
-msgstr ""
+msgstr "Creato il"
 
 #. module: edi_endpoint_oca
 #: model:ir.model.fields,field_description:edi_endpoint_oca.field_edi_endpoint__csrf
 msgid "Csrf"
-msgstr ""
+msgstr "CSRF"
 
 #. module: edi_endpoint_oca
 #: model:ir.model.fields,field_description:edi_endpoint_oca.field_edi_endpoint__display_name
 msgid "Display Name"
-msgstr ""
+msgstr "Nome visualizzato"
 
 #. module: edi_endpoint_oca
 #: model_terms:ir.ui.view,arch_db:edi_endpoint_oca.edi_endpoint_form_view
 msgid "EDI"
-msgstr ""
+msgstr "EDI"
 
 #. module: edi_endpoint_oca
 #: model:ir.model,name:edi_endpoint_oca.model_edi_backend
 msgid "EDI Backend"
-msgstr ""
+msgstr "Backend EDI"
 
 #. module: edi_endpoint_oca
 #: model:ir.model,name:edi_endpoint_oca.model_edi_backend_type
 msgid "EDI Backend Type"
-msgstr ""
+msgstr "Tipo backend EDI"
 
 #. module: edi_endpoint_oca
 #: model:ir.model,name:edi_endpoint_oca.model_edi_endpoint
 msgid "EDI Endpoint"
-msgstr ""
+msgstr "Endpoint EDI"
 
 #. module: edi_endpoint_oca
 #: model:ir.actions.act_window,name:edi_endpoint_oca.edi_endpoint_act_window
 #: model:ir.ui.menu,name:edi_endpoint_oca.edi_endpoint_menu
 msgid "EDI Endpoints"
-msgstr ""
+msgstr "Endopoint EDI"
 
 #. module: edi_endpoint_oca
 #: model:ir.model,name:edi_endpoint_oca.model_edi_exchange_record
@@ -128,98 +128,98 @@ msgstr "Record di scambio EDI"
 #. module: edi_endpoint_oca
 #: model:ir.model.fields,field_description:edi_endpoint_oca.field_edi_exchange_consumer_mixin__origin_edi_endpoint_id
 msgid "EDI origin endpoint"
-msgstr ""
+msgstr "Endpoint origine EDI"
 
 #. module: edi_endpoint_oca
 #: model:ir.model.fields,field_description:edi_endpoint_oca.field_edi_exchange_record__edi_endpoint_id
 #: model_terms:ir.ui.view,arch_db:edi_endpoint_oca.edi_exchange_record_view_search
 #: model_terms:ir.ui.view,arch_db:edi_endpoint_oca.edi_exchange_record_view_tree
 msgid "Endpoint"
-msgstr ""
+msgstr "Endpoint"
 
 #. module: edi_endpoint_oca
 #: model:ir.model.fields,field_description:edi_endpoint_oca.field_edi_endpoint__endpoint_hash
 msgid "Endpoint Hash"
-msgstr ""
+msgstr "Hash endpoint"
 
 #. module: edi_endpoint_oca
 #: model:ir.model.fields,field_description:edi_endpoint_oca.field_edi_backend__endpoint_ids
 #: model:ir.model.fields,field_description:edi_endpoint_oca.field_edi_backend_type__endpoint_ids
 #: model_terms:ir.ui.view,arch_db:edi_endpoint_oca.edi_backend_view_form
 msgid "Endpoints"
-msgstr ""
+msgstr "Endpoint"
 
 #. module: edi_endpoint_oca
 #: model:ir.model.fields,field_description:edi_endpoint_oca.field_edi_backend__endpoints_count
 msgid "Endpoints Count"
-msgstr ""
+msgstr "Conteggio endpoint"
 
 #. module: edi_endpoint_oca
 #: model:ir.model.fields,field_description:edi_endpoint_oca.field_edi_endpoint__exchange_type_id
 msgid "Exchange Type"
-msgstr ""
+msgstr "Tipo scambio"
 
 #. module: edi_endpoint_oca
 #: model_terms:ir.ui.view,arch_db:edi_endpoint_oca.edi_endpoint_search_view
 msgid "Exchange type"
-msgstr ""
+msgstr "Tipo scambio"
 
 #. module: edi_endpoint_oca
 #. odoo-python
 #: code:addons/edi_endpoint_oca/models/edi_endpoint.py:0
 #, python-format
 msgid "Exchange type not compatible with selected backend type."
-msgstr ""
+msgstr "Tipo scambio non compatibile con il tipo backend selezionato."
 
 #. module: edi_endpoint_oca
 #: model:ir.model.fields,field_description:edi_endpoint_oca.field_edi_endpoint__exec_as_user_id
 msgid "Exec As User"
-msgstr ""
+msgstr "Esegui come utente"
 
 #. module: edi_endpoint_oca
 #: model:ir.model.fields,field_description:edi_endpoint_oca.field_edi_endpoint__exec_mode
 msgid "Exec Mode"
-msgstr ""
+msgstr "Modo esecuzione"
 
 #. module: edi_endpoint_oca
 #: model_terms:ir.ui.view,arch_db:edi_endpoint_oca.edi_endpoint_search_view
 msgid "Group By"
-msgstr ""
+msgstr "Raggruppa per"
 
 #. module: edi_endpoint_oca
 #: model:ir.model.fields,field_description:edi_endpoint_oca.field_edi_endpoint__id
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: edi_endpoint_oca
 #: model:ir.model.fields,help:edi_endpoint_oca.field_edi_endpoint__endpoint_hash
 msgid "Identify the route with its main params"
-msgstr ""
+msgstr "Identifica la rotta con questi parametri principali"
 
 #. module: edi_endpoint_oca
 #: model:ir.model.fields,field_description:edi_endpoint_oca.field_edi_endpoint____last_update
 msgid "Last Modified on"
-msgstr ""
+msgstr "Ultima modifica il"
 
 #. module: edi_endpoint_oca
 #: model:ir.model.fields,field_description:edi_endpoint_oca.field_edi_endpoint__write_uid
 msgid "Last Updated by"
-msgstr ""
+msgstr "Ultimo aggiornamento di"
 
 #. module: edi_endpoint_oca
 #: model:ir.model.fields,field_description:edi_endpoint_oca.field_edi_endpoint__write_date
 msgid "Last Updated on"
-msgstr ""
+msgstr "Ultimo aggiornamento il"
 
 #. module: edi_endpoint_oca
 #: model_terms:ir.ui.view,arch_db:edi_endpoint_oca.edi_backend_view_form
 msgid "Manage endpoints"
-msgstr ""
+msgstr "Gestione endpoint"
 
 #. module: edi_endpoint_oca
 #: model:ir.model.fields,field_description:edi_endpoint_oca.field_edi_endpoint__name
 msgid "Name"
-msgstr ""
+msgstr "Nome"
 
 #. module: edi_endpoint_oca
 #: model:ir.model.fields,help:edi_endpoint_oca.field_edi_endpoint__registry_sync
@@ -229,47 +229,52 @@ msgid ""
 "\n"
 "OFF: record in line with the registry, nothing to do."
 msgstr ""
+"Acceso: il record è stato modificato e il registro non è stato notificato.\n"
+"Nessuna modifica sarà attiva finchè questa opzione è impostata a falso "
+"attraverso un'azione opportuna.\n"
+"\n"
+"Spento: record allineato con il registro, non c'è niente da fare."
 
 #. module: edi_endpoint_oca
 #: model:ir.model.fields,help:edi_endpoint_oca.field_edi_exchange_consumer_mixin__origin_edi_endpoint_id
 #: model:ir.model.fields,help:edi_endpoint_oca.field_edi_exchange_record__edi_endpoint_id
 msgid "Record generated via this endpoint"
-msgstr ""
+msgstr "Record generato attraverso questo endpoint"
 
 #. module: edi_endpoint_oca
 #: model:ir.model.fields,field_description:edi_endpoint_oca.field_edi_endpoint__registry_sync
 msgid "Registry Sync"
-msgstr ""
+msgstr "Sincro registro"
 
 #. module: edi_endpoint_oca
 #: model:ir.model.fields,field_description:edi_endpoint_oca.field_edi_endpoint__request_content_type
 msgid "Request Content Type"
-msgstr ""
+msgstr "Tipo contenuto richiesta"
 
 #. module: edi_endpoint_oca
 #: model:ir.model.fields,field_description:edi_endpoint_oca.field_edi_endpoint__request_method
 msgid "Request Method"
-msgstr ""
+msgstr "Metodo richiesta"
 
 #. module: edi_endpoint_oca
 #: model:ir.model.fields,field_description:edi_endpoint_oca.field_edi_endpoint__route
 msgid "Route"
-msgstr ""
+msgstr "Percorso"
 
 #. module: edi_endpoint_oca
 #: model:ir.model.fields,field_description:edi_endpoint_oca.field_edi_endpoint__route_group
 msgid "Route Group"
-msgstr ""
+msgstr "Gruppo percorso"
 
 #. module: edi_endpoint_oca
 #: model:ir.model.fields,field_description:edi_endpoint_oca.field_edi_endpoint__route_type
 msgid "Route Type"
-msgstr ""
+msgstr "Tipo percorso"
 
 #. module: edi_endpoint_oca
 #: model:ir.actions.server,name:edi_endpoint_oca.server_action_registry_sync
 msgid "Sync registry"
-msgstr ""
+msgstr "Sincronizza registro"
 
 #. module: edi_endpoint_oca
 #. odoo-python
@@ -281,13 +286,17 @@ msgid ""
 "\n"
 "%s"
 msgstr ""
+"I seguenti backend hanno endpoints allegati. Devono essere prima archiviati:"
+"\n"
+"\n"
+"%s"
 
 #. module: edi_endpoint_oca
 #: model:ir.model.fields,help:edi_endpoint_oca.field_edi_endpoint__route_group
 msgid "Use this to classify routes together"
-msgstr ""
+msgstr "Utilizzarlo per classificare i percorsi insieme"
 
 #. module: edi_endpoint_oca
 #: model_terms:ir.ui.view,arch_db:edi_endpoint_oca.edi_backend_view_form
 msgid "endpoints configured"
-msgstr ""
+msgstr "endopoint configurati"
