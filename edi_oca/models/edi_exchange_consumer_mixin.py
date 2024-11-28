@@ -405,3 +405,20 @@ class EDIExchangeConsumerMixin(models.AbstractModel):
         # Send the email
         composer.send_mail()
         return True
+
+    def write(self, vals):
+        # Generic event to match a state change
+        # TODO: this can be added to component_event for models having the state field
+        state_change = "state" in vals and "state" in self._fields
+        if state_change:
+            for rec in self:
+                rec._event(f"on_edi_{self._table}_before_state_change").notify(
+                    rec, state=vals["state"]
+                )
+        res = super().write(vals)
+        if state_change:
+            for rec in self:
+                rec._event(f"on_edi_{self._table}_state_change").notify(
+                    rec, state=vals["state"]
+                )
+        return res
