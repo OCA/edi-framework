@@ -67,10 +67,8 @@
                             string="Model rules"
                             groups="edi_oca.group_edi_advanced_settings_manager"
                         >
-                            <field
-                                name="rule_ids"
-                                context="{'default_type_id': active_id}"
-                            >
+                            <field name="id" invisible="1" />
+                            <field name="rule_ids" context="{'default_type_id': id}">
                                 <tree decoration-muted="(not active)">
                                     <field name="active" invisible="1" />
                                     <field name="name" />
