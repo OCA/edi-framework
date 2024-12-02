@@ -399,6 +399,29 @@ class EDIBackend(models.Model):
         for backend in self:
             backend._check_output_exchange_sync(**kw)
 
+    def exchange_generate_send(self, recordset, skip_generate=False, skip_send=False):
+        """Generate and send output files for given records.
+
+        If both are False, the record will be generated and sent right away
+        with chained jobs.
+
+        If both `skip_generate` and `skip_send` are True, nothing will be done.
+        :param recordset: edi.exchange.record recordset
+        :param skip_generate: only send records
+        :param skip_send: only generate missing output
+        """
+        for rec in recordset:
+            if not skip_generate and not skip_send:
+                job1 = rec.delayable().action_exchange_generate()
+                # Chain send job.
+                # Raise prio to max to send the record out as fast as possible.
+                job1.on_done(rec.delayable(priority=0).action_exchange_send())
+                job1.delay()
+            elif skip_send:
+                rec.with_delay().action_exchange_generate()
+            elif not skip_send:
+                rec.with_delay(priority=0).action_exchange_send()
+
     def _check_output_exchange_sync(
         self, skip_send=False, skip_sent=True, record_ids=None
     ):
