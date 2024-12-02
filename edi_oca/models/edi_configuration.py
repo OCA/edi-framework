@@ -50,7 +50,9 @@ class EdiConfiguration(models.Model):
         string="Model",
         help="Model the conf applies to. Leave blank to apply for all models",
     )
-    model_name = fields.Char(related="model_id.model", store=True)
+    model_name = fields.Char(
+        related="model_id.model", store=True, string="Model tech name"
+    )
     trigger_id = fields.Many2one(
         string="Trigger",
         comodel_name="edi.configuration.trigger",
