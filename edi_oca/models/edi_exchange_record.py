@@ -326,6 +326,9 @@ class EDIExchangeRecord(models.Model):
         self.ensure_one()
         return self.backend_id.exchange_send(self)
 
+    def action_exchange_generate_send(self, **kw):
+        return self.backend_id.exchange_generate_send(self, **kw)
+
     def action_exchange_process(self):
         self.ensure_one()
         return self.backend_id.exchange_process(self)
