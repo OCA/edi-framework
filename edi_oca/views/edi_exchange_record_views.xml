@@ -99,7 +99,7 @@
                             class="oe_stat_button"
                             icon="fa-calendar"
                             name="action_view_related_queue_jobs"
-                            attrs="{'invisible': [('related_queue_jobs_count', '=', 0)]}"
+                            invisible="not related_queue_jobs_count"
                             groups="base_edi.group_edi_user"
                         >
                             <field

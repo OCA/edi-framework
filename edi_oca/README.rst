@@ -55,10 +55,10 @@ proper implementations of components.
 
 In order to define a new Exchange Record, we need to configure:
 
-- Backend Type
-- Exchange Type
-- Backend
-- Components
+-  Backend Type
+-  Exchange Type
+-  Backend
+-  Components
 
 Jobs
 ----
@@ -79,10 +79,10 @@ Component definition
 The component usage must be defined like edi.{direction}.{kind}.{code}
 where:
 
-- direction is output or input
-- kind can be: generate, send, check, process, receive
-- code is the {backend type code} or {backend type code}.{exchange type
-  code}
+-  direction is output or input
+-  kind can be: generate, send, check, process, receive
+-  code is the {backend type code} or {backend type code}.{exchange type
+   code}
 
 User EDI generation
 -------------------
@@ -132,11 +132,11 @@ Odoo to another system.
 
 The flow of an output record should be:
 
-- Creation
-- Generation of data
-- Validation of data
-- Sending data
-- Validation of data processed properly by the other party
+-  Creation
+-  Generation of data
+-  Validation of data
+-  Sending data
+-  Validation of data processed properly by the other party
 
 Input Exchange records
 ----------------------
@@ -146,10 +146,10 @@ system to odoo.
 
 The flow of an input record should be:
 
-- Creation
-- Reception of data
-- Checking data
-- Processing data
+-  Creation
+-  Reception of data
+-  Checking data
+-  Processing data
 
 Known issues / Roadmap
 ======================
@@ -182,9 +182,9 @@ Authors
 Contributors
 ------------
 
-- Simone Orsi <simahawk@gmail.com>
-- Enric Tobella <etobella@creublanca.es>
-- Manuel Regidor <manuel.regidor@sygel.es>
+-  Simone Orsi <simahawk@gmail.com>
+-  Enric Tobella <etobella@creublanca.es>
+-  Manuel Regidor <manuel.regidor@sygel.es>
 
 Maintainers
 -----------
