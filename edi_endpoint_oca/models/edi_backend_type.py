@@ -7,7 +7,6 @@ from odoo import fields, models
 
 # TODO add view
 class EDIBackendType(models.Model):
-
     _inherit = "edi.backend.type"
 
     endpoint_ids = fields.One2many(

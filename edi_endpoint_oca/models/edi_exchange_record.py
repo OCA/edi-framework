@@ -6,7 +6,6 @@ from odoo import fields, models
 
 
 class EDIExchangeRecord(models.Model):
-
     _inherit = "edi.exchange.record"
 
     edi_endpoint_id = fields.Many2one(

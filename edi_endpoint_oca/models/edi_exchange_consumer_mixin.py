@@ -6,7 +6,6 @@ from odoo import fields, models
 
 
 class EDIExchangeConsumerMixin(models.AbstractModel):
-
     _inherit = "edi.exchange.consumer.mixin"
 
     origin_edi_endpoint_id = fields.Many2one(

@@ -23,7 +23,7 @@ class EDIEndpoint(models.Model):
         comodel_name="edi.backend.type",
         required=True,
     )
-    # Leave these as not required to allow pre-configuration of endpoints by backend type
+    # Leave these as unrequired to allow pre-configuration of endpoints by backend type
     backend_id = fields.Many2one(
         comodel_name="edi.backend", domain="[('backend_type_id','=', backend_type_id)]"
     )

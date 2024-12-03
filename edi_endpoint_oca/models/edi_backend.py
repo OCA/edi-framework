@@ -6,7 +6,6 @@ from odoo import _, api, exceptions, fields, models
 
 
 class EDIBackend(models.Model):
-
     _inherit = "edi.backend"
 
     endpoint_ids = fields.One2many(
