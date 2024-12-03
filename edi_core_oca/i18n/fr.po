@@ -221,6 +221,11 @@ msgid "All"
 msgstr ""
 
 #. module: edi_oca
+#: model:ir.model.fields,field_description:edi_oca.field_edi_exchange_type__allow_empty_files_on_receive
+msgid "Allow Empty Files"
+msgstr ""
+
+#. module: edi_oca
 #. odoo-python
 #: code:addons/edi_oca/models/edi_exchange_record.py:0
 #, python-format
@@ -321,12 +326,14 @@ msgid "Cancel"
 msgstr "Annuler"
 
 #. module: edi_oca
+#: model:ir.model.fields,field_description:edi_oca.field_edi_backend__backend_type_code
 #: model:ir.model.fields,field_description:edi_oca.field_edi_backend_type__code
 #: model:ir.model.fields,field_description:edi_oca.field_edi_exchange_type__code
 msgid "Code"
 msgstr "Code"
 
 #. module: edi_oca
+#: model:ir.model.fields,field_description:edi_oca.field_edi_backend__company_id
 #: model:ir.model.fields,field_description:edi_oca.field_edi_exchange_record__company_id
 msgid "Company"
 msgstr ""
@@ -382,6 +389,11 @@ msgid "Custom"
 msgstr ""
 
 #. module: edi_oca
+#: model:ir.model.fields,field_description:edi_oca.field_edi_exchange_type__encoding_in_error_handler
+msgid "Decoding Error Handler"
+msgstr ""
+
+#. module: edi_oca
 #: model:ir.model.fields,field_description:edi_oca.field_edi_exchange_record__direction
 #: model:ir.model.fields,field_description:edi_oca.field_edi_exchange_type__direction
 msgid "Direction"
@@ -420,7 +432,6 @@ msgstr "Gestionnaire des paramètres avancés EDI"
 #. module: edi_oca
 #: model:ir.actions.act_window,name:edi_oca.act_open_edi_backend_view
 #: model:ir.model,name:edi_oca.model_edi_backend
-#: model_terms:ir.ui.view,arch_db:edi_oca.edi_backend_view_form
 #: model_terms:ir.ui.view,arch_db:edi_oca.edi_backend_view_search
 msgid "EDI Backend"
 msgstr ""
@@ -463,6 +474,11 @@ msgid "EDI Exchange type rule"
 msgstr ""
 
 #. module: edi_oca
+#: model:ir.model.fields,field_description:edi_oca.field_edi_id_mixin__edi_id
+msgid "EDI ID"
+msgstr ""
+
+#. module: edi_oca
 #: model:ir.model,name:edi_oca.model_edi_id_mixin
 msgid "EDI ID mixin"
 msgstr ""
@@ -498,11 +514,6 @@ msgid "EDI record that originated this document."
 msgstr ""
 
 #. module: edi_oca
-#: model:ir.model.fields,field_description:edi_oca.field_edi_id_mixin__edi_id
-msgid "Edi"
-msgstr ""
-
-#. module: edi_oca
 #: model:ir.model.fields,field_description:edi_oca.field_edi_exchange_consumer_mixin__edi_config
 msgid "Edi Config"
 msgstr ""
@@ -510,6 +521,13 @@ msgstr ""
 #. module: edi_oca
 #: model:ir.model.fields,field_description:edi_oca.field_edi_exchange_consumer_mixin__edi_has_form_config
 msgid "Edi Has Form Config"
+msgstr ""
+
+#. module: edi_oca
+#. odoo-python
+#: code:addons/edi_oca/models/edi_backend.py:0
+#, python-format
+msgid "Empty files are not allowed for exchange type %(name)s (%(code)s)"
 msgstr ""
 
 #. module: edi_oca
@@ -525,6 +543,23 @@ msgstr "Activation sur l'extrait"
 #. module: edi_oca
 #: model:ir.model.fields,field_description:edi_oca.field_edi_exchange_type__partner_ids
 msgid "Enabled for partners"
+msgstr ""
+
+#. module: edi_oca
+#: model:ir.model.fields,field_description:edi_oca.field_edi_exchange_type__encoding
+msgid "Encoding"
+msgstr ""
+
+#. module: edi_oca
+#: model:ir.model.fields,field_description:edi_oca.field_edi_exchange_type__encoding_out_error_handler
+msgid "Encoding Error Handler"
+msgstr ""
+
+#. module: edi_oca
+#: model:ir.model.fields,help:edi_oca.field_edi_exchange_type__encoding
+msgid ""
+"Encoding to be applied to generate/process the exchanged file.\n"
+"Example: UTF-8, Windows-1252, ASCII...(default is always 'UTF-8')"
 msgstr ""
 
 #. module: edi_oca
@@ -563,6 +598,11 @@ msgid "Exchange File Ext"
 msgstr "Extension de fichier Exchange"
 
 #. module: edi_oca
+#: model:ir.model.fields,field_description:edi_oca.field_edi_exchange_record__exchange_filechecksum
+msgid "Exchange Filechecksum"
+msgstr ""
+
+#. module: edi_oca
 #: model:ir.model.fields,field_description:edi_oca.field_edi_exchange_record__exchange_filename
 msgid "Exchange Filename"
 msgstr "Nom du fichier Exchange"
@@ -571,6 +611,11 @@ msgstr "Nom du fichier Exchange"
 #: model:ir.model.fields,field_description:edi_oca.field_edi_exchange_type__exchange_filename_pattern
 msgid "Exchange Filename Pattern"
 msgstr "Modèle de nom de fichier Exchange"
+
+#. module: edi_oca
+#: model:ir.model.fields,field_description:edi_oca.field_edi_exchange_type__exchange_filename_sequence_id
+msgid "Exchange Filename Sequence"
+msgstr ""
 
 #. module: edi_oca
 #: model:ir.model.fields,field_description:edi_oca.field_edi_exchange_consumer_mixin__exchange_record_ids
@@ -585,6 +630,13 @@ msgstr ""
 #. module: edi_oca
 #: model:ir.model.fields,field_description:edi_oca.field_edi_exchange_record_create_wiz__exchange_type_id
 msgid "Exchange Type"
+msgstr ""
+
+#. module: edi_oca
+#. odoo-python
+#: code:addons/edi_oca/models/edi_exchange_record.py:0
+#, python-format
+msgid "Exchange data generated"
 msgstr ""
 
 #. module: edi_oca
@@ -615,7 +667,7 @@ msgstr "Échange non valide"
 #. odoo-python
 #: code:addons/edi_oca/models/edi_exchange_record.py:0
 #, python-format
-msgid "Exchange processed successfully "
+msgid "Exchange processed successfully"
 msgstr ""
 
 #. module: edi_oca
@@ -629,8 +681,8 @@ msgstr "Échange traité avec des erreurs"
 #. odoo-python
 #: code:addons/edi_oca/models/edi_exchange_record.py:0
 #, python-format
-msgid "Exchange received successfully "
-msgstr "Échange traité avec succès "
+msgid "Exchange received successfully"
+msgstr ""
 
 #. module: edi_oca
 #. odoo-python
@@ -760,6 +812,22 @@ msgid "Followers (Partners)"
 msgstr ""
 
 #. module: edi_oca
+#: model:ir.model.fields,help:edi_oca.field_edi_exchange_type__exchange_filename_pattern
+msgid ""
+"For output exchange types this should be a formatting string with the "
+"following variables available (to be used between brackets, `{}`): "
+"`exchange_record`, `record_name`, `type`, `dt` and `seq`. For instance, a "
+"valid string would be {record_name}-{type.code}-{dt}-{seq}\n"
+"For more information:\n"
+"- `exchange_record` means exchange record\n"
+"- `record_name` means name of the exchange record\n"
+"- `type` means code of the exchange record type\n"
+"- `dt` means datetime\n"
+"- `seq` means sequence. You need a sequence to be defined in `Exchange "
+"Filename Sequence` to use `seq`\n"
+msgstr ""
+
+#. module: edi_oca
 #: model_terms:ir.ui.view,arch_db:edi_oca.edi_exchange_type_rule_view_form
 msgid "Form"
 msgstr ""
@@ -796,6 +864,18 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:edi_oca.edi_exchange_type_view_search
 msgid "Group By"
 msgstr "Grouper par"
+
+#. module: edi_oca
+#: model:ir.model.fields,help:edi_oca.field_edi_exchange_type__encoding_in_error_handler
+msgid ""
+"Handling of decoding errors on process (default is always 'Raise Error')."
+msgstr ""
+
+#. module: edi_oca
+#: model:ir.model.fields,help:edi_oca.field_edi_exchange_type__encoding_out_error_handler
+msgid ""
+"Handling of encoding errors on generate (default is always 'Raise Error')."
+msgstr ""
 
 #. module: edi_oca
 #: model:ir.model.fields,field_description:edi_oca.field_edi_exchange_record__has_message
@@ -842,6 +922,19 @@ msgid "If checked, some messages have a delivery error."
 msgstr ""
 
 #. module: edi_oca
+#: model:ir.model.fields,help:edi_oca.field_edi_exchange_type__exchange_filename_sequence_id
+msgid ""
+"If the `Exchange Filename Pattern` has `{seq}`, you should define a sequence "
+"in this field to show the sequence in your filename"
+msgstr ""
+
+#. module: edi_oca
+#: model:ir.model.fields.selection,name:edi_oca.selection__edi_exchange_type__encoding_in_error_handler__ignore
+#: model:ir.model.fields.selection,name:edi_oca.selection__edi_exchange_type__encoding_out_error_handler__ignore
+msgid "Ignore"
+msgstr ""
+
+#. module: edi_oca
 #: model:ir.ui.menu,name:edi_oca.menu_edi_exchange_record_inbound
 #: model_terms:ir.ui.view,arch_db:edi_oca.edi_exchange_record_view_search
 #: model_terms:ir.ui.view,arch_db:edi_oca.edi_exchange_type_view_search
@@ -866,6 +959,11 @@ msgstr "est un abonné"
 #. module: edi_oca
 #: model:ir.model.fields,field_description:edi_oca.field_edi_exchange_type__job_channel_id
 msgid "Job Channel"
+msgstr ""
+
+#. module: edi_oca
+#: model_terms:ir.ui.view,arch_db:edi_oca.edi_exchange_record_view_form
+msgid "Jobs"
 msgstr ""
 
 #. module: edi_oca
@@ -907,12 +1005,16 @@ msgstr "Messages"
 #. module: edi_oca
 #: model:ir.model.fields,field_description:edi_oca.field_edi_exchange_record__model
 #: model:ir.model.fields,field_description:edi_oca.field_edi_exchange_record_create_wiz__model
-#: model:ir.model.fields,field_description:edi_oca.field_edi_exchange_type_rule__model
 #: model:ir.model.fields,field_description:edi_oca.field_edi_exchange_type_rule__model_id
 #: model_terms:ir.ui.view,arch_db:edi_oca.edi_exchange_record_view_search
 #: model_terms:ir.ui.view,arch_db:edi_oca.edi_exchange_type_rule_view_search
 msgid "Model"
 msgstr "Modèle"
+
+#. module: edi_oca
+#: model:ir.model.fields,field_description:edi_oca.field_edi_exchange_type_rule__model
+msgid "Model code"
+msgstr ""
 
 #. module: edi_oca
 #: model_terms:ir.ui.view,arch_db:edi_oca.edi_exchange_type_view_form
@@ -1001,6 +1103,12 @@ msgid "Quick execution"
 msgstr ""
 
 #. module: edi_oca
+#: model:ir.model.fields.selection,name:edi_oca.selection__edi_exchange_type__encoding_in_error_handler__strict
+#: model:ir.model.fields.selection,name:edi_oca.selection__edi_exchange_type__encoding_out_error_handler__strict
+msgid "Raise Error"
+msgstr ""
+
+#. module: edi_oca
 #: model:ir.model.fields.selection,name:edi_oca.selection__edi_exchange_record__edi_exchange_state__input_received
 msgid "Received"
 msgstr "Reçu"
@@ -1059,6 +1167,11 @@ msgid "Related Name"
 msgstr ""
 
 #. module: edi_oca
+#: model:ir.model.fields,field_description:edi_oca.field_edi_exchange_record__related_queue_jobs_count
+msgid "Related Queue Jobs Count"
+msgstr ""
+
+#. module: edi_oca
 #: model:ir.model.fields,field_description:edi_oca.field_edi_exchange_record__related_record_exists
 msgid "Related Record Exists"
 msgstr ""
@@ -1079,11 +1192,35 @@ msgid "Related records"
 msgstr ""
 
 #. module: edi_oca
+#: model:ir.model.fields.selection,name:edi_oca.selection__edi_exchange_type__encoding_in_error_handler__surrogateescape
+#: model:ir.model.fields.selection,name:edi_oca.selection__edi_exchange_type__encoding_out_error_handler__surrogateescape
+msgid "Replace Byte with Individual Surrogate Code"
+msgstr ""
+
+#. module: edi_oca
+#: model:ir.model.fields.selection,name:edi_oca.selection__edi_exchange_type__encoding_in_error_handler__backslashreplace
+#: model:ir.model.fields.selection,name:edi_oca.selection__edi_exchange_type__encoding_out_error_handler__backslashreplace
+msgid "Replace with Backslashed Escape Sequences"
+msgstr ""
+
+#. module: edi_oca
+#: model:ir.model.fields.selection,name:edi_oca.selection__edi_exchange_type__encoding_in_error_handler__replace
+#: model:ir.model.fields.selection,name:edi_oca.selection__edi_exchange_type__encoding_out_error_handler__replace
+msgid "Replace with Replacement Marker"
+msgstr ""
+
+#. module: edi_oca
+#: model:ir.model.fields.selection,name:edi_oca.selection__edi_exchange_type__encoding_out_error_handler__xmlcharrefreplace
+msgid "Replace with XML/HTML Numeric Character Reference"
+msgstr ""
+
+#. module: edi_oca
 #: model:ir.model.fields,field_description:edi_oca.field_edi_exchange_record_create_wiz__res_id
 msgid "Res"
 msgstr ""
 
 #. module: edi_oca
+#: model:ir.actions.server,name:edi_oca.action_retry_edi_exchange_record
 #: model_terms:ir.ui.view,arch_db:edi_oca.edi_exchange_record_view_form
 msgid "Retry"
 msgstr ""
@@ -1237,6 +1374,10 @@ msgstr ""
 #: model:ir.model.fields.selection,name:edi_oca.selection__edi_exchange_record__edi_exchange_state__output_error_on_send
 msgid "error on send"
 msgstr ""
+
+#, python-format
+#~ msgid "Exchange received successfully "
+#~ msgstr "Échange traité avec succès "
 
 #~ msgid "Last Modified on"
 #~ msgstr "Dernière modification le"
