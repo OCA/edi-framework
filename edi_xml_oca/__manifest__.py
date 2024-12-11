@@ -14,5 +14,5 @@
     "maintainers": ["simahawk"],
     "website": "https://github.com/OCA/edi-framework",
     "depends": ["edi_oca", "component"],
-    "external_dependencies": {"python": ["xmlschema"]},
+    "external_dependencies": {"python": ["xmltodict"]},
 }

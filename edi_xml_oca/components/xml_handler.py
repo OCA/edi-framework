@@ -2,13 +2,12 @@
 # @author: Simone Orsi <simahawk@gmail.com>
 # License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl).
 
-import io
-from contextlib import closing
-
-import xmlschema
+import xmltodict
+from lxml import etree
 
 from odoo import modules
-from odoo.tools import DotDict
+from odoo.exceptions import UserError
+from odoo.tools.xml_utils import _check_with_xsd
 
 from odoo.addons.component.core import Component
 
@@ -28,52 +27,60 @@ class XMLHandler(Component):
             if not hasattr(work_context, key):
                 raise AttributeError(f"`{key}` is required for this component!")
 
-        self.schema = xmlschema.XMLSchema(self._get_xsd_schema_path())
+        self.schema_path, self.schema = self._get_xsd_schema()
 
-    def _get_xsd_schema_path(self):
-        """Lookup for XSD schema."""
+    def _get_xsd_schema(self):
+        """Lookup and parse the XSD schema."""
         try:
             mod_name, path = self.work.schema_path.split(":")
         except ValueError as exc:
             raise ValueError("Path must be in the form `module:path`") from exc
-        return modules.get_resource_path(mod_name, path)
 
-    def _parse_xml(self, file_obj, **kw):
+        schema_path = modules.get_resource_path(mod_name, path)
+        if not schema_path:
+            return UserError(f"XSD schema file not found: {self.work.schema_path}")
+
+        with open(schema_path, "r") as schema_file:
+            return schema_path, etree.XMLSchema(etree.parse(schema_file))
+
+    def _xml_string_to_dict(self, xml_string, **kw):
         """Read xml_content and return a data dict.
 
-        :param file_obj: file obj of XML file
+        :param xml_string: str of XML file
         """
-        return DotDict(self.schema.to_dict(file_obj, **kw))
+        parsed_dict = xmltodict.parse(xml_string, **kw)
+        root_node = next(iter(parsed_dict))
+        return parsed_dict[root_node]
 
     def parse_xml(self, file_content, **kw):
         """Read XML content.
         :param file_content: str of XML file
         :return: dict with final data
         """
-        with closing(io.StringIO(file_content)) as fd:
-            return self._parse_xml(fd)
+        return self._xml_string_to_dict(file_content, **kw)
 
     def validate(self, xml_content, raise_on_fail=False):
         """Validate XML content against XSD schema.
 
-        Raises `XMLSchemaValidationError` if `raise_on_fail` is True.
-
         :param xml_content: str containing xml data to validate
-        :raise_on_fail: turn on/off validation error exception on fail
+        :param raise_on_fail: turn on/off validation error exception on fail
 
         :return:
-            * None if validation is ok
-            * error string if `raise_on_fail` is False
+            * None if validation is ok or skipped
+            * error string if `raise_on_fail` is False and validation fails
         """
-        try:
-            return self.schema.validate(xml_content)
-        except self._validate_swallable_exceptions() as err:
-            if raise_on_fail:
-                raise
-            return str(err)
 
-    def _validate_swallable_exceptions(self):
-        return (
-            xmlschema.exceptions.XMLSchemaValueError,
-            xmlschema.validators.exceptions.XMLSchemaValidationError,
+        xml_content = (
+            xml_content.encode("utf-8") if isinstance(xml_content, str) else xml_content
         )
+        try:
+            with open(self.schema_path, "r") as xsd_stream:
+                _check_with_xsd(xml_content, xsd_stream)
+        except FileNotFoundError as exc:
+            if raise_on_fail:
+                raise exc
+            return "XSD schema file not found: %s" % self.schema_path
+        except Exception as exc:
+            if raise_on_fail:
+                raise exc
+            return str(exc)
