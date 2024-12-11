@@ -891,8 +891,8 @@ msgstr ""
 "- `record_name` significa nome del record di scambio\n"
 "- `type` significa codice del tipo di record di scambio\n"
 "- `dt` significa data ora\n"
-"- `seq` significa sequenza. È necessario che una sequenza sia definita in `"
-"Sequenza nome file scambio` per utilizzare `seq`\n"
+"- `seq` significa sequenza. È necessario che una sequenza sia definita in "
+"`Sequenza nome file scambio` per utilizzare `seq`\n"
 
 #. module: edi_oca
 #: model_terms:ir.ui.view,arch_db:edi_oca.edi_exchange_type_rule_view_form
@@ -1181,6 +1181,11 @@ msgstr "Esecuzione rapida"
 #: model:ir.model.fields.selection,name:edi_oca.selection__edi_exchange_type__encoding_out_error_handler__strict
 msgid "Raise Error"
 msgstr "Segnala errore"
+
+#. module: edi_oca
+#: model:ir.model.fields,field_description:edi_oca.field_edi_exchange_record__rating_ids
+msgid "Ratings"
+msgstr ""
 
 #. module: edi_oca
 #: model:ir.model.fields.selection,name:edi_oca.selection__edi_exchange_record__edi_exchange_state__input_received
