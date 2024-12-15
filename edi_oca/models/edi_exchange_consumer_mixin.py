@@ -314,7 +314,8 @@ class EDIExchangeConsumerMixin(models.AbstractModel):
             exchange_record = self._edi_create_exchange_record(
                 exchange_type, backend=backend
             )
-        if exchange_record:
+        # If quick exec is on, `exchange_generate_send` already ran
+        if exchange_record and not exchange_type.quick_exec:
             exchange_record.action_exchange_generate_send(**kw)
 
     # TODO: full unit test coverage
