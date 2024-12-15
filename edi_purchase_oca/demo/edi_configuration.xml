@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="demo_edi_configuration_confirmed" model="edi.configuration">
+        <field name="name">Demo PO send</field>
+        <field
+            name="description"
+        >Show case how you can send out an order automatically</field>
+        <field name="type_id" ref="demo_edi_exc_type_order_out" />
+        <field name="backend_id" ref="demo_edi_backend" />
+        <field name="model_id" ref="purchase.model_purchase_order" />
+        <field name="trigger_id" ref="edi_conf_trigger_purchase_order_state_change" />
+        <field name="snippet_do">
+# ('draft', 'RFQ'),
+# ('sent', 'RFQ Sent'),
+# ('to approve', 'To Approve'),
+# ('purchase', 'Purchase Order'),
+# ('done', 'Locked'),
+# ('cancel', 'Cancelled')
+if record.state == 'purchase':
+  record._edi_send_via_edi(conf.type_id)
+        </field>
+    </record>
+</odoo>

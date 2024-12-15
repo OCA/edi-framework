@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="view_partner_form" model="ir.ui.view">
+        <field name="name">res.partner.edi.purchase</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="edi_oca.view_partner_form" />
+        <field name="arch" type="xml">
+            <group name="edi_main" position="inside">
+              <group name="purchase" string="Purchase">
+                <field name="edi_purchase_conf_ids" nolabel="1">
+                  <tree>
+                    <field name="name" />
+                    <field name="trigger_id" />
+                    <field name="type_id" />
+                    <field name="model_id" />
+                  </tree>
+                </field>
+              </group>
+            </group>
+        </field>
+    </record>
+</odoo>

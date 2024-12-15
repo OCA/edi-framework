@@ -1,6 +1,15 @@
 This module intends to create a base to be extended by local edi rules
 for purchase.
 
+
+Configuration
+~~~~~~~~~~~~~
+
+TODO
+
+Deprecated mode
+~~~~~~~~~~~~~~~
+
 In order to add a new integration, you need to create a listener:
 
 .. code-block:: python

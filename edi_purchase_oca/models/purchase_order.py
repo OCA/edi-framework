@@ -6,16 +6,23 @@ from odoo import models
 
 class PurchaseOrder(models.Model):
     _name = "purchase.order"
-    _inherit = ["purchase.order", "edi.exchange.consumer.mixin"]
+    _inherit = [
+        "purchase.order",
+        "edi.exchange.consumer.mixin",
+    ]
 
     def button_confirm(self):
-        result = super().button_confirm()
-        if self:
+        res = super().button_confirm()
+        # DEPRECATED: rely on `on_edi_purchase_order_state_change`
+        # provided automatically by edi.consumer.mixin
+        if self:  # TODO: is this check necessary?
             self._event("on_button_confirm_purchase_order").notify(self)
-        return result
+        return res
 
     def button_cancel(self):
         result = super().button_cancel()
+        # DEPRECATED: rely on `on_edi_purchase_order_state_change`
+        # provided automatically by edi.consumer.mixin
         if self:
             self._event("on_button_cancel_purchase_order").notify(self)
         return result
