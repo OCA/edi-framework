@@ -85,7 +85,7 @@
     <record model="ir.actions.act_window" id="edi_endpoint_act_window">
         <field name="name">EDI Endpoints</field>
         <field name="res_model">edi.endpoint</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">list,form</field>
         <field name="domain">[]</field>
         <field name="context">{"search_default_all": 1}</field>
     </record>
