@@ -26,5 +26,4 @@ record = endpoint.create_exchange_record()
 result = {"response": Response("Created record: %s" % record.identifier)}
         </field>
     </record>
-
 </odoo>
