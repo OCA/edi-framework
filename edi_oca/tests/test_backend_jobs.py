@@ -39,11 +39,12 @@ class EDIBackendTestJobsCase(EDIBackendCommonTestCase, JobMixin):
         )
         # Check related jobs
         self.assertEqual(created, self._get_related_jobs(record))
-        with mock.patch.object(
-            type(self.backend), "_exchange_generate"
-        ) as mocked_generate, mock.patch.object(
-            type(self.backend), "_validate_data"
-        ) as mocked_validate:
+        with (
+            mock.patch.object(
+                type(self.backend), "_exchange_generate"
+            ) as mocked_generate,
+            mock.patch.object(type(self.backend), "_validate_data") as mocked_validate,
+        ):
             mocked_generate.return_value = "filecontent"
             mocked_validate.return_value = None
             res = job.perform()
@@ -90,11 +91,12 @@ class EDIBackendTestJobsCase(EDIBackendCommonTestCase, JobMixin):
         self.assertEqual(created.name, "Retrieve an incoming document.")
         # Check related jobs
         self.assertEqual(created, self._get_related_jobs(record))
-        with mock.patch.object(
-            type(self.backend), "_exchange_receive"
-        ) as mocked_receive, mock.patch.object(
-            type(self.backend), "_validate_data"
-        ) as mocked_validate:
+        with (
+            mock.patch.object(
+                type(self.backend), "_exchange_receive"
+            ) as mocked_receive,
+            mock.patch.object(type(self.backend), "_validate_data") as mocked_validate,
+        ):
             mocked_receive.return_value = "filecontent"
             mocked_validate.return_value = None
             res = job.perform()
