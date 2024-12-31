@@ -31,9 +31,6 @@
         <field name="model">edi.exchange.record</field>
         <field name="arch" type="xml">
             <form string="EDI Exchange Record">
-                <field name="direction" invisible="1" />
-                <field name="retryable" invisible="1" />
-                <field name="related_record_exists" invisible="1" />
                 <header>
                     <button
                         name="action_open_related_record"
