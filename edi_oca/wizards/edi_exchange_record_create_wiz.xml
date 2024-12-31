@@ -13,10 +13,6 @@
                         domain="[('backend_type_id', '=', backend_type_id)]"
                         options="{'no_create': True, 'no_open': True}"
                     />
-                    <field name="backend_type_id" invisible="1" />
-                    <field name="exchange_type_id" invisible="1" />
-                    <field name="res_id" invisible="1" />
-                    <field name="model" invisible="1" />
                 </group>
                 <footer>
                     <button
