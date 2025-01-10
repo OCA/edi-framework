@@ -5,6 +5,7 @@
 import datetime
 
 import pytz
+from psycopg2.extensions import AsIs
 
 from odoo import _, api, exceptions, fields, models
 from odoo.tools import DotDict, safe_eval
@@ -198,3 +199,23 @@ class EdiConfiguration(models.Model):
             backend_ids.append(False)
             domain.append(("backend_id", "in", backend_ids))
         return self.filtered_domain(domain)
+
+    def action_view_partners(self):
+        # TODO: add tests
+        partner_model = self.env["res.partner"]
+        partner_ids = set()
+        # Find partners linked to this conf no matter which field
+        for field in partner_model._fields.values():
+            if field.type == "many2many" and field.comodel_name == self._name:
+                query = "SELECT DISTINCT(partner_id) FROM %(table)s WHERE conf_id=%(conf_id)s"
+                self.env.cr.execute(
+                    query, {"table": AsIs(field.relation), "conf_id": self.id}
+                )
+                partner_ids.update([r[0] for r in self.env.cr.fetchall()])
+        return {
+            "type": "ir.actions.act_window",
+            "name": _("Partners"),
+            "res_model": "res.partner",
+            "view_mode": "tree,form",
+            "domain": [("id", "in", list(partner_ids))],
+        }

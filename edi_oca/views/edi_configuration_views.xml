@@ -42,6 +42,15 @@
         <field name="arch" type="xml">
             <form string="EDI Configuration">
                 <sheet>
+                    <div class="oe_button_box" name="button_box">
+                      <button
+                            type="object"
+                            name="action_view_partners"
+                            class="oe_stat_button"
+                            string="Partners"
+                            icon="fa-eye"
+                        />
+                    </div>
                     <field name="active" invisible="1" />
                     <widget
                         name="web_ribbon"
