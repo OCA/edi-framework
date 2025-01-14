@@ -124,7 +124,6 @@ msgstr ""
 #. module: edi_oca
 #. odoo-python
 #: code:addons/edi_oca/models/edi_exchange_record.py:0
-#, python-format
 msgid "ACK file is required for this exchange but not found."
 msgstr ""
 "Le fichier ACK est nécessaire pour cet échange mais n'a pas été trouvé."
@@ -132,14 +131,12 @@ msgstr ""
 #. module: edi_oca
 #. odoo-python
 #: code:addons/edi_oca/models/edi_exchange_record.py:0
-#, python-format
 msgid "ACK file received but contains errors."
 msgstr "Fichier ACK reçu mais contenant des erreurs."
 
 #. module: edi_oca
 #. odoo-python
 #: code:addons/edi_oca/models/edi_exchange_record.py:0
-#, python-format
 msgid "ACK file received."
 msgstr "Fichier ACK reçu."
 
@@ -183,7 +180,6 @@ msgstr "Action nécessaire"
 #. module: edi_oca
 #. odoo-python
 #: code:addons/edi_oca/models/edi_exchange_record.py:0
-#, python-format
 msgid "Action retry: state moved back to '%s'"
 msgstr ""
 
@@ -228,7 +224,6 @@ msgstr ""
 #. module: edi_oca
 #. odoo-python
 #: code:addons/edi_oca/models/edi_exchange_record.py:0
-#, python-format
 msgid "An error happened while sending. Please check exchange record info."
 msgstr ""
 "Une erreur s'est produite lors de l'envoi. Veuillez vérifier les "
@@ -281,14 +276,12 @@ msgstr ""
 #. module: edi_oca
 #. odoo-python
 #: code:addons/edi_oca/models/edi_exchange_record.py:0
-#, python-format
 msgid "Backend must match with exchange type's backend!"
 msgstr ""
 
 #. module: edi_oca
 #. odoo-python
 #: code:addons/edi_oca/models/edi_exchange_type.py:0
-#, python-format
 msgid "Backend should respect backend type!"
 msgstr ""
 
@@ -306,7 +299,6 @@ msgstr ""
 #. module: edi_oca
 #. odoo-python
 #: code:addons/edi_oca/models/edi_exchange_record.py:0
-#, python-format
 msgid "Backend type must match with exchange type's backend type!"
 msgstr ""
 
@@ -526,7 +518,6 @@ msgstr ""
 #. module: edi_oca
 #. odoo-python
 #: code:addons/edi_oca/models/edi_backend.py:0
-#, python-format
 msgid "Empty files are not allowed for exchange type %(name)s (%(code)s)"
 msgstr ""
 
@@ -635,7 +626,6 @@ msgstr ""
 #. module: edi_oca
 #. odoo-python
 #: code:addons/edi_oca/models/edi_exchange_record.py:0
-#, python-format
 msgid "Exchange data generated"
 msgstr ""
 
@@ -652,56 +642,48 @@ msgstr ""
 #. module: edi_oca
 #. odoo-python
 #: code:addons/edi_oca/models/edi_exchange_record.py:0
-#, python-format
 msgid "Exchange not received"
 msgstr "Échange non reçu"
 
 #. module: edi_oca
 #. odoo-python
 #: code:addons/edi_oca/models/edi_exchange_record.py:0
-#, python-format
 msgid "Exchange not valid"
 msgstr "Échange non valide"
 
 #. module: edi_oca
 #. odoo-python
 #: code:addons/edi_oca/models/edi_exchange_record.py:0
-#, python-format
 msgid "Exchange processed successfully"
 msgstr ""
 
 #. module: edi_oca
 #. odoo-python
 #: code:addons/edi_oca/models/edi_exchange_record.py:0
-#, python-format
 msgid "Exchange processed with errors"
 msgstr "Échange traité avec des erreurs"
 
 #. module: edi_oca
 #. odoo-python
 #: code:addons/edi_oca/models/edi_exchange_record.py:0
-#, python-format
 msgid "Exchange received successfully"
 msgstr ""
 
 #. module: edi_oca
 #. odoo-python
 #: code:addons/edi_oca/models/edi_backend.py:0
-#, python-format
 msgid "Exchange record ID=%d already has a file to process!"
 msgstr ""
 
 #. module: edi_oca
 #. odoo-python
 #: code:addons/edi_oca/models/edi_backend.py:0
-#, python-format
 msgid "Exchange record ID=%d is not an outgoing record, cannot be generated"
 msgstr ""
 
 #. module: edi_oca
 #. odoo-python
 #: code:addons/edi_oca/models/edi_backend.py:0
-#, python-format
 msgid ""
 "Exchange record ID=%d is not in draft state and has already an output value."
 msgstr ""
@@ -709,7 +691,6 @@ msgstr ""
 #. module: edi_oca
 #. odoo-python
 #: code:addons/edi_oca/models/edi_exchange_record.py:0
-#, python-format
 msgid "Exchange sent"
 msgstr "Échange envoyé"
 
@@ -721,7 +702,6 @@ msgstr ""
 #. module: edi_oca
 #. odoo-python
 #: code:addons/edi_oca/models/edi_exchange_record.py:0
-#, python-format
 msgid "Exchange state must respect direction!"
 msgstr ""
 
@@ -918,6 +898,7 @@ msgstr ""
 
 #. module: edi_oca
 #: model:ir.model.fields,help:edi_oca.field_edi_exchange_record__message_has_error
+#: model:ir.model.fields,help:edi_oca.field_edi_exchange_record__message_has_sms_error
 msgid "If checked, some messages have a delivery error."
 msgstr ""
 
@@ -1109,11 +1090,6 @@ msgid "Raise Error"
 msgstr ""
 
 #. module: edi_oca
-#: model:ir.model.fields,field_description:edi_oca.field_edi_exchange_record__rating_ids
-msgid "Ratings"
-msgstr ""
-
-#. module: edi_oca
 #: model:ir.model.fields.selection,name:edi_oca.selection__edi_exchange_record__edi_exchange_state__input_received
 msgid "Received"
 msgstr "Reçu"
@@ -1136,28 +1112,24 @@ msgstr ""
 #. module: edi_oca
 #. odoo-python
 #: code:addons/edi_oca/models/edi_backend.py:0
-#, python-format
 msgid "Record ID=%d has no file to process!"
 msgstr ""
 
 #. module: edi_oca
 #. odoo-python
 #: code:addons/edi_oca/models/edi_backend.py:0
-#, python-format
 msgid "Record ID=%d has no file to send!"
 msgstr ""
 
 #. module: edi_oca
 #. odoo-python
 #: code:addons/edi_oca/models/edi_backend.py:0
-#, python-format
 msgid "Record ID=%d is not meant to be processed"
 msgstr ""
 
 #. module: edi_oca
 #. odoo-python
 #: code:addons/edi_oca/models/edi_backend.py:0
-#, python-format
 msgid "Record ID=%d is not meant to be sent!"
 msgstr ""
 
@@ -1243,6 +1215,11 @@ msgstr ""
 #. module: edi_oca
 #: model:ir.model.fields,help:edi_oca.field_edi_exchange_type__rule_ids
 msgid "Rules to handle exchanges and UI automatically"
+msgstr ""
+
+#. module: edi_oca
+#: model:ir.model.fields,field_description:edi_oca.field_edi_exchange_record__message_has_sms_error
+msgid "SMS Delivery error"
 msgstr ""
 
 #. module: edi_oca
@@ -1344,16 +1321,6 @@ msgstr ""
 #. module: edi_oca
 #: model:ir.model.fields.selection,name:edi_oca.selection__edi_exchange_record__edi_exchange_state__output_pending
 msgid "Waiting to be sent"
-msgstr ""
-
-#. module: edi_oca
-#: model:ir.model.fields,field_description:edi_oca.field_edi_exchange_record__website_message_ids
-msgid "Website Messages"
-msgstr ""
-
-#. module: edi_oca
-#: model:ir.model.fields,help:edi_oca.field_edi_exchange_record__website_message_ids
-msgid "Website communication history"
 msgstr ""
 
 #. module: edi_oca
