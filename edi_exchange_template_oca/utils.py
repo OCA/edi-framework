@@ -5,8 +5,6 @@
 
 from lxml import etree
 
-from odoo.tools import pycompat
-
 
 def xml_purge_nswrapper(xml_content):
     """Purge `nswrapper` elements.
@@ -36,10 +34,10 @@ def xml_purge_nswrapper(xml_content):
         parent = nswrapper.getparent()
         if parent is None:
             # fmt:off
-            return "".join([
-                pycompat.to_text(etree.tostring(el))
-                for el in nswrapper.getchildren()
-            ])
+            return "".join(
+                [etree.tostring(child, encoding="unicode")
+                    for child in nswrapper.getchildren()]
+            )
             # fmt:on
         parent.extend(nswrapper.getchildren())
         parent.remove(nswrapper)
