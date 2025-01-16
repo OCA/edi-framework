@@ -26,15 +26,15 @@ class TestEDIStorageBase(EDIBackendCommonComponentTestCase):
         cls.record = cls.backend.create_record("test_csv_output", vals)
         cls.record_input = cls.backend.create_record("test_csv_input", vals)
 
-        cls.fakepath = "/tmp/{}".format(cls._filename(cls))
+        cls.fakepath = f"/tmp/{cls._filename(cls)}"
         with open(cls.fakepath, "w+b") as fakefile:
             fakefile.write(b"filecontent")
 
-        cls.fakepath_ack = "/tmp/{}.ack".format(cls._filename(cls))
+        cls.fakepath_ack = f"/tmp/{cls._filename(cls)}.ack"
         with open(cls.fakepath_ack, "w+b") as fakefile:
             fakefile.write(b"ACK filecontent")
 
-        cls.fakepath_error = "/tmp/{}.error".format(cls._filename(cls))
+        cls.fakepath_error = f"/tmp/{cls._filename(cls)}.error"
         with open(cls.fakepath_error, "w+b") as fakefile:
             fakefile.write(b"ERROR XYZ: line 2 broken on bla bla")
 
@@ -143,7 +143,7 @@ class TestEDIStorageBase(EDIBackendCommonComponentTestCase):
                 lambda x: "edi-exchange" in x.body
             )
             self.assertEqual(len(messages), len(expected_messages))
-            for msg_rec, expected in zip(messages, expected_messages):
+            for msg_rec, expected in zip(messages, expected_messages, strict=False):
                 self.assertIn(expected["message"], msg_rec.body)
                 self.assertIn("level-" + expected["level"], msg_rec.body)
         # TODO: test content of file sent

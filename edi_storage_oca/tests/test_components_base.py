@@ -34,18 +34,18 @@ class EDIStorageComponentTestCase(TestEDIStorageBase):
             self.checker._get_remote_file("pending")
             mocked.assert_called_with(
                 mock.ANY,
-                "demo_out/pending/{}".format(self._filename(self.record)),
+                f"demo_out/pending/{self._filename(self.record)}",
                 binary=False,
             )
             self.checker._get_remote_file("done")
             mocked.assert_called_with(
                 mock.ANY,
-                "demo_out/done/{}".format(self._filename(self.record)),
+                f"demo_out/done/{self._filename(self.record)}",
                 binary=False,
             )
             self.checker._get_remote_file("error")
             mocked.assert_called_with(
                 mock.ANY,
-                "demo_out/error/{}".format(self._filename(self.record)),
+                f"demo_out/error/{self._filename(self.record)}",
                 binary=False,
             )

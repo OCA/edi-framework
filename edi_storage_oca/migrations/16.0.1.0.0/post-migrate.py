@@ -81,7 +81,7 @@ def migrate(env, version):
     column_names = [desc[0] for desc in env.cr.description]
     storage_backend_records = []
     for row in env.cr.fetchall():
-        storage_backend_records.append(dict(zip(column_names, row)))
+        storage_backend_records.append(dict(zip(column_names, row, strict=False)))
     fs_storage = env["fs.storage"]
 
     for record in storage_backend_records:

@@ -12,7 +12,6 @@ _logger = logging.getLogger(__name__)
 
 
 class EDIStorageCheckComponentMixin(Component):
-
     _name = "edi.storage.component.check"
     _inherit = [
         "edi.component.check.mixin",

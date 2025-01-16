@@ -5,7 +5,6 @@ from odoo.addons.component.core import Component
 
 
 class EDIStorageReceiveComponent(Component):
-
     _name = "edi.storage.component.receive"
     _inherit = [
         "edi.component.receive.mixin",
