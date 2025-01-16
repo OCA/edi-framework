@@ -4,8 +4,6 @@
 
 import logging
 
-from odoo.tools import pycompat
-
 from odoo.addons.component.core import Component
 
 _logger = logging.getLogger(__name__)
@@ -62,7 +60,7 @@ class EDIStorageCheckComponentMixin(Component):
                 self.exchange_record.update(
                     {
                         "edi_exchange_state": "output_sent_and_error",
-                        "exchange_error": pycompat.to_text(error_report),
+                        "exchange_error": error_report,
                     }
                 )
                 self.exchange_record._notify_error("process_ko")
