@@ -41,7 +41,7 @@
 
     <record model="ir.ui.view" id="edi_endpoint_search_view">
         <field name="model">edi.endpoint</field>
-        <field name="inherit_id" ref="endpoint.endpoint_endpoint_search_view" />
+        <field name="inherit_id" ref="endpoint.endpoint_mixin_search_view" />
         <field name="mode">primary</field>
         <field name="arch" type="xml">
             <field name="exec_mode" position="after">
@@ -71,7 +71,7 @@
 
     <record model="ir.ui.view" id="edi_endpoint_tree_view">
         <field name="model">edi.endpoint</field>
-        <field name="inherit_id" ref="endpoint.endpoint_endpoint_tree_view" />
+        <field name="inherit_id" ref="endpoint.endpoint_mixin_list_view" />
         <field name="mode">primary</field>
         <field name="arch" type="xml">
             <field name="exec_mode" position="after">
