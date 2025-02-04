@@ -7,7 +7,7 @@
         <field name="arch" type="xml">
             <group name="edi_main" position="inside">
               <group name="purchase" string="Purchase">
-                <field name="edi_purchase_conf_ids" nolabel="1">
+                <field name="edi_purchase_conf_ids" colspan="6" nolabel="1">
                   <tree>
                     <field name="name" />
                     <field name="trigger_id" />
