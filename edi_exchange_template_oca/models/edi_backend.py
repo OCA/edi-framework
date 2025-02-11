@@ -34,9 +34,12 @@ class EDIBackend(models.Model):
         # TODO: maybe we can add a m2o to output templates
         # but then we would need another for input templates if they are introduced.
         tmpl = None
+        code = code or exchange_record.type_id.code
         if code:
             domain = [("code", "=", code)]
-            return search(domain, limit=1)
+            tmpl = search(domain, limit=1)
+            if tmpl:
+                return tmpl
         for domain in self._get_output_template_domains(exchange_record):
             tmpl = search(domain, limit=1)
             if tmpl:
