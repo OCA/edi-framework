@@ -15,5 +15,6 @@
     "data": [
         "security/ir_model_access.xml",
         "views/edi_exchange_template_output_views.xml",
+        "views/edi_exchange_type_views.xml",
     ],
 }
