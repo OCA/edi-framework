@@ -7,7 +7,11 @@ from odoo.tools import mute_logger
 from .common import EDIBackendCommonComponentRegistryTestCase
 from .fake_components import FakeOutputChecker, FakeOutputGenerator, FakeOutputSender
 
-LOGGERS = ("odoo.addons.edi_oca.models.edi_backend", "odoo.addons.queue_job.delay")
+LOGGERS = (
+    "odoo.addons.edi_oca.models.edi_backend",
+    "odoo.addons.queue_job.delay",
+    "odoo.addons.edi_exchange_template_oca.models.edi_backend",
+)
 
 
 class EDIBackendTestCronCase(EDIBackendCommonComponentRegistryTestCase):

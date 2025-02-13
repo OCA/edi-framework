@@ -4,6 +4,8 @@ import base64
 
 import chardet
 
+from odoo.tools import mute_logger
+
 from .common import EDIBackendCommonComponentRegistryTestCase
 from .fake_components import FakeOutputGenerator
 
@@ -26,6 +28,8 @@ class EDIBackendTestOutputCase(EDIBackendCommonComponentRegistryTestCase):
         super().setUp()
         FakeOutputGenerator.reset_faked()
 
+    # TODO: getting a template via code or relying on a fallback is deprecated
+    @mute_logger("odoo.addons.edi_exchange_template_oca.models.edi_backend")
     def test_encoding_default(self):
         """
         Test default output/input encoding (UTF-8). Use string with special
@@ -41,6 +45,7 @@ class EDIBackendTestOutputCase(EDIBackendCommonComponentRegistryTestCase):
         encoding = chardet.detect(content)["encoding"].lower()
         self.assertEqual(encoding, "utf-8")
 
+    @mute_logger("odoo.addons.edi_exchange_template_oca.models.edi_backend")
     def test_encoding(self):
         """
         Test specific output/input encoding. Use string with special
@@ -57,6 +62,7 @@ class EDIBackendTestOutputCase(EDIBackendCommonComponentRegistryTestCase):
         encoding = chardet.detect(content)["encoding"].lower()
         self.assertEqual(encoding, "utf-16")
 
+    @mute_logger("odoo.addons.edi_exchange_template_oca.models.edi_backend")
     def test_encoding_error_handler(self):
         self.exchange_type_out.write({"encoding": "ascii"})
         # By default, error handling raises error
@@ -70,6 +76,7 @@ class EDIBackendTestOutputCase(EDIBackendCommonComponentRegistryTestCase):
         )
         self.assertEqual(self.record._get_file_content(), "Palmotieva")
 
+    @mute_logger("odoo.addons.edi_exchange_template_oca.models.edi_backend")
     def test_decoding_error_handler(self):
         self.backend.with_context(fake_output="Palmotićeva").exchange_generate(
             self.record
