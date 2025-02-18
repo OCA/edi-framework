@@ -59,6 +59,24 @@ class EDIQuickExecTestCase(EDIBackendCommonComponentRegistryTestCase):
             mocked.assert_not_called()
             self.assertEqual(record0.edi_exchange_state, "new")
 
+    def test_quick_exec(self):
+        vals = {
+            "model": self.partner._name,
+            "res_id": self.partner.id,
+        }
+        model = self.env["edi.exchange.record"]
+        with mock.patch.object(type(model), "_execute_next_action") as mocked:
+            record0 = self.backend.create_record("test_csv_output", vals)
+            # quick exec is off, we should not get any call
+            mocked.assert_not_called()
+            self.assertEqual(record0.edi_exchange_state, "new")
+        self.exchange_type_out.quick_exec = True
+        with mock.patch.object(type(model), "_execute_next_action") as mocked:
+            record0 = self.backend.create_record("test_csv_output", vals)
+            # quick exec is on, we should get a call
+            mocked.assert_called()
+            self.assertEqual(record0.edi_exchange_state, "new")
+
     def test_quick_exec_on_create_out(self):
         self.exchange_type_out.exchange_file_auto_generate = True
         self.exchange_type_out.quick_exec = True
