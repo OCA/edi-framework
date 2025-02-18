@@ -276,8 +276,10 @@ class EDIExchangeRecord(models.Model):
         # according to their direction and status.
         # Let it decide.
         if self.type_id.direction == "output":
-            self.backend_id._check_output_exchange_sync(record_ids=self.ids)
+            self.backend_id._handle_new_output_exchange_records(self)
         else:
+            # TODO: do not rely on the cron method and create a
+            # specific handle method like it has been done for the output
             self.backend_id._check_input_exchange_sync(record_ids=self.ids)
 
     @api.constrains("backend_id", "type_id")
