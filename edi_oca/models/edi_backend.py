@@ -402,13 +402,7 @@ class EDIBackend(models.Model):
             "EDI Exchange output sync: found %d new records to process.",
             len(new_records),
         )
-        for rec in new_records:
-            job1 = rec.delayable().action_exchange_generate()
-            if not skip_send:
-                # Chain send job.
-                # Raise prio to max to send the record out as fast as possible.
-                job1.on_done(rec.delayable(priority=0).action_exchange_send())
-            job1.delay()
+        self._handle_new_output_exchange_records(new_records, skip_send=skip_send)
 
         if skip_send:
             return
@@ -427,6 +421,15 @@ class EDIBackend(models.Model):
             else:
                 # TODO: run in job as well?
                 self._exchange_output_check_state(rec)
+
+    def _handle_new_output_exchange_records(self, new_records, skip_send=False):
+        for rec in new_records:
+            job1 = rec.delayable().action_exchange_generate()
+            if not skip_send:
+                # Chain send job.
+                # Raise prio to max to send the record out as fast as possible.
+                job1.on_done(rec.delayable(priority=0).action_exchange_send())
+            job1.delay()
 
     def _get_new_output_exchange_records(self, record_ids=None):
         return self.exchange_record_model.search(
