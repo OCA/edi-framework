@@ -128,6 +128,11 @@ msgid "ID of the view defined in xml file"
 msgstr ""
 
 #. module: edi_exchange_template_oca
+#: model:ir.model.fields.selection,name:edi_exchange_template_oca.selection__edi_exchange_template_output__generator__json
+msgid "JSON"
+msgstr ""
+
+#. module: edi_exchange_template_oca
 #: model:ir.model.fields,field_description:edi_exchange_template_oca.field_edi_exchange_template_output__write_uid
 msgid "Last Updated by"
 msgstr ""
