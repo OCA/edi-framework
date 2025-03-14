@@ -29,7 +29,6 @@ msgstr "Recod scambio movimenti conto"
 #. module: edi_account_oca
 #: model:ir.model.fields,field_description:edi_account_oca.field_account_bank_statement_line__edi_disable_auto
 #: model:ir.model.fields,field_description:edi_account_oca.field_account_move__edi_disable_auto
-#: model:ir.model.fields,field_description:edi_account_oca.field_account_payment__edi_disable_auto
 msgid "Disable auto"
 msgstr "Disabilita automatico"
 
@@ -38,6 +37,11 @@ msgstr "Disabilita automatico"
 #: model_terms:ir.ui.view,arch_db:edi_account_oca.view_partner_form
 msgid "EDI Configuration"
 msgstr "Configurazione EDI"
+
+#. module: edi_account_oca
+#: model:ir.model.fields,field_description:edi_account_oca.field_account_move__origin_edi_endpoint_id
+msgid "EDI origin endpoint"
+msgstr ""
 
 #. module: edi_account_oca
 #: model:ir.model.fields,field_description:edi_account_oca.field_account_move__origin_exchange_type_id
@@ -95,8 +99,12 @@ msgid "Moves"
 msgstr "Movimenti"
 
 #. module: edi_account_oca
+#: model:ir.model.fields,help:edi_account_oca.field_account_move__origin_edi_endpoint_id
+msgid "Record generated via this endpoint"
+msgstr ""
+
+#. module: edi_account_oca
 #: model:ir.model.fields,help:edi_account_oca.field_account_bank_statement_line__edi_disable_auto
 #: model:ir.model.fields,help:edi_account_oca.field_account_move__edi_disable_auto
-#: model:ir.model.fields,help:edi_account_oca.field_account_payment__edi_disable_auto
 msgid "When marked, EDI automatic processing will be avoided"
 msgstr "Quando selezionata, l'elaborazione EDI automatica verrà evitata"
