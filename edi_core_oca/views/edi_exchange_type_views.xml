@@ -68,7 +68,7 @@
                         <page
                             name="adv_settings"
                             string="Advanced settings"
-                            groups="edi_oca.group_edi_advanced_settings_manager"
+                            groups="edi_core_oca.group_edi_advanced_settings_manager"
                         >
                             <field
                                 name="advanced_settings_edit"
@@ -79,7 +79,7 @@
                         <page
                             name="model_rules"
                             string="Model rules"
-                            groups="edi_oca.group_edi_advanced_settings_manager"
+                            groups="edi_core_oca.group_edi_advanced_settings_manager"
                         >
                             <field name="rule_ids" context="{'default_type_id': id}">
                                 <list decoration-muted="(not active)">

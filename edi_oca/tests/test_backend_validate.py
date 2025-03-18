@@ -4,7 +4,8 @@
 
 import base64
 
-from ..exceptions import EDIValidationError
+from odoo.addons.edi_core_oca.exceptions import EDIValidationError
+
 from .common import EDIBackendCommonComponentRegistryTestCase
 from .fake_components import (
     FakeInputReceive,

@@ -1,14 +1,13 @@
-This module aims to provide an infrastructure to simplify
+This module aims to provide an infrastructure bases to simplify
 interchangeability of documents between systems providing a configuration
 platform. It will be inherited by other modules in order to define the
-proper implementations of components.
+proper implementations.
 
 In order to define a new Exchange Record, we need to configure:
 
 - Backend Type
 - Exchange Type
 - Backend
-- Components
 
 ## Jobs
 
@@ -17,16 +16,6 @@ In order to define a new Exchange Record, we need to configure:
 - (2) **EDI User**: more conscious EDI user that might sometimes need to debug things a bit further and thus needs access to related queue jobs.
 
 - (3) **EDI Manager**: full configuration access.
-
-## Component definition
-
-The component usage must be defined like edi.{direction}.{kind}.{code}
-where:
-
-- direction is output or input
-- kind can be: generate, send, check, process, receive
-- code is the {backend type code} or {backend type code}.{exchange type
-  code}
 
 ## User EDI generation
 

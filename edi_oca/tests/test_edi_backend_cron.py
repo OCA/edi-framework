@@ -7,7 +7,7 @@ from odoo.tools import mute_logger
 from .common import EDIBackendCommonComponentRegistryTestCase
 from .fake_components import FakeOutputChecker, FakeOutputGenerator, FakeOutputSender
 
-LOGGERS = ("odoo.addons.edi_oca.models.edi_backend", "odoo.addons.queue_job.delay")
+LOGGERS = ("odoo.addons.edi_core_oca.models.edi_backend", "odoo.addons.queue_job.delay")
 
 
 class EDIBackendTestCronCase(EDIBackendCommonComponentRegistryTestCase):
@@ -35,15 +35,6 @@ class EDIBackendTestCronCase(EDIBackendCommonComponentRegistryTestCase):
         FakeOutputGenerator.reset_faked()
         FakeOutputSender.reset_faked()
         FakeOutputChecker.reset_faked()
-
-    @mute_logger(*LOGGERS)
-    def test_exchange_generate_new_no_auto(self):
-        # No content ready to be sent, no auto-generate, nothing happens
-        for rec in self.records:
-            self.assertEqual(rec.edi_exchange_state, "new")
-        self.backend._cron_check_output_exchange_sync()
-        for rec in self.records:
-            self.assertEqual(rec.edi_exchange_state, "new")
 
     @mute_logger(*LOGGERS)
     def test_exchange_generate_new_auto_skip_send(self):

@@ -11,7 +11,7 @@ from freezegun import freeze_time
 from odoo import exceptions, fields
 from odoo.tools import mute_logger
 
-from odoo.addons.edi_oca.utils import get_checksum
+from odoo.addons.edi_core_oca.utils import get_checksum
 from odoo.addons.queue_job.delay import DelayableRecordset
 
 from .common import EDIBackendCommonTestCase

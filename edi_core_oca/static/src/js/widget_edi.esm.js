@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import {registry} from "@web/core/registry";
 import {useService} from "@web/core/utils/hooks";
 
@@ -28,7 +26,7 @@ export class EdiConfigurationWidget extends Component {
     }
 }
 
-EdiConfigurationWidget.template = "edi_oca.EdiConfigurationWidget";
+EdiConfigurationWidget.template = "edi_core_oca.EdiConfigurationWidget";
 
 registry.category("fields").add("edi_configuration", {
     component: EdiConfigurationWidget,
