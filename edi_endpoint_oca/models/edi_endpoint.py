@@ -73,7 +73,7 @@ class EDIEndpoint(models.Model):
 
     def action_view_edi_records(self):
         self.ensure_one()
-        xmlid = "edi_oca.act_open_edi_exchange_record_view"
+        xmlid = "edi_core_oca.act_open_edi_exchange_record_view"
         action = self.env["ir.actions.act_window"]._for_xml_id(xmlid)
         action["domain"] = [("edi_endpoint_id", "=", self.id)]
         # Purge default search filters from ctx to avoid hiding records
