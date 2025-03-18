@@ -6,6 +6,8 @@ from unittest import mock
 
 from requests.exceptions import ConnectionError as ReqConnectionError
 
+from odoo.fields import first
+
 from odoo.addons.queue_job.exception import RetryableJobError
 from odoo.addons.queue_job.tests.common import JobMixin
 
@@ -34,9 +36,8 @@ class EDIBackendTestJobsCase(EDIBackendCommonTestCase, JobMixin):
         job = self.backend.with_delay().exchange_generate(record)
         created = job_counter.search_created()
         self.assertEqual(len(created), 1)
-        self.assertEqual(
-            created.name, "Generate output content for given exchange record."
-        )
+        self.assertEqual([record], created.args)
+        self.assertEqual("<edi.backend>.exchange_generate", created.channel_method_name)
         # Check related jobs
         self.assertEqual(created, self._get_related_jobs(record))
         with (
@@ -88,7 +89,8 @@ class EDIBackendTestJobsCase(EDIBackendCommonTestCase, JobMixin):
         job = self.backend.with_delay().exchange_receive(record)
         created = job_counter.search_created()
         self.assertEqual(len(created), 1)
-        self.assertEqual(created.name, "Retrieve an incoming document.")
+        self.assertEqual([record], created.args)
+        self.assertEqual("<edi.backend>.exchange_receive", created.channel_method_name)
         # Check related jobs
         self.assertEqual(created, self._get_related_jobs(record))
         with (
@@ -107,9 +109,13 @@ class EDIBackendTestJobsCase(EDIBackendCommonTestCase, JobMixin):
             # the state is not input_pending hence there's nothing to do
             self.assertEqual(res, "Exchange received successfully")
             self.assertEqual(record.edi_exchange_state, "input_received")
-        job = self.backend.with_delay().exchange_process(record)
+        self.backend.with_delay().exchange_process(record)
         created = job_counter.search_created()
-        self.assertEqual(created[0].name, "Process an incoming document.")
+        first_job = first(created)
+        self.assertEqual([record], first_job.args)
+        self.assertEqual(
+            "<edi.backend>.exchange_process", first_job.channel_method_name
+        )
 
     def test_input_processed_error(self):
         vals = {
