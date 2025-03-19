@@ -4,10 +4,10 @@
 
 from unittest import mock
 
-from .common import FS_STORAGE_MOCK_PATH, TestEDIStorageBase
+from .common import FS_STORAGE_MOCK_PATH, TestEDIStorageBaseComponent
 
 
-class EDIStorageComponentTestCase(TestEDIStorageBase):
+class EDIStorageComponentTestCase(TestEDIStorageBaseComponent):
     def test_remote_file_path(self):
         to_test = (
             (("input", "pending", "foo.csv"), "demo_in/pending/foo.csv"),

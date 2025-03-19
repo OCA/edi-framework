@@ -4,7 +4,7 @@ from freezegun import freeze_time
 
 from odoo.tools import mute_logger
 
-from .common import TestEDIStorageBase
+from .common import TestEDIStorageBaseComponent
 
 LOGGERS = (
     "odoo.addons.edi_storage_oca.components.check",
@@ -13,7 +13,7 @@ LOGGERS = (
 
 
 @freeze_time("2020-10-21 10:30:00")
-class TestEDIBackendOutput(TestEDIStorageBase):
+class TestEDIBackendOutput(TestEDIStorageBaseComponent):
     @mute_logger(*LOGGERS)
     def test_export_file_sent(self):
         """Send, no errors."""

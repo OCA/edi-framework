@@ -6,8 +6,7 @@ import logging
 from pathlib import PurePath
 
 from odoo.addons.component.core import AbstractComponent
-
-from .. import utils
+from odoo.addons.edi_storage_core_oca import utils
 
 _logger = logging.getLogger(__file__)
 

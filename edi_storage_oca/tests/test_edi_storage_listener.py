@@ -31,7 +31,7 @@ class EDIBackendTestCase(EDIBackendCommonComponentRegistryTestCase):
 
     @classmethod
     def _get_backend(cls):
-        return cls.env.ref("edi_storage_oca.demo_edi_backend_storage")
+        return cls.env.ref("edi_storage_core_oca.demo_edi_backend_storage")
 
     def setUp(self):
         super().setUp()

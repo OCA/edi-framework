@@ -6,8 +6,7 @@ import os
 from pathlib import PurePath
 
 from odoo.addons.component.core import Component
-
-from .. import utils
+from odoo.addons.edi_storage_core_oca import utils
 
 
 class EdiStorageListener(Component):

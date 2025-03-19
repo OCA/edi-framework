@@ -3,7 +3,7 @@
 # License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl).
 
 {
-    "name": "EDI Storage backend support",
+    "name": "EDI Core Storage backend support",
     "summary": """
     Base module to allow exchanging files via storage backend (eg: SFTP).
     """,
@@ -12,6 +12,13 @@
     "license": "LGPL-3",
     "website": "https://github.com/OCA/edi-framework",
     "author": "ACSONE,Odoo Community Association (OCA)",
-    "depends": ["edi_oca", "edi_storage_core_oca"],
-    "data": [],
+    "depends": ["edi_core_oca", "fs_storage"],
+    "data": [
+        "data/cron.xml",
+        "data/job_channel_data.xml",
+        "data/queue_job_function_data.xml",
+        "security/ir_model_access.xml",
+        "views/edi_backend_views.xml",
+    ],
+    "demo": ["demo/edi_backend_demo.xml"],
 }
