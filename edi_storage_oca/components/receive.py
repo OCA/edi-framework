@@ -2,9 +2,10 @@
 # License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl).
 
 from odoo.addons.component.core import Component
+from odoo.addons.edi_storage_core_oca.abstracts.receive import EDIStorageReceive
 
 
-class EDIStorageReceiveComponent(Component):
+class EDIStorageReceiveComponent(EDIStorageReceive, Component):
     _name = "edi.storage.component.receive"
     _inherit = [
         "edi.component.receive.mixin",
@@ -13,4 +14,4 @@ class EDIStorageReceiveComponent(Component):
     _usage = "storage.receive"
 
     def receive(self):
-        return self._get_remote_file("pending", binary=True)
+        return self._receive(self.exchange_record)

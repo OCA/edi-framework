@@ -560,3 +560,60 @@ class EDIExchangeRecord(models.Model):
         # Drop ID otherwise the context will be loaded from the action's record
         action.pop("id")
         return action
+
+    def notify_action_complete(self, action, message=None):
+        """Notify current record that an edi action has been completed.
+
+        Implementers should take care of calling this method
+        if they work on records w/o calling edi_backend methods (eg: action_send).
+
+        Implementers can hook to this method to do something after any action ends.
+        """
+        if message:
+            self._notify_related_record(message)
+        return True
+
+    def _notify_related_record(self, message, level="info"):
+        """Post notification on the original record."""
+        if not self.related_record_exists or not hasattr(
+            self.record, "message_post_with_source"
+        ):
+            return
+        self.record.message_post_with_source(
+            "edi_core_oca.message_edi_exchange_link",
+            render_values={
+                "backend": self.backend_id,
+                "exchange_record": self,
+                "message": message,
+                "level": level,
+            },
+            subtype_id=self.env.ref("mail.mt_note").id,
+        )
+
+    def _notify_done(self):
+        self._notify_related_record(self._exchange_status_message("process_ok"))
+        return True
+
+    def _notify_error(self, message_key):
+        self._notify_related_record(
+            self._exchange_status_message(message_key),
+            level="error",
+        )
+        return True
+
+    def _notify_ack_received(self):
+        self._notify_related_record(self._exchange_status_message("ack_received"))
+        return True
+
+    def _notify_ack_missing(self):
+        self._notify_related_record(
+            self._exchange_status_message("ack_missing"),
+            level="warning",
+        )
+        return True
+
+    def _notify_ack_received_error(self):
+        self._notify_related_record(
+            self._exchange_status_message("ack_received_error"),
+        )
+        return True

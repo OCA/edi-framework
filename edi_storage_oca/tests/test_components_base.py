@@ -23,27 +23,29 @@ class EDIStorageComponentTestCase(TestEDIStorageBaseComponent):
                 checker = self.checker_input
             else:
                 checker = self.checker
-            path_obj = checker._get_remote_file_path(state, filename)
+            path_obj = checker._get_remote_file_path(
+                checker.exchange_record, state, filename
+            )
             self.assertEqual(path_obj.as_posix(), expected)
 
         with self.assertRaises(AssertionError):
-            self.checker_input._get_remote_file_path("WHATEVER", "foo.csv")
+            self.checker_input._get_remote_file_path(self.record, "WHATEVER", "foo.csv")
 
     def test_get_remote_file(self):
         with mock.patch(FS_STORAGE_MOCK_PATH + ".get_file") as mocked:
-            self.checker._get_remote_file("pending")
+            self.checker._get_remote_file(self.record, "pending")
             mocked.assert_called_with(
                 mock.ANY,
                 f"demo_out/pending/{self._filename(self.record)}",
                 binary=False,
             )
-            self.checker._get_remote_file("done")
+            self.checker._get_remote_file(self.record, "done")
             mocked.assert_called_with(
                 mock.ANY,
                 f"demo_out/done/{self._filename(self.record)}",
                 binary=False,
             )
-            self.checker._get_remote_file("error")
+            self.checker._get_remote_file(self.record, "error")
             mocked.assert_called_with(
                 mock.ANY,
                 f"demo_out/error/{self._filename(self.record)}",

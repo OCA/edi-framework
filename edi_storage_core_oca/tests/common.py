@@ -102,7 +102,7 @@ class TestEDIStorageBase(EDIBackendCommonTestCase):
         state_paths = state_paths or ("done", "pending", "error")
         # Paths will be something like:
         # [
-        # 'demo_out/pending/$filename.csv',
+        # 'demo_out/done/$filename.csv',
         # 'demo_out/pending/$filename.csv',
         # 'demo_out/error/$filename.csv',
         # ]

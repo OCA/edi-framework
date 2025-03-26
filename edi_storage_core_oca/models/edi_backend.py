@@ -158,3 +158,36 @@ class EDIBackend(models.Model):
             "edi_exchange_state": "input_pending",
             "storage_id": self.storage_id.id,
         }
+
+    def _is_using_fs_storage(self, exchange_record):
+        return bool(exchange_record.backend_id.storage_id)
+
+    def _exchange_send(self, exchange_record):
+        if self._is_using_fs_storage(exchange_record):
+            EdiBackendFsStorage = self.env["edi.backend.fs.storage"]
+            if EdiBackendFsStorage._exchange_output_check_abstract(exchange_record):
+                return EdiBackendFsStorage._send(exchange_record)
+        return super()._exchange_send(exchange_record)
+
+    def _exchange_output_check_state(self, exchange_record):
+        if self._is_using_fs_storage(exchange_record):
+            return self.env["edi.backend.fs.storage"]._exchange_output_check_abstract(
+                exchange_record
+            )
+        return super()._exchange_output_check_state(exchange_record)
+
+    def exchange_process(self, exchange_record):
+        result = super().exchange_process(exchange_record)
+        if self._is_using_fs_storage(exchange_record):
+            EdiBackendFsStorage = self.env["edi.backend.fs.storage"]
+            state = exchange_record.edi_exchange_state
+            if state == "input_processed":
+                EdiBackendFsStorage.on_edi_exchange_done(exchange_record)
+            elif state == "input_processed_error":
+                EdiBackendFsStorage.on_edi_exchange_error(exchange_record)
+        return result
+
+    def _exchange_receive(self, exchange_record):
+        if self._is_using_fs_storage(exchange_record):
+            return self.env["edi.backend.fs.storage"]._receive(exchange_record)
+        return super()._exchange_receive(exchange_record)

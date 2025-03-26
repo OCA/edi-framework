@@ -132,6 +132,7 @@ class EDIBackend(models.Model):
                 exchange_record.update(
                     {"edi_exchange_state": state, "exchange_error": error}
                 )
+        exchange_record.notify_action_complete("generate", message=message)
         return message
 
     # TODO: unify to all other checkes that return something
@@ -196,6 +197,7 @@ class EDIBackend(models.Model):
                 raise
             error = _get_exception_msg()
             state = "output_error_on_send"
+            message = exchange_record._exchange_status_message("send_ko")
             res = f"Error: {error}"
             _logger.debug(
                 "%s send failed. Marked as errored.", exchange_record.identifier
@@ -220,6 +222,7 @@ class EDIBackend(models.Model):
                     "exchanged_on": fields.Datetime.now(),
                 }
             )
+        exchange_record.notify_action_complete("send", message=message)
         return res
 
     def _swallable_exceptions(self):
@@ -365,6 +368,7 @@ class EDIBackend(models.Model):
         check = self._exchange_process_check(exchange_record)
         if not check:
             return "Nothing to do. Likely already processed."
+        old_state = state = exchange_record.edi_exchange_state
         error = False
         try:
             res = self._exchange_process(exchange_record)
@@ -387,6 +391,14 @@ class EDIBackend(models.Model):
                     "exchanged_on": fields.Datetime.now(),
                 }
             )
+            if (
+                state == "input_processed_error"
+                and old_state != "input_processed_error"
+            ):
+                exchange_record._notify_error("process_ko")
+            elif state == "input_processed":
+                exchange_record._notify_done()
+        exchange_record.notify_action_complete("receive")
         return res
 
     def _exchange_process(self, exchange_record):
@@ -436,6 +448,7 @@ class EDIBackend(models.Model):
                     "exchanged_on": fields.Datetime.now(),
                 }
             )
+        exchange_record.notify_action_complete("receive", message=message)
         return res
 
     def _exchange_receive_check(self, exchange_record):

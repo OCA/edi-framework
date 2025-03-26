@@ -36,4 +36,6 @@ class TestEDIStorageBaseComponent(TestEDIStorageBase):
             # Exception as we read from the same path but w/ error suffix
             state = "error"
             fname += ".error"
-        return checker._get_remote_file_path(state, filename=fname).as_posix()
+        return checker._get_remote_file_path(
+            checker.exchange_record, state, filename=fname
+        ).as_posix()

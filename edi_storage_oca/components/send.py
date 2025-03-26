@@ -4,10 +4,10 @@
 
 
 from odoo.addons.component.core import Component
-from odoo.addons.edi_storage_core_oca import utils
+from odoo.addons.edi_storage_core_oca.abstracts.send import EDIStorageSend
 
 
-class EDIStorageSendComponent(Component):
+class EDIStorageSendComponent(EDIStorageSend, Component):
     _name = "edi.storage.component.send"
     _inherit = [
         "edi.component.send.mixin",
@@ -24,14 +24,4 @@ class EDIStorageSendComponent(Component):
         if not result:
             # all good here
             return True
-        filedata = self.exchange_record.exchange_file
-        path = self._get_remote_file_path("pending")
-        utils.add_file(self.storage, path.as_posix(), filedata)
-        # TODO: delegate this to generic storage backend
-        # except paramiko.ssh_exception.AuthenticationException:
-        #     # TODO this exc handling should be moved to sftp backend IMO
-        #     error = _("Authentication error")
-        #     state = "error_on_send"
-        # TODO: catch other specific exceptions
-        # this will swallow all the exceptions!
-        return True
+        return self._send(self.exchange_record)

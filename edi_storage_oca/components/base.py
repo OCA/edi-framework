@@ -3,15 +3,14 @@
 # @author: Simone Orsi <simahawk@gmail.com>
 # License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl).
 import logging
-from pathlib import PurePath
 
 from odoo.addons.component.core import AbstractComponent
-from odoo.addons.edi_storage_core_oca import utils
+from odoo.addons.edi_storage_core_oca.abstracts.base import EDIStorageMixin
 
 _logger = logging.getLogger(__file__)
 
 
-class EDIStorageComponentMixin(AbstractComponent):
+class EDIStorageComponentMixin(EDIStorageMixin, AbstractComponent):
     _name = "edi.storage.component.mixin"
     _inherit = "edi.component.mixin"
     # Components having `_storage_type` will have precedence.
@@ -37,49 +36,4 @@ class EDIStorageComponentMixin(AbstractComponent):
         :param state: string stating state of the exchange
         :return: PurePath object
         """
-        assert direction in ("input", "output")
-        assert state in ("pending", "done", "error")
-        return PurePath(
-            (self.backend[direction + "_dir_" + state] or "").strip().rstrip("/")
-        )
-
-    def _get_remote_file_path(self, state, filename=None):
-        """Retrieve remote path for current exchange record."""
-        filename = filename or self.exchange_record.exchange_filename
-        direction = self.exchange_record.direction
-        directory = self._dir_by_state(direction, state).as_posix()
-        path = self.exchange_record.type_id._storage_fullpath(
-            directory=directory, filename=filename
-        )
-        return path
-
-    def _get_remote_file(self, state, filename=None, binary=False):
-        """Get file for current exchange_record in the given destination state.
-
-        :param state: string ("pending", "done", "error")
-        :param filename: custom file name, exchange_record filename used by default
-        :return: remote file content as string
-        """
-        path = self._get_remote_file_path(state, filename=filename)
-        try:
-            # TODO: support match via pattern (eg: filename-prefix-*)
-            # otherwise is impossible to retrieve input files and acks
-            # (the date will never match)
-            return utils.get_file(self.storage, path.as_posix(), binary=binary)
-        except FileNotFoundError:
-            _logger.info(
-                "Ignored FileNotFoundError when trying "
-                "to get file %s into path %s for state %s",
-                filename,
-                path,
-                state,
-            )
-            return None
-        except OSError:
-            _logger.info(
-                "Ignored OSError when trying to get file %s into path %s for state %s",
-                filename,
-                path,
-                state,
-            )
-            return None
+        return self._get_dir_by_state(self.backend, direction, state)
