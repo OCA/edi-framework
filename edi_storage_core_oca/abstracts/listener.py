@@ -10,6 +10,8 @@ from .. import utils
 
 class EdiStorageListenerAbstract:
     def _move_file(self, storage, from_dir_str, to_dir_str, filename):
+        if from_dir_str == to_dir_str:
+            return True
         from_dir = PurePath(from_dir_str)
         to_dir = PurePath(to_dir_str)
         # - storage.list_files now includes path in fs_storage, breaking change
