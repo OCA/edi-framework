@@ -370,6 +370,7 @@ class EDIBackend(models.Model):
             return "Nothing to do. Likely already processed."
         old_state = state = exchange_record.edi_exchange_state
         error = False
+        res = None
         try:
             res = self._exchange_process(exchange_record)
         except self._swallable_exceptions():
@@ -377,7 +378,9 @@ class EDIBackend(models.Model):
                 raise
             error = _get_exception_msg()
             state = "input_processed_error"
-            res = f"Error: {error}"
+        except Exception:
+            error = _get_exception_msg()
+            state = "input_processed_error"
         else:
             error = None
             state = "input_processed"
