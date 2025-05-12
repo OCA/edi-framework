@@ -71,6 +71,7 @@ Contributors
 ------------
 
 - Alba Riera <alba.riera@creublanca.es>
+- Alex Paris <alex.paris@forgeflow.com>
 
 Maintainers
 -----------
