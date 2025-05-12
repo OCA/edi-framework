@@ -12,7 +12,7 @@
                     class="oe_stat_button"
                     type="object"
                     name="action_edi_backend"
-                    attrs="{'invisible': [('edi_backend_count', '=', 0)]}"
+                    invisible="not edi_backend_count"
                     icon="fa-retweet"
                     groups="base_edi.group_edi_manager"
                 >
