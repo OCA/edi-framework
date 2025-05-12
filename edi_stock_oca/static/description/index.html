@@ -8,10 +8,11 @@
 
 /*
 :Author: David Goodger (goodger@python.org)
-:Id: $Id: html4css1.css 8954 2022-01-20 10:10:25Z milde $
+:Id: $Id: html4css1.css 9511 2024-01-13 09:50:07Z milde $
 :Copyright: This stylesheet has been placed in the public domain.
 
 Default cascading style sheet for the HTML output of Docutils.
+Despite the name, some widely supported CSS2 features are used.
 
 See https://docutils.sourceforge.io/docs/howto/html-stylesheets.html for how to
 customize this style sheet.
@@ -274,7 +275,7 @@ pre.literal-block, pre.doctest-block, pre.math, pre.code {
   margin-left: 2em ;
   margin-right: 2em }
 
-pre.code .ln { color: grey; } /* line numbers */
+pre.code .ln { color: gray; } /* line numbers */
 pre.code, code { background-color: #eeeeee }
 pre.code .comment, code .comment { color: #5C6576 }
 pre.code .keyword, code .keyword { color: #3B0D06; font-weight: bold }
@@ -300,7 +301,7 @@ span.option {
 span.pre {
   white-space: pre }
 
-span.problematic {
+span.problematic, pre.problematic {
   color: red }
 
 span.section-subtitle {
@@ -368,17 +369,18 @@ ul.auto-toc {
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 !! source digest: sha256:a7b4f488b0667acdcad755ad5548852152cd005f9cca4ab2e46d5b06db3bc45d
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! -->
-<p><a class="reference external image-reference" href="https://odoo-community.org/page/development-status"><img alt="Beta" src="https://img.shields.io/badge/maturity-Beta-yellow.png" /></a> <a class="reference external image-reference" href="http://www.gnu.org/licenses/agpl-3.0-standalone.html"><img alt="License: AGPL-3" src="https://img.shields.io/badge/licence-AGPL--3-blue.png" /></a> <a class="reference external image-reference" href="https://github.com/OCA/edi-framework/tree/16.0/edi_stock_oca"><img alt="OCA/edi-framework" src="https://img.shields.io/badge/github-OCA%2Fedi--framework-lightgray.png?logo=github" /></a> <a class="reference external image-reference" href="https://translation.odoo-community.org/projects/edi-framework-16-0/edi-framework-16-0-edi_stock_oca"><img alt="Translate me on Weblate" src="https://img.shields.io/badge/weblate-Translate%20me-F47D42.png" /></a> <a class="reference external image-reference" href="https://runboat.odoo-community.org/builds?repo=OCA/edi-framework&amp;target_branch=16.0"><img alt="Try me on Runboat" src="https://img.shields.io/badge/runboat-Try%20me-875A7B.png" /></a></p>
+<p><a class="reference external image-reference" href="https://odoo-community.org/page/development-status"><img alt="Beta" src="https://img.shields.io/badge/maturity-Beta-yellow.png" /></a> <a class="reference external image-reference" href="http://www.gnu.org/licenses/agpl-3.0-standalone.html"><img alt="License: AGPL-3" src="https://img.shields.io/badge/licence-AGPL--3-blue.png" /></a> <a class="reference external image-reference" href="https://github.com/OCA/edi-framework/tree/17.0/edi_stock_oca"><img alt="OCA/edi-framework" src="https://img.shields.io/badge/github-OCA%2Fedi--framework-lightgray.png?logo=github" /></a> <a class="reference external image-reference" href="https://translation.odoo-community.org/projects/edi-framework-17-0/edi-framework-17-0-edi_stock_oca"><img alt="Translate me on Weblate" src="https://img.shields.io/badge/weblate-Translate%20me-F47D42.png" /></a> <a class="reference external image-reference" href="https://runboat.odoo-community.org/builds?repo=OCA/edi-framework&amp;target_branch=17.0"><img alt="Try me on Runboat" src="https://img.shields.io/badge/runboat-Try%20me-875A7B.png" /></a></p>
 <p>This module intends to create a base to be extended by local edi rules
 for stock.</p>
-<p>In order to add a new integration for an stock picking, you need to create a listener:</p>
+<p>In order to add a new integration for an stock picking, you need to
+create a listener:</p>
 <pre class="code python literal-block">
-<span class="k">class</span> <span class="nc">MyEventListener</span><span class="p">(</span><span class="n">Component</span><span class="p">):</span><span class="w">
+<span class="k">class</span><span class="w"> </span><span class="nc">MyEventListener</span><span class="p">(</span><span class="n">Component</span><span class="p">):</span><span class="w">
 </span>    <span class="n">_name</span> <span class="o">=</span> <span class="s2">&quot;stock.picking.event.listener.demo&quot;</span><span class="w">
 </span>    <span class="n">_inherit</span> <span class="o">=</span> <span class="s2">&quot;base.event.listener&quot;</span><span class="w">
 </span>    <span class="n">_apply_on</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;stock.picking&quot;</span><span class="p">]</span><span class="w">
 
-</span>    <span class="k">def</span> <span class="nf">on_validate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">picking</span><span class="p">):</span><span class="w">
+</span>    <span class="k">def</span><span class="w"> </span><span class="nf">on_validate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">picking</span><span class="p">):</span><span class="w">
         </span><span class="sd">&quot;&quot;&quot;Add your code here about creation of record&quot;&quot;&quot;</span>
 </pre>
 <p><strong>Table of contents</strong></p>
@@ -398,7 +400,7 @@ for stock.</p>
 <p>Bugs are tracked on <a class="reference external" href="https://github.com/OCA/edi-framework/issues">GitHub Issues</a>.
 In case of trouble, please check there if your issue has already been reported.
 If you spotted it first, help us to smash it by providing a detailed and welcomed
-<a class="reference external" href="https://github.com/OCA/edi-framework/issues/new?body=module:%20edi_stock_oca%0Aversion:%2016.0%0A%0A**Steps%20to%20reproduce**%0A-%20...%0A%0A**Current%20behavior**%0A%0A**Expected%20behavior**">feedback</a>.</p>
+<a class="reference external" href="https://github.com/OCA/edi-framework/issues/new?body=module:%20edi_stock_oca%0Aversion:%2017.0%0A%0A**Steps%20to%20reproduce**%0A-%20...%0A%0A**Current%20behavior**%0A%0A**Expected%20behavior**">feedback</a>.</p>
 <p>Do not contact contributors directly about support or help with technical issues.</p>
 </div>
 <div class="section" id="credits">
@@ -418,11 +420,13 @@ If you spotted it first, help us to smash it by providing a detailed and welcome
 <div class="section" id="maintainers">
 <h2><a class="toc-backref" href="#toc-entry-5">Maintainers</a></h2>
 <p>This module is maintained by the OCA.</p>
-<a class="reference external image-reference" href="https://odoo-community.org"><img alt="Odoo Community Association" src="https://odoo-community.org/logo.png" /></a>
+<a class="reference external image-reference" href="https://odoo-community.org">
+<img alt="Odoo Community Association" src="https://odoo-community.org/logo.png" />
+</a>
 <p>OCA, or the Odoo Community Association, is a nonprofit organization whose
 mission is to support the collaborative development of Odoo features and
 promote its widespread use.</p>
-<p>This module is part of the <a class="reference external" href="https://github.com/OCA/edi-framework/tree/16.0/edi_stock_oca">OCA/edi-framework</a> project on GitHub.</p>
+<p>This module is part of the <a class="reference external" href="https://github.com/OCA/edi-framework/tree/17.0/edi_stock_oca">OCA/edi-framework</a> project on GitHub.</p>
 <p>You are welcome to contribute. To learn how please visit <a class="reference external" href="https://odoo-community.org/page/Contribute">https://odoo-community.org/page/Contribute</a>.</p>
 </div>
 </div>
