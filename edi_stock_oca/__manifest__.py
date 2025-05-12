@@ -10,6 +10,14 @@
     "author": "Odoo Community Association,Odoo Community Association (OCA)",
     "website": "https://github.com/OCA/edi-framework",
     "depends": ["stock", "edi_oca", "component_event"],
-    "data": ["views/stock_picking.xml", "views/res_partner.xml"],
-    "demo": [],
+    "data": [
+        "data/edi_configuration.xml",
+        "views/stock_picking.xml",
+        "views/res_partner.xml",
+    ],
+    "demo": [
+        "demo/edi_backend.xml",
+        "demo/edi_exchange_type.xml",
+        "demo/edi_configuration.xml",
+    ],
 }
