@@ -59,7 +59,7 @@ class EDIBackendTestCase(TestStockCommon, TransactionComponentRegistryCase):
 
     def test_validate_picking(self):
         self.picking_in.action_confirm()
-        self.move_a.move_line_ids.qty_done = 4
+        self.move_a.move_line_ids.quantity = 4
         self.picking_in._action_done()
         self.assertEqual(self.picking_in.name, "picking_done")
 

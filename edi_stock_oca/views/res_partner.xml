@@ -5,12 +5,11 @@
     <record model="ir.ui.view" id="view_partner_form">
         <field name="name">res.partner.form (in edi_stock_oca)</field>
         <field name="model">res.partner</field>
-        <field name="inherit_id" ref="stock.view_partner_stock_form" />
+        <field name="inherit_id" ref="edi_oca.view_partner_form" />
         <field name="arch" type="xml">
-            <!-- TODO: Move this conf inside `edi` page from edi_oca. -->
-            <group name="inventory" position="after">
+            <page name="edi" position="inside">
                 <group name="edi_configuration" string="EDI Configuration" />
-            </group>
+            </page>
         </field>
     </record>
 </odoo>

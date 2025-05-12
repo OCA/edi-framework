@@ -8,14 +8,7 @@ class StockPicking(models.Model):
     _name = "stock.picking"
     _inherit = ["stock.picking", "edi.exchange.consumer.mixin"]
 
-    edi_disable_auto = fields.Boolean(
-        states={
-            "draft": [("readonly", False)],
-            "waiting": [("readonly", False)],
-            "confirmed": [("readonly", False)],
-            "assigned": [("readonly", False)],
-        },
-    )
+    edi_disable_auto = fields.Boolean()
 
     def action_confirm(self):
         result = super().action_confirm()
