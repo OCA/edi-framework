@@ -141,9 +141,9 @@ class EDIExchangeConsumerMixin(models.AbstractModel):
                 new_node = etree.fromstring(str_element)
                 new_arch, new_models = View.postprocess_and_fields(new_node, self._name)
                 for model in new_models:
-                    if model in all_models:
-                        continue
-                    all_models[model] = new_models[model]
+                    all_models[model] = tuple(
+                        set(all_models.get(model, {})) | set(new_models[model])
+                    )
                 node.addprevious(etree.fromstring(new_arch))
             res["arch"] = etree.tostring(doc)
             res["models"] = frozendict(all_models)
