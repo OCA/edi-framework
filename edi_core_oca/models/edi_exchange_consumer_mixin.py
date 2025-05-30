@@ -142,6 +142,10 @@ class EDIExchangeConsumerMixin(models.AbstractModel):
                 new_arch, new_models = View.postprocess_and_fields(new_node, self._name)
                 for model in new_models:
                     if model in all_models:
+                        # It could add more fields
+                        all_models[model] = all_models.get(model) + tuple(
+                            new_models.get(model)
+                        )
                         continue
                     all_models[model] = new_models[model]
                 node.addprevious(etree.fromstring(new_arch))
