@@ -9,7 +9,6 @@ from ..fields import BetterSerialized
 
 
 class EDIExchangeRecord(models.Model):
-
     _inherit = "edi.exchange.record"
 
     metadata = BetterSerialized(
