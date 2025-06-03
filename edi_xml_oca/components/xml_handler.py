@@ -5,8 +5,8 @@
 import xmltodict
 from lxml import etree
 
-from odoo import modules
 from odoo.exceptions import UserError
+from odoo.tools import file_path
 from odoo.tools.xml_utils import _check_with_xsd
 
 from odoo.addons.component.core import Component
@@ -36,7 +36,7 @@ class XMLHandler(Component):
         except ValueError as exc:
             raise ValueError("Path must be in the form `module:path`") from exc
 
-        schema_path = modules.get_resource_path(mod_name, path)
+        schema_path = file_path(f"{mod_name}/{path}")
         if not schema_path:
             return UserError(f"XSD schema file not found: {self.work.schema_path}")
 
