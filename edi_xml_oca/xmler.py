@@ -88,8 +88,7 @@ def dict2xml(input_dict, encoding="utf-8", pretty=False):
 def parse(input_dict, parent=None, pretty=False):
     parent = parent or {}
     for key, value in input_dict.items():
-
-        if isinstance(value, (float, int)):
+        if isinstance(value, float | int):
             # Enfoce strings here
             value = str(value)
 
@@ -108,7 +107,7 @@ def parse(input_dict, parent=None, pretty=False):
 
             if "@value" in value:
                 val = value["@value"]
-                if isinstance(val, (float, int)):
+                if isinstance(val, float | int):
                     # Enfoce strings here
                     val = str(val)
                 parent["value"] = value = val
@@ -125,7 +124,7 @@ def parse(input_dict, parent=None, pretty=False):
         for child_key, child_value in parent["value"].items():
             element.append(parse({child_key: child_value}, parent={}))
 
-    elif isinstance(parent["value"], (list, set, tuple)):
+    elif isinstance(parent["value"], list | set | tuple):
         for child in parent["value"]:
             element.append(parse(child, parent={}))
 

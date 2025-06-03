@@ -25,7 +25,7 @@ class XMLHandler(Component):
         super().__init__(work_context)
         for key in self._work_context_validate_attrs:
             if not hasattr(work_context, key):
-                raise AttributeError(f"`{key}` is required for this component!")
+                raise AttributeError(f"'{key}' is required for this component!")
 
         self.schema_path, self.schema = self._get_xsd_schema()
 
@@ -40,7 +40,7 @@ class XMLHandler(Component):
         if not schema_path:
             return UserError(f"XSD schema file not found: {self.work.schema_path}")
 
-        with open(schema_path, "r") as schema_file:
+        with open(schema_path) as schema_file:
             return schema_path, etree.XMLSchema(etree.parse(schema_file))
 
     def _xml_string_to_dict(self, xml_string, **kw):
@@ -74,12 +74,12 @@ class XMLHandler(Component):
             xml_content.encode("utf-8") if isinstance(xml_content, str) else xml_content
         )
         try:
-            with open(self.schema_path, "r") as xsd_stream:
+            with open(self.schema_path) as xsd_stream:
                 _check_with_xsd(xml_content, xsd_stream)
         except FileNotFoundError as exc:
             if raise_on_fail:
                 raise exc
-            return "XSD schema file not found: %s" % self.schema_path
+            return f"XSD schema file not found: {self.schema_path}"
         except Exception as exc:
             if raise_on_fail:
                 raise exc
