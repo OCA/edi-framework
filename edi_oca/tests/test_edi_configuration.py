@@ -91,7 +91,7 @@ class TestEDIConfigurations(EDIBackendCommonComponentRegistryTestCase):
 
     def test_edi_send_via_edi_config(self):
         # Check configuration on create
-        self.consumer_record.refresh()
+        self.consumer_record.invalidate_recordset()
         exchange_record = self.consumer_record.exchange_record_ids
         self.assertEqual(len(exchange_record), 1)
         self.assertEqual(exchange_record.type_id, self.exchange_type_out)
@@ -99,7 +99,7 @@ class TestEDIConfigurations(EDIBackendCommonComponentRegistryTestCase):
         # Write the existed consumer record
         self.consumer_record.name = "Fixed Consumer"
         # check Configuration on write
-        self.consumer_record.refresh()
+        self.consumer_record.invalidate_recordset()
         exchange_record = self.consumer_record.exchange_record_ids - exchange_record
         self.assertEqual(len(exchange_record), 1)
         self.assertEqual(exchange_record.type_id, self.exchange_type_out)
