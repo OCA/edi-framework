@@ -339,7 +339,7 @@ class EDIExchangeConsumerMixin(models.AbstractModel):
         - origin exchange record is set (means it was originated by another record)
         - origin exchange type is compatible with the configured ack types
         """
-        if (self.disable_edi_auto and not force) or not self.origin_exchange_record_id:
+        if (self.edi_disable_auto and not force) or not self.origin_exchange_record_id:
             return False
         return self.origin_exchange_type_id in exchange_type.ack_for_type_ids
 
