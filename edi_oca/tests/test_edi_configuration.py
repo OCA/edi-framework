@@ -51,7 +51,7 @@ class TestEDIConfigurations(EDIBackendCommonComponentRegistryTestCase):
         )
 
     @classmethod
-    def _setup_records(cls):
+    def _setup_records(cls):  # pylint: disable=missing-return
         super()._setup_records()
         # Load fake models ->/
         cls.loader = FakeModelLoader(cls.env, cls.__module__)

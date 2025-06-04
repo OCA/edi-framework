@@ -32,7 +32,7 @@ class EdiConfiguration(models.Model):
         to meet the specific needs of their business processes.
     """
 
-    name = fields.Char(string="Name", required=True)
+    name = fields.Char(required=True)
     active = fields.Boolean(default=True)
     description = fields.Char(help="Describe what the conf is for")
     backend_id = fields.Many2one(string="Backend", comodel_name="edi.backend")
@@ -62,11 +62,9 @@ class EdiConfiguration(models.Model):
     )
     trigger = fields.Char(related="trigger_id.code")
     snippet_before_do = fields.Text(
-        string="Snippet Before Do",
         help="Snippet to validate the state and collect records to do",
     )
     snippet_do = fields.Text(
-        string="Snippet Do",
         help="""Used to do something specific here.
         Receives: operation, edi_action, vals, old_vals.""",
     )

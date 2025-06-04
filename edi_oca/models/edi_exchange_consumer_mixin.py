@@ -393,7 +393,7 @@ class EDIExchangeConsumerMixin(models.AbstractModel):
 
         # Retrieve context and composer model
         ctx = ir_action.get("context", {})
-        composer_model = self.env[ir_action["res_model"]].with_context(ctx)
+        composer_model = self.env[ir_action["res_model"]].with_context(**ctx)
 
         # Determine subtype and partner_ids dynamically based on model-specific logic
         subtype = subtype_ref and self.env.ref(subtype_ref) or None

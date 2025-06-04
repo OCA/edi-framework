@@ -11,7 +11,7 @@ class EdiConfigurationTrigger(models.Model):
         Describe what triggers a specific action for a configuration.
     """
 
-    name = fields.Char(string="Name", required=True)
+    name = fields.Char(required=True)
     code = fields.Char(required=True, copy=False)
     active = fields.Boolean(default=True)
     description = fields.Char(help="Describe what the conf is for")
