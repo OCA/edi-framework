@@ -27,11 +27,6 @@
                         <group name="main">
                             <field name="backend_type_id" />
                             <field name="backend_id" />
-                            <field
-                                name="type_id"
-                                string="Type (deprecated)"
-                                help="Use allowed types and set the template explicitly on the type"
-                            />
                             <field name="allowed_type_ids" widget="many2many_tags" />
                             <field name="code" />
                             <field name="output_type" />
@@ -81,7 +76,6 @@
         <field name="arch" type="xml">
             <search string="EDI Exchange Template Output">
                 <field name="name" />
-                <field name="type_id" />
                 <field name="backend_id" />
                 <field name="template_key" />
                 <group expand="0" string="Group By">
@@ -94,11 +88,6 @@
                         name="group_by_backend_id"
                         string="Backend"
                         context="{'group_by': 'backend_id'}"
-                    />
-                    <filter
-                        name="group_by_type_id"
-                        string="Type"
-                        context="{'group_by': 'type_id'}"
                     />
                 </group>
             </search>

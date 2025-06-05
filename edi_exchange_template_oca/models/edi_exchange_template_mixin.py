@@ -8,7 +8,7 @@ import textwrap
 
 import pytz
 
-from odoo import api, exceptions, fields, models
+from odoo import fields, models
 from odoo.tools import DotDict, safe_eval
 
 _logger = logging.getLogger(__name__)
@@ -41,15 +41,6 @@ class EDIExchangeTemplateMixin(models.AbstractModel):
         comodel_name="edi.backend.type",
         ondelete="restrict",
         required=True,
-    )
-    # TODO: deprecate this field.
-    # Templates should be explicitly linked by a type
-    # and use `allowed_type_ids` to define allowed types.
-    type_id = fields.Many2one(
-        string="EDI Exchange type",
-        comodel_name="edi.exchange.type",
-        ondelete="cascade",
-        auto_join=True,
     )
     allowed_type_ids = fields.Many2many(
         comodel_name="edi.exchange.type",
@@ -168,20 +159,3 @@ class EDIExchangeTemplateMixin(models.AbstractModel):
 
     def validate(self, exchange_record):
         pass
-
-    @api.constrains("type_id", "allowed_type_ids")
-    def _check_type_id(self):
-        for rec in self:
-            if (
-                rec.type_id
-                and rec.allowed_type_ids
-                and rec.type_id not in rec.allowed_type_ids
-            ):
-                raise exceptions.ValidationError(
-                    self.env._(
-                        "The selected type must appear among the allowed types. "
-                        "NOTE: the type field is deprecated and will be removed soon. "
-                        "Use 'Allowed types' instead and set the template to use "
-                        "explicitly on the type that will use this template."
-                    )
-                )

@@ -2,7 +2,6 @@
 # @author: Simone Orsi <simone.orsi@camptocamp.com>
 # License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl).
 from odoo.exceptions import ValidationError
-from odoo.tools import mute_logger
 
 from odoo.addons.base.tests.common import BaseCommon
 
@@ -76,8 +75,6 @@ class TestExchangeType(BaseCommon):
         }
         cls.record2 = cls.backend.create_record("test_type_out2", vals)
 
-    # TODO: getting a template via code or relying on a fallback is deprecated
-    @mute_logger("odoo.addons.edi_exchange_template_oca.models.edi_backend")
     def test_get_template_by_code(self):
         self.assertEqual(
             self.backend._get_output_template(self.record2, code=self.tmpl_out1.code),
@@ -92,7 +89,6 @@ class TestExchangeType(BaseCommon):
             self.backend._get_output_template(self.record2), self.tmpl_out2
         )
 
-    @mute_logger("odoo.addons.edi_exchange_template_oca.models.edi_backend")
     def test_get_template_by_fallback(self):
         self.assertEqual(
             self.backend._get_output_template(self.record2, code=self.tmpl_out1.code),
@@ -108,7 +104,6 @@ class TestExchangeType(BaseCommon):
             self.backend._get_output_template(self.record2), self.tmpl_out1
         )
 
-    @mute_logger("odoo.addons.edi_exchange_template_oca.models.edi_backend")
     def test_get_template_allowed(self):
         # No match by code on both templates
         self.assertNotEqual(self.type_out1.code, self.tmpl_out1.code)
@@ -127,19 +122,11 @@ class TestExchangeType(BaseCommon):
             self.backend._get_output_template(self.record1), self.tmpl_out1
         )
 
-    def test_template_validation(self):
-        self.tmpl_out1.allowed_type_ids = self.type_out1
-        self.assertIn(self.tmpl_out1, self.type_out1.output_template_allowed_ids)
-        with self.assertRaisesRegex(ValidationError, "Template not allowed"):
-            self.type_out2.output_template_id = self.tmpl_out1
-        with self.assertRaisesRegex(
-            ValidationError, "The selected type must appear among the allowed types"
-        ):
-            self.tmpl_out1.type_id = self.type_out2
-
     def test_get_template_selected(self):
         self.type_out1.output_template_id = self.tmpl_out1
         self.type_out2.output_template_id = self.tmpl_out2
+        self.tmpl_out1.allowed_type_ids = self.type_out1
+        self.tmpl_out2.allowed_type_ids = self.type_out2
         self.assertEqual(
             self.backend._get_output_template(self.record1), self.tmpl_out1
         )
@@ -147,6 +134,16 @@ class TestExchangeType(BaseCommon):
             self.backend._get_output_template(self.record2), self.tmpl_out2
         )
         # inverse
+        with self.assertRaisesRegex(
+            ValidationError, "Template not allowed for this type."
+        ):
+            self.type_out1.output_template_id = self.tmpl_out2
+        with self.assertRaisesRegex(
+            ValidationError, "Template not allowed for this type."
+        ):
+            self.type_out2.output_template_id = self.tmpl_out1
+        self.tmpl_out1.allowed_type_ids = self.type_out2
+        self.tmpl_out2.allowed_type_ids = self.type_out1
         self.type_out1.output_template_id = self.tmpl_out2
         self.type_out2.output_template_id = self.tmpl_out1
         self.assertEqual(

@@ -43,6 +43,7 @@ class TestEDIBackendOutputBase(EDIBackendCommonComponentTestCase):
             }
         )
         cls.type_out1.output_template_id = cls.tmpl_out1
+        cls.tmpl_out1.allowed_type_ids = cls.type_out1
         vals = {
             "model": cls.partner._name,
             "res_id": cls.partner.id,
@@ -88,6 +89,7 @@ result = {"custom_bit": foo, "baz": baz}
             }
         )
         cls.type_out2.output_template_id = cls.tmpl_out2
+        cls.tmpl_out2.allowed_type_ids = cls.type_out2
         vals = {
             "model": cls.partner._name,
             "res_id": cls.partner.id,
@@ -116,6 +118,7 @@ result = {"res_ids": record.ids}
             }
         )
         cls.type_out3.output_template_id = cls.tmpl_out3
+        cls.tmpl_out3.allowed_type_ids = cls.type_out3
         company = cls.env.ref("base.main_company")
         vals = {
             "model": company._name,
@@ -138,7 +141,6 @@ result = {"res_ids": record.ids}
                 "name": "Out JSON",
                 "backend_type_id": cls.backend.backend_type_id.id,
                 "code": "test_type_out_json",
-                "type_id": cls.type_out_json.id,
                 "output_type": "json",
                 "code_snippet": """
 result = {
