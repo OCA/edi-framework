@@ -30,11 +30,6 @@ class EDIExchangeType(models.Model):
     def _check_output_template_id(self):
         for rec in self:
             tmpl = rec.output_template_id
-            if tmpl.type_id:
-                if tmpl.type_id != rec:
-                    raise exceptions.ValidationError(
-                        self.env._("Template type must match exchange type.")
-                    )
             if (
                 tmpl
                 and tmpl.allowed_type_ids
