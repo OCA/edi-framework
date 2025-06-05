@@ -6,6 +6,8 @@ import unittest
 
 from odoo_test_helper import FakeModelLoader
 
+from odoo.tests.common import tagged
+
 from .common import EDIBackendCommonComponentRegistryTestCase
 from .fake_components import (
     FakeConfigurationListener,
@@ -18,6 +20,7 @@ from .fake_components import (
 # This clashes w/ some setup (eg: run tests w/ pytest when edi_storage is installed)
 # If you still want to run `edi` tests w/ pytest when this happens, set this env var.
 @unittest.skipIf(os.getenv("SKIP_EDI_CONSUMER_CASE"), "Consumer test case disabled.")
+@tagged("at_install", "-post_install")
 class TestEDIConfigurations(EDIBackendCommonComponentRegistryTestCase):
     @classmethod
     def setUpClass(cls):
