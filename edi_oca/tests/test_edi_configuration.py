@@ -125,6 +125,7 @@ class TestEDIConfigurations(EDIBackendCommonComponentRegistryTestCase):
             edi_action="generate",
         )
         # Check the new vals after execution
+        expected_value["conf"] = self.write_config
         self.assertEqual(vals, expected_value)
 
         # Check the snippet_do
