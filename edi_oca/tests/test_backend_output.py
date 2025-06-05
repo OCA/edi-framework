@@ -9,7 +9,6 @@ from freezegun import freeze_time
 
 from odoo import fields, tools
 from odoo.exceptions import UserError
-from odoo.tools import mute_logger
 
 from odoo.addons.queue_job.tests.common import trap_jobs
 
@@ -39,13 +38,10 @@ class EDIBackendTestOutputCase(EDIBackendCommonComponentRegistryTestCase):
         FakeOutputSender.reset_faked()
         FakeOutputChecker.reset_faked()
 
-    # TODO: getting a template via code or relying on a fallback is deprecated
-    @mute_logger("odoo.addons.edi_exchange_template_oca.models.edi_backend")
     def test_generate_record_output(self):
         self.record.with_context(fake_output="yeah!").action_exchange_generate()
         self.assertEqual(self.record._get_file_content(), "yeah!")
 
-    @mute_logger("odoo.addons.edi_exchange_template_oca.models.edi_backend")
     def test_generate_record_output_pdf(self):
         pdf_content = tools.file_open(
             "addons/edi_oca/tests/result.pdf", mode="rb"

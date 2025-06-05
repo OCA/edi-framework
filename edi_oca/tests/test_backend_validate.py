@@ -4,8 +4,6 @@
 
 import base64
 
-from odoo.tools import mute_logger
-
 from ..exceptions import EDIValidationError
 from .common import EDIBackendCommonComponentRegistryTestCase
 from .fake_components import (
@@ -70,8 +68,6 @@ class EDIBackendTestValidateCase(EDIBackendCommonComponentRegistryTestCase):
         )
         self.assertIn("Data seems wrong!", self.record_in.exchange_error_traceback)
 
-    # TODO: getting a template via code or relying on a fallback is deprecated
-    @mute_logger("odoo.addons.edi_exchange_template_oca.models.edi_backend")
     def test_generate_validate_record(self):
         self.record_out.write({"edi_exchange_state": "new"})
         self.backend.exchange_generate(self.record_out)
@@ -80,7 +76,6 @@ class EDIBackendTestValidateCase(EDIBackendCommonComponentRegistryTestCase):
             self.record_out, [{"edi_exchange_state": "output_pending"}]
         )
 
-    @mute_logger("odoo.addons.edi_exchange_template_oca.models.edi_backend")
     def test_generate_validate_record_error(self):
         self.record_out.write({"edi_exchange_state": "new"})
         exc = EDIValidationError("Data seems wrong!")
@@ -99,7 +94,6 @@ class EDIBackendTestValidateCase(EDIBackendCommonComponentRegistryTestCase):
         )
         self.assertIn("Data seems wrong!", self.record_out.exchange_error_traceback)
 
-    @mute_logger("odoo.addons.edi_exchange_template_oca.models.edi_backend")
     def test_validate_record_error_regenerate(self):
         self.record_out.write({"edi_exchange_state": "new"})
         exc = EDIValidationError("Data seems wrong!")
