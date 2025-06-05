@@ -695,6 +695,11 @@ msgid "Exchange error"
 msgstr "Errore scambio"
 
 #. module: edi_oca
+#: model:ir.model.fields,field_description:edi_oca.field_edi_exchange_record__exchange_error_traceback
+msgid "Exchange error traceback"
+msgstr ""
+
+#. module: edi_oca
 #. odoo-python
 #: code:addons/edi_oca/models/edi_exchange_record.py:0
 msgid "Exchange not received"
@@ -1015,6 +1020,11 @@ msgstr "Segue"
 #: model:ir.model.fields,field_description:edi_oca.field_edi_exchange_type__job_channel_id
 msgid "Job Channel"
 msgstr "Canale lavoro"
+
+#. module: edi_oca
+#: model:ir.model.fields,field_description:edi_oca.field_edi_exchange_type__job_priority
+msgid "Job Priority"
+msgstr ""
 
 #. module: edi_oca
 #: model_terms:ir.ui.view,arch_db:edi_oca.edi_exchange_record_view_form
