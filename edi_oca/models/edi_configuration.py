@@ -157,6 +157,7 @@ class EdiConfiguration(models.Model):
         # Prepare data
         vals = {
             "todo": vals_before_do.get("todo", True),
+            "conf": self,
             "snippet_do_vars": vals_before_do.get("snippet_do_vars", False),
             "event_only": vals_before_do.get("event_only", False),
             "tracked_fields": vals_before_do.get("tracked_fields", False),
@@ -173,6 +174,7 @@ class EdiConfiguration(models.Model):
         new_value = kwargs.get("vals", {}).get(record.id, {})
         vals = {
             "todo": True,
+            "conf": self,
             "record": record,
             "operation": kwargs.get("operation", False),
             "edi_action": kwargs.get("edi_action", False),
