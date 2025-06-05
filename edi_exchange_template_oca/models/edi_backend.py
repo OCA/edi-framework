@@ -36,22 +36,8 @@ class EDIBackend(models.Model):
         :param exchange_record: record to generate.
         :param code: explicit template code to lookup.
         """
-        tmpl = exchange_record.type_id.output_template_id
-        if tmpl:
-            return tmpl
-        _logger.warning(
-            "DEPRECATED: please set the template to use explicitly on the type %s.",
-            exchange_record.type_id.code,
-        )
-        # Deprecated behavior: template's code must match
-        # the same component usage as per normal components.
-        # Wherever possible old types relying on code
-        # have been migrated to use the explicit template.
         search = self.output_template_model.search
         tmpl = None
-        # NOTE: this is kind of broken because
-        # it should use the usage of the generate component one.
-        # As this is depraecated we can leave it as is.
         code = code or exchange_record.type_id.code
         if code:
             domain = [("code", "=", code)]
@@ -71,8 +57,5 @@ class EDIBackend(models.Model):
             ("allowed_type_ids", "=", False),
         ]
         candidates = self.output_template_model.search(base_domain)
-        for rec in candidates:
-            if rec.type_id == exchange_record.type_id:
-                return rec
         # Take the 1st one having allowed_type_ids set
         return fields.first(candidates.sorted(lambda x: 0 if x.allowed_type_ids else 1))
