@@ -329,7 +329,7 @@ class EDIExchangeConsumerMixin(models.AbstractModel):
         - origin exchange record is set (means it was originated by another record)
         - origin exchange type is compatible with the configured ack types
         """
-        if (self.disable_edi_auto and not force) or not self.origin_exchange_record_id:
+        if (self.edi_disable_auto and not force) or not self.origin_exchange_record_id:
             return False
         return self.origin_exchange_type_id in exchange_type.ack_for_type_ids
 
@@ -343,7 +343,7 @@ class EDIExchangeConsumerMixin(models.AbstractModel):
         we still want to generate a new up to date record to be sent.
 
         :param exchange_type: The exchange type to create the record for.
-        :param force: If True, will force the creation of the record in case of ack type.
+        :param force: If True, force creation of the record in case of ack type.
         """
         if not self._edi_can_generate_ack(exchange_type, force=force):
             return False, False
@@ -378,12 +378,14 @@ class EDIExchangeConsumerMixin(models.AbstractModel):
     ):
         """Send EDI file via email using the provided action."""
         # FIXME: missing generation of the record and adding it as an attachment
-        # In this case, the record should be generated immediately and attached to the email.
-        # An alternative is to generate the record and have a component to send via email.
+        # In this case, the record should be generated immediately
+        # and attached to the email.
+        # An alternative is to generate the record
+        # and have a component to send via email.
 
         # Retrieve context and composer model
         ctx = ir_action.get("context", {})
-        composer_model = self.env[ir_action["res_model"]].with_context(ctx)
+        composer_model = self.env[ir_action["res_model"]].with_context(**ctx)
 
         # Determine subtype and partner_ids dynamically based on model-specific logic
         subtype = subtype_ref and self.env.ref(subtype_ref) or None
@@ -395,7 +397,7 @@ class EDIExchangeConsumerMixin(models.AbstractModel):
         composer = composer_model.create({"subtype_id": subtype.id})
         composer.onchange_template_id_wrapper()
 
-        # Dynamically retrieve partners based on the provided method or fallback to parameter
+        # Retrieve partners based on provided method or fallback to parameter
         if partner_method and hasattr(self, partner_method):
             composer.partner_ids = getattr(self, partner_method)().ids
         elif partners:
