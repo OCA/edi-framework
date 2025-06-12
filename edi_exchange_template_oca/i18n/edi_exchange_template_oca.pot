@@ -14,6 +14,17 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: edi_exchange_template_oca
+#: model:ir.model.fields,field_description:edi_exchange_template_oca.field_edi_exchange_template_mixin__allowed_type_ids
+#: model:ir.model.fields,field_description:edi_exchange_template_oca.field_edi_exchange_template_output__allowed_type_ids
+msgid "Allowed Exchange Types"
+msgstr ""
+
+#. module: edi_exchange_template_oca
+#: model:ir.model.fields,field_description:edi_exchange_template_oca.field_edi_exchange_type__output_template_allowed_ids
+msgid "Allowed Templates"
+msgstr ""
+
+#. module: edi_exchange_template_oca
 #: model:ir.model.fields,field_description:edi_exchange_template_oca.field_edi_exchange_template_mixin__backend_id
 #: model:ir.model.fields,field_description:edi_exchange_template_oca.field_edi_exchange_template_output__backend_id
 #: model_terms:ir.ui.view,arch_db:edi_exchange_template_oca.edi_exchange_template_output_view_search
@@ -102,9 +113,13 @@ msgid "EDI Exchange Templates"
 msgstr ""
 
 #. module: edi_exchange_template_oca
-#: model:ir.model.fields,field_description:edi_exchange_template_oca.field_edi_exchange_template_mixin__type_id
-#: model:ir.model.fields,field_description:edi_exchange_template_oca.field_edi_exchange_template_output__type_id
-msgid "EDI Exchange type"
+#: model:ir.model,name:edi_exchange_template_oca.model_edi_exchange_type
+msgid "EDI Exchange Type"
+msgstr ""
+
+#. module: edi_exchange_template_oca
+#: model:ir.model.fields,field_description:edi_exchange_template_oca.field_edi_exchange_type__output_template_id
+msgid "Exchange Template"
 msgstr ""
 
 #. module: edi_exchange_template_oca
@@ -191,11 +206,28 @@ msgid "Template key"
 msgstr ""
 
 #. module: edi_exchange_template_oca
+#. odoo-python
+#: code:addons/edi_exchange_template_oca/models/edi_exchange_type.py:0
+msgid "Template not allowed for this type."
+msgstr ""
+
+#. module: edi_exchange_template_oca
+#: model:ir.model.fields,help:edi_exchange_template_oca.field_edi_exchange_type__output_template_id
+msgid "Template used to generate or process this type."
+msgstr ""
+
+#. module: edi_exchange_template_oca
+#: model:ir.model.fields,help:edi_exchange_template_oca.field_edi_exchange_type__output_template_allowed_ids
+msgid "Templates allowed to be used with this type."
+msgstr ""
+
+#. module: edi_exchange_template_oca
 #: model:ir.model.fields,help:edi_exchange_template_oca.field_edi_exchange_template_output__template_arch
 msgid "This field stores the view arch."
 msgstr ""
 
 #. module: edi_exchange_template_oca
-#: model_terms:ir.ui.view,arch_db:edi_exchange_template_oca.edi_exchange_template_output_view_search
-msgid "Type"
+#: model:ir.model.fields,help:edi_exchange_template_oca.field_edi_exchange_template_mixin__allowed_type_ids
+#: model:ir.model.fields,help:edi_exchange_template_oca.field_edi_exchange_template_output__allowed_type_ids
+msgid "Types allowed to use this template."
 msgstr ""
