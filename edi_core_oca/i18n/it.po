@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2025-06-16 11:26+0000\n"
+"PO-Revision-Date: 2025-06-20 10:25+0000\n"
 "Last-Translator: mymage <stefano.consolaro@mymage.it>\n"
 "Language-Team: none\n"
 "Language: it\n"
@@ -1105,7 +1105,7 @@ msgstr "Input"
 #. module: edi_oca
 #: model:ir.model.fields,help:edi_oca.field_edi_id_mixin__edi_id
 msgid "Internal or external identifier for records."
-msgstr "Identificatore interno o esterno per il record."
+msgstr "Identificatore interno o esterno per i record."
 
 #. module: edi_oca
 #: model:ir.model.fields,field_description:edi_oca.field_edi_exchange_record__message_is_follower
