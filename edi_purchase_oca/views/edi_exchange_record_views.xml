@@ -2,7 +2,6 @@
 <!-- Copyright 2022 ForgeFlow S.L. (https://www.forgeflow.com)
      License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl). -->
 <odoo>
-
     <record
         model="ir.actions.act_window"
         id="act_open_edi_exchange_record_purchase_order_view"
