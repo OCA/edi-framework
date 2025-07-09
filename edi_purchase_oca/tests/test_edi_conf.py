@@ -3,6 +3,8 @@
 
 from unittest import mock
 
+from odoo import Command
+
 from odoo.addons.edi_oca.tests.common import EDIBackendCommonComponentTestCase
 
 
@@ -21,24 +23,24 @@ class TestsPurchaseEDIConfiguration(EDIBackendCommonComponentTestCase):
         cls.edi_conf = cls.env.ref("edi_purchase_oca.demo_edi_configuration_confirmed")
         cls.partner.edi_purchase_conf_ids = cls.edi_conf
 
-    @mock.patch("odoo.addons.edi_oca.models.edi_backend.EDIBackend._validate_data")
-    @mock.patch("odoo.addons.edi_oca.models.edi_backend.EDIBackend._exchange_generate")
-    @mock.patch("odoo.addons.edi_oca.models.edi_backend.EDIBackend._exchange_send")
+    @mock.patch("odoo.addons.edi_core_oca.models.edi_backend.EDIBackend._validate_data")
+    @mock.patch(
+        "odoo.addons.edi_core_oca.models.edi_backend.EDIBackend._exchange_generate"
+    )
+    @mock.patch("odoo.addons.edi_core_oca.models.edi_backend.EDIBackend._exchange_send")
     def test_order_confirm(self, mock_send, mock_generate, mock_validate):
         mock_generate.return_value = "TEST PO OUT"
         order = self.purchase_order.create(
             {
                 "partner_id": self.partner.id,
                 "order_line": [
-                    (
-                        0,
-                        0,
+                    Command.create(
                         {
                             "product_id": self.product.id,
                             "product_qty": 10,
                             "price_unit": 100.0,
-                        },
-                    )
+                        }
+                    ),
                 ],
             }
         )

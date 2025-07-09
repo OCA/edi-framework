@@ -4,17 +4,16 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 14.0\n"
+"Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2023-11-25 11:34+0000\n"
-"Last-Translator: Ivorra78 <informatica@totmaterial.es>\n"
-"Language-Team: none\n"
-"Language: es\n"
+"POT-Creation-Date: 2025-12-31 04:48+0000\n"
+"PO-Revision-Date: 2025-12-31 04:48+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.17\n"
+"Plural-Forms: \n"
 
 #. module: edi_purchase_oca
 #: model_terms:ir.ui.view,arch_db:edi_purchase_oca.purchase_order_form
@@ -22,19 +21,24 @@ msgid "<span class=\"o_stat_text\">EDI</span>"
 msgstr "<span class=\"o_stat_text\">EDI</span>"
 
 #. module: edi_purchase_oca
-#: model:ir.model.fields,field_description:edi_purchase_oca.field_purchase_order__disable_edi_auto
+#: model:ir.model,name:edi_purchase_oca.model_res_partner
+msgid "Contact"
+msgstr "Contacto"
+
+#. module: edi_purchase_oca
+#: model_terms:ir.ui.view,arch_db:edi_purchase_oca.purchase_order_form
+msgid "Disable"
+msgstr "Desactivar"
+
+#. module: edi_purchase_oca
+#: model:ir.model.fields,field_description:edi_purchase_oca.field_purchase_order__edi_disable_auto
 msgid "Disable auto"
-msgstr "Deshabilitar auto"
+msgstr "Desactivar automático"
 
 #. module: edi_purchase_oca
-#: model:ir.model.fields,field_description:edi_purchase_oca.field_purchase_order__display_name
-msgid "Display Name"
-msgstr "Mostrar Nombre"
-
-#. module: edi_purchase_oca
-#: model:ir.model.fields,field_description:edi_purchase_oca.field_purchase_order__origin_edi_endpoint_id
-msgid "EDI origin endpoint"
-msgstr "Punto final de origen EDI"
+#: model_terms:ir.ui.view,arch_db:edi_purchase_oca.purchase_order_form
+msgid "EDI"
+msgstr "EDI"
 
 #. module: edi_purchase_oca
 #: model:ir.model.fields,field_description:edi_purchase_oca.field_purchase_order__origin_exchange_type_id
@@ -47,29 +51,45 @@ msgid "EDI origin record"
 msgstr "Registro de origen EDI"
 
 #. module: edi_purchase_oca
+#: model:ir.model.fields,field_description:edi_purchase_oca.field_res_partner__edi_purchase_conf_ids
+#: model:ir.model.fields,field_description:edi_purchase_oca.field_res_users__edi_purchase_conf_ids
+msgid "EDI purchase configuration"
+msgstr "Configuración de compra EDI"
+
+#. module: edi_purchase_oca
 #: model:ir.model.fields,help:edi_purchase_oca.field_purchase_order__origin_exchange_record_id
 msgid "EDI record that originated this document."
-msgstr "Registro EDI que originó este documento."
+msgstr "Registro EDI que originó este documento"
 
 #. module: edi_purchase_oca
 #: model:ir.model.fields,field_description:edi_purchase_oca.field_purchase_order__edi_config
 msgid "Edi Config"
-msgstr "Configuración Edi"
+msgstr "Configuración EDI"
 
 #. module: edi_purchase_oca
 #: model:ir.model.fields,field_description:edi_purchase_oca.field_purchase_order__edi_has_form_config
 msgid "Edi Has Form Config"
-msgstr "Edi Tiene Formulario Config"
+msgstr "EDI tiene configuración de formulario"
+
+#. module: edi_purchase_oca
+#: model_terms:ir.ui.view,arch_db:edi_purchase_oca.purchase_order_form
+msgid "Electronic Data Interchange"
+msgstr "Intercambio Electrónico de Datos"
 
 #. module: edi_purchase_oca
 #: model:ir.model.fields,field_description:edi_purchase_oca.field_purchase_order__exchange_record_ids
 msgid "Exchange Record"
-msgstr "Registro de Intercambio"
+msgstr "Registro de intercambio"
 
 #. module: edi_purchase_oca
 #: model:ir.model.fields,field_description:edi_purchase_oca.field_purchase_order__exchange_record_count
 msgid "Exchange Record Count"
-msgstr "Recuento de Registros de Intercambio"
+msgstr "Conteo de registros de intercambio"
+
+#. module: edi_purchase_oca
+#: model:ir.model.fields,field_description:edi_purchase_oca.field_purchase_order__exchange_related_record_ids
+msgid "Exchange Related Record"
+msgstr "Registro relacionado con el intercambio"
 
 #. module: edi_purchase_oca
 #: model:ir.ui.menu,name:edi_purchase_oca.menu_purchase_edi_root
@@ -77,36 +97,26 @@ msgid "Exchange records"
 msgstr "Registros de intercambio"
 
 #. module: edi_purchase_oca
-#: model:ir.model.fields,field_description:edi_purchase_oca.field_purchase_order__id
-msgid "ID"
-msgstr "ID"
-
-#. module: edi_purchase_oca
-#: model:ir.model.fields,field_description:edi_purchase_oca.field_purchase_order____last_update
-msgid "Last Modified on"
-msgstr "Última actualización el"
+#: model_terms:ir.ui.view,arch_db:edi_purchase_oca.view_partner_form
+msgid "Purchase"
+msgstr "Compra"
 
 #. module: edi_purchase_oca
 #: model:ir.model,name:edi_purchase_oca.model_purchase_order
 msgid "Purchase Order"
-msgstr "Orden de Compra"
+msgstr "Orden de compra"
 
 #. module: edi_purchase_oca
 #: model:ir.actions.act_window,name:edi_purchase_oca.act_open_edi_exchange_record_purchase_order_view
 msgid "Purchase Order Exchange Record"
-msgstr "Registro de Intercambio de Órdenes de Compra"
+msgstr "Registro de intercambio de la orden de compra"
 
 #. module: edi_purchase_oca
 #: model:ir.ui.menu,name:edi_purchase_oca.menu_purchase_edi_exchange_record
 msgid "Purchase Orders"
-msgstr "Órdenes de Compra"
+msgstr "Órdenes de compra"
 
 #. module: edi_purchase_oca
-#: model:ir.model.fields,help:edi_purchase_oca.field_purchase_order__origin_edi_endpoint_id
-msgid "Record generated via this endpoint"
-msgstr "Registro generado a través de este punto final"
-
-#. module: edi_purchase_oca
-#: model:ir.model.fields,help:edi_purchase_oca.field_purchase_order__disable_edi_auto
+#: model:ir.model.fields,help:edi_purchase_oca.field_purchase_order__edi_disable_auto
 msgid "When marked, EDI automatic processing will be avoided"
-msgstr "Si se marca, se evitará el procesamiento automático EDI"
+msgstr "Cuando se marque, se evitará el procesamiento automático de EDI"
