@@ -30,20 +30,14 @@ class EDIBackend(models.Model):
     def output_template_model(self):
         return self.env["edi.exchange.template.output"]
 
-    def _get_output_template(self, exchange_record, code=None):
+    def _get_output_template(self, exchange_record):
         """Retrieve output template.
 
         :param exchange_record: record to generate.
-        :param code: explicit template code to lookup.
         """
-        search = self.output_template_model.search
-        tmpl = None
-        code = code or exchange_record.type_id.code
-        if code:
-            domain = [("code", "=", code)]
-            tmpl = search(domain, limit=1)
-            if tmpl:
-                return tmpl
+        tmpl = exchange_record.type_id.output_template_id
+        if tmpl:
+            return tmpl
         tmpl = self._get_output_template_fallback(exchange_record)
         return tmpl
 
