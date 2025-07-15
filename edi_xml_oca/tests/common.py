@@ -22,3 +22,13 @@ class XMLTestCaseMixin(xmlunittest.XmlTestMixin):
         path = os.path.join(os.path.dirname(__file__), "examples", filename)
         with open(path) as thefile:
             return thefile.read()
+
+
+def get_xml_handler(backend, schema_path, model=None):
+    model = model or backend._name
+    return backend._find_component(
+        model,
+        ["edi.xml"],
+        work_ctx={"schema_path": schema_path},
+        safe=False,
+    )
