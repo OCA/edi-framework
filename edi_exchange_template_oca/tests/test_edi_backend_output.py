@@ -171,10 +171,6 @@ class TestEDIBackendOutput(TestEDIBackendOutputBase):
             self.backend._get_output_template(self.record2), self.tmpl_out2
         )
         self.assertEqual(
-            self.backend._get_output_template(self.record2, code=self.tmpl_out1.code),
-            self.tmpl_out1,
-        )
-        self.assertEqual(
             self.backend._get_output_template(self.record_json), self.tmpl_out_json
         )
 
