@@ -10,7 +10,7 @@ import logging
 import traceback
 from io import StringIO
 
-from odoo import _, exceptions, fields, models
+from odoo import exceptions, fields, models
 
 from odoo.addons.component.exception import NoComponentError
 from odoo.addons.queue_job.exception import RetryableJobError
@@ -258,7 +258,7 @@ class EDIBackend(models.Model):
             and not force
         ):
             raise exceptions.UserError(
-                _(
+                self.env._(
                     "Exchange record ID=%d is not in draft state "
                     "and has already an output value."
                 )
@@ -266,7 +266,7 @@ class EDIBackend(models.Model):
             )
         if exchange_record.direction != "output":
             raise exceptions.UserError(
-                _(
+                self.env._(
                     "Exchange record ID=%d is not an outgoing record, "
                     "cannot be generated"
                 )
@@ -274,7 +274,7 @@ class EDIBackend(models.Model):
             )
         if exchange_record.exchange_file:
             raise exceptions.UserError(
-                _("Exchange record ID=%d already has a file to process!")
+                self.env._("Exchange record ID=%d already has a file to process!")
                 % exchange_record.id
             )
 
@@ -289,14 +289,12 @@ class EDIBackend(models.Model):
         if exchange_record.direction == "input" and not exchange_record.exchange_file:
             if not exchange_record.type_id.allow_empty_files_on_receive:
                 raise ValueError(
-                    _(
+                    self.env._(
                         "Empty files are not allowed for exchange "
-                        "type %(name)s (%(code)s)"
+                        "type %(name)s (%(code)s)",
+                        name=exchange_record.type_id.name,
+                        code=exchange_record.type_id.code,
                     )
-                    % {
-                        "name": exchange_record.type_id.name,
-                        "code": exchange_record.type_id.code,
-                    }
                 )
 
         component = self._get_component(exchange_record, "validate")
@@ -378,11 +376,11 @@ class EDIBackend(models.Model):
     def _output_check_send(self, exchange_record):
         if exchange_record.direction != "output":
             raise exceptions.UserError(
-                _("Record ID=%d is not meant to be sent!") % exchange_record.id
+                self.env._("Record ID=%d is not meant to be sent!") % exchange_record.id
             )
         if not exchange_record.exchange_file:
             raise exceptions.UserError(
-                _("Record ID=%d has no file to send!") % exchange_record.id
+                self.env._("Record ID=%d has no file to send!") % exchange_record.id
             )
         return exchange_record.edi_exchange_state in [
             "output_pending",
@@ -505,14 +503,15 @@ class EDIBackend(models.Model):
     def _exchange_process_check(self, exchange_record):
         if not exchange_record.direction == "input":
             raise exceptions.UserError(
-                _("Record ID=%d is not meant to be processed") % exchange_record.id
+                self.env._("Record ID=%d is not meant to be processed")
+                % exchange_record.id
             )
         if (
             not exchange_record.exchange_file
             and not exchange_record.type_id.allow_empty_files_on_receive
         ):
             raise exceptions.UserError(
-                _("Record ID=%d has no file to process!") % exchange_record.id
+                self.env._("Record ID=%d has no file to process!") % exchange_record.id
             )
         return exchange_record.edi_exchange_state in [
             "input_received",
@@ -626,7 +625,8 @@ class EDIBackend(models.Model):
         # do the same for all the other check cases.
         if not exchange_record.direction == "input":
             raise exceptions.UserError(
-                _("Record ID=%d is not meant to be processed") % exchange_record.id
+                self.env._("Record ID=%d is not meant to be processed")
+                % exchange_record.id
             )
         return exchange_record.edi_exchange_state in [
             "input_pending",
