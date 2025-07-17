@@ -8,7 +8,7 @@ import logging
 from ast import literal_eval
 from collections import defaultdict
 
-from odoo import _, api, exceptions, fields, models
+from odoo import api, exceptions, fields, models
 from odoo.exceptions import AccessError
 
 from ..utils import exchange_record_job_identity_exact, get_checksum
@@ -167,7 +167,7 @@ class EDIExchangeRecord(models.Model):
                 continue
             if not rec.edi_exchange_state.startswith(rec.direction):
                 raise exceptions.ValidationError(
-                    _("Exchange state must respect direction!")
+                    self.env._("Exchange state must respect direction!")
                 )
 
     @api.depends("related_exchange_ids.type_id")
@@ -288,31 +288,35 @@ class EDIExchangeRecord(models.Model):
             if rec.type_id.backend_id:
                 if rec.type_id.backend_id != rec.backend_id:
                     raise exceptions.ValidationError(
-                        _("Backend must match with exchange type's backend!")
+                        self.env._("Backend must match with exchange type's backend!")
                     )
             else:
                 if rec.type_id.backend_type_id != rec.backend_id.backend_type_id:
                     raise exceptions.ValidationError(
-                        _("Backend type must match with exchange type's backend type!")
+                        self.env._(
+                            "Backend type must match with exchange type's backend type!"
+                        )
                     )
 
     @property
     def _exchange_status_messages(self):
         return {
             # status: message
-            "generate_ok": _("Exchange data generated"),
-            "send_ok": _("Exchange sent"),
-            "send_ko": _(
+            "generate_ok": self.env._("Exchange data generated"),
+            "send_ok": self.env._("Exchange sent"),
+            "send_ko": self.env._(
                 "An error happened while sending. Please check exchange record info."
             ),
-            "process_ok": _("Exchange processed successfully"),
-            "process_ko": _("Exchange processed with errors"),
-            "receive_ok": _("Exchange received successfully"),
-            "receive_ko": _("Exchange not received"),
-            "ack_received": _("ACK file received."),
-            "ack_missing": _("ACK file is required for this exchange but not found."),
-            "ack_received_error": _("ACK file received but contains errors."),
-            "validate_ko": _("Exchange not valid"),
+            "process_ok": self.env._("Exchange processed successfully"),
+            "process_ko": self.env._("Exchange processed with errors"),
+            "receive_ok": self.env._("Exchange received successfully"),
+            "receive_ko": self.env._("Exchange not received"),
+            "ack_received": self.env._("ACK file received."),
+            "ack_missing": self.env._(
+                "ACK file is required for this exchange but not found."
+            ),
+            "ack_received_error": self.env._("ACK file received but contains errors."),
+            "validate_ko": self.env._("Exchange not valid"),
         }
 
     def _exchange_status_message(self, key):
@@ -368,7 +372,7 @@ class EDIExchangeRecord(models.Model):
         self[fname] = new_state
         display_state = self._fields[fname].convert_to_export(self[fname], self)
         self.message_post(
-            body=_("Action retry: state moved back to '%s'") % display_state
+            body=self.env._("Action retry: state moved back to '%s'") % display_state
         )
         if self._quick_exec_enabled():
             self._execute_next_action()

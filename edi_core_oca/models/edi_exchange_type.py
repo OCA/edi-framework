@@ -7,7 +7,7 @@ from datetime import datetime
 
 from pytz import timezone, utc
 
-from odoo import _, api, exceptions, fields, models
+from odoo import api, exceptions, fields, models
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT as DATETIME_FORMAT
 from odoo.tools import groupby
 
@@ -229,7 +229,9 @@ class EDIExchangeType(models.Model):
             if not rec.backend_id:
                 continue
             if rec.backend_id.backend_type_id != rec.backend_type_id:
-                raise exceptions.UserError(_("Backend should respect backend type!"))
+                raise exceptions.UserError(
+                    self.env._("Backend should respect backend type!")
+                )
 
     def _make_exchange_filename_datetime(self):
         """

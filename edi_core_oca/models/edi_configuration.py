@@ -7,7 +7,7 @@ import datetime
 import pytz
 from psycopg2.extensions import AsIs
 
-from odoo import _, api, exceptions, fields, models
+from odoo import api, exceptions, fields, models
 from odoo.tools import DotDict, safe_eval
 
 
@@ -74,12 +74,14 @@ class EdiConfiguration(models.Model):
             if rec.type_id.backend_id:
                 if rec.type_id.backend_id != rec.backend_id:
                     raise exceptions.ValidationError(
-                        _("Backend must match with exchange type's backend!")
+                        self.env._("Backend must match with exchange type's backend!")
                     )
             else:
                 if rec.type_id.backend_type_id != rec.backend_id.backend_type_id:
                     raise exceptions.ValidationError(
-                        _("Backend type must match with exchange type's backend type!")
+                        self.env._(
+                            "Backend type must match with exchange type's backend type!"
+                        )
                     )
 
     # TODO: This function is also available in `edi_exchange_template`.
@@ -213,7 +215,7 @@ class EdiConfiguration(models.Model):
                 partner_ids.update([r[0] for r in self.env.cr.fetchall()])
         return {
             "type": "ir.actions.act_window",
-            "name": _("Partners"),
+            "name": self.env._("Partners"),
             "res_model": "res.partner",
             "view_mode": "list,form",
             "domain": [("id", "in", list(partner_ids))],
