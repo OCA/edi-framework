@@ -49,7 +49,8 @@ msgid ""
 "                date_pattern: %Y-%m-%d-%H-%M-%S\n"
 "\n"
 "            In any case, you can use these settings\n"
-"            to provide your own configuration for whatever need you might have.\n"
+"            to provide your own configuration for whatever need you might "
+"have.\n"
 "        "
 msgstr ""
 
@@ -65,8 +66,10 @@ msgstr ""
 #: model:ir.model,name:edi_oca.model_edi_configuration
 msgid ""
 "\n"
-"        This model is used to configure EDI (Electronic Data Interchange) flows.\n"
-"        It allows users to create their own configurations, which can be tailored\n"
+"        This model is used to configure EDI (Electronic Data Interchange) "
+"flows.\n"
+"        It allows users to create their own configurations, which can be "
+"tailored\n"
 "        to meet the specific needs of their business processes.\n"
 "    "
 msgstr ""
@@ -99,8 +102,10 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:edi_oca.edi_exchange_record_view_form
 msgid ""
 "<span class=\"text-warning\" invisible=\"related_record_exists\">\n"
-"                                The related record is not available anymore.\n"
-"                                Consider deleting this record too or fixing its relation.\n"
+"                                The related record is not available "
+"anymore.\n"
+"                                Consider deleting this record too or fixing "
+"its relation.\n"
 "                            </span>"
 msgstr ""
 
@@ -122,6 +127,11 @@ msgstr ""
 #. module: edi_oca
 #: model_terms:ir.ui.view,arch_db:edi_oca.message_edi_exchange_link
 msgid "<strong>Type:</strong>"
+msgstr ""
+
+#. module: edi_oca
+#: model:ir.model.constraint,message:edi_oca.constraint_edi_exchange_related_record_related_record_unique
+msgid "A record can only be related once to a specific exchange record."
 msgstr ""
 
 #. module: edi_oca
@@ -377,6 +387,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:edi_oca.field_edi_configuration_trigger__create_uid
 #: model:ir.model.fields,field_description:edi_oca.field_edi_exchange_record__create_uid
 #: model:ir.model.fields,field_description:edi_oca.field_edi_exchange_record_create_wiz__create_uid
+#: model:ir.model.fields,field_description:edi_oca.field_edi_exchange_related_record__create_uid
 #: model:ir.model.fields,field_description:edi_oca.field_edi_exchange_type__create_uid
 #: model:ir.model.fields,field_description:edi_oca.field_edi_exchange_type_rule__create_uid
 msgid "Created by"
@@ -394,6 +405,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:edi_oca.field_edi_configuration_trigger__create_date
 #: model:ir.model.fields,field_description:edi_oca.field_edi_exchange_record__create_date
 #: model:ir.model.fields,field_description:edi_oca.field_edi_exchange_record_create_wiz__create_date
+#: model:ir.model.fields,field_description:edi_oca.field_edi_exchange_related_record__create_date
 #: model:ir.model.fields,field_description:edi_oca.field_edi_exchange_type__create_date
 #: model:ir.model.fields,field_description:edi_oca.field_edi_exchange_type_rule__create_date
 msgid "Created on"
@@ -444,6 +456,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:edi_oca.field_edi_configuration_trigger__display_name
 #: model:ir.model.fields,field_description:edi_oca.field_edi_exchange_record__display_name
 #: model:ir.model.fields,field_description:edi_oca.field_edi_exchange_record_create_wiz__display_name
+#: model:ir.model.fields,field_description:edi_oca.field_edi_exchange_related_record__display_name
 #: model:ir.model.fields,field_description:edi_oca.field_edi_exchange_type__display_name
 #: model:ir.model.fields,field_description:edi_oca.field_edi_exchange_type_rule__display_name
 msgid "Display Name"
@@ -537,6 +550,11 @@ msgstr ""
 #. module: edi_oca
 #: model:ir.model,name:edi_oca.model_edi_exchange_record
 msgid "EDI exchange Record"
+msgstr ""
+
+#. module: edi_oca
+#: model:ir.model,name:edi_oca.model_edi_exchange_related_record
+msgid "EDI exchange Related Record"
 msgstr ""
 
 #. module: edi_oca
@@ -674,12 +692,18 @@ msgstr ""
 
 #. module: edi_oca
 #: model:ir.model.fields,field_description:edi_oca.field_edi_exchange_consumer_mixin__exchange_record_ids
+#: model:ir.model.fields,field_description:edi_oca.field_edi_exchange_related_record__exchange_record_id
 msgid "Exchange Record"
 msgstr ""
 
 #. module: edi_oca
 #: model:ir.model.fields,field_description:edi_oca.field_edi_exchange_consumer_mixin__exchange_record_count
 msgid "Exchange Record Count"
+msgstr ""
+
+#. module: edi_oca
+#: model:ir.model.fields,field_description:edi_oca.field_edi_exchange_consumer_mixin__exchange_related_record_ids
+msgid "Exchange Related Record"
 msgstr ""
 
 #. module: edi_oca
@@ -863,13 +887,17 @@ msgstr ""
 #. module: edi_oca
 #: model:ir.model.fields,help:edi_oca.field_edi_exchange_type__exchange_filename_pattern
 msgid ""
-"For output exchange types this should be a formatting string with the following variables available (to be used between brackets, `{}`): `exchange_record`, `record_name`, `type`, `dt` and `seq`. For instance, a valid string would be {record_name}-{type.code}-{dt}-{seq}\n"
+"For output exchange types this should be a formatting string with the "
+"following variables available (to be used between brackets, `{}`): "
+"`exchange_record`, `record_name`, `type`, `dt` and `seq`. For instance, a "
+"valid string would be {record_name}-{type.code}-{dt}-{seq}\n"
 "For more information:\n"
 "- `exchange_record` means exchange record\n"
 "- `record_name` means name of the exchange record\n"
 "- `type` means code of the exchange record type\n"
 "- `dt` means datetime\n"
-"- `seq` means sequence. You need a sequence to be defined in `Exchange Filename Sequence` to use `seq`\n"
+"- `seq` means sequence. You need a sequence to be defined in `Exchange "
+"Filename Sequence` to use `seq`\n"
 msgstr ""
 
 #. module: edi_oca
@@ -939,6 +967,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:edi_oca.field_edi_configuration_trigger__id
 #: model:ir.model.fields,field_description:edi_oca.field_edi_exchange_record__id
 #: model:ir.model.fields,field_description:edi_oca.field_edi_exchange_record_create_wiz__id
+#: model:ir.model.fields,field_description:edi_oca.field_edi_exchange_related_record__id
 #: model:ir.model.fields,field_description:edi_oca.field_edi_exchange_type__id
 #: model:ir.model.fields,field_description:edi_oca.field_edi_exchange_type_rule__id
 msgid "ID"
@@ -969,8 +998,8 @@ msgstr ""
 #. module: edi_oca
 #: model:ir.model.fields,help:edi_oca.field_edi_exchange_type__exchange_filename_sequence_id
 msgid ""
-"If the `Exchange Filename Pattern` has `{seq}`, you should define a sequence"
-" in this field to show the sequence in your filename"
+"If the `Exchange Filename Pattern` has `{seq}`, you should define a sequence "
+"in this field to show the sequence in your filename"
 msgstr ""
 
 #. module: edi_oca
@@ -1034,6 +1063,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:edi_oca.field_edi_configuration_trigger__write_uid
 #: model:ir.model.fields,field_description:edi_oca.field_edi_exchange_record__write_uid
 #: model:ir.model.fields,field_description:edi_oca.field_edi_exchange_record_create_wiz__write_uid
+#: model:ir.model.fields,field_description:edi_oca.field_edi_exchange_related_record__write_uid
 #: model:ir.model.fields,field_description:edi_oca.field_edi_exchange_type__write_uid
 #: model:ir.model.fields,field_description:edi_oca.field_edi_exchange_type_rule__write_uid
 msgid "Last Updated by"
@@ -1046,6 +1076,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:edi_oca.field_edi_configuration_trigger__write_date
 #: model:ir.model.fields,field_description:edi_oca.field_edi_exchange_record__write_date
 #: model:ir.model.fields,field_description:edi_oca.field_edi_exchange_record_create_wiz__write_date
+#: model:ir.model.fields,field_description:edi_oca.field_edi_exchange_related_record__write_date
 #: model:ir.model.fields,field_description:edi_oca.field_edi_exchange_type__write_date
 #: model:ir.model.fields,field_description:edi_oca.field_edi_exchange_type_rule__write_date
 msgid "Last Updated on"
@@ -1066,6 +1097,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:edi_oca.field_edi_configuration_trigger__model_id
 #: model:ir.model.fields,field_description:edi_oca.field_edi_exchange_record__model
 #: model:ir.model.fields,field_description:edi_oca.field_edi_exchange_record_create_wiz__model
+#: model:ir.model.fields,field_description:edi_oca.field_edi_exchange_related_record__model
 #: model:ir.model.fields,field_description:edi_oca.field_edi_exchange_type_rule__model_id
 #: model_terms:ir.ui.view,arch_db:edi_oca.edi_exchange_record_view_search
 #: model_terms:ir.ui.view,arch_db:edi_oca.edi_exchange_type_rule_view_search
@@ -1126,6 +1158,11 @@ msgstr ""
 #. module: edi_oca
 #: model:ir.model.fields,help:edi_oca.field_edi_exchange_record__message_has_error_counter
 msgid "Number of messages with delivery error"
+msgstr ""
+
+#. module: edi_oca
+#: model_terms:ir.ui.view,arch_db:edi_oca.edi_exchange_record_view_form
+msgid "Open Record"
 msgstr ""
 
 #. module: edi_oca
@@ -1206,6 +1243,7 @@ msgstr ""
 
 #. module: edi_oca
 #: model:ir.model.fields,field_description:edi_oca.field_edi_exchange_record__res_id
+#: model:ir.model.fields,field_description:edi_oca.field_edi_exchange_related_record__res_id
 msgid "Record"
 msgstr ""
 
@@ -1255,6 +1293,12 @@ msgstr ""
 
 #. module: edi_oca
 #: model_terms:ir.ui.view,arch_db:edi_oca.edi_exchange_record_view_form
+msgid "Related Records"
+msgstr ""
+
+#. module: edi_oca
+#: model:ir.model.fields,field_description:edi_oca.field_edi_exchange_record__related_exchange_ids
+#: model_terms:ir.ui.view,arch_db:edi_oca.edi_exchange_record_view_form
 msgid "Related exchanges"
 msgstr ""
 
@@ -1264,7 +1308,7 @@ msgid "Related record"
 msgstr ""
 
 #. module: edi_oca
-#: model:ir.model.fields,field_description:edi_oca.field_edi_exchange_record__related_exchange_ids
+#: model:ir.model.fields,field_description:edi_oca.field_edi_exchange_record__related_record_ids
 msgid "Related records"
 msgstr ""
 
@@ -1475,8 +1519,8 @@ msgstr ""
 #. module: edi_oca
 #: model:ir.model.fields,help:edi_oca.field_edi_exchange_type__partner_ids
 msgid ""
-"You can use this field to limit generating/processing exchanges for specific"
-" partners. Use it directly or within models rules (domain or snippet)."
+"You can use this field to limit generating/processing exchanges for specific "
+"partners. Use it directly or within models rules (domain or snippet)."
 msgstr ""
 
 #. module: edi_oca

@@ -237,6 +237,8 @@ class EDIExchangeRecord(models.Model):
         the first related record res_id and model as value.
         """
         self.env["edi.exchange.related.record"].flush_model()
+        if not self.ids:
+            return {}
         query, params = self._get_edi_first_related_record_query()
         self.env.cr.execute(query, params)
         return {
