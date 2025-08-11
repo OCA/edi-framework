@@ -1,2 +1,5 @@
 odoo-test-helper
 xmlunittest
+odoo-addon-base_edifact @ git+https://github.com/OCA/edi.git@refs/pull/1185/head#subdirectory=base_edifact
+odoo-addon-edi_storage_oca @ git+https://github.com/OCA/edi-framework.git@refs/pull/135/head#subdirectory=edi_storage_oca
+odoo-addon-edi_purchase_oca @ git+https://github.com/OCA/edi-framework.git@refs/pull/180/head#subdirectory=edi_purchase_oca
