@@ -14,7 +14,7 @@
 # ('assigned', 'Ready'),
 # ('done', 'Done'),
 # ('cancel', 'Cancelled'),
-if record.state == 'done':
+if record.state in ('done', 'cancel', 'confirmed', 'assigned'):
   record._edi_send_via_edi(conf.type_id)
         </field>
     </record>
