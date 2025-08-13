@@ -1,13 +1,13 @@
-# Copyright 2022 Odoo Community Association
+# Copyright 2022 Creu Blanca
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
 {
-    "name": "Edi Stock Oca",
+    "name": "EDI Stock OCA",
     "summary": """
        Define EDI Configuration for Stock""",
     "version": "18.0.1.0.0",
     "license": "AGPL-3",
-    "author": "Odoo Community Association,Odoo Community Association (OCA)",
+    "author": "Creu Blanca, Odoo Community Association (OCA)",
     "website": "https://github.com/OCA/edi-framework",
     "depends": ["stock", "edi_oca", "component_event"],
     "data": [
