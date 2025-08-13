@@ -3,7 +3,7 @@
    :alt: Odoo Community Association
 
 =============
-Edi Stock Oca
+EDI Stock OCA
 =============
 
 .. 
@@ -68,12 +68,13 @@ Credits
 Authors
 ~~~~~~~
 
-* Odoo Community Association
+* Creu Blanca
 
 Contributors
 ~~~~~~~~~~~~
 
 * Alba Riera <alba.riera@creublanca.es>
+* Simone Orsi <simone.orsi@camptopcamp.com>
 
 Maintainers
 ~~~~~~~~~~~
