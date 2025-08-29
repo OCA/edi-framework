@@ -21,7 +21,7 @@ class XMLTestCase(TransactionComponentCase, XMLTestCaseMixin):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.backend = cls.env.ref("edi_oca.demo_edi_backend")
+        cls.backend = cls.env.ref("edi_core_oca.demo_edi_backend")
         cls.handler = cls.backend._find_component(
             cls.backend._name,
             ["edi.xml"],
