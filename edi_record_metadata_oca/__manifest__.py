@@ -13,7 +13,7 @@
     "website": "https://github.com/OCA/edi-framework",
     "author": "Camptocamp, Odoo Community Association (OCA)",
     "maintainers": ["simahawk"],
-    "depends": ["edi_oca", "base_sparse_field"],
+    "depends": ["edi_core_oca", "base_sparse_field"],
     "data": [
         "views/edi_exchange_record.xml",
     ],

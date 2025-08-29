@@ -6,7 +6,7 @@ from odoo_test_helper import FakeModelLoader
 
 from odoo import fields
 
-from odoo.addons.edi_oca.tests.common import EDIBackendCommonTestCase
+from odoo.addons.edi_core_oca.tests.common import EDIBackendCommonTestCase
 
 
 class TestEDIMetadata(EDIBackendCommonTestCase):
