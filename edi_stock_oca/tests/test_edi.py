@@ -58,9 +58,11 @@ class TestProcessComponent(EDIBackendCommonComponentTestCase):
     def _mock_generate(self, exc_rec):
         return f"TRANSFER STATE {exc_rec.record.state}"
 
-    @mock.patch("odoo.addons.edi_oca.models.edi_backend.EDIBackend._validate_data")
-    @mock.patch("odoo.addons.edi_oca.models.edi_backend.EDIBackend._exchange_generate")
-    @mock.patch("odoo.addons.edi_oca.models.edi_backend.EDIBackend._exchange_send")
+    @mock.patch("odoo.addons.edi_core_oca.models.edi_backend.EDIBackend._validate_data")
+    @mock.patch(
+        "odoo.addons.edi_core_oca.models.edi_backend.EDIBackend._exchange_generate"
+    )
+    @mock.patch("odoo.addons.edi_core_oca.models.edi_backend.EDIBackend._exchange_send")
     def test_picking_cancel_flow(self, mock_send, mock_generate, mock_validate):
         mock_generate.side_effect = self._mock_generate
         picking = self._create_picking()
@@ -76,9 +78,11 @@ class TestProcessComponent(EDIBackendCommonComponentTestCase):
         self.assertEqual(record2.type_id, self.exc_type_out)
         self.assertEqual(record2._get_file_content(), "TRANSFER STATE cancel")
 
-    @mock.patch("odoo.addons.edi_oca.models.edi_backend.EDIBackend._validate_data")
-    @mock.patch("odoo.addons.edi_oca.models.edi_backend.EDIBackend._exchange_generate")
-    @mock.patch("odoo.addons.edi_oca.models.edi_backend.EDIBackend._exchange_send")
+    @mock.patch("odoo.addons.edi_core_oca.models.edi_backend.EDIBackend._validate_data")
+    @mock.patch(
+        "odoo.addons.edi_core_oca.models.edi_backend.EDIBackend._exchange_generate"
+    )
+    @mock.patch("odoo.addons.edi_core_oca.models.edi_backend.EDIBackend._exchange_send")
     def test_picking_done_flow(self, mock_send, mock_generate, mock_validate):
         mock_generate.side_effect = self._mock_generate
         picking = self._create_picking()
