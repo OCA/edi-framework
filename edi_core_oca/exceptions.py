@@ -5,3 +5,7 @@
 
 class EDIValidationError(Exception):
     """Thrown when a document validation fails."""
+
+
+class EDINotImplementedError(NotImplementedError):
+    """Thrown when a method is not implemented for a specific backend."""

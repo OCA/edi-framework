@@ -10,7 +10,7 @@
         <field name="user_id" ref="base.user_root" />
         <field name="interval_number">1</field>
         <field name="interval_type">hours</field>
-        <field name="model_id" ref="edi_oca.model_edi_backend" />
+        <field name="model_id" ref="edi_core_oca.model_edi_backend" />
         <field name="state">code</field>
         <field name="code">model.search([])._cron_check_output_exchange_sync()</field>
     </record>
@@ -25,7 +25,7 @@
         <field name="user_id" ref="base.user_root" />
         <field name="interval_number">1</field>
         <field name="interval_type">hours</field>
-        <field name="model_id" ref="edi_oca.model_edi_backend" />
+        <field name="model_id" ref="edi_core_oca.model_edi_backend" />
         <field name="state">code</field>
         <field name="code">model.search([])._cron_check_input_exchange_sync()</field>
     </record>

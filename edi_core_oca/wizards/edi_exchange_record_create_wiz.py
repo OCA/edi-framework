@@ -1,4 +1,4 @@
-# Copyright 2020 Creu Blanca
+# Copyright 2020 Dixmit
 # License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl).
 
 from odoo import fields, models
@@ -21,5 +21,5 @@ class EdiExchangeRecordCreateWiz(models.TransientModel):
         exchange_record = record._edi_create_exchange_record(
             self.exchange_type_id, self.backend_id
         )
-        record._event("on_edi_generate_manual").notify(record, exchange_record)
+        record._manual_notify_edi_generation(exchange_record)
         return exchange_record.get_formview_action()

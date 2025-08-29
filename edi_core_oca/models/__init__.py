@@ -8,3 +8,5 @@ from . import edi_exchange_type_rule
 from . import edi_id_mixin
 from . import edi_configuration_trigger
 from . import edi_configuration
+from . import edi_oca_handler
+from . import ir_model

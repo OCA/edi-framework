@@ -1,4 +1,4 @@
-# Copyright 2020 Creu Blanca
+# Copyright 2020 Dixmit
 # @author: Enric Tobella
 # Copyright 2020 Camptocamp SA
 # @author: Simone Orsi
@@ -10,14 +10,13 @@ from unittest import mock, skipIf
 from lxml import etree
 from odoo_test_helper import FakeModelLoader
 
-from odoo.tests import Form, tagged
+from odoo.tests import Form
 
 from .common import EDIBackendCommonTestCase
 
 
 # This clashes w/ some setup (eg: run tests w/ pytest when edi_storage is installed)
 # If you still want to run `edi` tests w/ pytest when this happens, set this env var.
-@tagged("at_install", "-post_install")
 @skipIf(os.getenv("SKIP_EDI_CONSUMER_CASE"), "Consumer test case disabled.")
 class TestConsumerMixinCase(EDIBackendCommonTestCase):
     @classmethod
@@ -200,9 +199,11 @@ result = not record._has_exchange_record(exchange_type, exchange_type.backend_id
             self.assertTrue(form.xpath("//field[@name='edi_config']"))
 
     # Don't care about real data processing here
-    @mock.patch("odoo.addons.edi_oca.models.edi_backend.EDIBackend._validate_data")
-    @mock.patch("odoo.addons.edi_oca.models.edi_backend.EDIBackend._exchange_generate")
-    @mock.patch("odoo.addons.edi_oca.models.edi_backend.EDIBackend._exchange_send")
+    @mock.patch("odoo.addons.edi_core_oca.models.edi_backend.EDIBackend._validate_data")
+    @mock.patch(
+        "odoo.addons.edi_core_oca.models.edi_backend.EDIBackend._exchange_generate"
+    )
+    @mock.patch("odoo.addons.edi_core_oca.models.edi_backend.EDIBackend._exchange_send")
     def test_edi_send_via_edi(self, mocked_send, mocked_generate, mocked_validate):
         mocked_generate.return_value = "result"
         self.assertEqual(self.consumer_record.exchange_record_count, 0)
@@ -216,9 +217,11 @@ result = not record._has_exchange_record(exchange_type, exchange_type.backend_id
             self.consumer_record.exchange_record_ids[0]._get_file_content(), "result"
         )
 
-    @mock.patch("odoo.addons.edi_oca.models.edi_backend.EDIBackend._validate_data")
-    @mock.patch("odoo.addons.edi_oca.models.edi_backend.EDIBackend._exchange_generate")
-    @mock.patch("odoo.addons.edi_oca.models.edi_backend.EDIBackend._exchange_send")
+    @mock.patch("odoo.addons.edi_core_oca.models.edi_backend.EDIBackend._validate_data")
+    @mock.patch(
+        "odoo.addons.edi_core_oca.models.edi_backend.EDIBackend._exchange_generate"
+    )
+    @mock.patch("odoo.addons.edi_core_oca.models.edi_backend.EDIBackend._exchange_send")
     def test_edi_send_via_edi_ack(self, mocked_send, mocked_generate, mocked_validate):
         mocked_generate.return_value = "result"
         vals = {
@@ -242,9 +245,11 @@ result = not record._has_exchange_record(exchange_type, exchange_type.backend_id
         self.assertEqual(ack_record.type_id, self.exchange_type_out)
         self.assertEqual(ack_record._get_file_content(), "result")
 
-    @mock.patch("odoo.addons.edi_oca.models.edi_backend.EDIBackend._validate_data")
-    @mock.patch("odoo.addons.edi_oca.models.edi_backend.EDIBackend._exchange_generate")
-    @mock.patch("odoo.addons.edi_oca.models.edi_backend.EDIBackend._exchange_send")
+    @mock.patch("odoo.addons.edi_core_oca.models.edi_backend.EDIBackend._validate_data")
+    @mock.patch(
+        "odoo.addons.edi_core_oca.models.edi_backend.EDIBackend._exchange_generate"
+    )
+    @mock.patch("odoo.addons.edi_core_oca.models.edi_backend.EDIBackend._exchange_send")
     def test_edi_send_via_edi_invalid_ack(
         self, mocked_send, mocked_generate, mocked_validate
     ):

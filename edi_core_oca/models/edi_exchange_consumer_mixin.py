@@ -1,5 +1,5 @@
 # Copyright 2020 ACSONE SA
-# Copyright 2020 Creu Blanca
+# Copyright 2020 Dixmit
 # Copyright 2022 Camptocamp SA
 # @author Simone Orsi <simahawk@gmail.com>
 # License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl).
@@ -144,7 +144,7 @@ class EDIExchangeConsumerMixin(models.AbstractModel):
                 if hasattr(self, "_edi_generate_group"):
                     group = self._edi_generate_group
                 str_element = self.env["ir.qweb"]._render(
-                    "edi_oca.edi_exchange_consumer_mixin_buttons",
+                    "edi_core_oca.edi_exchange_consumer_mixin_buttons",
                     {"group": group},
                 )
                 new_node = etree.fromstring(str_element)
@@ -190,12 +190,16 @@ class EDIExchangeConsumerMixin(models.AbstractModel):
             # Maybe this behavior can be controlled by exc type adv param.
         if backend:
             exchange_record = self._edi_create_exchange_record(exchange_type, backend)
-            self._event("on_edi_generate_manual").notify(self, exchange_record)
+            self._manual_notify_edi_generation(exchange_record)
             return exchange_record.get_formview_action()
         return self._edi_get_create_record_wiz_action(exchange_type_id)
 
+    def _manual_notify_edi_generation(self, exchange_record):
+        # Hook for adding events later on
+        pass
+
     def _edi_get_create_record_wiz_action(self, exchange_type_id):
-        xmlid = "edi_oca.edi_exchange_record_create_act_window"
+        xmlid = "edi_core_oca.edi_exchange_record_create_act_window"
         action = self.env["ir.actions.act_window"]._for_xml_id(xmlid)
         action["context"] = {
             "default_res_id": self.id,
@@ -255,7 +259,7 @@ class EDIExchangeConsumerMixin(models.AbstractModel):
 
     def action_view_edi_records(self):
         self.ensure_one()
-        xmlid = "edi_oca.act_open_edi_exchange_record_view"
+        xmlid = "edi_core_oca.act_open_edi_exchange_record_view"
         action = self.env["ir.actions.act_window"]._for_xml_id(xmlid)
         action["domain"] = [("id", "in", self.exchange_record_ids.ids)]
         # Purge default search filters from ctx to avoid hiding records
@@ -418,19 +422,35 @@ class EDIExchangeConsumerMixin(models.AbstractModel):
         composer.send_mail()
         return True
 
+    def _edi_config_field_relation(self):
+        # Link to edi.config fields to be used
+        # We can use a child fields like "self.partner_id.edi_config_ids"
+        return self.env["edi.configuration"]
+
+    def _execute_edi_config(self, trigger):
+        edi_confs = self._edi_config_field_relation()
+        if not edi_confs:
+            return
+        confs = edi_confs.edi_get_conf(trigger)
+        for conf in confs:
+            conf.edi_exec_snippet_do(self)
+
+    @api.model_create_multi
+    def create(self, mvals):
+        records = super().create(mvals)
+        for record in records:
+            record._execute_edi_config("on_record_create")
+        return records
+
     def write(self, vals):
-        # Generic event to match a state change
-        # TODO: this can be added to component_event for models having the state field
         state_change = "state" in vals and "state" in self._fields
         if state_change:
-            for rec in self:
-                rec._event(f"on_edi_{self._table}_before_state_change").notify(
-                    rec, state=vals["state"]
-                )
-        res = super().write(vals)
+            for record in self:
+                record._execute_edi_config(f"on_edi_{self._table}_before_state_change")
+        result = super().write(vals)
         if state_change:
-            for rec in self:
-                rec._event(f"on_edi_{self._table}_state_change").notify(
-                    rec, state=vals["state"]
-                )
-        return res
+            for record in self:
+                record._execute_edi_config(f"on_edi_{self._table}_state_change")
+        for record in self:
+            record._execute_edi_config("on_record_write")
+        return result

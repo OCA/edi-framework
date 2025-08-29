@@ -49,7 +49,7 @@
                         <page
                             name="domain"
                             string="Domain"
-                            groups="edi_oca.group_edi_advanced_settings_manager"
+                            groups="edi_core_oca.group_edi_advanced_settings_manager"
                         >
                             <field
                                 name="enable_domain"
@@ -60,7 +60,7 @@
                         <page
                             name="snippet"
                             string="Snippet"
-                            groups="edi_oca.group_edi_advanced_settings_manager"
+                            groups="edi_core_oca.group_edi_advanced_settings_manager"
                         >
                             <field name="enable_snippet" widget="ace" colspan="4" />
                         </page>

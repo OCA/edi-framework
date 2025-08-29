@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<!-- Copyright 2020 Creu Blanca
+<!-- Copyright 2020 Dixmit
      License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl). -->
 <odoo>
     <record model="ir.ui.view" id="edi_exchange_record_create_form_view">

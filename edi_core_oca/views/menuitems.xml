@@ -84,7 +84,7 @@
     />
     <menuitem
         id="menu_edi_configuration"
-        parent="edi_oca.menu_edi_config"
+        parent="edi_core_oca.menu_edi_config"
         name="Configurations"
         sequence="50"
         action="act_open_edi_configuration_view"

@@ -47,8 +47,6 @@
                             <field name="ack_type_id" />
                             <field name="ack_for_type_ids" widget="many2many_tags" />
                             <field name="partner_ids" widget="many2many_tags" />
-                            <field name="job_channel_id" />
-                            <field name="job_priority" />
                             <field name="quick_exec" />
                             <field name="encoding" />
                             <field
@@ -66,10 +64,50 @@
                         </group>
                     </group>
                     <notebook>
+                        <page name="exec_handlers" string="Execution handlers">
+                            <group
+                                name="input_handlers"
+                                invisible="direction != 'input'"
+                            >
+                                <field
+                                    name="receive_model_id"
+                                    options="{'no_create': True}"
+                                />
+                                <field
+                                    name="process_model_id"
+                                    options="{'no_create': True}"
+                                />
+                                <field
+                                    name="input_validate_model_id"
+                                    options="{'no_create': True}"
+                                />
+                            </group>
+                            <group
+                                name="output_handlers"
+                                invisible="direction != 'output'"
+                            >
+                                <field
+                                    name="generate_model_id"
+                                    options="{'no_create': True}"
+                                />
+                                <field
+                                    name="send_model_id"
+                                    options="{'no_create': True}"
+                                />
+                                <field
+                                    name="output_validate_model_id"
+                                    options="{'no_create': True}"
+                                />
+                                <field
+                                    name="check_model_id"
+                                    options="{'no_create': True}"
+                                />
+                            </group>
+                        </page>
                         <page
                             name="adv_settings"
                             string="Advanced settings"
-                            groups="edi_oca.group_edi_advanced_settings_manager"
+                            groups="edi_core_oca.group_edi_advanced_settings_manager"
                         >
                             <field
                                 name="advanced_settings_edit"
@@ -80,7 +118,7 @@
                         <page
                             name="model_rules"
                             string="Model rules"
-                            groups="edi_oca.group_edi_advanced_settings_manager"
+                            groups="edi_core_oca.group_edi_advanced_settings_manager"
                         >
                             <field name="rule_ids" context="{'default_type_id': id}">
                                 <list decoration-muted="(not active)">

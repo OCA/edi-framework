@@ -6,32 +6,16 @@ import unittest
 
 from odoo_test_helper import FakeModelLoader
 
-from odoo.tests.common import tagged
-
-from .common import EDIBackendCommonComponentRegistryTestCase
-from .fake_components import (
-    FakeConfigurationListener,
-    FakeOutputChecker,
-    FakeOutputGenerator,
-    FakeOutputSender,
-)
+from .common import EDIBackendCommonTestCase
 
 
 # This clashes w/ some setup (eg: run tests w/ pytest when edi_storage is installed)
 # If you still want to run `edi` tests w/ pytest when this happens, set this env var.
 @unittest.skipIf(os.getenv("SKIP_EDI_CONSUMER_CASE"), "Consumer test case disabled.")
-@tagged("at_install", "-post_install")
-class TestEDIConfigurations(EDIBackendCommonComponentRegistryTestCase):
+class TestEDIConfigurations(EDIBackendCommonTestCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls._build_components(
-            cls,
-            FakeOutputGenerator,
-            FakeOutputSender,
-            FakeOutputChecker,
-            FakeConfigurationListener,
-        )
         vals = {
             "model": cls.partner._name,
             "res_id": cls.partner.id,
@@ -40,9 +24,9 @@ class TestEDIConfigurations(EDIBackendCommonComponentRegistryTestCase):
 
     def setUp(self):
         super().setUp()
-        FakeOutputGenerator.reset_faked()
-        FakeOutputSender.reset_faked()
-        FakeOutputChecker.reset_faked()
+        self.ExecutionAbstractModel.reset_faked("generate")
+        self.ExecutionAbstractModel.reset_faked("send")
+        self.ExecutionAbstractModel.reset_faked("check")
         self.consumer_record = self.env["edi.exchange.consumer.test"].create(
             {
                 "name": "Test Consumer",
@@ -59,18 +43,26 @@ class TestEDIConfigurations(EDIBackendCommonComponentRegistryTestCase):
         # Load fake models ->/
         cls.loader = FakeModelLoader(cls.env, cls.__module__)
         cls.loader.backup_registry()
-        from .fake_models import EdiExchangeConsumerTest
+        from .fake_models import EdiExchangeConsumerTest, EdiTestExecution
 
-        cls.loader.update_registry((EdiExchangeConsumerTest,))
+        cls.loader.update_registry((EdiExchangeConsumerTest, EdiTestExecution))
+        cls.ExecutionAbstractModel = cls.env["edi.framework.test.execution"]
+        cls.model = cls.env["ir.model"].search(
+            [("model", "=", "edi.framework.test.execution")]
+        )
+        cls.exchange_type_out.generate_model_id = cls.model
+        cls.exchange_type_out.send_model_id = cls.model
         cls.exchange_type_out.exchange_filename_pattern = "{record.id}"
         cls.edi_configuration = cls.env["edi.configuration"]
+        cls.create_trigger = cls.env.ref("edi_core_oca.edi_conf_trigger_record_create")
+        cls.write_trigger = cls.env.ref("edi_core_oca.edi_conf_trigger_record_write")
         cls.create_config = cls.edi_configuration.create(
             {
                 "name": "Create Config",
                 "active": True,
                 "backend_id": cls.backend.id,
                 "type_id": cls.exchange_type_out.id,
-                "trigger_id": cls.env.ref("edi_oca.edi_conf_trigger_record_create").id,
+                "trigger_id": cls.create_trigger.id,
                 "model_id": cls.env["ir.model"]._get_id("edi.exchange.consumer.test"),
                 "snippet_do": "record._edi_send_via_edi(conf.type_id)",
             }
@@ -81,7 +73,7 @@ class TestEDIConfigurations(EDIBackendCommonComponentRegistryTestCase):
                 "active": True,
                 "backend_id": cls.backend.id,
                 "type_id": cls.exchange_type_out.id,
-                "trigger_id": cls.env.ref("edi_oca.edi_conf_trigger_record_write").id,
+                "trigger_id": cls.write_trigger.id,
                 "model_id": cls.env["ir.model"]._get_id("edi.exchange.consumer.test"),
                 "snippet_do": "record._edi_send_via_edi(conf.type_id)",
             }

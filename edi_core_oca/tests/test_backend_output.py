@@ -6,37 +6,52 @@
 from unittest import mock
 
 from freezegun import freeze_time
+from odoo_test_helper import FakeModelLoader
 
 from odoo import fields, tools
 from odoo.exceptions import UserError
 
-from odoo.addons.queue_job.tests.common import trap_jobs
-
-from .common import EDIBackendCommonComponentRegistryTestCase
-from .fake_components import FakeOutputChecker, FakeOutputGenerator, FakeOutputSender
+from .common import EDIBackendCommonTestCase
 
 
-class EDIBackendTestOutputCase(EDIBackendCommonComponentRegistryTestCase):
+class EDIBackendTestOutputCase(EDIBackendCommonTestCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls._build_components(
-            cls,
-            FakeOutputGenerator,
-            FakeOutputSender,
-            FakeOutputChecker,
-        )
+
         vals = {
             "model": cls.partner._name,
             "res_id": cls.partner.id,
         }
         cls.record = cls.backend.create_record("test_csv_output", vals)
 
+    @classmethod
+    def _setup_records(cls):  # pylint:disable=missing-return
+        super()._setup_records()
+        # Load fake models ->/
+        cls.loader = FakeModelLoader(cls.env, cls.__module__)
+        cls.loader.backup_registry()
+        from .fake_models import EdiTestExecution
+
+        cls.loader.update_registry((EdiTestExecution,))
+        cls.ExecutionAbstractModel = cls.env["edi.framework.test.execution"]
+        cls.model = cls.env["ir.model"].search(
+            [("model", "=", "edi.framework.test.execution")]
+        )
+        cls.exchange_type_out.generate_model_id = cls.model
+        cls.exchange_type_out.send_model_id = cls.model
+        cls.exchange_type_out.output_validate_model_id = cls.model
+
+    @classmethod
+    def tearDownClass(cls):
+        cls.loader.restore_registry()
+        super().tearDownClass()
+
     def setUp(self):
         super().setUp()
-        FakeOutputGenerator.reset_faked()
-        FakeOutputSender.reset_faked()
-        FakeOutputChecker.reset_faked()
+        self.ExecutionAbstractModel.reset_faked("generate")
+        self.ExecutionAbstractModel.reset_faked("send")
+        self.ExecutionAbstractModel.reset_faked("check")
 
     def test_generate_record_output(self):
         self.record.with_context(fake_output="yeah!").action_exchange_generate()
@@ -44,7 +59,7 @@ class EDIBackendTestOutputCase(EDIBackendCommonComponentRegistryTestCase):
 
     def test_generate_record_output_pdf(self):
         pdf_content = tools.file_open(
-            "addons/edi_oca/tests/result.pdf", mode="rb"
+            "addons/edi_core_oca/tests/result.pdf", mode="rb"
         ).read()
         self.record.with_context(fake_output=pdf_content).action_exchange_generate()
 
@@ -54,7 +69,9 @@ class EDIBackendTestOutputCase(EDIBackendCommonComponentRegistryTestCase):
         self.assertFalse(self.record.exchanged_on)
         with freeze_time("2020-10-21 10:00:00"):
             self.record.action_exchange_send()
-        self.assertTrue(FakeOutputSender.check_called_for(self.record))
+        self.assertTrue(
+            self.ExecutionAbstractModel.check_called_for(self.record, "send")
+        )
         self.assertRecordValues(self.record, [{"edi_exchange_state": "output_sent"}])
         self.assertEqual(
             fields.Datetime.to_string(self.record.exchanged_on), "2020-10-21 10:00:00"
@@ -67,7 +84,9 @@ class EDIBackendTestOutputCase(EDIBackendCommonComponentRegistryTestCase):
         self.record.with_context(
             test_break_send="OOPS! Something went wrong :("
         ).action_exchange_send()
-        self.assertTrue(FakeOutputSender.check_called_for(self.record))
+        self.assertTrue(
+            self.ExecutionAbstractModel.check_called_for(self.record, "send")
+        )
         self.assertRecordValues(
             self.record,
             [
@@ -111,53 +130,3 @@ class EDIBackendTestOutputCase(EDIBackendCommonComponentRegistryTestCase):
                 err.exception.args[0], "Record ID=%d has no file to send!" % record.id
             )
             mocked.assert_not_called()
-
-
-class EDIBackendTestOutputJobsCase(EDIBackendCommonComponentRegistryTestCase):
-    @classmethod
-    def setUpClass(cls):
-        super().setUpClass()
-        cls._build_components(
-            cls,
-            FakeOutputGenerator,
-            FakeOutputSender,
-            FakeOutputChecker,
-        )
-        vals = {
-            "model": cls.partner._name,
-            "res_id": cls.partner.id,
-        }
-        cls.record = cls.backend.create_record("test_csv_output", vals)
-        cls.record.type_id.exchange_file_auto_generate = True
-
-    @classmethod
-    def _setup_context(cls):
-        # Re-enable jobs
-        return dict(super()._setup_context(), queue_job__no_delay=False)
-
-    def test_job(self):
-        with trap_jobs() as trap:
-            self.backend._check_output_exchange_sync(record_ids=self.record.ids)
-            trap.assert_jobs_count(2)
-            trap.assert_enqueued_job(
-                self.record.action_exchange_generate,
-            )
-            trap.assert_enqueued_job(
-                self.record.action_exchange_send,
-            )
-            # No matter how many times we schedule jobs
-            self.record.with_delay().action_exchange_generate()
-            self.record.with_delay().action_exchange_generate()
-            self.record.with_delay().action_exchange_generate()
-            # identity key should prevent having new jobs for same record same file
-            trap.assert_jobs_count(2)
-            # but if we change the content
-            self.record._set_file_content("something different")
-            # 1st call will schedule another job
-            self.record.with_delay().action_exchange_generate()
-            # the 2nd one not
-            self.record.with_delay().action_exchange_generate()
-            trap.assert_jobs_count(3)
-            self.record.with_delay().action_exchange_send()
-            trap.assert_jobs_count(4)
-        # TODO: test input in the same way

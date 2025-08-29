@@ -101,23 +101,7 @@
                     />
                 </header>
                 <sheet>
-                    <div class="oe_button_box" name="button_box">
-                        <button
-                            type="object"
-                            class="oe_stat_button"
-                            icon="fa-calendar"
-                            name="action_view_related_queue_jobs"
-                            invisible="not related_queue_jobs_count"
-                            groups="base_edi.group_edi_user"
-                        >
-                            <field
-                                string="Jobs"
-                                name="related_queue_jobs_count"
-                                widget="statinfo"
-                                readonly="1"
-                            />
-                        </button>
-                    </div>
+                    <div class="oe_button_box" name="button_box" />
                     <div class="oe_title">
                         <label for="identifier" class="oe_edit_only" />
                         <h1>

@@ -12,21 +12,29 @@ In order to define a new Exchange Record, we need to configure:
 
 ## Jobs
 
-- (1) **Internal User**: might be an EDI user without even knowing about it, triggering EDI flows by some of his actions on business records; does not need access to related queue jobs.
+- **Internal User**: might be an EDI user without even knowing about it, triggering EDI flows by some of his actions on business records; does not need access to related queue jobs.
 
-- (2) **EDI User**: more conscious EDI user that might sometimes need to debug things a bit further and thus needs access to related queue jobs.
+- **EDI User**: more conscious EDI user that might sometimes need to debug things a bit further and thus needs access to related queue jobs.
 
-- (3) **EDI Manager**: full configuration access.
+- **EDI Manager**: full configuration access.
 
-## Component definition
+## Code to execute
 
-The component usage must be defined like edi.{direction}.{kind}.{code}
-where:
+By default, EDI Framework uses fields on `edi.backend` to get the right function to execute.
+Each function is related to a model where the specific function is defined.
+This models needs to inherit the specific handler of each case.
 
-- direction is output or input
-- kind can be: generate, send, check, process, receive
-- code is the {backend type code} or {backend type code}.{exchange type
-  code}
+- receive: model `edi.oca.handler.receive` with function receive.
+- process: model `edi.oca.handler.process` with function process.
+- generate: model `edi.oca.handler.generate` with function generate.
+- send: model `edi.oca.handler.send` with function send.
+- check: model `edi.oca.handler.check` with function check.
+- validate on inputs: model `edi.oca.handler.input.validate` with function input_validate.
+- validate on outputs: model `edi.oca.handler.output.validate` with function input_validate.
+
+You can see an example on the tests fake_models.
+
+For a more complex behaviour, you can use `edi_component_oca` module to use components.
 
 ## User EDI generation
 

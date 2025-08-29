@@ -5,13 +5,12 @@
 
 import base64
 import logging
-from ast import literal_eval
 from collections import defaultdict
 
 from odoo import Command, api, exceptions, fields, models
 from odoo.exceptions import AccessError
 
-from ..utils import exchange_record_job_identity_exact, get_checksum
+from ..utils import get_checksum
 
 _logger = logging.getLogger(__name__)
 
@@ -133,9 +132,6 @@ class EDIExchangeRecord(models.Model):
     retryable = fields.Boolean(
         compute="_compute_retryable",
         help="The record state can be rolled back manually in case of failure.",
-    )
-    related_queue_jobs_count = fields.Integer(
-        compute="_compute_related_queue_jobs_count"
     )
     company_id = fields.Many2one("res.company", string="Company")
 
@@ -485,7 +481,7 @@ class EDIExchangeRecord(models.Model):
         self.ensure_one()
         if not self.related_exchange_ids:
             return {}
-        xmlid = "edi_oca.act_open_edi_exchange_record_view"
+        xmlid = "edi_core_oca.act_open_edi_exchange_record_view"
         action = self.env["ir.actions.act_window"]._for_xml_id(xmlid)
         action["domain"] = [("id", "in", self.related_exchange_ids.ids)]
         return action
@@ -513,17 +509,9 @@ class EDIExchangeRecord(models.Model):
         for rec in self.related_record_ids:
             rec._notify_related_record(message, level)
 
-    def _trigger_edi_event_make_name(self, name, suffix=None):
-        return "on_edi_exchange_{name}{suffix}".format(
-            name=name,
-            suffix=("_" + suffix) if suffix else "",
-        )
-
     def _trigger_edi_event(self, name, suffix=None, target=None, **kw):
-        """Trigger a component event linked to this backend and edi exchange."""
-        name = self._trigger_edi_event_make_name(name, suffix=suffix)
-        target = target or self
-        target._event(name).notify(self, **kw)
+        """Hook to be implemented in other modules"""
+        pass
 
     def _notify_done(self):
         self._notify_related_record(self._exchange_status_message("process_ok"))
@@ -677,58 +665,6 @@ class EDIExchangeRecord(models.Model):
         self.check_access("write")
         return super().write(vals)
 
-    def _job_delay_params(self):
-        params = {}
-        exchange_type = self.type_id.sudo()
-        channel = exchange_type.job_channel_id
-        if channel:
-            params["channel"] = channel.complete_name
-        priority = exchange_type.job_priority
-        if priority:
-            params["priority"] = priority
-        # Avoid generating the same job for the same record if existing
-        params["identity_key"] = exchange_record_job_identity_exact
-        return params
-
-    def with_delay(self, **kw):
-        params = self._job_delay_params()
-        params.update(kw)
-        return super().with_delay(**params)
-
-    def delayable(self, **kw):
-        params = self._job_delay_params()
-        params.update(kw)
-        return super().delayable(**params)
-
-    def _job_retry_params(self):
-        return {}
-
-    def _compute_related_queue_jobs_count(self):
-        for rec in self:
-            # TODO: We should refactor the object field on queue_job to use jsonb field
-            # so that we can search directly into it.
-            rec.related_queue_jobs_count = rec.env["queue.job"].search_count(
-                [("func_string", "like", str(rec))]
-            )
-
-    def action_view_related_queue_jobs(self):
-        self.ensure_one()
-        xmlid = "queue_job.action_queue_job"
-        action = self.env["ir.actions.act_window"]._for_xml_id(xmlid)
-        # Searching based on task name:
-        # Ex: `edi.exchange.record(1,).action_exchange_send()`
-        # TODO: We should refactor the object field on queue_job to use jsonb field
-        # so that we can search directly into it.
-        action["domain"] = [("func_string", "like", str(self))]
-        # Purge default search filters from ctx to avoid hiding records
-        ctx = action.get("context", {})
-        if isinstance(ctx, str):
-            ctx = literal_eval(ctx)
-        # Update the current contexts
-        ctx.update(self.env.context)
-        action["context"] = {
-            k: v for k, v in ctx.items() if not k.startswith("search_default_")
-        }
-        # Drop ID otherwise the context will be loaded from the action's record
-        action.pop("id")
-        return action
+    def action_exchange_generate_send_chained(self):
+        self.action_exchange_generate()
+        self.action_exchange_send()

@@ -5,43 +5,57 @@
 import base64
 from unittest import mock
 
+from odoo_test_helper import FakeModelLoader
+
 from odoo.tools import mute_logger
 
-from .common import EDIBackendCommonComponentRegistryTestCase
-from .fake_components import (
-    FakeInputProcess,
-    FakeOutputChecker,
-    FakeOutputGenerator,
-    FakeOutputSender,
-)
+from .common import EDIBackendCommonTestCase
 
 LOGGERS = (
-    "odoo.addons.edi_oca.models.edi_backend",
+    "odoo.addons.edi_core_oca.models.edi_backend",
     "odoo.addons.queue_job.delay",
     "odoo.addons.edi_exchange_template_oca.models.edi_backend",
 )
 
 
-class EDIQuickExecTestCase(EDIBackendCommonComponentRegistryTestCase):
+class EDIQuickExecTestCase(EDIBackendCommonTestCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls._build_components(
-            cls,
-            FakeOutputGenerator,
-            FakeOutputSender,
-            FakeOutputChecker,
-            FakeInputProcess,
-        )
         cls.partner2 = cls.env.ref("base.res_partner_10")
         cls.partner3 = cls.env.ref("base.res_partner_12")
 
+    @classmethod
+    def _setup_records(cls):  # pylint:disable=missing-return
+        super()._setup_records()
+        # Load fake models ->/
+        cls.loader = FakeModelLoader(cls.env, cls.__module__)
+        cls.loader.backup_registry()
+        from .fake_models import EdiTestExecution
+
+        cls.loader.update_registry((EdiTestExecution,))
+        cls.ExecutionAbstractModel = cls.env["edi.framework.test.execution"]
+        cls.model = cls.env["ir.model"].search(
+            [("model", "=", "edi.framework.test.execution")]
+        )
+        cls.exchange_type_out.generate_model_id = cls.model
+        cls.exchange_type_out.send_model_id = cls.model
+        cls.exchange_type_out.output_validate_model_id = cls.model
+        cls.exchange_type_in.generate_model_id = cls.model
+        cls.exchange_type_in.process_model_id = cls.model
+        cls.exchange_type_in.input_validate_model_id = cls.model
+
+    @classmethod
+    def tearDownClass(cls):
+        cls.loader.restore_registry()
+        super().tearDownClass()
+
     def setUp(self):
         super().setUp()
-        FakeOutputGenerator.reset_faked()
-        FakeOutputSender.reset_faked()
-        FakeOutputChecker.reset_faked()
-        FakeInputProcess.reset_faked()
+        self.ExecutionAbstractModel.reset_faked("generate")
+        self.ExecutionAbstractModel.reset_faked("send")
+        self.ExecutionAbstractModel.reset_faked("check")
+        self.ExecutionAbstractModel.reset_faked("process")
 
     @mute_logger(*LOGGERS)
     def test_quick_exec_on_create_no_call(self):
@@ -77,9 +91,11 @@ class EDIQuickExecTestCase(EDIBackendCommonComponentRegistryTestCase):
         record0 = self.backend.create_record("test_csv_output", vals)
         # File generated and sent!
         self.assertEqual(record0.edi_exchange_state, "output_sent")
-        self.assertTrue(FakeOutputGenerator.check_called_for(record0))
+        self.assertTrue(
+            self.ExecutionAbstractModel.check_called_for(record0, "generate")
+        )
         self.assertEqual(
-            record0._get_file_content(), FakeOutputGenerator._call_key(record0)
+            record0._get_file_content(), self.ExecutionAbstractModel._call_key(record0)
         )
 
     @mute_logger(*LOGGERS)
@@ -93,7 +109,9 @@ class EDIQuickExecTestCase(EDIBackendCommonComponentRegistryTestCase):
         }
         record0 = self.backend.create_record("test_csv_input", vals)
         self.assertEqual(record0.edi_exchange_state, "input_processed")
-        self.assertTrue(FakeInputProcess.check_called_for(record0))
+        self.assertTrue(
+            self.ExecutionAbstractModel.check_called_for(record0, "process")
+        )
 
     @mute_logger(*LOGGERS)
     def test_quick_exec_on_retry(self):
@@ -114,4 +132,6 @@ class EDIQuickExecTestCase(EDIBackendCommonComponentRegistryTestCase):
         record0.action_retry()
         # The file has been rolled back and processed right away
         self.assertEqual(record0.edi_exchange_state, "input_processed")
-        self.assertTrue(FakeInputProcess.check_called_for(record0))
+        self.assertTrue(
+            self.ExecutionAbstractModel.check_called_for(record0, "process")
+        )

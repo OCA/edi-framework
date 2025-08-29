@@ -46,7 +46,7 @@ class EDIExchangeRelatedRecord(models.Model):
         if not self.record or not hasattr(self.record, "message_post_with_source"):
             return
         self.record.message_post_with_source(
-            "edi_oca.message_edi_exchange_link",
+            "edi_core_oca.message_edi_exchange_link",
             render_values={
                 "backend": self.exchange_record_id.backend_id,
                 "exchange_record": self.exchange_record_id,

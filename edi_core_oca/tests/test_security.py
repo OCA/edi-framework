@@ -1,17 +1,15 @@
-# Copyright 2020 Creu Blanca
+# Copyright 2020 Dixmit
 # @author: Enric Tobella
 # License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl).
 
 from odoo_test_helper import FakeModelLoader
 
 from odoo.exceptions import AccessError
-from odoo.tests import tagged
 from odoo.tools import mute_logger
 
 from .common import EDIBackendCommonTestCase
 
 
-@tagged("at_install", "-post_install")
 class TestEDIExchangeRecordSecurity(EDIBackendCommonTestCase):
     @classmethod
     def _setup_env(cls):
@@ -31,7 +29,9 @@ class TestEDIExchangeRecordSecurity(EDIBackendCommonTestCase):
         cls.ir_access = cls.env["ir.model.access"].create(
             {
                 "name": "model access",
-                "model_id": cls.env.ref("edi_oca.model_edi_exchange_consumer_test").id,
+                "model_id": cls.env.ref(
+                    "edi_core_oca.model_edi_exchange_consumer_test"
+                ).id,
                 "group_id": cls.group.id,
                 "perm_read": True,
                 "perm_write": True,
@@ -42,7 +42,9 @@ class TestEDIExchangeRecordSecurity(EDIBackendCommonTestCase):
         cls.rule = cls.env["ir.rule"].create(
             {
                 "name": "Exchange Record rule demo",
-                "model_id": cls.env.ref("edi_oca.model_edi_exchange_consumer_test").id,
+                "model_id": cls.env.ref(
+                    "edi_core_oca.model_edi_exchange_consumer_test"
+                ).id,
                 "domain_force": "[('name', '=', 'test')]",
                 "groups": [(4, cls.group.id)],
             }
@@ -173,7 +175,7 @@ class TestEDIExchangeRecordSecurity(EDIBackendCommonTestCase):
         exchange_record = self.create_record()
         exchange_record.res_id = -1
         self.user.write({"groups_id": [(4, self.group.id)]})
-        logger_name = "odoo.addons.edi_oca.models.edi_exchange_record"
+        logger_name = "odoo.addons.edi_core_oca.models.edi_exchange_record"
         expected_msg = (
             f"WARNING:{logger_name}:"
             f"Deleted record {exchange_record.model},{exchange_record.res_id} "
@@ -195,7 +197,7 @@ class TestEDIExchangeRecordSecurity(EDIBackendCommonTestCase):
         exchange_record.res_id = -1
         admin_group = self.env.ref("base.group_system")
         self.user.write({"groups_id": [(4, self.group.id), (4, admin_group.id)]})
-        logger_name = "odoo.addons.edi_oca.models.edi_exchange_record"
+        logger_name = "odoo.addons.edi_core_oca.models.edi_exchange_record"
         with self.assertLogs(logger_name, "WARNING"):
             self.assertEqual(
                 1,

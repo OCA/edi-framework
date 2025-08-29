@@ -3,28 +3,45 @@
 import base64
 
 import chardet
+from odoo_test_helper import FakeModelLoader
 
-from .common import EDIBackendCommonComponentRegistryTestCase
-from .fake_components import FakeOutputGenerator
+from .common import EDIBackendCommonTestCase
 
 
-class EDIBackendTestOutputCase(EDIBackendCommonComponentRegistryTestCase):
+class EDIBackendTestOutputCase(EDIBackendCommonTestCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls._build_components(
-            cls,
-            FakeOutputGenerator,
-        )
         vals = {
             "model": cls.partner._name,
             "res_id": cls.partner.id,
         }
         cls.record = cls.backend.create_record("test_csv_output", vals)
 
+    @classmethod
+    def _setup_records(cls):  # pylint:disable=missing-return
+        super()._setup_records()
+        # Load fake models ->/
+        cls.loader = FakeModelLoader(cls.env, cls.__module__)
+        cls.loader.backup_registry()
+        from .fake_models import EdiTestExecution
+
+        cls.loader.update_registry((EdiTestExecution,))
+        cls.ExecutionAbstractModel = cls.env["edi.framework.test.execution"]
+        cls.model = cls.env["ir.model"].search(
+            [("model", "=", "edi.framework.test.execution")]
+        )
+        cls.exchange_type_out.generate_model_id = cls.model
+        cls.exchange_type_out.send_model_id = cls.model
+
+    @classmethod
+    def tearDownClass(cls):
+        cls.loader.restore_registry()
+        super().tearDownClass()
+
     def setUp(self):
         super().setUp()
-        FakeOutputGenerator.reset_faked()
+        self.ExecutionAbstractModel.reset_faked("generate")
 
     def test_encoding_default(self):
         """

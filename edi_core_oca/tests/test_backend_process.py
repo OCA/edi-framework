@@ -5,24 +5,19 @@
 import base64
 
 from freezegun import freeze_time
+from odoo_test_helper import FakeModelLoader
 
 from odoo import fields
 from odoo.exceptions import UserError
 from odoo.tools import mute_logger
 
-from .common import EDIBackendCommonComponentRegistryTestCase
-from .fake_components import FakeInputProcess
+from .common import EDIBackendCommonTestCase
 
 
-class EDIBackendTestProcessCase(EDIBackendCommonComponentRegistryTestCase):
+class EDIBackendTestProcessCase(EDIBackendCommonTestCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls._build_components(
-            # TODO: test all components lookup
-            cls,
-            FakeInputProcess,
-        )
         vals = {
             "model": cls.partner._name,
             "res_id": cls.partner.id,
@@ -30,15 +25,39 @@ class EDIBackendTestProcessCase(EDIBackendCommonComponentRegistryTestCase):
         }
         cls.record = cls.backend.create_record("test_csv_input", vals)
 
+    @classmethod
+    def _setup_records(cls):  # pylint:disable=missing-return
+        super()._setup_records()
+        # Load fake models ->/
+        cls.loader = FakeModelLoader(cls.env, cls.__module__)
+        cls.loader.backup_registry()
+        from .fake_models import EdiTestExecution
+
+        cls.loader.update_registry((EdiTestExecution,))
+        cls.ExecutionAbstractModel = cls.env["edi.framework.test.execution"]
+        cls.model = cls.env["ir.model"].search(
+            [("model", "=", "edi.framework.test.execution")]
+        )
+        cls.exchange_type_in.generate_model_id = cls.model
+        cls.exchange_type_in.process_model_id = cls.model
+        cls.exchange_type_in.input_validate_model_id = cls.model
+
+    @classmethod
+    def tearDownClass(cls):
+        cls.loader.restore_registry()
+        super().tearDownClass()
+
     def setUp(self):
         super().setUp()
-        FakeInputProcess.reset_faked()
+        self.ExecutionAbstractModel.reset_faked("process")
 
     def test_process_record(self):
         self.record.write({"edi_exchange_state": "input_received"})
         with freeze_time("2020-10-22 10:00:00"):
             self.record.action_exchange_process()
-        self.assertTrue(FakeInputProcess.check_called_for(self.record))
+        self.assertTrue(
+            self.ExecutionAbstractModel.check_called_for(self.record, "process")
+        )
         self.assertRecordValues(
             self.record, [{"edi_exchange_state": "input_processed"}]
         )
@@ -52,7 +71,9 @@ class EDIBackendTestProcessCase(EDIBackendCommonComponentRegistryTestCase):
         self.record.with_context(
             test_break_process="OOPS! Something went wrong :("
         ).action_exchange_process()
-        self.assertTrue(FakeInputProcess.check_called_for(self.record))
+        self.assertTrue(
+            self.ExecutionAbstractModel.check_called_for(self.record, "process")
+        )
         self.assertRecordValues(
             self.record,
             [

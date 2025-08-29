@@ -42,10 +42,6 @@ class EDIExchangeType(models.Model):
         required=True,
         ondelete="restrict",
     )
-    job_channel_id = fields.Many2one(
-        comodel_name="queue.job.channel",
-    )
-    job_priority = fields.Integer()
     name = fields.Char(required=True)
     code = fields.Char(required=True, copy=False)
     direction = fields.Selection(
@@ -87,6 +83,31 @@ class EDIExchangeType(models.Model):
         string="Ack for exchange type",
         comodel_name="edi.exchange.type",
         compute="_compute_ack_for_type_ids",
+    )
+    receive_model_id = fields.Many2one(
+        "ir.model", domain=[("is_edi_receiver", "=", True)], string="Receiver"
+    )
+    process_model_id = fields.Many2one(
+        "ir.model", domain=[("is_edi_processor", "=", True)], string="Processor"
+    )
+    check_model_id = fields.Many2one(
+        "ir.model", domain=[("is_edi_checker", "=", True)], string="Checker"
+    )
+    generate_model_id = fields.Many2one(
+        "ir.model", domain=[("is_edi_generator", "=", True)], string="Generator"
+    )
+    send_model_id = fields.Many2one(
+        "ir.model", domain=[("is_edi_sender", "=", True)], string="Sender"
+    )
+    input_validate_model_id = fields.Many2one(
+        "ir.model",
+        domain=[("is_edi_input_validator", "=", True)],
+        string="Input Validator",
+    )
+    output_validate_model_id = fields.Many2one(
+        "ir.model",
+        domain=[("is_edi_output_validator", "=", True)],
+        string="Output Validator",
     )
     advanced_settings_edit = fields.Text(
         string="Advanced YAML settings",

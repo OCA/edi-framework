@@ -1,5 +1,5 @@
 # Copyright 2020 ACSONE SA
-# Copyright 2020 Creu Blanca
+# Copyright 2020 Dixmit
 # Copyright 2021 Camptocamp SA
 # @author Simone Orsi <simahawk@gmail.com>
 # License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl).
@@ -11,11 +11,9 @@ import traceback
 from io import StringIO
 
 from odoo import exceptions, fields, models
+from odoo.exceptions import UserError
 
-from odoo.addons.component.exception import NoComponentError
-from odoo.addons.queue_job.exception import RetryableJobError
-
-from ..exceptions import EDIValidationError
+from ..exceptions import EDINotImplementedError, EDIValidationError
 
 _logger = logging.getLogger(__name__)
 
@@ -47,7 +45,6 @@ class EDIBackend(models.Model):
 
     _name = "edi.backend"
     _description = "EDI Backend"
-    _inherit = ["collection.base"]
 
     name = fields.Char(required=True)
     backend_type_id = fields.Many2one(
@@ -65,107 +62,6 @@ class EDIBackend(models.Model):
     )
     active = fields.Boolean(default=True)
     company_id = fields.Many2one("res.company", string="Company")
-
-    def _get_component(self, exchange_record, key):
-        record_conf = self._get_component_conf_for_record(exchange_record, key)
-        # Load additional ctx keys if any
-        collection = self
-        # TODO: document/test this
-        env_ctx = self._get_component_env_ctx(record_conf, key)
-        collection = collection.with_context(**env_ctx)
-        exchange_record = exchange_record.with_context(**env_ctx)
-        work_ctx = {"exchange_record": exchange_record}
-        # Inject work context from advanced settings
-        work_ctx.update(record_conf.get("work_ctx", {}))
-        # Model is not granted to be there
-        model = exchange_record.model or self._name
-        candidates = self._get_component_usage_candidates(exchange_record, key)
-        match_attrs = self._component_match_attrs(exchange_record, key)
-        return collection._find_component(
-            model,
-            candidates,
-            work_ctx=work_ctx,
-            **match_attrs,
-        )
-
-    def _get_component_env_ctx(self, record_conf, key):
-        env_ctx = record_conf.get("env_ctx", {})
-        # You can use `edi_session` down in the stack to control logics.
-        env_ctx.update(dict(edi_framework_action=key))
-        return env_ctx
-
-    def _component_match_attrs(self, exchange_record, key):
-        """Attributes that will be used to lookup components.
-
-        They will be set in the work context and propagated to components.
-        """
-        return {
-            "backend_type": self.backend_type_id.code,
-            "exchange_type": exchange_record.type_id.code,
-        }
-
-    def _component_sort_key(self, component_class):
-        """Determine the order of matched components.
-
-        The order can be very important if your implementation
-        allow generic / default components to be registered.
-        """
-        return (
-            1 if component_class._backend_type else 0,
-            1 if component_class._exchange_type else 0,
-        )
-
-    def _find_component(self, model, usage_candidates, safe=True, work_ctx=None, **kw):
-        """Retrieve component for current backend.
-
-        :param usage_candidates:
-            list of usage to try by priority. 1st found, 1st returned
-        :param safe: boolean, if true does not break if component is not found
-        :param work_ctx: dictionary with work context params
-        :param kw: keyword args to lookup for components (eg: usage)
-        """
-        component = None
-        work_ctx = work_ctx or {}
-        if "backend" not in work_ctx:
-            work_ctx["backend"] = self
-        with self.work_on(model, **work_ctx) as work:
-            for usage in usage_candidates:
-                components, c_work_ctx = work._matching_components(usage=usage, **kw)
-                if not components:
-                    continue
-                # Sort components and pick the 1st one matching.
-                # In this way we support generic components registration
-                # and specific components registrations
-                components = sorted(
-                    components, key=lambda x: self._component_sort_key(x), reverse=True
-                )
-                component = components[0](c_work_ctx)
-                _logger.debug("using component %s", component._name)
-                break
-        if not component and not safe:
-            raise NoComponentError(
-                f"No component found matching any of: {usage_candidates}"
-            )
-        return component or None
-
-    def _get_component_usage_candidates(self, exchange_record, key):
-        """Retrieve usage candidates for components."""
-        # fmt:off
-        base_usage = ".".join([
-            exchange_record.direction,
-            key,
-        ])
-        # fmt:on
-        record_conf = self._get_component_conf_for_record(exchange_record, key)
-        candidates = [record_conf["usage"]] if record_conf else []
-        candidates += [
-            base_usage,
-        ]
-        return candidates
-
-    def _get_component_conf_for_record(self, exchange_record, key):
-        settings = exchange_record.type_id.get_settings()
-        return settings.get("components", {}).get(key, {})
 
     @property
     def exchange_record_model(self):
@@ -279,10 +175,9 @@ class EDIBackend(models.Model):
             )
 
     def _exchange_generate(self, exchange_record, **kw):
-        component = self._get_component(exchange_record, "generate")
-        if component:
-            return component.generate()
-        raise NotImplementedError("No handler for `_exchange_generate`")
+        exchange_function = self._get_exec_handler(exchange_record, "generate")
+        ctx = self._get_record_env_ctx(exchange_record, "generate")
+        return exchange_function(exchange_record.with_context(**ctx), **kw)
 
     # TODO: add tests
     def _validate_data(self, exchange_record, value=None, **kw):
@@ -296,10 +191,18 @@ class EDIBackend(models.Model):
                         code=exchange_record.type_id.code,
                     )
                 )
+        try:
+            return self._exchange_validate_data(exchange_record, value=value, **kw)
+        except EDINotImplementedError:  # pylint: disable=W8138
+            # We use this exception for inheritance purpose only.
+            # If it fails, we assume that no validation is implemented
+            pass
 
-        component = self._get_component(exchange_record, "validate")
-        if component:
-            return component.validate(value)
+    def _exchange_validate_data(self, exchange_record, value=None, **kw):
+        action = f"{exchange_record.type_id.direction}_validate"
+        exchange_function = self._get_exec_handler(exchange_record, action)
+        ctx = self._get_record_env_ctx(exchange_record, action)
+        return exchange_function(exchange_record.with_context(**ctx), value=value, **kw)
 
     def exchange_send(self, exchange_record):
         """Send exchange file."""
@@ -320,7 +223,7 @@ class EDIBackend(models.Model):
             traceback = _get_exception_traceback()
             error = _get_exception_msg(err)
             _logger.debug("%s send failed. To be retried.", exchange_record.identifier)
-            raise RetryableJobError(
+            raise self._retryable_exception()(
                 error, **exchange_record._job_retry_params()
             ) from err
         except self._swallable_exceptions() as err:
@@ -368,10 +271,11 @@ class EDIBackend(models.Model):
         )
 
     def _send_retryable_exceptions(self):
-        # IOError is a base class for all connection errors
-        # OSError is a base class for all errors
-        # when dealing w/ internal or external systems or filesystems
-        return (IOError, OSError)
+        # To be modified in edi_queue_oca
+        return ()
+
+    def _retryable_exception(self):
+        return UserError
 
     def _output_check_send(self, exchange_record):
         if exchange_record.direction != "output":
@@ -388,10 +292,9 @@ class EDIBackend(models.Model):
         ]
 
     def _exchange_send(self, exchange_record):
-        component = self._get_component(exchange_record, "send")
-        if component:
-            return component.send()
-        raise NotImplementedError("No handler for `_exchange_send`")
+        exchange_function = self._get_exec_handler(exchange_record, "send")
+        ctx = self._get_record_env_ctx(exchange_record, "send")
+        return exchange_function(exchange_record.with_context(**ctx))
 
     def _cron_check_output_exchange_sync(self, **kw):
         for backend in self:
@@ -410,15 +313,11 @@ class EDIBackend(models.Model):
         """
         for rec in recordset:
             if not skip_generate and not skip_send:
-                job1 = rec.delayable().action_exchange_generate()
-                # Chain send job.
-                # Raise prio to max to send the record out as fast as possible.
-                job1.on_done(rec.delayable(priority=0).action_exchange_send())
-                job1.delay()
+                rec.action_exchange_generate_send_chained()
             elif skip_send:
-                rec.with_delay().action_exchange_generate()
+                rec.action_exchange_generate()
             elif not skip_send:
-                rec.with_delay(priority=0).action_exchange_send()
+                rec.action_exchange_send()
 
     def _check_output_exchange_sync(
         self, skip_send=False, skip_sent=True, record_ids=None
@@ -453,7 +352,7 @@ class EDIBackend(models.Model):
         )
         for rec in pending_records:
             if rec.edi_exchange_state == "output_pending":
-                rec.with_delay().action_exchange_send()
+                rec.action_exchange_send()
             else:
                 # TODO: run in job as well?
                 self._exchange_output_check_state(rec)
@@ -495,10 +394,9 @@ class EDIBackend(models.Model):
         return domain
 
     def _exchange_output_check_state(self, exchange_record):
-        component = self._get_component(exchange_record, "check")
-        if component:
-            return component.check()
-        raise NotImplementedError("No handler for `_exchange_output_check_state`")
+        exchange_function = self._get_exec_handler(exchange_record, "check")
+        ctx = self._get_record_env_ctx(exchange_record, "check")
+        return exchange_function(exchange_record.with_context(**ctx))
 
     def _exchange_process_check(self, exchange_record):
         if not exchange_record.direction == "input":
@@ -563,10 +461,9 @@ class EDIBackend(models.Model):
         return res
 
     def _exchange_process(self, exchange_record):
-        component = self._get_component(exchange_record, "process")
-        if component:
-            return component.process()
-        raise NotImplementedError()
+        exchange_function = self._get_exec_handler(exchange_record, "process")
+        ctx = self._get_record_env_ctx(exchange_record, "process")
+        return exchange_function(exchange_record.with_context(**ctx))
 
     def exchange_receive(self, exchange_record):
         """Retrieve an incoming document."""
@@ -634,10 +531,9 @@ class EDIBackend(models.Model):
         ]
 
     def _exchange_receive(self, exchange_record):
-        component = self._get_component(exchange_record, "receive")
-        if component:
-            return component.receive()
-        raise NotImplementedError()
+        exchange_function = self._get_exec_handler(exchange_record, "receive")
+        ctx = self._get_record_env_ctx(exchange_record, "receive")
+        return exchange_function(exchange_record.with_context(**ctx))
 
     def _cron_check_input_exchange_sync(self, **kw):
         for backend in self:
@@ -659,7 +555,7 @@ class EDIBackend(models.Model):
             len(pending_records),
         )
         for rec in pending_records:
-            rec.with_delay().action_exchange_receive()
+            rec.action_exchange_receive()
 
         pending_process_records = self.exchange_record_model.search(
             self._input_pending_process_records_domain(record_ids=record_ids)
@@ -669,7 +565,7 @@ class EDIBackend(models.Model):
             len(pending_process_records),
         )
         for rec in pending_process_records:
-            rec.with_delay().action_exchange_process()
+            rec.action_exchange_process()
 
     def _input_pending_records_domain(self, record_ids=None):
         domain = [
@@ -706,7 +602,7 @@ class EDIBackend(models.Model):
             return self.env["edi.exchange.record"].search(domain)
 
     def action_view_exchanges(self):
-        xmlid = "edi_oca.act_open_edi_exchange_record_view"
+        xmlid = "edi_core_oca.act_open_edi_exchange_record_view"
         action = self.env["ir.actions.act_window"]._for_xml_id(xmlid)
         action["context"] = {
             "search_default_backend_id": self.id,
@@ -716,7 +612,7 @@ class EDIBackend(models.Model):
         return action
 
     def action_view_exchange_types(self):
-        xmlid = "edi_oca.act_open_edi_exchange_type_view"
+        xmlid = "edi_core_oca.act_open_edi_exchange_type_view"
         action = self.env["ir.actions.act_window"]._for_xml_id(xmlid)
         action["context"] = {
             "search_default_backend_id": self.id,
@@ -736,3 +632,21 @@ class EDIBackend(models.Model):
 
     def _failed_output_check_send_msg(self):
         return "Nothing to do. Likely already sent."
+
+    def _get_exec_handler(self, exchange_record, action):
+        model = exchange_record.type_id[f"{action}_model_id"]
+        if model:
+            ctx = self._get_record_env_ctx(exchange_record, action)
+            return getattr(self.env[model.model].with_context(**ctx), action)
+        raise EDINotImplementedError(
+            self.env._("No handler for %(action)s", action=action)
+        )
+
+    def _get_conf_for_record(self, exchange_record, key):
+        """Get the configuration for a given record and key."""
+        settings = exchange_record.type_id.get_settings()
+        return settings.get("execution_model", {}).get(key, {})
+
+    def _get_record_env_ctx(self, exchange_record, action):
+        # TODO: Maybe adding some keys on the configuration
+        return self._get_conf_for_record(exchange_record, action).get("env_ctx", {})

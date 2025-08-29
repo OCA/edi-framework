@@ -2,24 +2,42 @@
 # @author: Simone Orsi <simahawk@gmail.com>
 # License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl).
 
-from .common import EDIBackendCommonComponentRegistryTestCase
-from .fake_components import FakeInputReceive
+from odoo_test_helper import FakeModelLoader
+
+from .common import EDIBackendCommonTestCase
 
 
-class EDIBackendTestInputCase(EDIBackendCommonComponentRegistryTestCase):
+class EDIBackendTestInputCase(EDIBackendCommonTestCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls._build_components(
-            # TODO: test all components lookup
-            cls,
-            FakeInputReceive,
-        )
         vals = {
             "model": cls.partner._name,
             "res_id": cls.partner.id,
         }
         cls.record = cls.backend.create_record("test_csv_input", vals)
+
+    @classmethod
+    def _setup_records(cls):  # pylint:disable=missing-return
+        super()._setup_records()
+        # Load fake models ->/
+        cls.loader = FakeModelLoader(cls.env, cls.__module__)
+        cls.loader.backup_registry()
+        from .fake_models import EdiTestExecution
+
+        cls.loader.update_registry((EdiTestExecution,))
+        cls.ExecutionAbstractModel = cls.env["edi.framework.test.execution"]
+        cls.model = cls.env["ir.model"].search(
+            [("model", "=", "edi.framework.test.execution")]
+        )
+        cls.exchange_type_in.receive_model_id = cls.model
+        cls.exchange_type_in.process_model_id = cls.model
+        cls.exchange_type_in.input_validate_model_id = cls.model
+
+    @classmethod
+    def tearDownClass(cls):
+        cls.loader.restore_registry()
+        super().tearDownClass()
 
     @classmethod
     def _setup_context(cls):
@@ -31,7 +49,7 @@ class EDIBackendTestInputCase(EDIBackendCommonComponentRegistryTestCase):
 
     def setUp(self):
         super().setUp()
-        FakeInputReceive.reset_faked()
+        self.ExecutionAbstractModel.reset_faked("receive")
 
     def test_receive_record_nothing_todo(self):
         self.backend.with_context(fake_output="yeah!").exchange_receive(self.record)
