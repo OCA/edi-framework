@@ -1,4 +1,4 @@
-# Copyright 2020 Creu Blanca
+# Copyright 2020 Dixmit
 # License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl).
 
 import logging

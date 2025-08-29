@@ -1,6 +1,3 @@
-This module intends to create a base to be extended by local edi rules
-for accounting.
-
 In order to add a new integration for an account, you need to create a
 listener:
 
