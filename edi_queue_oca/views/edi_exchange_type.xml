@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2025 Dixmit
+     License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl). -->
+<odoo>
+    <record model="ir.ui.view" id="edi_exchange_type_form_view">
+        <field name="model">edi.exchange.type</field>
+        <field name="inherit_id" ref="edi_core_oca.edi_exchange_type_view_form" />
+        <field name="arch" type="xml">
+            <field name="partner_ids" position="after">
+                <field name="job_channel_id" />
+                <field name="job_priority" />
+            </field>
+        </field>
+    </record>
+</odoo>
