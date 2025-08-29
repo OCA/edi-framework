@@ -12,7 +12,7 @@
     "license": "LGPL-3",
     "website": "https://github.com/OCA/edi-framework",
     "author": "Camptocamp,Odoo Community Association (OCA)",
-    "depends": ["base_edi", "edi_oca", "endpoint"],
+    "depends": ["base_edi", "edi_core_oca", "endpoint"],
     "data": [
         "data/server_action.xml",
         "security/ir.model.access.csv",
