@@ -5,19 +5,44 @@ import json
 
 from freezegun import freeze_time
 from lxml import etree
+from odoo_test_helper import FakeModelLoader
 
-from odoo.addons.edi_oca.tests.common import EDIBackendCommonComponentTestCase
+from odoo.addons.edi_core_oca.tests.common import EDIBackendCommonTestCase
 
 
-class TestEDIBackendOutputBase(EDIBackendCommonComponentTestCase):
+class TestEDIBackendOutputBase(EDIBackendCommonTestCase):
+    @classmethod
+    def tearDownClass(cls):
+        cls.loader.restore_registry()
+        super().tearDownClass()
+
     @classmethod
     def _setup_records(cls):
         res = super()._setup_records()
+        # Load fake models ->/
+        cls.loader = FakeModelLoader(cls.env, cls.__module__)
+        cls.loader.backup_registry()
+        from odoo.addons.edi_core_oca.tests.fake_models import EdiTestExecution
+
+        cls.loader.update_registry((EdiTestExecution,))
+        cls.ExecutionAbstractModel = cls.env["edi.framework.test.execution"]
+        cls.model = cls.env["ir.model"].search(
+            [("model", "=", "edi.framework.test.execution")]
+        )
+        cls.exchange_type_out.generate_model_id = cls.model
+        cls.exchange_type_out.send_model_id = cls.model
+        cls.exchange_type_out.output_validate_model_id = cls.model
+        cls.exchange_type_out.check_model_id = cls.model
+        # We do that in order to ensure that the tests work properly with edi_connector
         cls.type_out1 = cls._create_exchange_type(
             name="Template output 1",
             direction="output",
             code="test_type_out1",
             exchange_file_ext="txt",
+            generate_model_id=cls.model.id,
+            send_model_id=cls.model.id,
+            output_validate_model_id=cls.model.id,
+            check_model_id=cls.model.id,
             exchange_filename_pattern="{record.ref}-{type.code}-{dt}",
         )
         model = cls.env["edi.exchange.template.output"]
@@ -55,6 +80,10 @@ class TestEDIBackendOutputBase(EDIBackendCommonComponentTestCase):
             direction="output",
             code="test_type_out2",
             exchange_file_ext="xml",
+            generate_model_id=cls.model.id,
+            send_model_id=cls.model.id,
+            output_validate_model_id=cls.model.id,
+            check_model_id=cls.model.id,
             exchange_filename_pattern="{record.ref}-{type.code}-{dt}",
         )
         qweb_tmpl = cls.env["ir.ui.view"].create(
@@ -101,6 +130,10 @@ result = {"custom_bit": foo, "baz": baz}
             direction="output",
             code="test_type_out3",
             exchange_file_ext="xml",
+            generate_model_id=cls.model.id,
+            send_model_id=cls.model.id,
+            output_validate_model_id=cls.model.id,
+            check_model_id=cls.model.id,
             exchange_filename_pattern="{record.id}-{type.code}-{dt}",
         )
         cls.report = cls.env.ref("web.action_report_externalpreview")
@@ -131,6 +164,10 @@ result = {"res_ids": record.ids}
             name="Template output JSON",
             direction="output",
             code="test_type_out_json",
+            generate_model_id=cls.model.id,
+            send_model_id=cls.model.id,
+            output_validate_model_id=cls.model.id,
+            check_model_id=cls.model.id,
             exchange_file_ext="txt",
             exchange_filename_pattern="{record.ref}-{type.code}-{dt}",
         )
