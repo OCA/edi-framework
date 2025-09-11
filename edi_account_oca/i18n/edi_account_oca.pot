@@ -81,6 +81,11 @@ msgid "Exchange Record Count"
 msgstr ""
 
 #. module: edi_account_oca
+#: model:ir.model.fields,field_description:edi_account_oca.field_account_move__exchange_related_record_ids
+msgid "Exchange Related Record"
+msgstr ""
+
+#. module: edi_account_oca
 #: model:ir.ui.menu,name:edi_account_oca.menu_account_edi_root
 msgid "Exchange records"
 msgstr ""
