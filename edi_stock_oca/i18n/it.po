@@ -17,6 +17,11 @@ msgstr ""
 "X-Generator: Weblate 5.6.2\n"
 
 #. module: edi_stock_oca
+#: model:ir.model,name:edi_stock_oca.model_res_partner
+msgid "Contact"
+msgstr ""
+
+#. module: edi_stock_oca
 #: model:ir.model.fields,field_description:edi_stock_oca.field_stock_picking__edi_disable_auto
 msgid "Disable auto"
 msgstr "Disabilita automatico"
@@ -25,11 +30,6 @@ msgstr "Disabilita automatico"
 #: model_terms:ir.ui.view,arch_db:edi_stock_oca.stock_picking_form_view
 msgid "EDI"
 msgstr "EDI"
-
-#. module: edi_stock_oca
-#: model_terms:ir.ui.view,arch_db:edi_stock_oca.view_partner_form
-msgid "EDI Configuration"
-msgstr "Configurazione EDI"
 
 #. module: edi_stock_oca
 #: model:ir.model.fields,field_description:edi_stock_oca.field_stock_picking__origin_edi_endpoint_id
@@ -50,6 +50,12 @@ msgstr "Record origine EDI"
 #: model:ir.model.fields,help:edi_stock_oca.field_stock_picking__origin_exchange_record_id
 msgid "EDI record that originated this document."
 msgstr "Record EDI che ha generato questo documento."
+
+#. module: edi_stock_oca
+#: model:ir.model.fields,field_description:edi_stock_oca.field_res_partner__edi_stock_picking_conf_ids
+#: model:ir.model.fields,field_description:edi_stock_oca.field_res_users__edi_stock_picking_conf_ids
+msgid "EDI stock configuration"
+msgstr ""
 
 #. module: edi_stock_oca
 #: model:ir.model.fields,field_description:edi_stock_oca.field_stock_picking__edi_config
@@ -77,6 +83,11 @@ msgid "Exchange Record Count"
 msgstr "Conteggio record di scambio"
 
 #. module: edi_stock_oca
+#: model:ir.model.fields,field_description:edi_stock_oca.field_stock_picking__exchange_related_record_ids
+msgid "Exchange Related Record"
+msgstr ""
+
+#. module: edi_stock_oca
 #: model:ir.model.fields,help:edi_stock_oca.field_stock_picking__origin_edi_endpoint_id
 msgid "Record generated via this endpoint"
 msgstr "Record generato attraverso questo endpoint"
@@ -87,6 +98,14 @@ msgid "Transfer"
 msgstr "Trasferimento"
 
 #. module: edi_stock_oca
+#: model_terms:ir.ui.view,arch_db:edi_stock_oca.view_partner_form
+msgid "Transfers"
+msgstr ""
+
+#. module: edi_stock_oca
 #: model:ir.model.fields,help:edi_stock_oca.field_stock_picking__edi_disable_auto
 msgid "When marked, EDI automatic processing will be avoided"
 msgstr "Quando selezionata, l'elaborazione EDI automatica verrà evitata"
+
+#~ msgid "EDI Configuration"
+#~ msgstr "Configurazione EDI"
