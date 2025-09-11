@@ -95,7 +95,7 @@ msgstr ""
 
 #. module: edi_oca
 #: model_terms:ir.ui.view,arch_db:edi_oca.edi_exchange_consumer_mixin_buttons
-msgid "<span class=\"pr-4\"><i class=\"fa fa-retweet\"/> EDI actions</span>"
+msgid "<span class=\"pe-4\"><i class=\"fa fa-retweet\"/> EDI actions</span>"
 msgstr ""
 
 #. module: edi_oca

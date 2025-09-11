@@ -156,8 +156,8 @@ msgstr ""
 
 #. module: edi_oca
 #: model_terms:ir.ui.view,arch_db:edi_oca.edi_exchange_consumer_mixin_buttons
-msgid "<span class=\"pr-4\"><i class=\"fa fa-retweet\"/> EDI actions</span>"
-msgstr "<span class=\"pr-4\"><i class=\"fa fa-retweet\"/> Azioni EDI</span>"
+msgid "<span class=\"pe-4\"><i class=\"fa fa-retweet\"/> EDI actions</span>"
+msgstr ""
 
 #. module: edi_oca
 #: model_terms:ir.ui.view,arch_db:edi_oca.edi_exchange_record_view_form
@@ -1639,6 +1639,9 @@ msgstr ""
 #: model:ir.model.fields.selection,name:edi_oca.selection__edi_exchange_record__edi_exchange_state__output_error_on_send
 msgid "error on send"
 msgstr "errore nell'invio"
+
+#~ msgid "<span class=\"pr-4\"><i class=\"fa fa-retweet\"/> EDI actions</span>"
+#~ msgstr "<span class=\"pr-4\"><i class=\"fa fa-retweet\"/> Azioni EDI</span>"
 
 #~ msgid "SMS Delivery error"
 #~ msgstr "Errore consegna SMS"
