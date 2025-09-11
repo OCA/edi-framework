@@ -9,7 +9,7 @@
             invisible="not edi_has_form_config"
         >
             <div>
-                <span class="pr-4"><i class="fa fa-retweet" /> EDI actions</span>
+                <span class="pe-4"><i class="fa fa-retweet" /> EDI actions</span>
                 <field name="edi_config" widget="edi_configuration" />
                 <field name="edi_has_form_config" invisible="1" />
             </div>
