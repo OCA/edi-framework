@@ -62,7 +62,7 @@
                             string="Snippet"
                             groups="edi_oca.group_edi_advanced_settings_manager"
                         >
-                            <field name="enable_snippet" />
+                            <field name="enable_snippet" widget="ace" colspan="4" />
                         </page>
                     </notebook>
                 </sheet>
