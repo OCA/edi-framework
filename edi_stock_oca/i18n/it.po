@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-07-29 08:58+0000\n"
+"PO-Revision-Date: 2025-09-15 08:42+0000\n"
 "Last-Translator: mymage <stefano.consolaro@mymage.it>\n"
 "Language-Team: none\n"
 "Language: it\n"
@@ -14,12 +14,12 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.6.2\n"
+"X-Generator: Weblate 5.10.4\n"
 
 #. module: edi_stock_oca
 #: model:ir.model,name:edi_stock_oca.model_res_partner
 msgid "Contact"
-msgstr ""
+msgstr "Contatto"
 
 #. module: edi_stock_oca
 #: model:ir.model.fields,field_description:edi_stock_oca.field_stock_picking__edi_disable_auto
@@ -55,7 +55,7 @@ msgstr "Record EDI che ha generato questo documento."
 #: model:ir.model.fields,field_description:edi_stock_oca.field_res_partner__edi_stock_picking_conf_ids
 #: model:ir.model.fields,field_description:edi_stock_oca.field_res_users__edi_stock_picking_conf_ids
 msgid "EDI stock configuration"
-msgstr ""
+msgstr "Configurazione magazzino EDI"
 
 #. module: edi_stock_oca
 #: model:ir.model.fields,field_description:edi_stock_oca.field_stock_picking__edi_config
@@ -85,7 +85,7 @@ msgstr "Conteggio record di scambio"
 #. module: edi_stock_oca
 #: model:ir.model.fields,field_description:edi_stock_oca.field_stock_picking__exchange_related_record_ids
 msgid "Exchange Related Record"
-msgstr ""
+msgstr "Record relativo allo scambio"
 
 #. module: edi_stock_oca
 #: model:ir.model.fields,help:edi_stock_oca.field_stock_picking__origin_edi_endpoint_id
@@ -100,7 +100,7 @@ msgstr "Trasferimento"
 #. module: edi_stock_oca
 #: model_terms:ir.ui.view,arch_db:edi_stock_oca.view_partner_form
 msgid "Transfers"
-msgstr ""
+msgstr "Trasferimenti"
 
 #. module: edi_stock_oca
 #: model:ir.model.fields,help:edi_stock_oca.field_stock_picking__edi_disable_auto
