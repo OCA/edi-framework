@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2025-03-18 11:50+0000\n"
+"PO-Revision-Date: 2025-09-15 08:42+0000\n"
 "Last-Translator: mymage <stefano.consolaro@mymage.it>\n"
 "Language-Team: none\n"
 "Language: it\n"
@@ -14,7 +14,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.10.2\n"
+"X-Generator: Weblate 5.10.4\n"
 
 #. module: edi_account_oca
 #: model_terms:ir.ui.view,arch_db:edi_account_oca.account_move_form_view
@@ -86,7 +86,7 @@ msgstr "Conteggio record di scambio"
 #. module: edi_account_oca
 #: model:ir.model.fields,field_description:edi_account_oca.field_account_move__exchange_related_record_ids
 msgid "Exchange Related Record"
-msgstr ""
+msgstr "Record relativo allo scambio"
 
 #. module: edi_account_oca
 #: model:ir.ui.menu,name:edi_account_oca.menu_account_edi_root
