@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2025-06-20 10:25+0000\n"
+"PO-Revision-Date: 2025-09-15 08:42+0000\n"
 "Last-Translator: mymage <stefano.consolaro@mymage.it>\n"
 "Language-Team: none\n"
 "Language: it\n"
@@ -157,7 +157,7 @@ msgstr ""
 #. module: edi_oca
 #: model_terms:ir.ui.view,arch_db:edi_oca.edi_exchange_consumer_mixin_buttons
 msgid "<span class=\"pe-4\"><i class=\"fa fa-retweet\"/> EDI actions</span>"
-msgstr ""
+msgstr "<span class=\"pe-4\"><i class=\"fa fa-retweet\"/> Azioni EDI</span>"
 
 #. module: edi_oca
 #: model_terms:ir.ui.view,arch_db:edi_oca.edi_exchange_record_view_form
@@ -199,6 +199,8 @@ msgstr "<strong>Tipo:</strong>"
 #: model:ir.model.constraint,message:edi_oca.constraint_edi_exchange_related_record_related_record_unique
 msgid "A record can only be related once to a specific exchange record."
 msgstr ""
+"Un record può essere correlato solo una volta a uno specifico record di "
+"scambio."
 
 #. module: edi_oca
 #: model_terms:ir.ui.view,arch_db:edi_oca.edi_exchange_record_view_form
@@ -626,7 +628,7 @@ msgstr "Record di scambio EDI"
 #. module: edi_oca
 #: model:ir.model,name:edi_oca.model_edi_exchange_related_record
 msgid "EDI exchange Related Record"
-msgstr ""
+msgstr "Record correlato allo scambio EDI"
 
 #. module: edi_oca
 #: model:ir.actions.server,name:edi_oca.cron_edi_backend_check_input_exchange_ir_actions_server
@@ -779,7 +781,7 @@ msgstr "Conteggio record di scambio"
 #. module: edi_oca
 #: model:ir.model.fields,field_description:edi_oca.field_edi_exchange_consumer_mixin__exchange_related_record_ids
 msgid "Exchange Related Record"
-msgstr ""
+msgstr "Record relativo allo scambio"
 
 #. module: edi_oca
 #: model:ir.model.fields,field_description:edi_oca.field_edi_configuration__type_id
@@ -1262,7 +1264,7 @@ msgstr "Numero di messaggi con errore di consegna"
 #. module: edi_oca
 #: model_terms:ir.ui.view,arch_db:edi_oca.edi_exchange_record_view_form
 msgid "Open Record"
-msgstr ""
+msgstr "Apri record"
 
 #. module: edi_oca
 #: model:ir.model.fields,help:edi_oca.field_edi_exchange_record__parent_id
@@ -1393,7 +1395,7 @@ msgstr "Esistono record collegati"
 #. module: edi_oca
 #: model_terms:ir.ui.view,arch_db:edi_oca.edi_exchange_record_view_form
 msgid "Related Records"
-msgstr ""
+msgstr "Record collegati"
 
 #. module: edi_oca
 #: model:ir.model.fields,field_description:edi_oca.field_edi_exchange_record__related_exchange_ids
