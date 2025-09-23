@@ -164,7 +164,7 @@
                         <page
                             name="related_exchanges"
                             string="Related exchanges"
-                            invisible="not related_exchange_ids or not parent_id"
+                            invisible="not related_exchange_ids and not parent_id"
                         >
                             <group name="rel_exchanges">
                                 <field name="parent_id" />
