@@ -6,7 +6,6 @@ import logging
 from odoo import models
 
 from odoo.addons.component.exception import NoComponentError
-from odoo.addons.edi_core_oca.exceptions import EDINotImplementedError
 
 _logger = logging.getLogger(__name__)
 
@@ -14,60 +13,6 @@ _logger = logging.getLogger(__name__)
 class EdiBackend(models.Model):
     _name = "edi.backend"
     _inherit = ["edi.backend", "collection.base"]
-
-    def _exchange_generate(self, exchange_record, **kw):
-        try:
-            return super()._exchange_generate(exchange_record, **kw)
-        except EDINotImplementedError:
-            component = self._get_component(exchange_record, "generate")
-            if component:
-                return component.generate()
-            raise
-
-    def _exchange_validate_data(self, exchange_record, value=None, **kw):
-        try:
-            return super()._exchange_validate_data(exchange_record, value=value, **kw)
-        except EDINotImplementedError:
-            component = self._get_component(exchange_record, "validate")
-            if component:
-                return component.validate(value)
-            raise
-
-    def _exchange_send(self, exchange_record):
-        try:
-            return super()._exchange_send(exchange_record)
-        except EDINotImplementedError:
-            component = self._get_component(exchange_record, "send")
-            if component:
-                return component.send()
-            raise
-
-    def _exchange_output_check_state(self, exchange_record):
-        try:
-            return super()._exchange_output_check_state(exchange_record)
-        except EDINotImplementedError:
-            component = self._get_component(exchange_record, "check")
-            if component:
-                return component.check()
-            raise
-
-    def _exchange_process(self, exchange_record):
-        try:
-            return super()._exchange_process(exchange_record)
-        except EDINotImplementedError:
-            component = self._get_component(exchange_record, "process")
-            if component:
-                return component.process()
-            raise
-
-    def _exchange_receive(self, exchange_record):
-        try:
-            return super()._exchange_receive(exchange_record)
-        except EDINotImplementedError:
-            component = self._get_component(exchange_record, "receive")
-            if component:
-                return component.receive()
-            raise
 
     def _get_component(self, exchange_record, key):
         record_conf = self._get_component_conf_for_record(exchange_record, key)

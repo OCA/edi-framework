@@ -31,8 +31,8 @@ class EDIBackendTestOutputCase(EDIBackendCommonComponentRegistryTestCase):
         Test default output/input encoding (UTF-8). Use string with special
         character to test the encoding applied.
         """
-        self.backend.with_context(fake_output="Palmotićeva").exchange_generate(
-            self.record
+        self.backend.exchange_generate(
+            self.record.with_context(fake_output="Palmotićeva")
         )
         # Test decoding is applied correctly
         self.assertEqual(self.record._get_file_content(), "Palmotićeva")
@@ -47,8 +47,8 @@ class EDIBackendTestOutputCase(EDIBackendCommonComponentRegistryTestCase):
         character to test the encoding applied.
         """
         self.exchange_type_out.write({"encoding": "UTF-16"})
-        self.backend.with_context(fake_output="Palmotićeva").exchange_generate(
-            self.record
+        self.backend.exchange_generate(
+            self.record.with_context(fake_output="Palmotićeva")
         )
         # Test decoding is applied correctly
         self.assertEqual(self.record._get_file_content(), "Palmotićeva")
@@ -61,18 +61,18 @@ class EDIBackendTestOutputCase(EDIBackendCommonComponentRegistryTestCase):
         self.exchange_type_out.write({"encoding": "ascii"})
         # By default, error handling raises error
         with self.assertRaises(UnicodeEncodeError):
-            self.backend.with_context(fake_output="Palmotićeva").exchange_generate(
-                self.record
+            self.backend.exchange_generate(
+                self.record.with_context(fake_output="Palmotićeva")
             )
         self.exchange_type_out.write({"encoding_out_error_handler": "ignore"})
-        self.backend.with_context(fake_output="Palmotićeva").exchange_generate(
-            self.record
+        self.backend.exchange_generate(
+            self.record.with_context(fake_output="Palmotićeva")
         )
         self.assertEqual(self.record._get_file_content(), "Palmotieva")
 
     def test_decoding_error_handler(self):
-        self.backend.with_context(fake_output="Palmotićeva").exchange_generate(
-            self.record
+        self.backend.exchange_generate(
+            self.record.with_context(fake_output="Palmotićeva")
         )
         # Change encoding to ascii to check the decoding
         self.exchange_type_out.write({"encoding": "ascii"})
