@@ -29,7 +29,9 @@ class TestEDIBackendOutputBase(EDIBackendCommonTestCase):
         cls.model = cls.env["ir.model"].search(
             [("model", "=", "edi.framework.test.execution")]
         )
-        cls.exchange_type_out.generate_model_id = cls.model
+        cls.exchange_type_out.generate_model_id = cls.env.ref(
+            "edi_exchange_template_oca.model_edi_oca_template_handler"
+        )
         cls.exchange_type_out.send_model_id = cls.model
         cls.exchange_type_out.output_validate_model_id = cls.model
         cls.exchange_type_out.check_model_id = cls.model
@@ -39,7 +41,9 @@ class TestEDIBackendOutputBase(EDIBackendCommonTestCase):
             direction="output",
             code="test_type_out1",
             exchange_file_ext="txt",
-            generate_model_id=cls.model.id,
+            generate_model_id=cls.env.ref(
+                "edi_exchange_template_oca.model_edi_oca_template_handler"
+            ).id,
             send_model_id=cls.model.id,
             output_validate_model_id=cls.model.id,
             check_model_id=cls.model.id,
@@ -80,7 +84,9 @@ class TestEDIBackendOutputBase(EDIBackendCommonTestCase):
             direction="output",
             code="test_type_out2",
             exchange_file_ext="xml",
-            generate_model_id=cls.model.id,
+            generate_model_id=cls.env.ref(
+                "edi_exchange_template_oca.model_edi_oca_template_handler"
+            ).id,
             send_model_id=cls.model.id,
             output_validate_model_id=cls.model.id,
             check_model_id=cls.model.id,
@@ -130,7 +136,9 @@ result = {"custom_bit": foo, "baz": baz}
             direction="output",
             code="test_type_out3",
             exchange_file_ext="xml",
-            generate_model_id=cls.model.id,
+            generate_model_id=cls.env.ref(
+                "edi_exchange_template_oca.model_edi_oca_template_handler"
+            ).id,
             send_model_id=cls.model.id,
             output_validate_model_id=cls.model.id,
             check_model_id=cls.model.id,
@@ -164,7 +172,9 @@ result = {"res_ids": record.ids}
             name="Template output JSON",
             direction="output",
             code="test_type_out_json",
-            generate_model_id=cls.model.id,
+            generate_model_id=cls.env.ref(
+                "edi_exchange_template_oca.model_edi_oca_template_handler"
+            ).id,
             send_model_id=cls.model.id,
             output_validate_model_id=cls.model.id,
             check_model_id=cls.model.id,
