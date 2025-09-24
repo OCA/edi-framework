@@ -17,6 +17,9 @@ class TestExchangeType(TransactionCase):
                 "direction": "output",
                 "code": "test_type_out1",
                 "exchange_file_ext": "txt",
+                "generate_model_id": cls.env.ref(
+                    "edi_exchange_template_oca.model_edi_oca_template_handler"
+                ).id,
                 "backend_type_id": cls.backend_type.id,
             }
         )
@@ -26,6 +29,9 @@ class TestExchangeType(TransactionCase):
                 "direction": "output",
                 "code": "test_type_out2",
                 "exchange_file_ext": "txt",
+                "generate_model_id": cls.env.ref(
+                    "edi_exchange_template_oca.model_edi_oca_template_handler"
+                ).id,
                 "backend_type_id": cls.backend_type.id,
             }
         )
