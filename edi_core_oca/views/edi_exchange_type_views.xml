@@ -48,19 +48,6 @@
                             <field name="ack_for_type_ids" widget="many2many_tags" />
                             <field name="partner_ids" widget="many2many_tags" />
                             <field name="quick_exec" />
-                            <field name="encoding" />
-                            <field
-                                name="encoding_out_error_handler"
-                                invisible="direction == 'input'"
-                            />
-                            <field
-                                name="encoding_in_error_handler"
-                                invisible="direction == 'output'"
-                            />
-                            <field
-                                name="allow_empty_files_on_receive"
-                                invisible="direction == 'output'"
-                            />
                         </group>
                     </group>
                     <notebook>
@@ -128,6 +115,23 @@
                                     <field name="kind" />
                                 </list>
                             </field>
+                        </page>
+                        <page name="encoding" string="Encoding">
+                            <group>
+                                <field name="encoding" />
+                                <field
+                                    name="encoding_out_error_handler"
+                                    invisible="direction == 'input'"
+                                />
+                                <field
+                                    name="encoding_in_error_handler"
+                                    invisible="direction == 'output'"
+                                />
+                                <field
+                                    name="allow_empty_files_on_receive"
+                                    invisible="direction == 'output'"
+                                />
+                            </group>
                         </page>
                     </notebook>
                 </sheet>
