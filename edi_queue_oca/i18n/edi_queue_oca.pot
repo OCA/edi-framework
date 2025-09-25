@@ -1,0 +1,54 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* edi_queue_oca
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0\n"
+"Report-Msgid-Bugs-To: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: edi_queue_oca
+#: model:ir.model,name:edi_queue_oca.model_edi_backend
+msgid "EDI Backend"
+msgstr ""
+
+#. module: edi_queue_oca
+#: model:ir.model,name:edi_queue_oca.model_edi_exchange_type
+msgid "EDI Exchange Type"
+msgstr ""
+
+#. module: edi_queue_oca
+#: model:ir.model,name:edi_queue_oca.model_edi_exchange_record
+msgid "EDI exchange Record"
+msgstr ""
+
+#. module: edi_queue_oca
+#: model:ir.model.fields,field_description:edi_queue_oca.field_edi_exchange_type__job_channel_id
+msgid "Job Channel"
+msgstr ""
+
+#. module: edi_queue_oca
+#: model:ir.model.fields,field_description:edi_queue_oca.field_edi_exchange_type__job_priority
+msgid "Job Priority"
+msgstr ""
+
+#. module: edi_queue_oca
+#: model_terms:ir.ui.view,arch_db:edi_queue_oca.edi_exchange_record_form_view
+msgid "Jobs"
+msgstr ""
+
+#. module: edi_queue_oca
+#: model_terms:ir.ui.view,arch_db:edi_queue_oca.edi_exchange_type_form_view
+msgid "Queue"
+msgstr ""
+
+#. module: edi_queue_oca
+#: model:ir.model.fields,field_description:edi_queue_oca.field_edi_exchange_record__related_queue_jobs_count
+msgid "Related Queue Jobs Count"
+msgstr ""
