@@ -123,6 +123,11 @@ msgid "Exchange Template"
 msgstr ""
 
 #. module: edi_exchange_template_oca
+#: model:ir.model,name:edi_exchange_template_oca.model_edi_oca_template_handler
+msgid "Exchange Template Handler for EDI"
+msgstr ""
+
+#. module: edi_exchange_template_oca
 #: model:ir.model.fields,field_description:edi_exchange_template_oca.field_edi_exchange_template_output__generator
 msgid "Generator"
 msgstr ""
