@@ -17,99 +17,60 @@ msgstr ""
 "X-Generator: Weblate 5.10.4\n"
 
 #. module: edi_account_oca
-#: model_terms:ir.ui.view,arch_db:edi_account_oca.account_move_form_view
-msgid "<span class=\"o_stat_text\">EDI</span>"
-msgstr "<span class=\"o_stat_text\">EDI</span>"
-
-#. module: edi_account_oca
-#: model:ir.actions.act_window,name:edi_account_oca.act_open_edi_exchange_record_account_move_view
-msgid "Account Moves Exchange Record"
-msgstr "Recod scambio movimenti conto"
-
-#. module: edi_account_oca
-#: model:ir.model.fields,field_description:edi_account_oca.field_account_bank_statement_line__edi_disable_auto
-#: model:ir.model.fields,field_description:edi_account_oca.field_account_move__edi_disable_auto
-msgid "Disable auto"
-msgstr "Disabilita automatico"
-
-#. module: edi_account_oca
-#: model_terms:ir.ui.view,arch_db:edi_account_oca.view_account_journal_form
-#: model_terms:ir.ui.view,arch_db:edi_account_oca.view_partner_form
-msgid "EDI Configuration"
-msgstr "Configurazione EDI"
-
-#. module: edi_account_oca
-#: model:ir.model.fields,field_description:edi_account_oca.field_account_move__origin_edi_endpoint_id
-msgid "EDI origin endpoint"
-msgstr "Endpoint origine EDI"
-
-#. module: edi_account_oca
-#: model:ir.model.fields,field_description:edi_account_oca.field_account_move__origin_exchange_type_id
-msgid "EDI origin exchange type"
-msgstr "Tipo scambio origine EDI"
-
-#. module: edi_account_oca
-#: model:ir.model.fields,field_description:edi_account_oca.field_account_move__origin_exchange_record_id
-msgid "EDI origin record"
-msgstr "Record origine EDI"
-
-#. module: edi_account_oca
-#: model:ir.model.fields,help:edi_account_oca.field_account_move__origin_exchange_record_id
-msgid "EDI record that originated this document."
-msgstr "Record EDI che ha generato questo documento."
-
-#. module: edi_account_oca
-#: model:ir.model.fields,field_description:edi_account_oca.field_account_move__edi_config
-msgid "Edi Config"
-msgstr "Configurazione EDI"
-
-#. module: edi_account_oca
-#: model:ir.model.fields,field_description:edi_account_oca.field_account_move__edi_has_form_config
-msgid "Edi Has Form Config"
-msgstr "EDI ha una maschera di configurazione"
-
-#. module: edi_account_oca
-#: model_terms:ir.ui.view,arch_db:edi_account_oca.account_move_form_view
-msgid "Electronic Data Interchange"
-msgstr "Scambio Dati Elettronico"
-
-#. module: edi_account_oca
-#: model:ir.model.fields,field_description:edi_account_oca.field_account_move__exchange_record_ids
-msgid "Exchange Record"
-msgstr "Record di scambio"
-
-#. module: edi_account_oca
-#: model:ir.model.fields,field_description:edi_account_oca.field_account_move__exchange_record_count
-msgid "Exchange Record Count"
-msgstr "Conteggio record di scambio"
-
-#. module: edi_account_oca
-#: model:ir.model.fields,field_description:edi_account_oca.field_account_move__exchange_related_record_ids
-msgid "Exchange Related Record"
-msgstr "Record relativo allo scambio"
-
-#. module: edi_account_oca
-#: model:ir.ui.menu,name:edi_account_oca.menu_account_edi_root
-msgid "Exchange records"
-msgstr "Record di scambio"
-
-#. module: edi_account_oca
 #: model:ir.model,name:edi_account_oca.model_account_move
 msgid "Journal Entry"
 msgstr "Registrazione contabile"
 
-#. module: edi_account_oca
-#: model:ir.ui.menu,name:edi_account_oca.menu_account_edi_exchange_record
-msgid "Moves"
-msgstr "Movimenti"
+#~ msgid "<span class=\"o_stat_text\">EDI</span>"
+#~ msgstr "<span class=\"o_stat_text\">EDI</span>"
 
-#. module: edi_account_oca
-#: model:ir.model.fields,help:edi_account_oca.field_account_move__origin_edi_endpoint_id
-msgid "Record generated via this endpoint"
-msgstr "Record generato attraverso questo endpoint"
+#~ msgid "Account Moves Exchange Record"
+#~ msgstr "Recod scambio movimenti conto"
 
-#. module: edi_account_oca
-#: model:ir.model.fields,help:edi_account_oca.field_account_bank_statement_line__edi_disable_auto
-#: model:ir.model.fields,help:edi_account_oca.field_account_move__edi_disable_auto
-msgid "When marked, EDI automatic processing will be avoided"
-msgstr "Quando selezionata, l'elaborazione EDI automatica verrà evitata"
+#~ msgid "Disable auto"
+#~ msgstr "Disabilita automatico"
+
+#~ msgid "EDI Configuration"
+#~ msgstr "Configurazione EDI"
+
+#~ msgid "EDI origin endpoint"
+#~ msgstr "Endpoint origine EDI"
+
+#~ msgid "EDI origin exchange type"
+#~ msgstr "Tipo scambio origine EDI"
+
+#~ msgid "EDI origin record"
+#~ msgstr "Record origine EDI"
+
+#~ msgid "EDI record that originated this document."
+#~ msgstr "Record EDI che ha generato questo documento."
+
+#~ msgid "Edi Config"
+#~ msgstr "Configurazione EDI"
+
+#~ msgid "Edi Has Form Config"
+#~ msgstr "EDI ha una maschera di configurazione"
+
+#~ msgid "Electronic Data Interchange"
+#~ msgstr "Scambio Dati Elettronico"
+
+#~ msgid "Exchange Record"
+#~ msgstr "Record di scambio"
+
+#~ msgid "Exchange Record Count"
+#~ msgstr "Conteggio record di scambio"
+
+#~ msgid "Exchange Related Record"
+#~ msgstr "Record relativo allo scambio"
+
+#~ msgid "Exchange records"
+#~ msgstr "Record di scambio"
+
+#~ msgid "Moves"
+#~ msgstr "Movimenti"
+
+#~ msgid "Record generated via this endpoint"
+#~ msgstr "Record generato attraverso questo endpoint"
+
+#~ msgid "When marked, EDI automatic processing will be avoided"
+#~ msgstr "Quando selezionata, l'elaborazione EDI automatica verrà evitata"
