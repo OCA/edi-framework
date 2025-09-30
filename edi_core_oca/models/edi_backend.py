@@ -637,7 +637,7 @@ class EDIBackend(models.Model):
         model = exchange_record.type_id[f"{action}_model_id"]
         if model:
             ctx = self._get_record_env_ctx(exchange_record, action)
-            return getattr(self.env[model.model].with_context(**ctx), action)
+            return getattr(self.env[model].with_context(**ctx), action)
         raise EDINotImplementedError(
             self.env._("No handler for %(action)s", action=action)
         )
