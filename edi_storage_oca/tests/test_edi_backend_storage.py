@@ -8,7 +8,7 @@ from .common import TestEDIStorageBase
 
 LOGGERS = (
     "odoo.addons.edi_storage_oca.components.check",
-    "odoo.addons.edi_oca.models.edi_backend",
+    "odoo.addons.edi_core_oca.models.edi_backend",
 )
 
 
@@ -210,13 +210,14 @@ class TestEDIBackendOutput(TestEDIStorageBase):
         input_dir = "/test_input/pending/"
         file_names = ["some-file.csv", "another-file.csv"]
         self.backend.input_dir_pending = input_dir
+        self.backend.flush_recordset()
         mocked_paths = {
             input_dir: "/tmp/",
             self._file_fullpath(
-                "pending", fname=file_names[0], checker=self.checker_input
+                "pending", fname=file_names[0], record=self.record_input
             ): self.fakepath_input_pending_1,
             self._file_fullpath(
-                "pending", fname=file_names[1], checker=self.checker_input
+                "pending", fname=file_names[1], record=self.record_input
             ): self.fakepath_input_pending_2,
         }
         existing_records = self.env["edi.exchange.record"].search(

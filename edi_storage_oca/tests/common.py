@@ -4,25 +4,34 @@ import base64
 import functools
 from unittest import mock
 
-from odoo.addons.edi_oca.tests.common import EDIBackendCommonComponentTestCase
+from odoo.addons.edi_core_oca.tests.common import EDIBackendCommonTestCase
 
 FS_STORAGE_MOCK_PATH = "odoo.addons.edi_storage_oca.utils"
 
 
-class TestEDIStorageBase(EDIBackendCommonComponentTestCase):
+class TestEDIStorageBase(EDIBackendCommonTestCase):
     @classmethod
     def _get_backend(cls):
         return cls.env.ref("edi_storage_oca.demo_edi_backend_storage")
 
     @classmethod
     def _setup_records(cls):
-        super()._setup_records()
+        res = super()._setup_records()
         cls.filedata = base64.b64encode(b"This is a simple file")
         vals = {
             "model": cls.partner._name,
             "res_id": cls.partner.id,
             "exchange_file": cls.filedata,
         }
+        cls.exchange_type_out.send_model_id = cls.env.ref(
+            "edi_storage_oca.model_edi_oca_storage_handler"
+        )
+        cls.exchange_type_out.check_model_id = cls.env.ref(
+            "edi_storage_oca.model_edi_oca_storage_handler"
+        )
+        cls.exchange_type_in.receive_model_id = cls.env.ref(
+            "edi_storage_oca.model_edi_oca_storage_handler"
+        )
         cls.record = cls.backend.create_record("test_csv_output", vals)
         cls.record_input = cls.backend.create_record("test_csv_input", vals)
 
@@ -45,23 +54,7 @@ class TestEDIStorageBase(EDIBackendCommonComponentTestCase):
         cls.fakepath_input_pending_2 = "/tmp/test-input-002.csv"
         with open(cls.fakepath_input_pending_2, "w+b") as fakefile:
             fakefile.write(b"I received that in my storage.")
-
-        cls.checker = cls.backend._find_component(
-            cls.partner._name,
-            ["storage.check"],
-            work_ctx={"exchange_record": cls.record},
-        )
-        cls.checker_input = cls.backend._find_component(
-            cls.partner._name,
-            ["storage.check"],
-            work_ctx={"exchange_record": cls.record_input},
-        )
-        cls.sender = cls.backend._find_component(
-            cls.partner._name,
-            ["storage.send"],
-            work_ctx={"exchange_record": cls.record},
-        )
-        return
+        return res
 
     def setUp(self):
         super().setUp()
@@ -73,16 +66,19 @@ class TestEDIStorageBase(EDIBackendCommonComponentTestCase):
             record.type_id.ack_type_id._make_exchange_filename(record)
         return record.exchange_filename
 
-    def _file_fullpath(self, state, record=None, ack=False, fname=None, checker=None):
+    def _file_fullpath(self, state, record=None, ack=False, fname=None):
         record = record or self.record
-        checker = checker or self.checker
         if not fname:
             fname = self._filename(record, ack=ack)
         if state == "error-report":
             # Exception as we read from the same path but w/ error suffix
             state = "error"
             fname += ".error"
-        return checker._get_remote_file_path(state, filename=fname).as_posix()
+        return (
+            self.env["edi.oca.storage.handler"]
+            ._get_remote_file_path(record, state, filename=fname)
+            .as_posix()
+        )
 
     def _mocked_backend_get(self, mocked_paths, storage, path, **kwargs):
         self._fs_storage_calls.append(path)

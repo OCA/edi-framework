@@ -59,8 +59,6 @@ class EDIBackend(models.Model):
         "Output error directory", help="Path to folder for error operations"
     )
 
-    _storage_actions = ("check", "send", "receive")
-
     def _get_component_usage_candidates(self, exchange_record, key):
         candidates = super()._get_component_usage_candidates(exchange_record, key)
         if not self.storage_id or key not in self._storage_actions:
@@ -113,9 +111,7 @@ class EDIBackend(models.Model):
                 len(file_names),
             )
             for file_name in file_names:
-                self.with_delay()._storage_create_record_if_missing(
-                    exchange_type, file_name
-                )
+                self._storage_create_record_if_missing(exchange_type, file_name)
         return True
 
     def _storage_exchange_type_pending_input_domain(self):
