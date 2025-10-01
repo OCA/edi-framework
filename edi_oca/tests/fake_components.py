@@ -1,5 +1,5 @@
 # ruff: noqa: F401
-from odoo.addons.edi_component_oca.tests.fale_components import (
+from odoo.addons.edi_component_oca.tests.fake_components import (
     FakeComponentMixin,
     FakeConfigurationListener,
     FakeInputProcess,
