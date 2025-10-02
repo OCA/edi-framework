@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2025-06-14 09:26+0000\n"
+"PO-Revision-Date: 2025-10-02 21:43+0000\n"
 "Last-Translator: mymage <stefano.consolaro@mymage.it>\n"
 "Language-Team: none\n"
 "Language: it\n"
@@ -128,7 +128,7 @@ msgstr "Modello scambio"
 #. module: edi_exchange_template_oca
 #: model:ir.model,name:edi_exchange_template_oca.model_edi_oca_template_handler
 msgid "Exchange Template Handler for EDI"
-msgstr ""
+msgstr "Gestore modello scambio per EDI"
 
 #. module: edi_exchange_template_oca
 #: model:ir.model.fields,field_description:edi_exchange_template_oca.field_edi_exchange_template_output__generator
