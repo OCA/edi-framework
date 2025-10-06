@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2025-10-06 11:42+0000\n"
+"PO-Revision-Date: 2025-10-06 14:43+0000\n"
 "Last-Translator: mymage <stefano.consolaro@mymage.it>\n"
 "Language-Team: none\n"
 "Language: it\n"
@@ -1188,38 +1188,37 @@ msgstr "Identificatore interno o esterno per i record."
 #. module: edi_core_oca
 #: model:ir.model.fields,field_description:edi_core_oca.field_ir_model__is_edi_checker
 msgid "Is Edi Checker"
-msgstr ""
+msgstr "È un controllore EDI"
 
 #. module: edi_core_oca
 #: model:ir.model.fields,field_description:edi_core_oca.field_ir_model__is_edi_generator
 msgid "Is Edi Generator"
-msgstr ""
+msgstr "È un generatore EDI"
 
 #. module: edi_core_oca
 #: model:ir.model.fields,field_description:edi_core_oca.field_ir_model__is_edi_input_validator
 msgid "Is Edi Input Validator"
-msgstr ""
+msgstr "È un validatore ingresso EDI"
 
 #. module: edi_core_oca
 #: model:ir.model.fields,field_description:edi_core_oca.field_ir_model__is_edi_output_validator
 msgid "Is Edi Output Validator"
-msgstr ""
+msgstr "È un validatore uscita EDI"
 
 #. module: edi_core_oca
 #: model:ir.model.fields,field_description:edi_core_oca.field_ir_model__is_edi_processor
 msgid "Is Edi Processor"
-msgstr ""
+msgstr "È un elaboratore EDI"
 
 #. module: edi_core_oca
 #: model:ir.model.fields,field_description:edi_core_oca.field_ir_model__is_edi_receiver
-#, fuzzy
 msgid "Is Edi Receiver"
-msgstr "Ricevuto"
+msgstr "È un ricevitore EDI"
 
 #. module: edi_core_oca
 #: model:ir.model.fields,field_description:edi_core_oca.field_ir_model__is_edi_sender
 msgid "Is Edi Sender"
-msgstr ""
+msgstr "È un mittente EDI"
 
 #. module: edi_core_oca
 #: model:ir.model.fields,field_description:edi_core_oca.field_edi_exchange_record__message_is_follower
@@ -1305,9 +1304,8 @@ msgstr ""
 
 #. module: edi_core_oca
 #: model:ir.model,name:edi_core_oca.model_ir_model
-#, fuzzy
 msgid "Models"
-msgstr "Modello"
+msgstr "Modelli"
 
 #. module: edi_core_oca
 #: model:ir.model.fields,field_description:edi_core_oca.field_edi_backend__name
@@ -1328,7 +1326,7 @@ msgstr "Nuovo"
 #. odoo-python
 #: code:addons/edi_core_oca/models/edi_backend.py:0
 msgid "No handler for %(action)s"
-msgstr ""
+msgstr "Nessun handler per %(action)s"
 
 #. module: edi_core_oca
 #: model:ir.model.fields,field_description:edi_core_oca.field_edi_exchange_record__message_needaction_counter
@@ -1380,7 +1378,7 @@ msgstr "Output ha inviato auto elaborato"
 #. module: edi_core_oca
 #: model:ir.model.fields,field_description:edi_core_oca.field_edi_exchange_type__output_validate_model_id
 msgid "Output Validator"
-msgstr ""
+msgstr "Validatore uscita"
 
 #. module: edi_core_oca
 #: model:ir.model.fields,field_description:edi_core_oca.field_edi_exchange_record__parent_id
@@ -1412,9 +1410,8 @@ msgstr "Processato"
 
 #. module: edi_core_oca
 #: model:ir.model.fields,field_description:edi_core_oca.field_edi_exchange_type__process_model_id
-#, fuzzy
 msgid "Processor"
-msgstr "Processato"
+msgstr "Processore"
 
 #. module: edi_core_oca
 #: model:ir.model.fields,field_description:edi_core_oca.field_edi_exchange_type__quick_exec
@@ -1434,9 +1431,8 @@ msgstr "Ricevuto"
 
 #. module: edi_core_oca
 #: model:ir.model.fields,field_description:edi_core_oca.field_edi_exchange_type__receive_model_id
-#, fuzzy
 msgid "Receiver"
-msgstr "Ricevuto"
+msgstr "Ricevitore"
 
 #. module: edi_core_oca
 #: model:ir.ui.menu,name:edi_core_oca.menu_edi_exchange_record_recent
@@ -1566,7 +1562,7 @@ msgstr "Regole per gestire scambi e UI automaticamente"
 #. module: edi_core_oca
 #: model:ir.model.fields,field_description:edi_core_oca.field_edi_exchange_type__send_model_id
 msgid "Sender"
-msgstr ""
+msgstr "Mittente"
 
 #. module: edi_core_oca
 #: model:ir.model.fields.selection,name:edi_core_oca.selection__edi_exchange_record__edi_exchange_state__output_sent
