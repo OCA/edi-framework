@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2025-09-15 08:42+0000\n"
+"PO-Revision-Date: 2025-10-06 11:42+0000\n"
 "Last-Translator: mymage <stefano.consolaro@mymage.it>\n"
 "Language-Team: none\n"
 "Language: it\n"
@@ -416,7 +416,7 @@ msgstr "Annulla"
 #. module: edi_core_oca
 #: model:ir.model.fields,field_description:edi_core_oca.field_edi_exchange_type__check_model_id
 msgid "Checker"
-msgstr ""
+msgstr "Controllore"
 
 #. module: edi_core_oca
 #: model:ir.model.fields,field_description:edi_core_oca.field_edi_backend__backend_type_code
@@ -628,37 +628,37 @@ msgstr "Mixin ID EDI"
 #. module: edi_core_oca
 #: model:ir.model,name:edi_core_oca.model_edi_oca_handler_check
 msgid "EDI OCA Handler Check"
-msgstr ""
+msgstr "Controllo handler OCA EDI"
 
 #. module: edi_core_oca
 #: model:ir.model,name:edi_core_oca.model_edi_oca_handler_generate
 msgid "EDI OCA Handler Generate"
-msgstr ""
+msgstr "Genera handler OCA EDI"
 
 #. module: edi_core_oca
 #: model:ir.model,name:edi_core_oca.model_edi_oca_handler_input_validate
 msgid "EDI OCA Handler Input Validate"
-msgstr ""
+msgstr "Validazione ingresso handler OCA EDI"
 
 #. module: edi_core_oca
 #: model:ir.model,name:edi_core_oca.model_edi_oca_handler_output_validate
 msgid "EDI OCA Handler Output Validate"
-msgstr ""
+msgstr "Validazione uscita handler OCA EDI"
 
 #. module: edi_core_oca
 #: model:ir.model,name:edi_core_oca.model_edi_oca_handler_process
 msgid "EDI OCA Handler Process"
-msgstr ""
+msgstr "Processo handler OCA EDI"
 
 #. module: edi_core_oca
 #: model:ir.model,name:edi_core_oca.model_edi_oca_handler_receive
 msgid "EDI OCA Handler Receive"
-msgstr ""
+msgstr "Ricezione handler OCA EDI"
 
 #. module: edi_core_oca
 #: model:ir.model,name:edi_core_oca.model_edi_oca_handler_send
 msgid "EDI OCA Handler Send"
-msgstr ""
+msgstr "Invio handler OCA EDI"
 
 #. module: edi_core_oca
 #: model:ir.model,name:edi_core_oca.model_edi_exchange_record
@@ -981,7 +981,7 @@ msgstr "Scambi - in attesa"
 #. module: edi_core_oca
 #: model_terms:ir.ui.view,arch_db:edi_core_oca.edi_exchange_type_view_form
 msgid "Execution handlers"
-msgstr ""
+msgstr "Esecuzione handler"
 
 #. module: edi_core_oca
 #: model:ir.model.fields,field_description:edi_core_oca.field_edi_exchange_record__external_identifier
@@ -1069,9 +1069,8 @@ msgstr "Genera record di scambio"
 
 #. module: edi_core_oca
 #: model:ir.model.fields,field_description:edi_core_oca.field_edi_exchange_type__generate_model_id
-#, fuzzy
 msgid "Generator"
-msgstr "Genera"
+msgstr "Generatore"
 
 #. module: edi_core_oca
 #: model_terms:ir.ui.view,arch_db:edi_core_oca.edi_exchange_record_view_search
@@ -1179,7 +1178,7 @@ msgstr "Input"
 #. module: edi_core_oca
 #: model:ir.model.fields,field_description:edi_core_oca.field_edi_exchange_type__input_validate_model_id
 msgid "Input Validator"
-msgstr ""
+msgstr "Validatore ingresso"
 
 #. module: edi_core_oca
 #: model:ir.model.fields,help:edi_core_oca.field_edi_id_mixin__edi_id
