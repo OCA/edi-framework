@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2025-10-06 14:43+0000\n"
+"PO-Revision-Date: 2025-10-07 09:43+0000\n"
 "Last-Translator: mymage <stefano.consolaro@mymage.it>\n"
 "Language-Team: none\n"
 "Language: it\n"
@@ -243,7 +243,7 @@ msgstr "Ricevuto ACK su"
 #. module: edi_core_oca
 #: model:ir.model,name:edi_core_oca.model_edi_exchange_consumer_mixin
 msgid "Abstract record where exchange records can be assigned"
-msgstr "Record astratto dove i recod di scambio possono essere assegnati"
+msgstr "Record astratto dove i record di scambio possono essere assegnati"
 
 #. module: edi_core_oca
 #: model:ir.model.fields,field_description:edi_core_oca.field_edi_exchange_record__ack_expected
@@ -348,7 +348,7 @@ msgid ""
 "Auto generate output for records missing their payload. If active, a cron "
 "will take care of generating the output when not set yet. "
 msgstr ""
-"Genera automaticamento l'output per i record che hanno perso il loro "
+"Genera automaticamente l'output per i record che hanno perso il loro "
 "contenuto. Se attiva, un cron gestirà la generazione dell'output quando non "
 "ancora impostato. "
 
