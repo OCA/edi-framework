@@ -23,3 +23,9 @@ class EDIBackendTypeTestCase(EDIBackendCommonTestCase):
                 self.backend_type_model.create(
                     {"name": "Test new type", "code": existing_code}
                 )
+
+    def test_copy(self):
+        new_type = self.backend.backend_type_id.copy()
+        self.assertEqual(
+            new_type.code, f"{self.backend.backend_type_id.code}_copy_fixme"
+        )
