@@ -11,6 +11,14 @@ from .common import EDIBackendCommonTestCase
 
 
 class EDIExchangeTypeTestCase(EDIBackendCommonTestCase):
+    def test_copy(self):
+        new_type = self.exchange_type_out.copy()
+        self.assertEqual(new_type.code, f"{self.exchange_type_out.code}/COPY_FIXME")
+        self.assertEqual(
+            new_type.backend_type_id, self.exchange_type_out.backend_type_id
+        )
+        self.assertEqual(new_type.backend_id, self.exchange_type_out.backend_id)
+
     def test_ack_for(self):
         self.assertEqual(self.exchange_type_out.ack_type_id, self.exchange_type_out_ack)
         new_type = self.exchange_type_out.copy({"code": "just_a_test"})

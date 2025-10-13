@@ -321,3 +321,11 @@ class EDIExchangeType(models.Model):
         if exc_type.partner_ids:
             return partner.id in exc_type.partner_ids.ids
         return True
+
+    def copy_data(self, default=None):
+        # OVERRIDE: ``code`` cannot be copied as it must me unique.
+        # Yet, we want to be able to duplicate a record from the UI.
+        self.ensure_one()
+        default = dict(default or {})
+        default.setdefault("code", f"{self.code}/COPY_FIXME")
+        return super().copy_data(default=default)
