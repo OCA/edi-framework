@@ -3,7 +3,7 @@
 from openupgradelib import openupgrade
 
 
-@openupgrade.migrate
+@openupgrade.migrate()
 def migrate(env, version):
     env["edi.exchange.type"].search(
         [
