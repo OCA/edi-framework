@@ -69,13 +69,16 @@ class EDIBackendTestOutputCase(EDIBackendCommonTestCase):
         self.assertFalse(self.record.exchanged_on)
         with freeze_time("2020-10-21 10:00:00"):
             self.record.action_exchange_send()
-        self.assertTrue(
-            self.ExecutionAbstractModel.check_called_for(self.record, "send")
-        )
-        self.assertRecordValues(self.record, [{"edi_exchange_state": "output_sent"}])
-        self.assertEqual(
-            fields.Datetime.to_string(self.record.exchanged_on), "2020-10-21 10:00:00"
-        )
+            self.assertTrue(
+                self.ExecutionAbstractModel.check_called_for(self.record, "send")
+            )
+            self.assertRecordValues(
+                self.record, [{"edi_exchange_state": "output_sent"}]
+            )
+            self.assertEqual(
+                fields.Datetime.to_string(self.record.exchanged_on),
+                "2020-10-21 10:00:00",
+            )
 
     def test_send_record_with_error(self):
         self.record.write({"edi_exchange_state": "output_pending"})

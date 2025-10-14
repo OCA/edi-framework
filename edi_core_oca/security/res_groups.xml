@@ -8,4 +8,12 @@
             eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]"
         />
     </record>
+    <record id="group_edi_override_exchange_file_content" model="res.groups">
+        <field name="name">EDI Override Exchange File Content</field>
+        <field name="category_id" ref="base_edi.module_category_edi" />
+        <field
+            name="users"
+            eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]"
+        />
+    </record>
 </odoo>

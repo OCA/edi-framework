@@ -65,13 +65,21 @@ class EDIExchangeRecord(models.Model):
         compute="_compute_exchange_filename", readonly=False, store=True
     )
     exchange_filechecksum = fields.Char(
-        compute="_compute_exchange_filechecksum", store=True
+        compute="_compute_exchange_filechecksum",
+        store=True,
+        tracking=True,
+        readonly=True,
     )
     exchanged_on = fields.Datetime(
         help="Sent or received on this date.",
         compute="_compute_exchanged_on",
         store=True,
-        readonly=False,
+        readonly=True,
+    )
+    exchange_file_frozen = fields.Boolean(
+        help="Not allowed to change the file anymore.",
+        compute="_compute_exchange_file_frozen",
+        compute_sudo=True,
     )
     edi_exchange_state = fields.Selection(
         string="Exchange state",
@@ -171,6 +179,17 @@ class EDIExchangeRecord(models.Model):
         for rec in self:
             if rec.edi_exchange_state in ("input_received", "output_sent"):
                 rec.exchanged_on = fields.Datetime.now()
+
+    @api.depends("exchange_file", "edi_exchange_state")
+    def _compute_exchange_file_frozen(self):
+        for rec in self:
+            rec.exchange_file_frozen = bool(
+                rec.exchange_file
+                and rec.edi_exchange_state
+                in ("input_processed", "output_sent", "output_sent_and_processed")
+            ) and not self.env.user.has_group(
+                "edi_core_oca.group_edi_override_exchange_file_content"
+            )
 
     @api.constrains("edi_exchange_state")
     def _constrain_edi_exchange_state(self):

@@ -208,6 +208,23 @@ class EDIRecordTestCase(EDIBackendCommonTestCase):
         self.assertEqual(record0.exchange_filechecksum, checksum2)
         self.assertNotEqual(record0.exchange_filechecksum, checksum1)
 
+    def test_file_frozen(self):
+        filecontent = base64.b64encode(b"ABC")
+        vals = {
+            "model": self.partner._name,
+            "res_id": self.partner.id,
+            "exchange_file": filecontent,
+        }
+        record0 = self.backend.create_record("test_csv_output", vals)
+        bypass_group = "edi_core_oca.group_edi_override_exchange_file_content"
+        self.assertTrue(self.env.user.has_group(bypass_group))
+        self.assertFalse(record0.exchange_file_frozen)
+        record0.edi_exchange_state = "output_sent"
+        self.assertFalse(record0.exchange_file_frozen)
+        self.env.user.groups_id -= self.env.ref(bypass_group)
+        record0.invalidate_recordset()
+        self.assertTrue(record0.exchange_file_frozen)
+
     def test_related_records(self):
         vals = {
             "model": self.partner._name,

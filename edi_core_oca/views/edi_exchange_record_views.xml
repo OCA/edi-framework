@@ -123,11 +123,19 @@
                         </group>
                         <group name="status" string="Status">
                             <field name="exchanged_on" />
-                            <field name="exchange_file" filename="exchange_filename" />
-                            <field name="exchange_filename" invisible="exchange_file" />
+                            <field
+                                name="exchange_file"
+                                filename="exchange_filename"
+                                readonly="exchange_file_frozen"
+                            />
+                            <field
+                                name="exchange_filename"
+                                invisible="exchange_file"
+                                readonly="exchange_file_frozen"
+                            />
                             <field
                                 name="exchange_filechecksum"
-                                invisible="exchange_file"
+                                invisible="not exchange_file"
                             />
                         </group>
                         <group name="ack" string="ACK" invisible="not ack_expected">
