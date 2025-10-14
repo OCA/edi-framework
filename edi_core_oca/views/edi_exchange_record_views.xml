@@ -143,22 +143,6 @@
                             <field name="ack_exchange_id" />
                             <field name="ack_received_on" />
                         </group>
-                        <group
-                            name="related_odoo_record"
-                            string="Related record"
-                            groups="base.group_no_one"
-                            invisible="res_id == 0"
-                        >
-                            <field name="res_id" readonly="1" />
-                            <field name="model" readonly="1" />
-                            <span
-                                class="text-warning"
-                                invisible="related_record_exists"
-                            >
-                                The related record is not available anymore.
-                                Consider deleting this record too or fixing its relation.
-                            </span>
-                        </group>
                     </group>
                     <notebook>
                         <page
@@ -204,6 +188,20 @@
                                     />
                                 </list>
                             </field>
+                            <group
+                                name="related_odoo_record"
+                                groups="base.group_no_one"
+                                invisible="res_id == 0"
+                            >
+                                <div
+                                    class="alert alert-danger"
+                                    role="alert"
+                                    invisible="related_record_exists"
+                                >
+                                    The related record is not available anymore.
+                                    Consider deleting this record too or fixing its relation.
+                                </div>
+                            </group>
                         </page>
                     </notebook>
                 </sheet>
