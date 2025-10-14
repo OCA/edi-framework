@@ -2,6 +2,8 @@
 # @author: Simone Orsi <simone.orsi@camptocamp.com>
 # License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl).
 
+import base64
+
 from odoo import exceptions
 
 from odoo.addons.endpoint.tests.common import CommonEndpoint
@@ -53,3 +55,8 @@ class TestEndpoint(CommonEndpoint):
     def test_sync(self):
         # FIXME: just testing if the method here is available on GH
         self.endpoint._handle_registry_sync()
+
+    def test_create_exchange_record_with_file_content(self):
+        content = "This is a test"
+        rec = self.endpoint.create_exchange_record(file_content=content)
+        self.assertEqual(base64.b64decode(rec.exchange_file).decode("utf-8"), content)

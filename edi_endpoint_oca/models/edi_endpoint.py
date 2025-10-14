@@ -1,6 +1,8 @@
 # Copyright 2021 Camptocamp SA
 # @author: Simone Orsi <simone.orsi@camptocamp.com>
 # License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl).
+import base64
+
 import werkzeug
 
 from odoo import _, api, exceptions, fields, models
@@ -32,18 +34,20 @@ class EDIEndpoint(models.Model):
         domain="[('backend_type_id','=', backend_type_id)]",
     )
 
-    # TODO: add unit tests
-
-    def create_exchange_record(self, file_content=None, **vals):
+    def create_exchange_record(self, file_content=None, encoding="utf-8", **vals):
         """Create an EDI exchange record from current endpoint.
 
         Just a shortcut.
         """
         self._check_endpoint_ready()
         vals["edi_endpoint_id"] = self.id
-        rec = self.backend_id.create_record(self.exchange_type_id.code, vals)
+
         if file_content:
-            rec._set_file_content(file_content)
+            if not isinstance(file_content, bytes):
+                file_content = bytes(file_content, encoding)
+            vals["exchange_file"] = base64.b64encode(file_content)
+
+        rec = self.backend_id.create_record(self.exchange_type_id.code, vals)
         return rec
 
     def _check_endpoint_ready(self, request=False):
