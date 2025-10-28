@@ -99,17 +99,6 @@ msgid "<span class=\"pe-4\"><i class=\"fa fa-retweet\"/> EDI actions</span>"
 msgstr ""
 
 #. module: edi_core_oca
-#: model_terms:ir.ui.view,arch_db:edi_core_oca.edi_exchange_record_view_form
-msgid ""
-"<span class=\"text-warning\" invisible=\"related_record_exists\">\n"
-"                                The related record is not available "
-"anymore.\n"
-"                                Consider deleting this record too or fixing "
-"its relation.\n"
-"                            </span>"
-msgstr ""
-
-#. module: edi_core_oca
 #: model_terms:ir.ui.view,arch_db:edi_core_oca.message_edi_exchange_link
 msgid "<strong>EDI exchange:</strong>"
 msgstr ""
@@ -459,11 +448,21 @@ msgstr ""
 #: model:ir.model.fields,field_description:edi_core_oca.field_edi_backend_type__display_name
 #: model:ir.model.fields,field_description:edi_core_oca.field_edi_configuration__display_name
 #: model:ir.model.fields,field_description:edi_core_oca.field_edi_configuration_trigger__display_name
+#: model:ir.model.fields,field_description:edi_core_oca.field_edi_exchange_consumer_mixin__display_name
 #: model:ir.model.fields,field_description:edi_core_oca.field_edi_exchange_record__display_name
 #: model:ir.model.fields,field_description:edi_core_oca.field_edi_exchange_record_create_wiz__display_name
 #: model:ir.model.fields,field_description:edi_core_oca.field_edi_exchange_related_record__display_name
 #: model:ir.model.fields,field_description:edi_core_oca.field_edi_exchange_type__display_name
 #: model:ir.model.fields,field_description:edi_core_oca.field_edi_exchange_type_rule__display_name
+#: model:ir.model.fields,field_description:edi_core_oca.field_edi_id_mixin__display_name
+#: model:ir.model.fields,field_description:edi_core_oca.field_edi_oca_handler_check__display_name
+#: model:ir.model.fields,field_description:edi_core_oca.field_edi_oca_handler_generate__display_name
+#: model:ir.model.fields,field_description:edi_core_oca.field_edi_oca_handler_input_validate__display_name
+#: model:ir.model.fields,field_description:edi_core_oca.field_edi_oca_handler_output_validate__display_name
+#: model:ir.model.fields,field_description:edi_core_oca.field_edi_oca_handler_process__display_name
+#: model:ir.model.fields,field_description:edi_core_oca.field_edi_oca_handler_receive__display_name
+#: model:ir.model.fields,field_description:edi_core_oca.field_edi_oca_handler_send__display_name
+#: model:ir.model.fields,field_description:edi_core_oca.field_ir_model__display_name
 msgid "Display Name"
 msgstr ""
 
@@ -588,6 +587,11 @@ msgid "EDI OCA Handler Send"
 msgstr ""
 
 #. module: edi_core_oca
+#: model:res.groups,name:edi_core_oca.group_edi_override_exchange_file_content
+msgid "EDI Override Exchange File Content"
+msgstr ""
+
+#. module: edi_core_oca
 #: model:ir.model,name:edi_core_oca.model_edi_exchange_record
 msgid "EDI exchange Record"
 msgstr ""
@@ -709,6 +713,11 @@ msgstr ""
 #. module: edi_core_oca
 #: model:ir.model.fields,field_description:edi_core_oca.field_edi_exchange_type__exchange_file_ext
 msgid "Exchange File Ext"
+msgstr ""
+
+#. module: edi_core_oca
+#: model:ir.model.fields,field_description:edi_core_oca.field_edi_exchange_record__exchange_file_frozen
+msgid "Exchange File Frozen"
 msgstr ""
 
 #. module: edi_core_oca
@@ -983,13 +992,6 @@ msgid "Generator"
 msgstr ""
 
 #. module: edi_core_oca
-#: model_terms:ir.ui.view,arch_db:edi_core_oca.edi_exchange_record_view_search
-#: model_terms:ir.ui.view,arch_db:edi_core_oca.edi_exchange_type_rule_view_search
-#: model_terms:ir.ui.view,arch_db:edi_core_oca.edi_exchange_type_view_search
-msgid "Group By"
-msgstr ""
-
-#. module: edi_core_oca
 #: model:ir.model.fields,help:edi_core_oca.field_edi_exchange_type__encoding_in_error_handler
 msgid ""
 "Handling of decoding errors on process (default is always 'Raise Error')."
@@ -1016,11 +1018,21 @@ msgstr ""
 #: model:ir.model.fields,field_description:edi_core_oca.field_edi_backend_type__id
 #: model:ir.model.fields,field_description:edi_core_oca.field_edi_configuration__id
 #: model:ir.model.fields,field_description:edi_core_oca.field_edi_configuration_trigger__id
+#: model:ir.model.fields,field_description:edi_core_oca.field_edi_exchange_consumer_mixin__id
 #: model:ir.model.fields,field_description:edi_core_oca.field_edi_exchange_record__id
 #: model:ir.model.fields,field_description:edi_core_oca.field_edi_exchange_record_create_wiz__id
 #: model:ir.model.fields,field_description:edi_core_oca.field_edi_exchange_related_record__id
 #: model:ir.model.fields,field_description:edi_core_oca.field_edi_exchange_type__id
 #: model:ir.model.fields,field_description:edi_core_oca.field_edi_exchange_type_rule__id
+#: model:ir.model.fields,field_description:edi_core_oca.field_edi_id_mixin__id
+#: model:ir.model.fields,field_description:edi_core_oca.field_edi_oca_handler_check__id
+#: model:ir.model.fields,field_description:edi_core_oca.field_edi_oca_handler_generate__id
+#: model:ir.model.fields,field_description:edi_core_oca.field_edi_oca_handler_input_validate__id
+#: model:ir.model.fields,field_description:edi_core_oca.field_edi_oca_handler_output_validate__id
+#: model:ir.model.fields,field_description:edi_core_oca.field_edi_oca_handler_process__id
+#: model:ir.model.fields,field_description:edi_core_oca.field_edi_oca_handler_receive__id
+#: model:ir.model.fields,field_description:edi_core_oca.field_edi_oca_handler_send__id
+#: model:ir.model.fields,field_description:edi_core_oca.field_ir_model__id
 msgid "ID"
 msgstr ""
 
@@ -1225,6 +1237,11 @@ msgstr ""
 #. odoo-python
 #: code:addons/edi_core_oca/models/edi_backend.py:0
 msgid "No handler for %(action)s"
+msgstr ""
+
+#. module: edi_core_oca
+#: model:ir.model.fields,help:edi_core_oca.field_edi_exchange_record__exchange_file_frozen
+msgid "Not allowed to change the file anymore."
 msgstr ""
 
 #. module: edi_core_oca
@@ -1559,6 +1576,14 @@ msgid "The record state can be rolled back manually in case of failure."
 msgstr ""
 
 #. module: edi_core_oca
+#: model_terms:ir.ui.view,arch_db:edi_core_oca.edi_exchange_record_view_form
+msgid ""
+"The related record is not available anymore.\n"
+"                                    Consider deleting this record too or "
+"fixing its relation."
+msgstr ""
+
+#. module: edi_core_oca
 #: model:ir.model.fields,field_description:edi_core_oca.field_edi_configuration__trigger_id
 msgid "Trigger"
 msgstr ""
@@ -1597,16 +1622,6 @@ msgid "Waiting to be sent"
 msgstr ""
 
 #. module: edi_core_oca
-#: model:ir.model.fields,field_description:edi_core_oca.field_edi_exchange_record__website_message_ids
-msgid "Website Messages"
-msgstr ""
-
-#. module: edi_core_oca
-#: model:ir.model.fields,help:edi_core_oca.field_edi_exchange_record__website_message_ids
-msgid "Website communication history"
-msgstr ""
-
-#. module: edi_core_oca
 #: model:ir.model.fields,help:edi_core_oca.field_edi_exchange_type__quick_exec
 msgid ""
 "When active, records of this type will be processed immediately without "
@@ -1628,4 +1643,10 @@ msgstr ""
 #. module: edi_core_oca
 #: model:ir.model.fields.selection,name:edi_core_oca.selection__edi_exchange_record__edi_exchange_state__output_error_on_send
 msgid "error on send"
+msgstr ""
+
+#. module: edi_core_oca
+#. odoo-python
+#: code:addons/edi_core_oca/models/edi_configuration.py:0
+msgid "id"
 msgstr ""
