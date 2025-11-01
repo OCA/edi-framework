@@ -634,7 +634,7 @@ class EDIBackend(models.Model):
         return "Nothing to do. Likely already sent."
 
     def _get_exec_handler(self, exchange_record, action):
-        model = exchange_record.type_id[f"{action}_model_id"]
+        model = exchange_record.type_id[f"{action}_model_id"].sudo()
         if model:
             ctx = self._get_record_env_ctx(exchange_record, action)
             return getattr(self.env[model.model].with_context(**ctx), action)
