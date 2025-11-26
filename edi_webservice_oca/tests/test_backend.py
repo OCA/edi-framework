@@ -34,3 +34,15 @@ class TestEdiWebService(EDIBackendCommonTestCase):
     def test_components_without_ws(self):
         components = self.backend._get_component_usage_candidates(self.record, "send")
         self.assertNotIn("webservice.send", components)
+
+    def test_component_lookup_avg_user(self):
+        """Ensure normal users can run the component lookup methods."""
+        user = (
+            self.env["res.users"]
+            .with_context(no_reset_password=True)
+            .create({"name": "Test EDI WS User", "login": "test_edi_ws_perm_user"})
+        )
+        backend = self.backend.with_user(user)
+        backend.sudo().webservice_backend_id = self.webservice
+        backend._get_component_usage_candidates(self.record, "send")
+        backend._component_match_attrs(self.record, "send")

@@ -28,7 +28,7 @@ class EdiBackend(models.Model):
 
     def _component_sort_key(self, component_class):
         res = super()._component_sort_key(component_class)
-        ws_backend = self.webservice_backend_id.sudo()
+        ws_backend = self.webservice_backend_id
         # Override to give precedence by `webservice_protocol` when needed.
         if not ws_backend:
             return res
