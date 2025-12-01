@@ -592,6 +592,11 @@ msgid "EDI OCA Handler Send"
 msgstr "Invio handler OCA EDI"
 
 #. module: edi_oca
+#: model:res.groups,name:edi_oca.group_edi_override_exchange_file_content
+msgid "EDI Override Exchange File Content"
+msgstr ""
+
+#. module: edi_oca
 #: model:ir.model,name:edi_oca.model_edi_exchange_record
 msgid "EDI exchange Record"
 msgstr "Record di scambio EDI"
@@ -711,6 +716,11 @@ msgstr "Auto generazione file scambio"
 #: model:ir.model.fields,field_description:edi_oca.field_edi_exchange_type__exchange_file_ext
 msgid "Exchange File Ext"
 msgstr "Ext file scambio"
+
+#. module: edi_oca
+#: model:ir.model.fields,field_description:edi_oca.field_edi_exchange_record__exchange_file_frozen
+msgid "Exchange File Frozen"
+msgstr ""
 
 #. module: edi_oca
 #: model:ir.model.fields,field_description:edi_oca.field_edi_exchange_record__exchange_filechecksum
@@ -1176,6 +1186,11 @@ msgstr "Nome"
 #: model:ir.model.fields.selection,name:edi_oca.selection__edi_exchange_record__edi_exchange_state__new
 msgid "New"
 msgstr "Nuovo"
+
+#. module: edi_oca
+#: model:ir.model.fields,help:edi_oca.field_edi_exchange_record__exchange_file_frozen
+msgid "Not allowed to change the file anymore."
+msgstr ""
 
 #. module: edi_oca
 #: model:ir.model.fields,field_description:edi_oca.field_edi_exchange_record__message_needaction_counter
