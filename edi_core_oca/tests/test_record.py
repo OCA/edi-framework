@@ -221,7 +221,7 @@ class EDIRecordTestCase(EDIBackendCommonTestCase):
         self.assertFalse(record0.exchange_file_frozen)
         record0.edi_exchange_state = "output_sent"
         self.assertFalse(record0.exchange_file_frozen)
-        self.env.user.groups_id -= self.env.ref(bypass_group)
+        self.env.user.group_ids -= self.env.ref(bypass_group)
         record0.invalidate_recordset()
         self.assertTrue(record0.exchange_file_frozen)
 

@@ -3,7 +3,8 @@
 # License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl).
 
 from freezegun import freeze_time
-from odoo_test_helper import FakeModelLoader
+
+from odoo.orm.model_classes import add_to_registry
 
 from odoo.addons.edi_core_oca.exceptions import EDINotImplementedError
 
@@ -15,21 +16,21 @@ class EDIBackendTestCaseBase(EDIBackendCommonTestCase):
     def _setup_records(cls):  # pylint:disable=missing-return
         super()._setup_records()
         # Load fake models ->/
-        cls.loader = FakeModelLoader(cls.env, cls.__module__)
-        cls.loader.backup_registry()
         from .fake_models import EdiTestExecution
 
-        cls.loader.update_registry((EdiTestExecution,))
+        add_to_registry(cls.registry, EdiTestExecution)
+        cls.registry._setup_models__(cls.env.cr, ["edi.framework.test.execution"])
+        cls.registry.init_models(
+            cls.env.cr,
+            ["edi.framework.test.execution"],
+            {"models_to_check": True},
+        )
+        cls.addClassCleanup(cls.registry.__delitem__, "edi.framework.test.execution")
         cls.ExecutionAbstractModel = cls.env["edi.framework.test.execution"]
         cls.model = cls.env["ir.model"]._get("edi.framework.test.execution")
         cls.exchange_type_in.receive_model_id = cls.model
         cls.exchange_type_in.process_model_id = cls.model
         cls.exchange_type_in.input_validate_model_id = cls.model
-
-    @classmethod
-    def tearDownClass(cls):
-        cls.loader.restore_registry()
-        super().tearDownClass()
 
     @freeze_time("2020-10-21 10:00:00")
     def test_create_record(self):
@@ -42,8 +43,7 @@ class EDIBackendTestCaseBase(EDIBackendCommonTestCase):
         expected = {
             "type_id": self.exchange_type_in.id,
             "edi_exchange_state": "new",
-            "exchange_filename": "EDI_EXC_TEST-test_csv_"
-            "input-2020-10-21-10-00-00.csv",
+            "exchange_filename": "EDI_EXC_TEST-test_csv_input-2020-10-21-100000.csv",
         }
         self.assertRecordValues(record, [expected])
         self.assertEqual(record.record, self.partner)
@@ -81,6 +81,7 @@ class EDIBackendTestCaseBase(EDIBackendCommonTestCase):
             .with_context(no_reset_password=True)
             .create({"name": "Test User EDI", "login": "test_edi_perm_user"})
         )
+        user.group_ids += self.env.ref("base.group_partner_manager")
         self._test_get_handler(user=user)
 
     def test_get_handler_no_handler(self):

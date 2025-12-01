@@ -207,13 +207,9 @@ class EDIExchangeType(models.Model):
     )
     allow_empty_files_on_receive = fields.Boolean(string="Allow Empty Files")
 
-    _sql_constraints = [
-        (
-            "code_uniq",
-            "unique(code, backend_id)",
-            "The code must be unique per backend",
-        )
-    ]
+    _code_uniq = models.Constraint(
+        "unique(code, backend_id)", "The code must be unique per backend"
+    )
 
     def _inverse_active(self):
         for rec in self:
@@ -327,5 +323,5 @@ class EDIExchangeType(models.Model):
         # Yet, we want to be able to duplicate a record from the UI.
         self.ensure_one()
         default = dict(default or {})
-        default.setdefault("code", f"{self.code}/COPY_FIXME")
+        default.setdefault("code", f"{self.code}_COPY_FIXME")
         return super().copy_data(default=default)

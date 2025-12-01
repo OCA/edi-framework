@@ -276,7 +276,7 @@
                 <field name="external_identifier" />
                 <field name="ack_exchange_id" />
                 <field name="parent_id" />
-                <group expand="0" string="Group By">
+                <group>
                     <filter
                         name="group_by_backend_id"
                         string="Backend"

@@ -9,6 +9,7 @@ from collections import defaultdict
 
 from odoo import Command, api, exceptions, fields, models
 from odoo.exceptions import AccessError
+from odoo.tools import Query, split_every
 
 from ..utils import get_checksum
 
@@ -33,7 +34,7 @@ class EDIExchangeRecord(models.Model):
         comodel_name="edi.exchange.type",
         required=True,
         ondelete="cascade",
-        auto_join=True,
+        bypass_search_access=True,
         index=True,
     )
     direction = fields.Selection(related="type_id.direction")
@@ -143,14 +144,13 @@ class EDIExchangeRecord(models.Model):
     )
     company_id = fields.Many2one("res.company", string="Company")
 
-    _sql_constraints = [
-        ("identifier_uniq", "unique(identifier)", "The identifier must be unique."),
-        (
-            "external_identifier_uniq",
-            "unique(external_identifier, backend_id, type_id)",
-            "The external_identifier must be unique for a type and a backend.",
-        ),
-    ]
+    _identifier_uniq = models.Constraint(
+        "unique(identifier)", "The identifier must be unique."
+    )
+    _external_identifier_uniq = models.Constraint(
+        "unique(external_identifier, backend_id, type_id)",
+        "The external_identifier must be unique for a type and a backend.",
+    )
 
     @api.depends("model", "res_id")
     def _compute_related_name(self):
@@ -209,11 +209,9 @@ class EDIExchangeRecord(models.Model):
     def _get_ack_record(self):
         if not self.type_id.ack_type_id:
             return None
-        return fields.first(
-            self.related_exchange_ids.filtered(
-                lambda x: x.type_id == self.type_id.ack_type_id
-            ).sorted("id", reverse=True)
-        )
+        return self.related_exchange_ids.filtered(
+            lambda x: x.type_id == self.type_id.ack_type_id
+        ).sorted("id", reverse=True)[:1]
 
     def _compute_ack_expected(self):
         for rec in self:
@@ -560,8 +558,7 @@ class EDIExchangeRecord(models.Model):
         )
         self._trigger_edi_event("done", suffix="ack_received_error")
 
-    @api.model
-    def _search(self, domain, offset=0, limit=None, order=None):
+    def _search(self, domain, offset=0, limit=None, order=None, **kw) -> Query:
         query = super()._search(
             domain=domain,
             offset=offset,
@@ -588,12 +585,12 @@ class EDIExchangeRecord(models.Model):
             FROM %(table)s
             WHERE id = ANY (%%(ids)s)
         """
-        for sub_ids in self._cr.split_for_in_conditions(ids):
-            self._cr.execute(
+        for sub_ids in split_every(self.env.cr.IN_MAX, ids):
+            self.env.cr.execute(
                 sub_query % {"table": self._table},
                 dict(ids=list(sub_ids)),
             )
-            for eid, res_id, model in self._cr.fetchall():
+            for eid, res_id, model in self.env.cr.fetchall():
                 if not model:
                     result.append(eid)
                     continue
@@ -672,7 +669,7 @@ class EDIExchangeRecord(models.Model):
                 )
 
         for model, rec_ids in by_model_rec_ids.items():
-            records = self.env[model].browse(rec_ids).with_user(self._uid)
+            records = self.env[model].browse(rec_ids).with_user(self.env.uid)
             checker = by_model_checker[model]
             for record in records:
                 check_operation = checker(

@@ -13,3 +13,4 @@ from . import test_security
 from . import test_quick_exec
 from . import test_exchange_type_encoding
 from . import test_edi_configuration
+from . import test_frontend

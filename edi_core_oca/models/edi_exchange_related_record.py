@@ -29,13 +29,10 @@ class EDIExchangeRelatedRecord(models.Model):
         copy=False,
     )
 
-    _sql_constraints = [
-        (
-            "related_record_unique",
-            "unique(exchange_record_id, model, res_id)",
-            "A record can only be related once to a specific exchange record.",
-        )
-    ]
+    _related_record_unique = models.Constraint(
+        "unique(exchange_record_id, model, res_id)",
+        "A record can only be related once to a specific exchange record.",
+    )
 
     @property
     def record(self):

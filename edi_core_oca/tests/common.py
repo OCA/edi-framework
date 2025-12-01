@@ -48,7 +48,7 @@ class EDIBackendTestMixin:
             exchange_filename_pattern="{record.ref}-{type.code}-{dt}",
         )
         cls.exchange_type_out.ack_type_id = cls.exchange_type_out_ack
-        cls.partner = cls.env.ref("base.res_partner_1")
+        cls.partner = cls.env["res.partner"].create({"name": "EDI EXC TEST"})
         cls.partner.ref = "EDI_EXC_TEST"
         cls.sequence = cls.env["ir.sequence"].create(
             {
@@ -65,8 +65,22 @@ class EDIBackendTestMixin:
             return thefile.read()
 
     @classmethod
+    def _get_backend_type(cls):
+        return cls.env["edi.backend.type"].create(
+            {
+                "name": "Demo backend type",
+                "code": "demo_backend",
+            }
+        )
+
+    @classmethod
     def _get_backend(cls):
-        return cls.env.ref("edi_core_oca.demo_edi_backend")
+        return cls.env["edi.backend"].create(
+            {
+                "name": "Demo backend",
+                "backend_type_id": cls._get_backend_type().id,
+            }
+        )
 
     @classmethod
     def _create_exchange_type(cls, **kw):

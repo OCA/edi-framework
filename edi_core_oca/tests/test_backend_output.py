@@ -6,10 +6,10 @@
 from unittest import mock
 
 from freezegun import freeze_time
-from odoo_test_helper import FakeModelLoader
 
 from odoo import fields, tools
 from odoo.exceptions import UserError
+from odoo.orm.model_classes import add_to_registry
 
 from .common import EDIBackendCommonTestCase
 
@@ -29,23 +29,19 @@ class EDIBackendTestOutputCase(EDIBackendCommonTestCase):
     def _setup_records(cls):  # pylint:disable=missing-return
         super()._setup_records()
         # Load fake models ->/
-        cls.loader = FakeModelLoader(cls.env, cls.__module__)
-        cls.loader.backup_registry()
         from .fake_models import EdiTestExecution
 
-        cls.loader.update_registry((EdiTestExecution,))
-        cls.ExecutionAbstractModel = cls.env["edi.framework.test.execution"]
-        cls.model = cls.env["ir.model"].search(
-            [("model", "=", "edi.framework.test.execution")]
+        add_to_registry(cls.registry, EdiTestExecution)
+        cls.registry._setup_models__(cls.env.cr, ["edi.framework.test.execution"])
+        cls.registry.init_models(
+            cls.env.cr, ["edi.framework.test.execution"], {"models_to_check": True}
         )
+        cls.addClassCleanup(cls.registry.__delitem__, "edi.framework.test.execution")
+        cls.ExecutionAbstractModel = cls.env["edi.framework.test.execution"]
+        cls.model = cls.env["ir.model"]._get("edi.framework.test.execution")
         cls.exchange_type_out.generate_model_id = cls.model
         cls.exchange_type_out.send_model_id = cls.model
         cls.exchange_type_out.output_validate_model_id = cls.model
-
-    @classmethod
-    def tearDownClass(cls):
-        cls.loader.restore_registry()
-        super().tearDownClass()
 
     def setUp(self):
         super().setUp()

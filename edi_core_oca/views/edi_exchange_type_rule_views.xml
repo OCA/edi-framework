@@ -92,7 +92,7 @@
                     string="Archived"
                     domain="[('active', '=', False)]"
                 />
-                <group expand="0" string="Group By">
+                <group>
                     <filter
                         name="group_by_type_id"
                         string="Exchange type"

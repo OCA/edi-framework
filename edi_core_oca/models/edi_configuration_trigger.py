@@ -20,4 +20,4 @@ class EdiConfigurationTrigger(models.Model):
         help="Model the conf applies to. Leave blank to apply for all models",
     )
 
-    _sql_constraints = [("code_uniq", "unique(code)", "Code must be unique")]
+    _code_uniq = models.Constraint("unique(code)", "Code must be unique")

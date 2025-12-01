@@ -85,9 +85,7 @@ class EDIExchangeConsumerMixin(models.AbstractModel):
             if not self.filtered_domain(domain):
                 continue
             if rule.enable_snippet:
-                safe_eval.safe_eval(
-                    rule.enable_snippet, eval_ctx, mode="exec", nocopy=True
-                )
+                safe_eval.safe_eval(rule.enable_snippet, eval_ctx, mode="exec")
                 if not eval_ctx.get("result", False):
                     continue
 
@@ -248,12 +246,12 @@ class EDIExchangeConsumerMixin(models.AbstractModel):
 
     @api.depends("exchange_record_ids")
     def _compute_exchange_record_count(self):
-        data = self.env["edi.exchange.related.record"].read_group(
-            [("res_id", "in", self.ids), ("model", "=", self._name)],
-            ["res_id"],
-            ["res_id"],
+        data = self.env["edi.exchange.related.record"]._read_group(
+            domain=[("res_id", "in", self.ids), ("model", "=", self._name)],
+            groupby=["res_id"],
+            aggregates=["__count"],
         )
-        mapped_data = {x["res_id"]: x["res_id_count"] for x in data}
+        mapped_data = {x[0]: x[1] for x in data}
         for rec in self:
             rec.exchange_record_count = mapped_data.get(rec.id, 0)
 

@@ -19,9 +19,7 @@ class EDIBackendType(models.Model):
         inverse="_inverse_code",
     )
 
-    _sql_constraints = [
-        ("uniq_code", "unique(code)", "Backend type code must be unique!")
-    ]
+    _uniq_code = models.Constraint("unique(code)", "Backend type code must be unique!")
 
     @api.onchange("name", "code")
     def _onchange_code(self):
@@ -38,5 +36,5 @@ class EDIBackendType(models.Model):
         # Yet, we want to be able to duplicate a record from the UI.
         self.ensure_one()
         default = dict(default or {})
-        default.setdefault("code", f"{self.code}/COPY_FIXME")
+        default.setdefault("code", f"{self.code}_COPY_FIXME")
         return super().copy_data(default=default)

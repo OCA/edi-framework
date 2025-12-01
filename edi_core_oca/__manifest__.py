@@ -9,7 +9,7 @@
     Define backends, exchange types, exchange records,
     basic automation and views for handling EDI exchanges.
     """,
-    "version": "18.0.1.5.3",
+    "version": "19.0.1.0.0",
     "website": "https://github.com/OCA/edi-framework",
     "development_status": "Beta",
     "license": "LGPL-3",
@@ -20,8 +20,6 @@
         "mail",
         "base_sparse_field",
     ],
-    "pre_init_hook": "pre_init_hook",
-    "post_init_hook": "post_init_hook",
     "external_dependencies": {"python": ["PyYAML", "openupgradelib"]},
     "data": [
         "wizards/edi_exchange_record_create_wiz.xml",
@@ -47,6 +45,9 @@
         "web.assets_backend": [
             "edi_core_oca/static/src/js/widget_edi.esm.js",
             "edi_core_oca/static/src/xml/widget_edi.xml",
+        ],
+        "web.assets_unit_tests": [
+            "edi_core_oca/static/tests/**/*",
         ],
     },
     "demo": ["demo/edi_backend_demo.xml"],

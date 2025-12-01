@@ -8,8 +8,8 @@ import os
 from unittest import mock, skipIf
 
 from lxml import etree
-from odoo_test_helper import FakeModelLoader
 
+from odoo.orm.model_classes import add_to_registry
 from odoo.tests import Form
 
 from .common import EDIBackendCommonTestCase
@@ -23,11 +23,20 @@ class TestConsumerMixinCase(EDIBackendCommonTestCase):
     def _setup_env(cls):
         super()._setup_env()
         # Load fake models ->/
-        cls.loader = FakeModelLoader(cls.env, cls.__module__)
-        cls.loader.backup_registry()
-        from .fake_models import EdiExchangeConsumerTest
+        from .fake_models import EdiExchangeConsumerTest, EdiTestExecution
 
-        cls.loader.update_registry((EdiExchangeConsumerTest,))
+        add_to_registry(cls.registry, EdiTestExecution)
+        add_to_registry(cls.registry, EdiExchangeConsumerTest)
+        cls.registry._setup_models__(
+            cls.env.cr, ["edi.framework.test.execution", "edi.exchange.consumer.test"]
+        )
+        cls.registry.init_models(
+            cls.env.cr,
+            ["edi.framework.test.execution", "edi.exchange.consumer.test"],
+            {"models_to_check": True},
+        )
+        cls.addClassCleanup(cls.registry.__delitem__, "edi.exchange.consumer.test")
+        cls.addClassCleanup(cls.registry.__delitem__, "edi.framework.test.execution")
         return super()._setup_env()
 
     # pylint: disable=W8110
@@ -68,11 +77,6 @@ result = not record._has_exchange_record(exchange_type, exchange_type.backend_id
         }
         cls.exchange_type_out.write({"rule_ids": [(0, 0, rule_vals)]})
         cls.backend_02 = cls.backend.copy()
-
-    @classmethod
-    def tearDownClass(cls):
-        cls.loader.restore_registry()
-        super().tearDownClass()
 
     def test_mixin(self):
         self.assertEqual(self.consumer_record.exchange_record_count, 0)

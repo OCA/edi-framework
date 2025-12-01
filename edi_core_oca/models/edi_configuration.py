@@ -43,7 +43,7 @@ class EdiConfiguration(models.Model):
         string="Exchange Type",
         comodel_name="edi.exchange.type",
         ondelete="cascade",
-        auto_join=True,
+        bypass_search_access=True,
         index=True,
     )
     model_id = fields.Many2one(
@@ -121,7 +121,6 @@ class EdiConfiguration(models.Model):
             "date_to_string": self._date_to_string,
             "datetime_to_string": self._datetime_to_string,
             "time_to_string": lambda dt: dt.strftime("%H:%M:%S") if dt else "",
-            "first_of": fields.first,
         }
 
     def _get_code_snippet_eval_context(self):
@@ -142,7 +141,7 @@ class EdiConfiguration(models.Model):
         if not self._code_snippet_valued(snippet):
             return {}
         eval_ctx = dict(render_values, **self._get_code_snippet_eval_context())
-        safe_eval.safe_eval(snippet, eval_ctx, mode="exec", nocopy=True)
+        safe_eval.safe_eval(snippet, eval_ctx, mode="exec")
         result = eval_ctx.get("result", {})
         if not isinstance(result, dict):
             return {}

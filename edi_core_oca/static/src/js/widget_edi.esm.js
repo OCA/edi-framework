@@ -1,9 +1,11 @@
 import {registry} from "@web/core/registry";
+import {standardFieldProps} from "@web/views/fields/standard_field_props";
 import {useService} from "@web/core/utils/hooks";
 
 const {Component} = owl;
 
 export class EdiConfigurationWidget extends Component {
+    static props = {...standardFieldProps};
     async setup() {
         super.setup();
         this.orm = useService("orm");
