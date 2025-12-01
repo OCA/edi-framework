@@ -156,22 +156,24 @@ class EDIBackend(models.Model):
             raise exceptions.UserError(
                 self.env._(
                     "Exchange record ID=%d is not in draft state "
-                    "and has already an output value."
+                    "and has already an output value.",
+                    exchange_record.id,
                 )
-                % exchange_record.id
             )
         if exchange_record.direction != "output":
             raise exceptions.UserError(
                 self.env._(
                     "Exchange record ID=%d is not an outgoing record, "
-                    "cannot be generated"
+                    "cannot be generated",
+                    exchange_record.id,
                 )
-                % exchange_record.id
             )
         if exchange_record.exchange_file:
             raise exceptions.UserError(
-                self.env._("Exchange record ID=%d already has a file to process!")
-                % exchange_record.id
+                self.env._(
+                    "Exchange record ID=%d already has a file to process!",
+                    exchange_record.id,
+                )
             )
 
     def _exchange_generate(self, exchange_record, **kw):
@@ -280,11 +282,11 @@ class EDIBackend(models.Model):
     def _output_check_send(self, exchange_record):
         if exchange_record.direction != "output":
             raise exceptions.UserError(
-                self.env._("Record ID=%d is not meant to be sent!") % exchange_record.id
+                self.env._("Record ID=%d is not meant to be sent!", exchange_record.id)
             )
         if not exchange_record.exchange_file:
             raise exceptions.UserError(
-                self.env._("Record ID=%d has no file to send!") % exchange_record.id
+                self.env._("Record ID=%d has no file to send!", exchange_record.id)
             )
         return exchange_record.edi_exchange_state in [
             "output_pending",
@@ -401,15 +403,16 @@ class EDIBackend(models.Model):
     def _exchange_process_check(self, exchange_record):
         if not exchange_record.direction == "input":
             raise exceptions.UserError(
-                self.env._("Record ID=%d is not meant to be processed")
-                % exchange_record.id
+                self.env._(
+                    "Record ID=%d is not meant to be processed", exchange_record.id
+                )
             )
         if (
             not exchange_record.exchange_file
             and not exchange_record.type_id.allow_empty_files_on_receive
         ):
             raise exceptions.UserError(
-                self.env._("Record ID=%d has no file to process!") % exchange_record.id
+                self.env._("Record ID=%d has no file to process!", exchange_record.id)
             )
         return exchange_record.edi_exchange_state in [
             "input_received",
@@ -522,8 +525,9 @@ class EDIBackend(models.Model):
         # do the same for all the other check cases.
         if not exchange_record.direction == "input":
             raise exceptions.UserError(
-                self.env._("Record ID=%d is not meant to be processed")
-                % exchange_record.id
+                self.env._(
+                    "Record ID=%d is not meant to be processed", exchange_record.id
+                )
             )
         return exchange_record.edi_exchange_state in [
             "input_pending",

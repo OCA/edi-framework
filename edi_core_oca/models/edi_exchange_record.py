@@ -474,7 +474,7 @@ class EDIExchangeRecord(models.Model):
         self[fname] = new_state
         display_state = self._fields[fname].convert_to_export(self[fname], self)
         self.message_post(
-            body=self.env._("Action retry: state moved back to '%s'") % display_state
+            body=self.env._("Action retry: state moved back to '%s'", display_state)
         )
         if self._quick_exec_enabled():
             self._execute_next_action()

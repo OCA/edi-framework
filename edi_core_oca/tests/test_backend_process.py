@@ -67,7 +67,7 @@ class EDIBackendTestProcessCase(EDIBackendCommonTestCase):
 
     def test_process_record_with_error(self):
         self.record.write({"edi_exchange_state": "input_received"})
-        self.record._set_file_content("TEST %d" % self.record.id)
+        self.record._set_file_content(f"TEST {self.record.id}")
         self.record.with_context(
             test_break_process="OOPS! Something went wrong :("
         ).action_exchange_process()
@@ -109,7 +109,7 @@ class EDIBackendTestProcessCase(EDIBackendCommonTestCase):
             "res_id": self.partner.id,
         }
         record = self.backend.create_record("test_csv_output", vals)
-        record._set_file_content("TEST %d" % record.id)
+        record._set_file_content(f"TEST {record.id}")
         with self.assertRaises(UserError):
             record.action_exchange_process()
 

@@ -65,7 +65,7 @@ class EDIBackendTestOutputCase(EDIBackendCommonTestCase):
 
     def test_send_record(self):
         self.record.write({"edi_exchange_state": "output_pending"})
-        self.record._set_file_content("TEST %d" % self.record.id)
+        self.record._set_file_content(f"TEST {self.record.id}")
         self.assertFalse(self.record.exchanged_on)
         with freeze_time("2020-10-21 10:00:00"):
             self.record.action_exchange_send()
@@ -82,7 +82,7 @@ class EDIBackendTestOutputCase(EDIBackendCommonTestCase):
 
     def test_send_record_with_error(self):
         self.record.write({"edi_exchange_state": "output_pending"})
-        self.record._set_file_content("TEST %d" % self.record.id)
+        self.record._set_file_content(f"TEST {self.record.id}")
         self.assertFalse(self.record.exchanged_on)
         self.record.with_context(
             test_break_send="OOPS! Something went wrong :("
@@ -115,7 +115,7 @@ class EDIBackendTestOutputCase(EDIBackendCommonTestCase):
                 record.action_exchange_send()
             self.assertEqual(
                 err.exception.args[0],
-                "Record ID=%d is not meant to be sent!" % record.id,
+                f"Record ID={record.id} is not meant to be sent!",
             )
             mocked.assert_not_called()
 
@@ -130,6 +130,6 @@ class EDIBackendTestOutputCase(EDIBackendCommonTestCase):
             with self.assertRaises(UserError) as err:
                 record.action_exchange_send()
             self.assertEqual(
-                err.exception.args[0], "Record ID=%d has no file to send!" % record.id
+                err.exception.args[0], f"Record ID={record.id} has no file to send!"
             )
             mocked.assert_not_called()
