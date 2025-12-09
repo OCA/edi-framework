@@ -42,6 +42,7 @@ def migrate(env, version):
                   AND edi_backend.backend_type_id = edi_exchange_type.backend_type_id
                 )
                 AND edi_backend.active IS TRUE
+              )
             )
             """,
     )
