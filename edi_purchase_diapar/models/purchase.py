@@ -2,7 +2,7 @@
 # @author: Druidoo
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html
 
-from odoo import models, api, _, fields
+from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
 
 
@@ -12,10 +12,10 @@ class PurchaseOrder(models.Model):
     @api.multi
     def _consolidate_products(self):
         """
-            Consolidate order lines by product.
-            Raise if Tax or price different.
-            @return: dict {product_id(record):[code_or_ean, qty, price,
-            taxes(records)]}
+        Consolidate order lines by product.
+        Raise if Tax or price different.
+        @return: dict {product_id(record):[code_or_ean, qty, price,
+        taxes(records)]}
         """
         self.ensure_one()
         if not self.order_line:
@@ -50,7 +50,8 @@ class PurchaseOrder(models.Model):
 
 
 class AccountInvoice(models.Model):
-    _inherit = 'account.invoice'
+    _inherit = "account.invoice"
 
-    partner_is_edi = fields.Boolean(related='partner_id.is_edi',
-                                    string='Partner (Is Edit)', store=True)
+    partner_is_edi = fields.Boolean(
+        related="partner_id.is_edi", string="Partner (Is Edit)", store=True
+    )

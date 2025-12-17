@@ -7,7 +7,7 @@
     "version": "12.0.1.0.0",
     "category": "Custom",
     "author": "Druidoo",
-    "website": "http://www.druidoo.io",
+    "website": "https://github.com/OCA/edi-framework",
     "license": "AGPL-3",
     "depends": [
         "product",
