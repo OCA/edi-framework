@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <template id="edi_exchange_template_output_diapar_3"><t
+        t-out="template.constant_file_start"
+    /> A<t t-out="template.vrp_code" />B<t t-out="template.customer_code" /><t
+        t-out="'C' + env['edi.configuration'].get_datetime_format_ddmmyyyy(record.date_planned)"
+    /><t
+        t-out="''.join([('%s%s%s' % ('D' if vals['origin_code'] == 'supplier' else 'E', env['edi.configuration']._fix_lenght(vals['code'], 6, mode='string', replace='0', position='after'), env['edi.configuration']._fix_lenght(vals['quantity'], 3, mode='float', replace='0', position='before'))) for product, vals in order_lines.items()])"
+    /><t t-out="template.constant_file_end" /></template>
+</odoo>

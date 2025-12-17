@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="demo_exchange_diapar_out_order" model="edi.exchange.type">
+        <field name="name">diapar_out_order</field>
+        <field name="code">diapar_out_order</field>
+        <field
+            name="backend_id"
+            ref="edi_purchase_diapar_oca.demo_edi_backend_diapar"
+        />
+        <field
+            name="backend_type_id"
+            ref="edi_purchase_diapar_oca.demo_edi_backend_type_diapar"
+        />
+        <field name="direction">output</field>
+        <field name="exchange_filename_pattern">LD{dt}H{time}</field>
+        <field name="exchange_file_ext">C99</field>
+        <field name="encoding">iso-8859-1</field>
+        <field name="generate_model_id" ref="model_edi_output_diapar_handler" />
+        <field
+            name="send_model_id"
+            ref="edi_storage_oca.model_edi_oca_storage_handler"
+        />
+        <field name="advanced_settings_edit">
+            filename_pattern:
+                date_pattern: "%Y%m%d"
+                time_pattern: "%H%M%S"
+        </field>
+    </record>
+    <record id="demo_exchange_diapar_in_despatch_advice" model="edi.exchange.type">
+        <field name="name">diapar_in_despatch_advice</field>
+        <field name="code">diapar_in_despatch_advice</field>
+        <field
+            name="backend_id"
+            ref="edi_purchase_diapar_oca.demo_edi_backend_diapar"
+        />
+        <field
+            name="backend_type_id"
+            ref="edi_purchase_diapar_oca.demo_edi_backend_type_diapar"
+        />
+        <field name="direction">input</field>
+        <field name="exchange_filename_pattern">BLE.*</field>
+        <field name="exchange_file_ext">txt</field>
+        <field name="encoding">iso-8859-1</field>
+        <field name="header_code">1</field>
+        <field name="lines_code">2</field>
+        <field name="delivery_sign">+</field>
+        <field name="advanced_settings_edit" />
+        <field
+            name="process_model_id"
+            ref="model_input_process_diapar_despatch_advice"
+        />
+        <field
+            name="receive_model_id"
+            ref="edi_storage_oca.model_edi_oca_storage_handler"
+        />
+    </record>
+    <record id="demo_exchange_diapar_in_purchase_price" model="edi.exchange.type">
+        <field name="name">diapar_in_purchase_price</field>
+        <field name="code">diapar_in_purchase_price</field>
+        <field
+            name="backend_id"
+            ref="edi_purchase_diapar_oca.demo_edi_backend_diapar"
+        />
+        <field
+            name="backend_type_id"
+            ref="edi_purchase_diapar_oca.demo_edi_backend_type_diapar"
+        />
+        <field name="direction">input</field>
+        <field name="exchange_filename_pattern">CH*</field>
+        <field name="exchange_file_ext">txt</field>
+        <field name="encoding">iso-8859-1</field>
+        <field name="advanced_settings_edit" />
+        <field
+            name="process_model_id"
+            ref="model_input_process_diapar_purchase_price"
+        />
+        <field
+            name="receive_model_id"
+            ref="edi_storage_oca.model_edi_oca_storage_handler"
+        />
+    </record>
+</odoo>
