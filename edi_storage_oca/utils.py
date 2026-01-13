@@ -48,6 +48,8 @@ def list_files(storage, relative_path="", pattern=False):
     if pattern:
         relative_path = fs.sep.join([relative_path, pattern])
         return fs.glob(relative_path)
+    if fs.protocol == "ftp" and fs.ftp:
+        return fs.ftp.nlst(relative_path)
     return fs.ls(relative_path, detail=False)
 
 
