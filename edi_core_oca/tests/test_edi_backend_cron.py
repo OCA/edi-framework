@@ -82,14 +82,8 @@ class EDIBackendTestCronCase(EDIBackendCommonTestCase):
             # TODO: test better?
             self.assertFalse(rec.ack_exchange_id)
 
-    @mute_logger(*LOGGERS)
-    def test_exchange_generate_new_auto_send(self):
-        self.exchange_type_out.exchange_file_auto_generate = True
-        # No content ready to be sent, will get the content and send it
-        for rec in self.records:
-            self.assertEqual(rec.edi_exchange_state, "new")
-        self.backend._cron_check_output_exchange_sync()
-        for rec in self.records:
+    def _test_generate_new_auto_send(self, records):
+        for rec in records:
             self.assertEqual(rec.edi_exchange_state, "output_sent")
             self.assertTrue(
                 self.ExecutionAbstractModel.check_called_for(rec, "generate")
@@ -98,6 +92,26 @@ class EDIBackendTestCronCase(EDIBackendCommonTestCase):
                 rec._get_file_content(), self.ExecutionAbstractModel._call_key(rec)
             )
             self.assertTrue(self.ExecutionAbstractModel.check_called_for(rec, "send"))
+
+    @mute_logger(*LOGGERS)
+    def test_exchange_generate_new_auto_send(self):
+        self.exchange_type_out.exchange_file_auto_generate = True
+        # No content ready to be sent, will get the content and send it
+        for rec in self.records:
+            self.assertEqual(rec.edi_exchange_state, "new")
+        self.backend._cron_check_output_exchange_sync()
+        self._test_generate_new_auto_send(self.records)
+
+    @mute_logger(*LOGGERS)
+    def test_exchange_generate_new_quick_exec_skip_cron(self):
+        self.exchange_type_out.exchange_file_auto_generate = True
+        self.exchange_type_out.quick_exec = True
+        for rec in self.records:
+            self.assertEqual(rec.edi_exchange_state, "new")
+        # Records w/ quick exec should be skipped by the cron
+        self.backend._cron_check_output_exchange_sync()
+        for rec in self.records:
+            self.assertEqual(rec.edi_exchange_state, "new")
 
     @mute_logger(*LOGGERS)
     def test_exchange_generate_output_ready_auto_send(self):

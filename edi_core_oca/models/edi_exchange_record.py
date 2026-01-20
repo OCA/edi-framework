@@ -379,10 +379,11 @@ class EDIExchangeRecord(models.Model):
         # The backend already knows how to handle records
         # according to their direction and status.
         # Let it decide.
+        backend = self.backend_id.with_context(edi__quick_exec=True)
         if self.type_id.direction == "output":
-            self.backend_id._check_output_exchange_sync(record_ids=self.ids)
+            backend._check_output_exchange_sync(record_ids=self.ids)
         else:
-            self.backend_id._check_input_exchange_sync(record_ids=self.ids)
+            backend._check_input_exchange_sync(record_ids=self.ids)
 
     @api.constrains("backend_id", "type_id")
     def _constrain_backend(self):

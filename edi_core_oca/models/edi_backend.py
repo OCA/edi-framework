@@ -384,6 +384,15 @@ class EDIBackend(models.Model):
         ]
         if record_ids:
             domain.append(("id", "in", record_ids))
+        # By default, it's pointless to consider records with quick_exec
+        # because they will be executed right away when created.
+        domain.append(
+            (
+                "type_id.quick_exec",
+                "=",
+                self.env.context.get("edi__quick_exec", False),
+            )
+        )
         return domain
 
     def _output_pending_records_domain(self, skip_sent=True, record_ids=None):

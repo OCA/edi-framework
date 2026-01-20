@@ -155,7 +155,9 @@ class EDIExchangeType(models.Model):
     quick_exec = fields.Boolean(
         string="Quick execution",
         help="When active, records of this type will be processed immediately "
-        "without waiting for the cron to pass by.",
+        "without waiting for the cron to pass by. "
+        "Requires auto generate flag to be active as well. "
+        "The cron will skip these records unless forced.",
     )
     partner_ids = fields.Many2many(
         string="Enabled for partners",
