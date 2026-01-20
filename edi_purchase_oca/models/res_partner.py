@@ -3,6 +3,7 @@
 
 
 from odoo import fields, models
+from odoo.fields import Domain
 
 
 class ResPartner(models.Model):
@@ -14,5 +15,5 @@ class ResPartner(models.Model):
         relation="res_partner_edi_purchase_configuration_rel",
         column1="partner_id",
         column2="conf_id",
-        domain=[("model_name", "=", "purchase.order")],
+        domain=Domain("model_name", "=", "purchase.order"),
     )

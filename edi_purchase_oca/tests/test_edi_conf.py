@@ -5,7 +5,7 @@ from unittest import mock
 
 from odoo import Command
 
-from odoo.addons.edi_oca.tests.common import EDIBackendCommonComponentTestCase
+from odoo.addons.edi_component_oca.tests.common import EDIBackendCommonComponentTestCase
 
 
 class TestsPurchaseEDIConfiguration(EDIBackendCommonComponentTestCase):
@@ -19,8 +19,28 @@ class TestsPurchaseEDIConfiguration(EDIBackendCommonComponentTestCase):
                 "default_code": "1234567",
             }
         )
-        cls.exc_type_out = cls.env.ref("edi_purchase_oca.demo_edi_exc_type_order_out")
-        cls.edi_conf = cls.env.ref("edi_purchase_oca.demo_edi_configuration_confirmed")
+        cls.exc_type_out = cls._create_exchange_type(
+            name="Demo Purchase Order out",
+            code="demo_PurchaseOrder_out",
+            direction="output",
+            exchange_filename_pattern="{record_name}-{type.code}-{dt}",
+            exchange_file_ext="xml",
+        )
+        cls.edi_conf = cls.env["edi.configuration"].create(
+            {
+                "name": "Demo PO send",
+                "type_id": cls.exc_type_out.id,
+                "backend_id": cls.backend.id,
+                "model_id": cls.env["ir.model"]._get_id("purchase.order"),
+                "trigger_id": cls.env.ref(
+                    "edi_purchase_oca.edi_conf_trigger_purchase_order_state_change"
+                ).id,
+                "snippet_do": (
+                    "if record.state == 'purchase':\n"
+                    "  record._edi_send_via_edi(conf.type_id)"
+                ),
+            }
+        )
         cls.partner.edi_purchase_conf_ids = cls.edi_conf
 
     @mock.patch("odoo.addons.edi_core_oca.models.edi_backend.EDIBackend._validate_data")
