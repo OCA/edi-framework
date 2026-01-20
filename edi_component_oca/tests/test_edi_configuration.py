@@ -4,8 +4,7 @@
 import os
 import unittest
 
-from odoo_test_helper import FakeModelLoader
-
+from odoo import Command
 from odoo.tests.common import tagged
 
 from .common import EDIBackendCommonComponentRegistryTestCase
@@ -40,15 +39,6 @@ class TestEDIConfigurations(EDIBackendCommonComponentRegistryTestCase):
 
     def setUp(self):
         super().setUp()
-        self.loader = FakeModelLoader(self.env, self.__module__)
-        self.loader.backup_registry()
-        from odoo.addons.edi_core_oca.tests.fake_models import EdiExchangeConsumerTest
-
-        EdiExchangeConsumerTest._edi_config_field_relation = lambda self: self.env[
-            "edi.configuration"
-        ]
-        self.loader.update_registry((EdiExchangeConsumerTest,))
-
         FakeOutputGenerator.reset_faked()
         FakeOutputSender.reset_faked()
         FakeOutputChecker.reset_faked()
@@ -84,8 +74,8 @@ class TestEDIConfigurations(EDIBackendCommonComponentRegistryTestCase):
             {
                 "name": "Test Consumer",
                 "edi_config_ids": [
-                    (4, self.create_config.id),
-                    (4, self.write_config.id),
+                    Command.link(self.create_config.id),
+                    Command.link(self.write_config.id),
                 ],
             }
         )
@@ -94,10 +84,6 @@ class TestEDIConfigurations(EDIBackendCommonComponentRegistryTestCase):
     def _setup_records(cls):  # pylint:disable=missing-return
         super()._setup_records()
         cls.exchange_type_out.exchange_filename_pattern = "{record.id}"
-
-    def tearDown(self):
-        self.loader.restore_registry()
-        super().tearDown()
 
     def test_edi_send_via_edi_config(self):
         # Check configuration on create

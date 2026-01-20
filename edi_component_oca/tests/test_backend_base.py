@@ -16,6 +16,12 @@ class EDIBackendTestCaseBase(EDIBackendCommonTestCase):
             "res_id": self.partner.id,
         }
         record = self.backend.create_record("test_csv_input", vals)
+        # Force date pattern and timezone on advanced settings
+        self.exchange_type_in.advanced_settings_edit = """
+        filename_pattern:
+            force_tz: UTC
+            date_pattern: '%Y-%m-%d-%H-%M-%S'
+        """
         expected = {
             "type_id": self.exchange_type_in.id,
             "edi_exchange_state": "new",

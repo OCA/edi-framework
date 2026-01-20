@@ -21,8 +21,8 @@ class EDIBackendTestCronCase(EDIBackendCommonComponentRegistryTestCase):
         cls._build_components(
             cls, FakeOutputGenerator, FakeOutputSender, FakeOutputChecker
         )
-        cls.partner2 = cls.env.ref("base.res_partner_10")
-        cls.partner3 = cls.env.ref("base.res_partner_12")
+        cls.partner2 = cls.env["res.partner"].create({"name": "EDI Test Partner 2"})
+        cls.partner3 = cls.env["res.partner"].create({"name": "EDI Test Partner 3"})
         cls.record1 = cls.backend.create_record(
             "test_csv_output", {"model": cls.partner._name, "res_id": cls.partner.id}
         )
