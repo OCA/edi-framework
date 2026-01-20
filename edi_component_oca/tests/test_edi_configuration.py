@@ -4,8 +4,7 @@
 import os
 import unittest
 
-from odoo_test_helper import FakeModelLoader
-
+from odoo.orm.model_classes import add_to_registry
 from odoo.tests.common import tagged
 
 from .common import EDIBackendCommonComponentRegistryTestCase
@@ -57,8 +56,6 @@ class TestEDIConfigurations(EDIBackendCommonComponentRegistryTestCase):
     def _setup_records(cls):  # pylint:disable=missing-return
         super()._setup_records()
         # Load fake models ->/
-        cls.loader = FakeModelLoader(cls.env, cls.__module__)
-        cls.loader.backup_registry()
         from odoo.addons.edi_core_oca.tests.fake_models import EdiExchangeConsumerTest
 
         EdiExchangeConsumerTest._edi_config_field_relation = lambda self: self.env[
@@ -66,7 +63,12 @@ class TestEDIConfigurations(EDIBackendCommonComponentRegistryTestCase):
         ]
         # We need to override it, as we want to test the usage with components
 
-        cls.loader.update_registry((EdiExchangeConsumerTest,))
+        add_to_registry(cls.registry, EdiExchangeConsumerTest)
+        cls.registry._setup_models__(cls.env.cr, ["edi.exchange.consumer.test"])
+        cls.registry.init_models(
+            cls.env.cr, ["edi.exchange.consumer.test"], {"models_to_check": True}
+        )
+        cls.addClassCleanup(cls.registry.__delitem__, "edi.exchange.consumer.test")
         cls.exchange_type_out.exchange_filename_pattern = "{record.id}"
         cls.edi_configuration = cls.env["edi.configuration"]
         cls.create_config = cls.edi_configuration.create(
@@ -95,11 +97,6 @@ class TestEDIConfigurations(EDIBackendCommonComponentRegistryTestCase):
                 "snippet_do": "record._edi_send_via_edi(conf.type_id)",
             }
         )
-
-    @classmethod
-    def tearDownClass(cls):
-        cls.loader.restore_registry()
-        super().tearDownClass()
 
     def test_edi_send_via_edi_config(self):
         # Check configuration on create

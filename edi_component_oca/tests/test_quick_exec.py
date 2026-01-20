@@ -33,8 +33,6 @@ class EDIQuickExecTestCase(EDIBackendCommonComponentRegistryTestCase):
             FakeOutputChecker,
             FakeInputProcess,
         )
-        cls.partner2 = cls.env.ref("base.res_partner_10")
-        cls.partner3 = cls.env.ref("base.res_partner_12")
 
     def setUp(self):
         super().setUp()
