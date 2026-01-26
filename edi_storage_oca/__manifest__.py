@@ -12,7 +12,7 @@
     "license": "LGPL-3",
     "website": "https://github.com/OCA/edi-framework",
     "author": "ACSONE,Odoo Community Association (OCA)",
-    "depends": ["edi_core_oca", "fs_storage"],
+    "depends": ["edi_core_oca", "fs_storage", "edi_component_oca"],
     "data": [
         "data/cron.xml",
         "data/edi_configuration.xml",
