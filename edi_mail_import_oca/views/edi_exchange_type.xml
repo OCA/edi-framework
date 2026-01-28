@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2026 Dixmit
+     License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl). -->
+<odoo>
+
+    <record model="ir.ui.view" id="edi_exchange_type_view_form">
+        <field name="model">edi.exchange.type</field>
+        <field name="inherit_id" ref="edi_oca.edi_exchange_type_view_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='config']" position="after">
+                <group invisible="direction != 'input'">
+                    <div name="alias_def" colspan="2" class="pb-2">
+                        <!-- Always display the whole alias in edit mode. It depends in read only -->
+                        <!-- Need to add alias_id in view for getting alias_domain_id by default -->
+                        <field name="alias_id" invisible="1" />
+                        <label
+                            for="alias_name"
+                            class="fw-bold o_form_label"
+                            string="Create tasks by sending an email to"
+                        />
+                        <field
+                            name="alias_email"
+                            class="oe_read_only d-inline"
+                            widget="email"
+                            readonly="1"
+                            invisible="not alias_name"
+                        />
+                        <span class="oe_edit_only o_row">
+                            <field name="alias_name" />@
+                            <field
+                                name="alias_domain_id"
+                                class="oe_inline"
+                                placeholder="e.g. domain.com"
+                                options="{'no_create': True, 'no_open': True}"
+                            />
+                        </span>
+                    </div>
+                    <field name="mail_as_attachment" invisible="not alias_email" />
+                    <!-- the alias contact must appear when the user start typing and it must disappear
+                        when the string is deleted. -->
+                    <field
+                        name="alias_contact"
+                        class="oe_inline"
+                        string="Accept Emails From"
+                        invisible="not alias_email"
+                    />
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+
+
+</odoo>
