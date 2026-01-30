@@ -1,0 +1,2 @@
+- Simone Orsi \<simahawk@gmail.com\>
+- Arnau Cruz \<arnau.cruz@forgeflow.com\>
