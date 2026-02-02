@@ -6,7 +6,7 @@ import json
 import logging
 import re
 
-from odoo import _, api, models
+from odoo import api, models
 from odoo.exceptions import UserError
 
 _logger = logging.getLogger(__name__)
@@ -22,7 +22,9 @@ class EdiExchangeRecord(models.Model):
             custom_values=custom_values,
         )
         if record.type_id.direction != "input":
-            raise UserError(_("Received email for non-incoming exchange type."))
+            raise UserError(
+                self.env._("Received email for non-incoming exchange type.")
+            )
         if record.type_id.mail_as_attachment:
             new_message_dict = msg_dict.copy()
             attachments = new_message_dict.pop("attachments", [])
