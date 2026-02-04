@@ -2,6 +2,7 @@
 
 import json
 
+from odoo.exceptions import ValidationError
 from odoo.tests import tagged
 
 from odoo.addons.mail.tests.common import MailCommon
@@ -37,6 +38,15 @@ class TestEmailParsing(MailCommon):
                 "backend_id": cls.backend.id,
             }
         )
+
+    def test_constraint(self):
+        with self.assertRaises(ValidationError):
+            self.exchange_type.direction = "output"
+
+    def test_constraint_no_error_on_no_alias(self):
+        self.exchange_type.alias_name = False
+        self.exchange_type.direction = "output"
+        self.assertFalse(self.exchange_type.alias_email)
 
     def test_import_full(self):
         self.assertTrue(self.exchange_type.alias_email)
