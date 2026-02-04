@@ -1,15 +1,11 @@
-# Part of Odoo. See LICENSE file for full copyright and licensing details.
-
+# Copyright 2026 Dixmit
+# License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
 import json
-
-from odoo.exceptions import ValidationError
-from odoo.tests import tagged
 
 from odoo.addons.mail.tests.common import MailCommon
 from odoo.addons.test_mail.data.test_mail_data import MAIL_EML_ATTACHMENT
 
 
-@tagged("mail_gateway")
 class TestEmailParsing(MailCommon):
     """Test email parsing and import via mail gateway"""
 
@@ -26,41 +22,71 @@ class TestEmailParsing(MailCommon):
             {
                 "name": "Mail Import OCA Test Backend",
                 "backend_type_id": cls.backend_type.id,
+                "alias_name": "edi-input",
             }
         )
-        cls.exchange_type = cls.env["edi.exchange.type"].create(
+        cls.exchange_type_01 = cls.env["edi.exchange.type"].create(
             {
                 "name": "Test Exchange Type",
-                "code": "test_exchange_type",
+                "code": "test_exchange_type_01",
+                "mail_record_policy": "full",
                 "direction": "input",
-                "alias_name": "edi-input",
                 "backend_type_id": cls.backend_type.id,
                 "backend_id": cls.backend.id,
+                "process_model_id": cls.env.ref("base.model_res_partner").id,
             }
         )
-
-    def test_constraint(self):
-        with self.assertRaises(ValidationError):
-            self.exchange_type.direction = "output"
-
-    def test_constraint_no_error_on_no_alias(self):
-        self.exchange_type.alias_name = False
-        self.exchange_type.direction = "output"
-        self.assertFalse(self.exchange_type.alias_email)
+        cls.exchange_type_02 = cls.env["edi.exchange.type"].create(
+            {
+                "name": "Test Exchange Type",
+                "code": "test_exchange_type_02",
+                "mail_record_policy": "pattern",
+                "exchange_filename_pattern": ".*eml",
+                "direction": "input",
+                "backend_type_id": cls.backend_type.id,
+                "backend_id": cls.backend.id,
+                "process_model_id": cls.env.ref("base.model_res_partner").id,
+            }
+        )
+        cls.exchange_type_03 = cls.env["edi.exchange.type"].create(
+            {
+                "name": "Test Exchange Type",
+                "code": "test_exchange_type_03",
+                "mail_record_policy": "pattern",
+                "exchange_filename_pattern": ".*jpg",
+                "direction": "input",
+                "backend_type_id": cls.backend_type.id,
+                "backend_id": cls.backend.id,
+                "process_model_id": cls.env.ref("base.model_res_partner").id,
+            }
+        )
+        cls.exchange_type_04 = cls.env["edi.exchange.type"].create(
+            {
+                "name": "Test Exchange Type",
+                "code": "test_exchange_type_04",
+                "exchange_filename_pattern": ".*eml",
+                "direction": "input",
+                "backend_type_id": cls.backend_type.id,
+                "backend_id": cls.backend.id,
+                "process_model_id": cls.env.ref("base.model_res_partner").id,
+            }
+        )
+        cls.exchange_types = (
+            cls.exchange_type_01 | cls.exchange_type_02 | cls.exchange_type_03
+        )
 
     def test_import_full(self):
-        self.assertTrue(self.exchange_type.alias_email)
-        self.exchange_type.mail_as_attachment = True
+        self.assertTrue(self.backend.alias_email)
         self.assertFalse(
             self.env["edi.exchange.record"].search(
                 [
-                    ("type_id", "=", self.exchange_type.id),
+                    ("type_id", "in", self.exchange_types.ids),
                 ]
             )
         )
         mail = self.format(
             MAIL_EML_ATTACHMENT,
-            to=self.exchange_type.alias_email,
+            to=self.backend.alias_email,
             subject="purchase test mail",
             target_model="account.move",
             msg_id="<test-account-move-alias-id>",
@@ -68,7 +94,7 @@ class TestEmailParsing(MailCommon):
         self.env["mail.thread"].message_process("mail.thread", mail)
         record = self.env["edi.exchange.record"].search(
             [
-                ("type_id", "=", self.exchange_type.id),
+                ("type_id", "=", self.exchange_type_01.id),
             ]
         )
         self.assertTrue(record)
@@ -77,58 +103,25 @@ class TestEmailParsing(MailCommon):
         self.assertTrue(file_content)
         data = json.loads(file_content)
         self.assertIn("body", data)
-
-    def test_import_specific_file(self):
-        self.assertTrue(self.exchange_type.alias_email)
-        self.exchange_type.mail_as_attachment = False
-        self.exchange_type.exchange_filename_pattern = ".*eml"
-        self.assertFalse(
-            self.env["edi.exchange.record"].search(
-                [
-                    ("type_id", "=", self.exchange_type.id),
-                ]
-            )
-        )
-        mail = self.format(
-            MAIL_EML_ATTACHMENT,
-            to=self.exchange_type.alias_email,
-            subject="purchase test mail",
-            target_model="account.move",
-            msg_id="<test-account-move-alias-id>",
-        )
-        self.env["mail.thread"].message_process("mail.thread", mail)
         record = self.env["edi.exchange.record"].search(
             [
-                ("type_id", "=", self.exchange_type.id),
+                ("type_id", "=", self.exchange_type_02.id),
             ]
         )
         self.assertTrue(record)
         self.assertEqual(record.edi_exchange_state, "input_received")
         self.assertEqual(record.exchange_filename, "original_msg.eml")
-
-    def test_import_no_file_found(self):
-        self.assertTrue(self.exchange_type.alias_email)
-        self.exchange_type.mail_as_attachment = False
-        self.exchange_type.exchange_filename_pattern = ".*xml"
         self.assertFalse(
             self.env["edi.exchange.record"].search(
                 [
-                    ("type_id", "=", self.exchange_type.id),
+                    ("type_id", "=", self.exchange_type_03.id),
                 ]
             )
         )
-        mail = self.format(
-            MAIL_EML_ATTACHMENT,
-            to=self.exchange_type.alias_email,
-            subject="purchase test mail",
-            target_model="account.move",
-            msg_id="<test-account-move-alias-id>",
+        self.assertFalse(
+            self.env["edi.exchange.record"].search(
+                [
+                    ("type_id", "=", self.exchange_type_04.id),
+                ]
+            )
         )
-        self.env["mail.thread"].message_process("mail.thread", mail)
-        record = self.env["edi.exchange.record"].search(
-            [
-                ("type_id", "=", self.exchange_type.id),
-            ]
-        )
-        self.assertTrue(record)
-        self.assertEqual(record.edi_exchange_state, "new")
