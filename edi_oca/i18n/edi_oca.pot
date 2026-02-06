@@ -1453,7 +1453,8 @@ msgstr ""
 #: model:ir.model.fields,help:edi_oca.field_edi_exchange_type__quick_exec
 msgid ""
 "When active, records of this type will be processed immediately without "
-"waiting for the cron to pass by."
+"waiting for the cron to pass by. Requires auto generate flag to be active as"
+" well. The cron will skip these records unless forced."
 msgstr ""
 
 #. module: edi_oca
