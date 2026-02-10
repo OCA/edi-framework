@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2025-12-02 15:42+0000\n"
+"PO-Revision-Date: 2026-02-10 15:09+0000\n"
 "Last-Translator: mymage <stefano.consolaro@mymage.it>\n"
 "Language-Team: none\n"
 "Language: it\n"
@@ -14,7 +14,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.10.4\n"
+"X-Generator: Weblate 5.15.2\n"
 
 #. module: edi_oca
 #: model:ir.model.fields,help:edi_oca.field_edi_exchange_type__advanced_settings_edit
@@ -1563,6 +1563,10 @@ msgid ""
 "waiting for the cron to pass by. Requires auto generate flag to be active as "
 "well. The cron will skip these records unless forced."
 msgstr ""
+"Quando attivi, i record di questo tipo verranno elaborati immediatamente, "
+"senza attendere il completamento del cron. Richiede che anche il flag di "
+"generazione automatica sia attivo. Il cron ignorerà questi record, a meno "
+"che non venga forzato."
 
 #. module: edi_oca
 #: model:ir.model.fields,help:edi_oca.field_edi_exchange_consumer_mixin__edi_disable_auto
