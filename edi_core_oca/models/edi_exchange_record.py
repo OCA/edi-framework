@@ -114,6 +114,7 @@ class EDIExchangeRecord(models.Model):
     parent_id = fields.Many2one(
         comodel_name="edi.exchange.record",
         help="Original exchange which originated this record",
+        index=True,
     )
     related_exchange_ids = fields.One2many(
         string="Related exchanges",
@@ -134,6 +135,7 @@ class EDIExchangeRecord(models.Model):
         help="ACK generated for current exchange.",
         compute="_compute_ack_exchange_id",
         store=True,
+        index=True,
     )
     ack_received_on = fields.Datetime(
         string="ACK received on", related="ack_exchange_id.exchanged_on"
