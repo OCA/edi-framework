@@ -57,7 +57,14 @@
                         <field name="company_id" groups="base.group_multi_company" />
                     </group>
                     <!-- Hook to add more config -->
-                    <notebook />
+                    <notebook>
+                        <page name="auto_cleanup" string="Records retention">
+                            <group>
+                                <field name="auto_archive_records_after_days" />
+                                <field name="auto_delete_records_after_days" />
+                            </group>
+                        </page>
+                    </notebook>
                 </sheet>
             </form>
         </field>

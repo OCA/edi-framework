@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo noupdate="1">
+    <record id="ir_cron_delete_old_archived_edi_records" model="ir.cron">
+        <field name="name">Delete Old Archived EDI Exchange Records</field>
+        <field name="model_id" ref="edi_core_oca.model_edi_exchange_record" />
+        <field name="state">code</field>
+        <field name="code">
+# Delete old archived EDI exchange records based on backend configuration
+backends = env['edi.backend'].search([
+    ('auto_delete_records_after_days', '&gt;', 0)
+])
+for backend in backends:
+    cutoff_date = datetime.datetime.now() - datetime.timedelta(days=backend.auto_delete_records_after_days)
+    records = model.search([
+        ('backend_id', '=', backend.id),
+        ('create_date', '&lt;', cutoff_date),
+        ('active', '=', False)
+    ], limit=100, order="create_date asc")
+    if records:
+        records.unlink()
+        </field>
+        <field name="interval_number">3</field>
+        <field name="interval_type">hours</field>
+        <field name="active" eval="True" />
+        <field name="priority" eval="10" />
+    </record>
+</odoo>

@@ -145,6 +145,7 @@ class EDIExchangeRecord(models.Model):
         help="The record state can be rolled back manually in case of failure.",
     )
     company_id = fields.Many2one("res.company", string="Company")
+    active = fields.Boolean(default=True)
 
     _identifier_uniq = models.Constraint(
         "unique(identifier)", "The identifier must be unique."

@@ -64,6 +64,18 @@ class EDIBackend(models.Model):
     )
     active = fields.Boolean(default=True)
     company_id = fields.Many2one("res.company", string="Company")
+    auto_archive_records_after_days = fields.Integer(
+        string="Auto-archive records after (days)",
+        default=0,
+        help="Automatically archive EDI exchange records after X days. "
+        "Set to <= 0 to disable auto-archiving.",
+    )
+    auto_delete_records_after_days = fields.Integer(
+        string="Auto-delete archived records after (days)",
+        default=0,
+        help="Automatically delete archived EDI exchange records after X days. "
+        "Set to <= 0 to disable auto-deletion.",
+    )
 
     @property
     def exchange_record_model(self):

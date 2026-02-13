@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo noupdate="1">
+    <record id="ir_cron_archive_old_edi_records" model="ir.cron">
+        <field name="name">Archive Old EDI Exchange Records</field>
+        <field name="model_id" ref="edi_core_oca.model_edi_exchange_record" />
+        <field name="state">code</field>
+        <field name="code">
+# Archive old EDI exchange records based on backend configuration
+backends = env['edi.backend'].search([
+    ('auto_archive_records_after_days', '&gt;', 0)
+])
+for backend in backends:
+    cutoff_date = datetime.datetime.now() - datetime.timedelta(days=backend.auto_archive_records_after_days)
+    records = model.search([
+        ('backend_id', '=', backend.id),
+        ('create_date', '&lt;', cutoff_date),
+        ('active', '=', True)
+    ], limit=10000, order="create_date asc")
+    if records:
+        records.action_archive()
+        </field>
+        <field name="interval_number">1</field>
+        <field name="interval_type">days</field>
+        <field name="active" eval="True" />
+        <field name="priority" eval="10" />
+    </record>
+</odoo>

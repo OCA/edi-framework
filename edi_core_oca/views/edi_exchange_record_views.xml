@@ -265,6 +265,17 @@
                     help="Show all records created in the last 7 days"
                 />
                 <separator />
+                <filter
+                    string="Active"
+                    name="filter_active"
+                    domain="[('active', '=', True)]"
+                />
+                <filter
+                    string="Archived"
+                    name="filter_archived"
+                    domain="[('active', '!=', True)]"
+                />
+                <separator />
                 <field name="backend_id" />
                 <field name="type_id" />
                 <field name="res_id" />

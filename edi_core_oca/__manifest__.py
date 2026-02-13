@@ -27,6 +27,8 @@
         "data/ir_actions_server.xml",
         "data/sequence.xml",
         "data/edi_configuration.xml",
+        "data/ir_cron_archive_old_edi_records.xml",
+        "data/ir_cron_delete_old_archived_edi_records.xml",
         "security/res_groups.xml",
         "security/ir_model_access.xml",
         "views/edi_backend_views.xml",
