@@ -40,9 +40,46 @@ class TestEDIConfigurations(EDIBackendCommonComponentRegistryTestCase):
 
     def setUp(self):
         super().setUp()
+        self.loader = FakeModelLoader(self.env, self.__module__)
+        self.loader.backup_registry()
+        from odoo.addons.edi_core_oca.tests.fake_models import EdiExchangeConsumerTest
+
+        EdiExchangeConsumerTest._edi_config_field_relation = lambda self: self.env[
+            "edi.configuration"
+        ]
+        self.loader.update_registry((EdiExchangeConsumerTest,))
+
         FakeOutputGenerator.reset_faked()
         FakeOutputSender.reset_faked()
         FakeOutputChecker.reset_faked()
+
+        self.create_config = self.env["edi.configuration"].create(
+            {
+                "name": "Create Config",
+                "active": True,
+                "backend_id": self.backend.id,
+                "type_id": self.exchange_type_out.id,
+                "trigger_id": self.env.ref(
+                    "edi_core_oca.edi_conf_trigger_record_create"
+                ).id,
+                "model_id": self.env["ir.model"]._get_id("edi.exchange.consumer.test"),
+                "snippet_do": "record._edi_send_via_edi(conf.type_id)",
+            }
+        )
+        self.write_config = self.env["edi.configuration"].create(
+            {
+                "name": "Write Config 1",
+                "active": True,
+                "backend_id": self.backend.id,
+                "type_id": self.exchange_type_out.id,
+                "trigger_id": self.env.ref(
+                    "edi_core_oca.edi_conf_trigger_record_write"
+                ).id,
+                "model_id": self.env["ir.model"]._get_id("edi.exchange.consumer.test"),
+                "snippet_do": "record._edi_send_via_edi(conf.type_id)",
+            }
+        )
+
         self.consumer_record = self.env["edi.exchange.consumer.test"].create(
             {
                 "name": "Test Consumer",
@@ -56,50 +93,11 @@ class TestEDIConfigurations(EDIBackendCommonComponentRegistryTestCase):
     @classmethod
     def _setup_records(cls):  # pylint:disable=missing-return
         super()._setup_records()
-        # Load fake models ->/
-        cls.loader = FakeModelLoader(cls.env, cls.__module__)
-        cls.loader.backup_registry()
-        from odoo.addons.edi_core_oca.tests.fake_models import EdiExchangeConsumerTest
-
-        EdiExchangeConsumerTest._edi_config_field_relation = lambda self: self.env[
-            "edi.configuration"
-        ]
-        # We need to override it, as we want to test the usage with components
-
-        cls.loader.update_registry((EdiExchangeConsumerTest,))
         cls.exchange_type_out.exchange_filename_pattern = "{record.id}"
-        cls.edi_configuration = cls.env["edi.configuration"]
-        cls.create_config = cls.edi_configuration.create(
-            {
-                "name": "Create Config",
-                "active": True,
-                "backend_id": cls.backend.id,
-                "type_id": cls.exchange_type_out.id,
-                "trigger_id": cls.env.ref(
-                    "edi_core_oca.edi_conf_trigger_record_create"
-                ).id,
-                "model_id": cls.env["ir.model"]._get_id("edi.exchange.consumer.test"),
-                "snippet_do": "record._edi_send_via_edi(conf.type_id)",
-            }
-        )
-        cls.write_config = cls.edi_configuration.create(
-            {
-                "name": "Write Config 1",
-                "active": True,
-                "backend_id": cls.backend.id,
-                "type_id": cls.exchange_type_out.id,
-                "trigger_id": cls.env.ref(
-                    "edi_core_oca.edi_conf_trigger_record_write"
-                ).id,
-                "model_id": cls.env["ir.model"]._get_id("edi.exchange.consumer.test"),
-                "snippet_do": "record._edi_send_via_edi(conf.type_id)",
-            }
-        )
 
-    @classmethod
-    def tearDownClass(cls):
-        cls.loader.restore_registry()
-        super().tearDownClass()
+    def tearDown(self):
+        self.loader.restore_registry()
+        super().tearDown()
 
     def test_edi_send_via_edi_config(self):
         # Check configuration on create
