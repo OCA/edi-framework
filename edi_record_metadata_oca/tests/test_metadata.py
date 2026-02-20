@@ -10,29 +10,25 @@ from odoo.addons.edi_core_oca.tests.common import EDIBackendCommonTestCase
 
 
 class TestEDIMetadata(EDIBackendCommonTestCase):
-    @classmethod
-    def _setup_records(cls):
-        res = super()._setup_records()
-        # Load fake models ->/
-        cls.loader = FakeModelLoader(cls.env, cls.__module__)
-        cls.loader.backup_registry()
+    def setUp(self):
+        super().setUp()
+        self.loader = FakeModelLoader(self.env, self.__module__)
+        self.loader.backup_registry()
         from .fake_models import EDIMetadataConsumerFake
 
-        cls.loader.update_registry((EDIMetadataConsumerFake,))
-        cls.consumer_model = cls.env[EDIMetadataConsumerFake._name]
+        self.loader.update_registry((EDIMetadataConsumerFake,))
+        self.consumer_model = self.env[EDIMetadataConsumerFake._name]
 
-        cls.exc_type = cls._create_exchange_type(
+        self.exc_type = self._create_exchange_type(
             name="Metadata test",
             code="metadata_test",
             direction="output",
         )
-        cls.exc_record = cls.backend.create_record(cls.exc_type.code, {})
-        return res
+        self.exc_record = self.backend.create_record(self.exc_type.code, {})
 
-    @classmethod
-    def tearDownClass(cls):
-        cls.loader.restore_registry()
-        super().tearDownClass()
+    def tearDown(self):
+        self.loader.restore_registry()
+        super().tearDown()
 
     def test_fields(self):
         self.exc_record.set_metadata({"foo": "baz", "bar": "waa"})
