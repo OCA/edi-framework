@@ -242,13 +242,21 @@ class TestEDIBackendOutput(TestEDIBackendOutputBase):
         self.assertEqual(file_content.strip(), expected)
 
     def test_prettify(self):
-        self.tmpl_out2.template_id.arch = (
+        tmpl_out2 = self.env["edi.exchange.template.output"].browse(self.tmpl_out2.id)
+        record2 = self.env["edi.exchange.record"].browse(self.record2.id)
+        self.assertTrue(
+            tmpl_out2.exists(), "Template output record vanished during test execution"
+        )
+        self.assertTrue(
+            record2.exists(), "Exchange record vanished during test execution"
+        )
+        tmpl_out2.template_id.arch = (
             '<t t-name="edi_exchange.test_output2"><root><a>1</a></root></t>'
         )
-        output = self.tmpl_out2.exchange_generate(self.record2)
+        output = tmpl_out2.exchange_generate(record2)
         self.assertEqual(output, b"<root><a>1</a></root>")
-        self.tmpl_out2.prettify = True
-        output = self.tmpl_out2.exchange_generate(self.record2)
+        tmpl_out2.prettify = True
+        output = tmpl_out2.exchange_generate(record2)
         self.assertEqual(output, b"<root>\n  <a>1</a>\n</root>\n")
 
     def test_generate_file_report(self):
