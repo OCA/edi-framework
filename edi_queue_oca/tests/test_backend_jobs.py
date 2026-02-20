@@ -20,25 +20,27 @@ class EDIBackendTestJobsCase(EDIBackendCommonTestCase, JobMixin):
     def _setup_context(cls):
         return dict(super()._setup_context(), queue_job__no_delay=None)
 
-    @classmethod
-    def _setup_records(cls):  # pylint:disable=missing-return
-        super()._setup_records()
-        # Load fake models ->/
-        cls.loader = FakeModelLoader(cls.env, cls.__module__)
-        cls.loader.backup_registry()
+    def setUp(self):
+        super().setUp()
+        self.loader = FakeModelLoader(self.env, self.__module__)
+        self.loader.backup_registry()
         from odoo.addons.edi_core_oca.tests.fake_models import EdiTestExecution
 
-        cls.loader.update_registry((EdiTestExecution,))
-        cls.ExecutionAbstractModel = cls.env["edi.framework.test.execution"]
-        cls.model = cls.env["ir.model"].search(
+        self.loader.update_registry((EdiTestExecution,))
+        self.ExecutionAbstractModel = self.env["edi.framework.test.execution"]
+        self.model = self.env["ir.model"].search(
             [("model", "=", "edi.framework.test.execution")]
         )
-        cls.exchange_type_out.generate_model_id = cls.model
-        cls.exchange_type_out.send_model_id = cls.model
-        cls.exchange_type_out.output_validate_model_id = cls.model
-        cls.exchange_type_in.receive_model_id = cls.model
-        cls.exchange_type_in.process_model_id = cls.model
-        cls.exchange_type_in.input_validate_model_id = cls.model
+        self.exchange_type_out.generate_model_id = self.model
+        self.exchange_type_out.send_model_id = self.model
+        self.exchange_type_out.output_validate_model_id = self.model
+        self.exchange_type_in.receive_model_id = self.model
+        self.exchange_type_in.process_model_id = self.model
+        self.exchange_type_in.input_validate_model_id = self.model
+
+    def tearDown(self):
+        self.loader.restore_registry()
+        super().tearDown()
 
     def _get_related_jobs(self, record):
         # Use domain in action to find all related jobs

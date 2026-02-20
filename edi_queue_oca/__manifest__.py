@@ -4,7 +4,7 @@
 {
     "name": "Edi Queue Oca",
     "summary": """Set Queue Jobs on EDI""",
-    "version": "18.0.1.0.1",
+    "version": "18.0.1.0.2",
     "license": "LGPL-3",
     "author": "Dixmit,Camptocamp,Odoo Community Association (OCA)",
     "website": "https://github.com/OCA/edi-framework",
