@@ -6,6 +6,7 @@
 from unittest import mock
 
 from freezegun import freeze_time
+from psycopg2 import OperationalError
 
 from odoo import fields, tools
 from odoo.exceptions import UserError
@@ -129,3 +130,13 @@ class EDIBackendTestOutputCase(EDIBackendCommonTestCase):
                 err.exception.args[0], f"Record ID={record.id} has no file to send!"
             )
             mocked.assert_not_called()
+
+    def test_send_record_with_operational_error(self):
+        self.record.write({"edi_exchange_state": "output_pending"})
+        self.record._set_file_content(f"TEST {self.record.id}")
+        with self.assertRaises(OperationalError):
+            self.backend.with_context(
+                test_break_send=OperationalError("SQL error")
+            ).exchange_send(self.record)
+        self.assertRecordValues(self.record, [{"edi_exchange_state": "output_pending"}])
+        self.assertFalse(self.record.exchange_error)

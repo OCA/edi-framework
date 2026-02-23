@@ -2,6 +2,8 @@
 # @author: Simone Orsi <simahawk@gmail.com>
 # License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl).
 
+from psycopg2 import OperationalError
+
 from odoo.orm.model_classes import add_to_registry
 
 from .common import EDIBackendCommonTestCase
@@ -84,3 +86,12 @@ class EDIBackendTestInputCase(EDIBackendCommonTestCase):
         # Check the record
         self.assertEqual(self.record._get_file_content(), "")
         self.assertRecordValues(self.record, [{"edi_exchange_state": "input_received"}])
+
+    def test_receive_record_with_operational_error(self):
+        self.record.edi_exchange_state = "input_pending"
+        with self.assertRaises(OperationalError):
+            self.backend.with_context(
+                test_break_receive=OperationalError("SQL error")
+            ).exchange_receive(self.record)
+        self.assertRecordValues(self.record, [{"edi_exchange_state": "input_pending"}])
+        self.assertFalse(self.record.exchange_error)

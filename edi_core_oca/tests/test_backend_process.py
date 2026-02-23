@@ -5,6 +5,7 @@
 import base64
 
 from freezegun import freeze_time
+from psycopg2 import IntegrityError
 
 from odoo import fields
 from odoo.exceptions import UserError
@@ -108,5 +109,14 @@ class EDIBackendTestProcessCase(EDIBackendCommonTestCase):
         record._set_file_content(f"TEST {record.id}")
         with self.assertRaises(UserError):
             record.action_exchange_process()
+
+    def test_process_record_with_integrity_error(self):
+        self.record.write({"edi_exchange_state": "input_received"})
+        with self.assertRaises(IntegrityError):
+            self.backend.with_context(
+                test_break_process=IntegrityError("SQL error")
+            ).exchange_process(self.record)
+        self.assertRecordValues(self.record, [{"edi_exchange_state": "input_received"}])
+        self.assertFalse(self.record.exchange_error)
 
     # TODO: test ack file are processed
