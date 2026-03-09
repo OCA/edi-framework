@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2025-10-07 09:43+0000\n"
+"PO-Revision-Date: 2026-03-09 14:45+0000\n"
 "Last-Translator: mymage <stefano.consolaro@mymage.it>\n"
 "Language-Team: none\n"
 "Language: it\n"
@@ -14,7 +14,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.10.4\n"
+"X-Generator: Weblate 5.15.2\n"
 
 #. module: edi_core_oca
 #: model:ir.model.fields,help:edi_core_oca.field_edi_exchange_type__advanced_settings_edit
@@ -657,7 +657,7 @@ msgstr "Invio handler OCA EDI"
 #. module: edi_core_oca
 #: model:res.groups,name:edi_core_oca.group_edi_override_exchange_file_content
 msgid "EDI Override Exchange File Content"
-msgstr ""
+msgstr "EDI sovrascrive il contenuto del file di scambio"
 
 #. module: edi_core_oca
 #: model:ir.model,name:edi_core_oca.model_edi_exchange_record
@@ -790,7 +790,7 @@ msgstr "Ext file scambio"
 #. module: edi_core_oca
 #: model:ir.model.fields,field_description:edi_core_oca.field_edi_exchange_record__exchange_file_frozen
 msgid "Exchange File Frozen"
-msgstr ""
+msgstr "Iberna file di scambio"
 
 #. module: edi_core_oca
 #: model:ir.model.fields,field_description:edi_core_oca.field_edi_exchange_record__exchange_filechecksum
@@ -1338,7 +1338,7 @@ msgstr "Nessun handler per %(action)s"
 #. module: edi_core_oca
 #: model:ir.model.fields,help:edi_core_oca.field_edi_exchange_record__exchange_file_frozen
 msgid "Not allowed to change the file anymore."
-msgstr ""
+msgstr "Modifica del file non più consentita."
 
 #. module: edi_core_oca
 #: model:ir.model.fields,field_description:edi_core_oca.field_edi_exchange_record__message_needaction_counter
@@ -1684,6 +1684,9 @@ msgid ""
 "                                    Consider deleting this record too or "
 "fixing its relation."
 msgstr ""
+"Il record correlato non è più disponibile.\n"
+"                                    Valutare l'eliminazione anche di questo "
+"record o correggere la sua relazione."
 
 #. module: edi_core_oca
 #: model:ir.model.fields,field_description:edi_core_oca.field_edi_configuration__trigger_id
@@ -1758,7 +1761,7 @@ msgstr "errore nell'invio"
 #. odoo-python
 #: code:addons/edi_core_oca/models/edi_configuration.py:0
 msgid "id"
-msgstr ""
+msgstr "id"
 
 #~ msgid ""
 #~ "<span class=\"text-warning\" invisible=\"related_record_exists\">\n"
