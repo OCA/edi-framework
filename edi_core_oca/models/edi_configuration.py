@@ -67,6 +67,12 @@ class EdiConfiguration(models.Model):
         help="""Used to do something specific here.
         Receives: operation, edi_action, vals, old_vals.""",
     )
+    is_global = fields.Boolean(
+        string="Global Configuration",
+        help="If checked, this configuration will be executed for all records, "
+        "regardless of the partner.",
+        default=False,
+    )
 
     @api.constrains("backend_id", "type_id")
     def _constrains_backend(self):
