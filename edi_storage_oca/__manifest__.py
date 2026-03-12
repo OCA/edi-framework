@@ -15,6 +15,7 @@
     "depends": ["edi_core_oca", "fs_storage"],
     "data": [
         "data/cron.xml",
+        "data/edi_configuration.xml",
         "security/ir_model_access.xml",
         "views/edi_backend_views.xml",
     ],

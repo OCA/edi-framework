@@ -1,0 +1,24 @@
+<odoo noupdate="1">
+    <record id="edi_config_trigger_storage_done" model="edi.configuration.trigger">
+        <field name="name">On record exchange done</field>
+        <field name="code">on_edi_exchange_done</field>
+        <field name="description">Trigger when a record exchange is done</field>
+    </record>
+    <record id="edi_config_trigger_storage_error" model="edi.configuration.trigger">
+        <field name="name">On record exchange error</field>
+        <field name="code">on_edi_exchange_error</field>
+        <field name="description">Trigger when a record exchange has an error</field>
+    </record>
+    <record id="edi_config_storage_done" model="edi.configuration">
+        <field name="name">Storage Move File on Done</field>
+        <field name="is_global" eval="True" />
+        <field name="trigger_id" ref="edi_config_trigger_storage_done" />
+        <field name="snippet_do">record.on_edi_exchange_done()</field>
+    </record>
+    <record id="edi_config_storage_error" model="edi.configuration">
+        <field name="name">Storage Move File on Error</field>
+        <field name="is_global" eval="True" />
+        <field name="trigger_id" ref="edi_config_trigger_storage_error" />
+        <field name="snippet_do">record.on_edi_exchange_error()</field>
+    </record>
+</odoo>
