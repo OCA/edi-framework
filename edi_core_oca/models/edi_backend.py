@@ -448,6 +448,7 @@ class EDIBackend(models.Model):
         old_state = state = exchange_record.edi_exchange_state
         error = traceback = False
         message = None
+        res = None
         try:
             res = self._exchange_process(exchange_record)
         except self._swallable_exceptions() as err:
