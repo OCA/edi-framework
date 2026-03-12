@@ -4,7 +4,7 @@
 {
     "name": "Edi Connector Oca",
     "summary": """Allow to use Connector as a source in EDI""",
-    "version": "19.0.1.0.0",
+    "version": "19.0.1.1.0",
     "license": "LGPL-3",
     "author": "ACSONE,Dixmit,Camptocamp,Odoo Community Association (OCA)",
     "maintainers": ["simahawk", "etobella"],
