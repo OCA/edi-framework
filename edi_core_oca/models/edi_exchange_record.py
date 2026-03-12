@@ -532,6 +532,12 @@ class EDIExchangeRecord(models.Model):
         """Hook to be implemented in other modules"""
         pass
 
+    def _trigger_edi_event_make_name(self, name, suffix=None):
+        return "on_edi_exchange_{name}{suffix}".format(
+            name=name,
+            suffix=("_" + suffix) if suffix else "",
+        )
+
     def _notify_done(self):
         self._notify_related_record(self._exchange_status_message("process_ok"))
         self._trigger_edi_event("done")
