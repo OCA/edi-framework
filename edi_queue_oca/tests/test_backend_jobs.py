@@ -4,9 +4,9 @@
 
 from unittest import mock
 
-from odoo_test_helper import FakeModelLoader
 from requests.exceptions import ConnectionError as ReqConnectionError
 
+from odoo.orm.model_classes import add_to_registry
 from odoo.tests import tagged
 
 from odoo.addons.edi_core_oca.tests.common import EDIBackendCommonTestCase
@@ -20,14 +20,24 @@ class EDIBackendTestJobsCase(EDIBackendCommonTestCase, JobMixin):
     def _setup_context(cls):
         return dict(super()._setup_context(), queue_job__no_delay=None)
 
-    def setUp(self):
-        super().setUp()
-        self.loader = FakeModelLoader(self.env, self.__module__)
-        self.loader.backup_registry()
+    @classmethod
+    def _setup_env(cls):
+        super()._setup_env()
+        # Load fake models ->/
         from odoo.addons.edi_core_oca.tests.fake_models import EdiTestExecution
 
-        self.loader.update_registry((EdiTestExecution,))
-        self.ExecutionAbstractModel = self.env["edi.framework.test.execution"]
+        add_to_registry(cls.registry, EdiTestExecution)
+        cls.registry._setup_models__(cls.env.cr, ["edi.framework.test.execution"])
+        cls.registry.init_models(
+            cls.env.cr,
+            ["edi.framework.test.execution"],
+            {"models_to_check": True},
+        )
+        cls.addClassCleanup(cls.registry.__delitem__, "edi.framework.test.execution")
+        return super()._setup_env()
+
+    def setUp(self):
+        super().setUp()
         self.model = self.env["ir.model"].search(
             [("model", "=", "edi.framework.test.execution")]
         )
@@ -37,10 +47,6 @@ class EDIBackendTestJobsCase(EDIBackendCommonTestCase, JobMixin):
         self.exchange_type_in.receive_model_id = self.model
         self.exchange_type_in.process_model_id = self.model
         self.exchange_type_in.input_validate_model_id = self.model
-
-    def tearDown(self):
-        self.loader.restore_registry()
-        super().tearDown()
 
     def _get_related_jobs(self, record):
         # Use domain in action to find all related jobs

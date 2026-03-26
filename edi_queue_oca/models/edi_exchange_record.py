@@ -2,6 +2,7 @@
 # Copyright 2025 Dixmit
 # License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl).
 
+import functools
 from ast import literal_eval
 
 from odoo import fields, models
@@ -23,7 +24,15 @@ class EdiExchangeRecord(models.Model):
             "action_exchange_process",
             "action_exchange_generate",
         ]:
-            self._patch_method(function, self._patch_job_auto_delay(function))
+            patched = self._patch_job_auto_delay(function)
+            setattr(
+                type(self),
+                function,
+                functools.update_wrapper(
+                    patched,
+                    getattr(type(self), function),
+                ),
+            )
         return super()._register_hook()
 
     def action_exchange_send_job_options(self):
