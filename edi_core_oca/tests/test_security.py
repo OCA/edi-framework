@@ -311,3 +311,35 @@ class TestEDIExchangeRecordSecurity(EDIBackendCommonTestCase):
 
         # The records fetched from the second page must be present in the final result
         self.assertIn(visible_id_2, records.ids)
+
+    def test_search_no_res_id(self):
+        """Test Exc Rec visibility for internal users when ``res_id`` is False-ish
+
+        Exchange Record's ``res_id`` is a ``Many2onReference`` field, which internally
+        converts False-ish values to 0 before storing them to the cache and the DB.
+        The rule's domain old leaf ``('res_id', '=', False)`` was instead converted to a
+        SQL query clause ``WHERE "edi_exchange_record.res_id" IS NULL``.
+        Since all ``edi_exchange_record`` rows contain a non-negative integer in the
+        ``res_id`` column, the rule old domain leaf always failed to fetch any record.
+
+        Changing the leaf to ``('res_id', '=', 0)`` fixes the issue, making such
+        Exchange Records visible again for internal users.
+        """
+        # Add the test user to the internal users group
+        self.user.write({"group_ids": [(4, self.env.ref("base.group_user").id)]})
+
+        # Create Exchange Records with no model (condition ``('model', '!=', False)``
+        # will fail) and False-ish record ID (to test condition ``('res_id', '=', 0)``):
+        # such False-ish values are all converted to 0 by ``fields.Many2oneReference``
+        # methods (and methods of its superclasses) when updating the cache values and
+        # preparing SQL queries to flush to the DB
+        exc_recs = self.env["edi.exchange.record"]
+        type_code = "test_csv_output"
+        vals = {"model": False}
+        for res_id in (0, 0.00, False, None, "", self.env["base"]):
+            exc_recs += self.backend.create_record(type_code, vals | {"res_id": res_id})
+        self.assertEqual(exc_recs.mapped("res_id"), [0] * len(exc_recs))
+
+        # Check that the test user can actually fetch such records
+        exc_recs_model = self.env["edi.exchange.record"].with_user(self.user)
+        self.assertEqual(exc_recs_model.search([("id", "in", exc_recs.ids)]), exc_recs)
