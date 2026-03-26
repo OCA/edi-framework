@@ -4,7 +4,7 @@
 {
     "name": "Edi Oca",
     "summary": """Integrate all EDI modules together""",
-    "version": "18.0.1.5.2",
+    "version": "19.0.1.0.0",
     "license": "LGPL-3",
     "author": "ACSONE,Dixmit,Camptocamp,Odoo Community Association (OCA)",
     "maintainers": ["simahawk", "etobella"],
