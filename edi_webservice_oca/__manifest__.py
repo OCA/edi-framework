@@ -11,7 +11,7 @@
     "author": "Dixmit, Camptocamp, Odoo Community Association (OCA)",
     "maintainers": ["etobella", "simahawk"],
     "website": "https://github.com/OCA/edi-framework",
-    "depends": ["edi_component_oca", "webservice"],
+    "depends": ["edi_component_oca", "webservice_server_env"],
     "data": ["views/edi_backend.xml", "security/ir.model.access.csv"],
     "demo": ["demo/edi_backend.xml"],
 }
