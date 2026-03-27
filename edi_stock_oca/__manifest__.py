@@ -5,11 +5,11 @@
     "name": "EDI Stock OCA",
     "summary": """
        Define EDI Configuration for Stock""",
-    "version": "18.0.1.0.1",
+    "version": "19.0.1.0.0",
     "license": "AGPL-3",
     "author": "Creu Blanca, Odoo Community Association (OCA)",
     "website": "https://github.com/OCA/edi-framework",
-    "depends": ["stock", "edi_oca", "component_event"],
+    "depends": ["stock", "edi_core_oca", "edi_component_oca"],
     "data": [
         "data/edi_configuration.xml",
         "views/stock_picking.xml",

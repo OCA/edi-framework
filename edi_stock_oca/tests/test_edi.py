@@ -2,16 +2,42 @@
 # License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl).
 from unittest import mock
 
-from odoo.addons.edi_oca.tests.common import EDIBackendCommonComponentTestCase
+from odoo.addons.edi_component_oca.tests.common import EDIBackendCommonComponentTestCase
 
 
 class TestProcessComponent(EDIBackendCommonComponentTestCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.backend = cls.env.ref("edi_stock_oca.demo_edi_backend")
-        cls.exc_type_out = cls.env.ref("edi_stock_oca.demo_edi_exc_type_order_out")
-        cls.edi_conf = cls.env.ref("edi_stock_oca.demo_edi_configuration_done")
+        cls.exc_type_out = cls._create_exchange_type(
+            name="TRANSFER DEMO",
+            code="demo_Transfer_out",
+            direction="output",
+            exchange_file_ext="xml",
+            exchange_filename_pattern="{record_name}-{type.code}-{dt}",
+        )
+        cls.edi_conf = cls.env["edi.configuration"].create(
+            {
+                "name": "Demo Transfer - Done",
+                "description": "Show case state change to done",
+                "backend_id": cls.backend.id,
+                "type_id": cls.exc_type_out.id,
+                "trigger_id": cls.env.ref(
+                    "edi_stock_oca.edi_conf_trigger_stock_picking_state_change"
+                ).id,
+                "model_id": cls.env["ir.model"]._get_id("stock.picking"),
+                "snippet_do": """
+# ('draft', 'Draft'),
+# ('waiting', 'Waiting Another Operation'),
+# ('confirmed', 'Waiting'),
+# ('assigned', 'Ready'),
+# ('done', 'Done'),
+# ('cancel', 'Cancelled'),
+if record.state in ('done', 'cancel', 'confirmed', 'assigned'):
+  record._edi_send_via_edi(conf.type_id)
+                """,
+            }
+        )
         cls.partner.edi_stock_picking_conf_ids = cls.edi_conf
         cls.warehouse = cls.env["stock.warehouse"].search([], limit=1)
         cls.stock_location = cls.warehouse.lot_stock_id
@@ -43,7 +69,6 @@ class TestProcessComponent(EDIBackendCommonComponentTestCase):
         )
         move_a = self.env["stock.move"].create(
             {
-                "name": self.product.name,
                 "product_id": self.product.id,
                 "product_uom_qty": 1,
                 "product_uom": self.product.uom_id.id,
