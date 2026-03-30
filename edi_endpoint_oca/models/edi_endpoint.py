@@ -5,7 +5,7 @@ import base64
 
 import werkzeug
 
-from odoo import _, api, exceptions, fields, models
+from odoo import api, exceptions, fields, models
 from odoo.tools import safe_eval
 
 
@@ -52,7 +52,7 @@ class EDIEndpoint(models.Model):
 
     def _check_endpoint_ready(self, request=False):
         if not self.backend_id or not self.exchange_type_id:
-            msg = _("Backend and exchange type are mandatory")
+            msg = self.env._("Backend and exchange type are mandatory")
             if request:
                 self._logger.error(msg)
                 raise werkzeug.exceptions.BadRequest("Endpoint mis-configured")
@@ -68,7 +68,9 @@ class EDIEndpoint(models.Model):
                 and not rec.backend_type_id == rec.exchange_type_id.backend_type_id
             ):
                 raise exceptions.UserError(
-                    _("Exchange type not compatible with selected backend type.")
+                    self.env._(
+                        "Exchange type not compatible with selected backend type."
+                    )
                 )
 
     def _handle_request(self, request):
