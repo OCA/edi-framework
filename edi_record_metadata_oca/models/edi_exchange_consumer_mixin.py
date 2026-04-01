@@ -36,11 +36,11 @@ class EDIMetadataConsumerMixin(models.AbstractModel):
 
     def _edi_store_metadata(self, metadata):
         if self.origin_exchange_record_id:
-            self.origin_exchange_record_id.set_metadata(metadata)
+            self.origin_exchange_record_id.edi_set_metadata(metadata)
 
     @api.model
     def _edi_store_metadata_before_create(self, origin_id, metadata):
-        self.env["edi.exchange.record"].browse(origin_id).set_metadata(metadata)
+        self.env["edi.exchange.record"].browse(origin_id).edi_set_metadata(metadata)
 
     def _edi_get_metadata(self):
-        return self.origin_exchange_record_id.get_metadata()
+        return self.origin_exchange_record_id.edi_get_metadata()

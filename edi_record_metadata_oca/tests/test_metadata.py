@@ -31,7 +31,7 @@ class TestEDIMetadata(EDIBackendCommonTestCase):
         super().tearDown()
 
     def test_fields(self):
-        self.exc_record.set_metadata({"foo": "baz", "bar": "waa"})
+        self.exc_record.edi_set_metadata({"foo": "baz", "bar": "waa"})
         self.assertTrue(self.exc_record.metadata)
         self.assertTrue(self.exc_record.metadata_display)
 
@@ -44,7 +44,7 @@ class TestEDIMetadata(EDIBackendCommonTestCase):
             }
         )
         self.assertFalse(consumer_record._edi_get_metadata())
-        self.assertFalse(self.exc_record.get_metadata())
+        self.assertFalse(self.exc_record.edi_get_metadata())
 
     def test_store(self):
         vals = {
@@ -66,4 +66,4 @@ class TestEDIMetadata(EDIBackendCommonTestCase):
             "additional": True,
         }
         self.assertEqual(consumer_record._edi_get_metadata(), expected)
-        self.assertEqual(self.exc_record.get_metadata(), expected)
+        self.assertEqual(self.exc_record.edi_get_metadata(), expected)
