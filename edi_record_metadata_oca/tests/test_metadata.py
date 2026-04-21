@@ -2,33 +2,38 @@
 # @author: Simone Orsi <simahawk@gmail.com>
 # License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl).
 
-from odoo_test_helper import FakeModelLoader
-
 from odoo import fields
+from odoo.orm.model_classes import add_to_registry
 
 from odoo.addons.edi_core_oca.tests.common import EDIBackendCommonTestCase
 
 
 class TestEDIMetadata(EDIBackendCommonTestCase):
-    def setUp(self):
-        super().setUp()
-        self.loader = FakeModelLoader(self.env, self.__module__)
-        self.loader.backup_registry()
+    @classmethod
+    def _setup_env(cls):
+        super()._setup_env()
+        # Load fake models ->/
         from .fake_models import EDIMetadataConsumerFake
 
-        self.loader.update_registry((EDIMetadataConsumerFake,))
-        self.consumer_model = self.env[EDIMetadataConsumerFake._name]
+        add_to_registry(cls.registry, EDIMetadataConsumerFake)
+        cls.registry._setup_models__(cls.env.cr, [EDIMetadataConsumerFake._name])
+        cls.registry.init_models(
+            cls.env.cr,
+            [EDIMetadataConsumerFake._name],
+            {"models_to_check": True},
+        )
+        cls.addClassCleanup(cls.registry.__delitem__, EDIMetadataConsumerFake._name)
+        return super()._setup_env()
 
+    def setUp(self):
+        super().setUp()
+        self.consumer_model = self.env["edi.metadata.consumer.fake"]
         self.exc_type = self._create_exchange_type(
             name="Metadata test",
             code="metadata_test",
             direction="output",
         )
         self.exc_record = self.backend.create_record(self.exc_type.code, {})
-
-    def tearDown(self):
-        self.loader.restore_registry()
-        super().tearDown()
 
     def test_fields(self):
         self.exc_record.edi_set_metadata({"foo": "baz", "bar": "waa"})

@@ -5,13 +5,11 @@ import json
 
 from odoo import api, fields, models
 
-from ..fields import BetterSerialized
-
 
 class EDIExchangeRecord(models.Model):
     _inherit = "edi.exchange.record"
 
-    metadata = BetterSerialized(
+    metadata = fields.Json(
         help="JSON-like metadata used for technical purposes.",
         default={},
     )

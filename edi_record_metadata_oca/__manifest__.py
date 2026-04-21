@@ -7,13 +7,13 @@
     "summary": """
     Allow to store metadata for related records.
     """,
-    "version": "18.0.1.0.4",
+    "version": "19.0.1.0.0",
     "development_status": "Alpha",
     "license": "LGPL-3",
     "website": "https://github.com/OCA/edi-framework",
     "author": "Camptocamp, Odoo Community Association (OCA)",
     "maintainers": ["simahawk"],
-    "depends": ["edi_core_oca", "base_sparse_field"],
+    "depends": ["edi_core_oca"],
     "data": [
         "views/edi_exchange_record.xml",
     ],
