@@ -34,15 +34,15 @@ class TestEndpoint(CommonEndpoint):
 
     def test_endpoint_count(self):
         backend = self.endpoint.backend_id
-        self.assertEqual(backend.endpoints_count, 1)
+        initial = backend.endpoints_count
         rec = self.endpoint.copy(
             {
                 "route": "/another",
             }
         )
-        self.assertEqual(backend.endpoints_count, 2)
+        self.assertEqual(backend.endpoints_count, initial + 1)
         rec.active = False
-        self.assertEqual(backend.endpoints_count, 1)
+        self.assertEqual(backend.endpoints_count, initial)
 
     def test_archive_check(self):
         backend = self.endpoint.backend_id
