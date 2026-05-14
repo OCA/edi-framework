@@ -78,12 +78,14 @@ class EdiConfiguration(models.Model):
     @api.constrains("backend_id", "type_id")
     def _constrains_backend(self):
         for rec in self:
+            if not rec.backend_id:
+                continue
             if rec.type_id.backend_id:
                 if rec.type_id.backend_id != rec.backend_id:
                     raise exceptions.ValidationError(
                         self.env._("Backend must match with exchange type's backend!")
                     )
-            else:
+            elif rec.type_id:
                 if rec.type_id.backend_type_id != rec.backend_id.backend_type_id:
                     raise exceptions.ValidationError(
                         self.env._(
