@@ -173,7 +173,9 @@ class TestEDIConfigurationGlobalEvents(EDIBackendCommonTestCase):
 
     # Snippet appends a marker per call so we can verify multiple invocations
     # against different targets within the same transaction.
-    _marker_snippet = "conf.write({'description': (conf.description or '') + '|' + record._name})"
+    _marker_snippet = (
+        "conf.write({'description': (conf.description or '') + '|' + record._name})"
+    )
 
     @classmethod
     def setUpClass(cls):
