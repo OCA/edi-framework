@@ -15,6 +15,18 @@
         <field name="code">on_record_write</field>
         <field name="description">Trigger when a record is updated</field>
     </record>
+
+    <record id="edi_config_trigger_record_done" model="edi.configuration.trigger">
+        <field name="name">On record exchange done</field>
+        <field name="code">on_edi_exchange_done</field>
+        <field name="description">Trigger when a record exchange is done</field>
+    </record>
+    <record id="edi_config_trigger_record_error" model="edi.configuration.trigger">
+        <field name="name">On record exchange error</field>
+        <field name="code">on_edi_exchange_error</field>
+        <field name="description">Trigger when a record exchange has an error</field>
+    </record>
+
     <!-- TODO: these 2 have to be triggered somehow -->
     <record id="edi_conf_trigger_send_via_email" model="edi.configuration.trigger">
         <field name="name">Send via email</field>
