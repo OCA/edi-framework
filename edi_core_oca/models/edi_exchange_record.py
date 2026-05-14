@@ -531,14 +531,9 @@ class EDIExchangeRecord(models.Model):
     def _trigger_edi_event(self, name, suffix=None, target=None, **kw):
         event_name = self._trigger_edi_event_make_name(name, suffix)
         target = target or self
-
-        global_configs = self.env["edi.configuration"].search(
-            [
-                ("trigger", "=", event_name),
-                ("is_global", "=", True),
-            ]
+        global_configs = self.env["edi.configuration"].edi_get_conf_global(
+            self, event_name
         )
-
         for conf in global_configs:
             conf.edi_exec_snippet_do(target, **kw)
 

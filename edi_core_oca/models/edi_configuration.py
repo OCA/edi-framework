@@ -207,6 +207,35 @@ class EdiConfiguration(models.Model):
             domain.append(("backend_id", "in", backend_ids))
         return self.filtered_domain(domain)
 
+    @api.model
+    def edi_get_conf_global(self, exchange_record, trigger):
+        """Return active global configurations matching the given event.
+
+        Unlike :meth:`edi_get_conf` -- which runs on a recordset of
+        configurations already linked to a partner -- global configurations
+        are not bound to any partner. We therefore have to derive the
+        filtering keys from the originating exchange record:
+
+        * ``trigger`` must match the event code
+        * ``is_global`` must be True
+        * ``type_id`` must match the exchange type or be empty (applies to all)
+        * ``backend_id`` must match the backend or be empty (applies to all)
+        * ``model_name`` must match the related record model or be empty
+          (applies to all)
+        """
+        related_model = exchange_record.model
+        model_options = [False]
+        if related_model:
+            model_options.append(related_model)
+        domain = [
+            ("trigger", "=", trigger),
+            ("is_global", "=", True),
+            ("type_id", "in", [exchange_record.type_id.id, False]),
+            ("backend_id", "in", [exchange_record.backend_id.id, False]),
+            ("model_name", "in", model_options),
+        ]
+        return self.search(domain)
+
     def action_view_partners(self):
         # TODO: add tests
         partner_model = self.env["res.partner"]
