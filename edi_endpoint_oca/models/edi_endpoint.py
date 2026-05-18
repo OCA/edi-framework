@@ -66,6 +66,7 @@ class EDIEndpoint(models.Model):
             if not isinstance(file_content, bytes):
                 file_content = bytes(file_content, encoding)
             vals["exchange_file"] = base64.b64encode(file_content)
+            vals["edi_exchange_state"] = "input_received"
 
         rec = self.backend_id.create_record(self.exchange_type_id.code, vals)
         return rec
