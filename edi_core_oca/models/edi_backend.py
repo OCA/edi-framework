@@ -403,6 +403,8 @@ class EDIBackend(models.Model):
             ("backend_id", "=", self.id),
             ("type_id.exchange_file_auto_generate", "=", True),
             ("type_id.direction", "=", "output"),
+            ("type_id.generate_model_id", "!=", False),
+            ("type_id.send_model_id", "!=", False),
             ("edi_exchange_state", "=", "new"),
             ("exchange_file", "=", False),
         ]
@@ -430,6 +432,7 @@ class EDIBackend(models.Model):
             states += ("output_sent",)
         domain = [
             ("type_id.direction", "=", "output"),
+            ("type_id.send_model_id", "!=", False),
             ("backend_id", "=", self.id),
             ("edi_exchange_state", "in", states),
         ]
@@ -636,6 +639,7 @@ class EDIBackend(models.Model):
         domain = [
             ("backend_id", "=", self.id),
             ("type_id.direction", "=", "input"),
+            ("type_id.receive_model_id", "!=", False),
             ("edi_exchange_state", "=", "input_pending"),
             ("exchange_file", "=", False),
         ]
@@ -648,6 +652,7 @@ class EDIBackend(models.Model):
         domain = [
             ("backend_id", "=", self.id),
             ("type_id.direction", "=", "input"),
+            ("type_id.process_model_id", "!=", False),
             ("edi_exchange_state", "in", states),
         ]
         if record_ids:
