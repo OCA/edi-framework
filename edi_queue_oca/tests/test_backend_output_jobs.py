@@ -4,6 +4,7 @@
 # License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl).
 
 
+from odoo.orm.model_classes import add_to_registry
 from odoo.tests import tagged
 
 from odoo.addons.edi_core_oca.tests.common import EDIBackendCommonTestCase
@@ -12,6 +13,21 @@ from odoo.addons.queue_job.tests.common import trap_jobs
 
 @tagged("-at_install", "post_install")
 class EDIBackendTestOutputJobsCase(EDIBackendCommonTestCase):
+    @classmethod
+    def _setup_records(cls):  # pylint:disable=missing-return
+        super()._setup_records()
+        from odoo.addons.edi_core_oca.tests.fake_models import EdiTestExecution
+
+        add_to_registry(cls.registry, EdiTestExecution)
+        cls.registry._setup_models__(cls.env.cr, ["edi.framework.test.execution"])
+        cls.registry.init_models(
+            cls.env.cr, ["edi.framework.test.execution"], {"models_to_check": True}
+        )
+        cls.addClassCleanup(cls.registry.__delitem__, "edi.framework.test.execution")
+        model = cls.env["ir.model"]._get("edi.framework.test.execution")
+        cls.exchange_type_out.generate_model_id = model
+        cls.exchange_type_out.send_model_id = model
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
