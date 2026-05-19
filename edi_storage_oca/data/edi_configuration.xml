@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo noupdate="1">
+    <!--
+        IMPORTANT: these configurations are *inactive* by default. Before
+        activating them, set 'backend_id' to the specific storage backend
+        whose directories should be used, otherwise the snippet will not
+        know which input_dir_pending / input_dir_done / input_dir_error to
+        operate on.
+    -->
+    <record id="edi_conf_storage_move_on_done" model="edi.configuration">
+        <field name="name">Storage: move input file to done</field>
+        <field name="active" eval="False" />
+        <field name="is_global" eval="True" />
+        <field name="trigger_id" ref="edi_core_oca.edi_config_trigger_record_done" />
+        <field
+            name="snippet_do"
+        >record.backend_id._storage_on_edi_exchange_done(record)</field>
+    </record>
+
+    <record id="edi_conf_storage_move_on_error" model="edi.configuration">
+        <field name="name">Storage: move input file to error</field>
+        <field name="active" eval="False" />
+        <field name="is_global" eval="True" />
+        <field name="trigger_id" ref="edi_core_oca.edi_config_trigger_record_error" />
+        <field
+            name="snippet_do"
+        >record.backend_id._storage_on_edi_exchange_error(record)</field>
+    </record>
+</odoo>

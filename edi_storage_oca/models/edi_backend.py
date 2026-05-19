@@ -148,3 +148,53 @@ class EDIBackend(models.Model):
             "edi_exchange_state": "input_pending",
             "storage_id": self.storage_id.id,
         }
+
+    def _storage_on_edi_exchange_done(self, exchange_record):
+        """
+        Move an input file from the pending dir to the done dir.
+
+        Intended to be invoked from a global 'edi.configuration' snippet
+        bound to the 'on_edi_exchange_done' trigger.
+        """
+        self.ensure_one()
+        storage = exchange_record.storage_id
+        if exchange_record.direction != "input" or not storage:
+            return False
+        if not self.input_dir_done:
+            return False
+        file_name = exchange_record.exchange_filename
+        pending_dir = exchange_record.type_id._storage_fullpath(
+            self.input_dir_pending
+        ).as_posix()
+        done_dir = exchange_record.type_id._storage_fullpath(
+            self.input_dir_done
+        ).as_posix()
+        error_dir = exchange_record.type_id._storage_fullpath(
+            self.input_dir_error
+        ).as_posix()
+        res = utils.move_file(storage, pending_dir, done_dir, file_name)
+        if not res and self.input_dir_error:
+            res = utils.move_file(storage, error_dir, done_dir, file_name)
+        return res
+
+    def _storage_on_edi_exchange_error(self, exchange_record):
+        """
+        Move an input file from the pending dir to the error dir.
+
+        Intended to be invoked from a global 'edi.configuration' snippet
+        bound to the 'on_edi_exchange_error' trigger.
+        """
+        self.ensure_one()
+        storage = exchange_record.storage_id
+        if exchange_record.direction != "input" or not storage:
+            return False
+        if not self.input_dir_error:
+            return False
+        file_name = exchange_record.exchange_filename
+        pending_dir = exchange_record.type_id._storage_fullpath(
+            self.input_dir_pending
+        ).as_posix()
+        error_dir = exchange_record.type_id._storage_fullpath(
+            self.input_dir_error
+        ).as_posix()
+        return utils.move_file(storage, pending_dir, error_dir, file_name)
