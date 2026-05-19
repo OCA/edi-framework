@@ -529,6 +529,7 @@ class EDIExchangeRecord(models.Model):
             rec._notify_related_record(message, level)
 
     def _trigger_edi_event(self, name, suffix=None, target=None, **kw):
+        """Trigger a component event linked to this backend and edi exchange."""
         event_name = self._trigger_edi_event_make_name(name, suffix)
         target = target or self
         global_configs = self.env["edi.configuration"].edi_get_conf_global(
