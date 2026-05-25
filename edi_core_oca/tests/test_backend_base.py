@@ -13,6 +13,14 @@ from .common import EDIBackendCommonTestCase
 
 class EDIBackendTestCaseBase(EDIBackendCommonTestCase):
     @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.default_record = cls.backend.create_record(
+            "test_csv_input",
+            {"model": cls.partner._name, "res_id": cls.partner.id},
+        )
+
+    @classmethod
     def _setup_records(cls):  # pylint:disable=missing-return
         super()._setup_records()
         # Load fake models ->/
@@ -96,3 +104,61 @@ class EDIBackendTestCaseBase(EDIBackendCommonTestCase):
         for action in ["receive", "input_validate", "process"]:
             with self.assertRaises(EDINotImplementedError):
                 self.backend._get_exec_handler(record, action)
+
+    # ---- conf / env_ctx resolution ------------------------------------------
+
+    def test_get_conf_for_record(self):
+        """`_get_conf_for_record` returns the action conf, or {} when missing."""
+        self.exchange_type_in.advanced_settings_edit = (
+            "execution_model:\n"
+            "  receive:\n"
+            "    env_ctx:\n"
+            "      foo: bar\n"
+            "    other_key: 1\n"
+        )
+        record = self.default_record
+        # Action declared -> its conf
+        self.assertEqual(
+            self.backend._get_conf_for_record(record, "receive"),
+            {"env_ctx": {"foo": "bar"}, "other_key": 1},
+        )
+        # Action not declared -> empty
+        self.assertEqual(self.backend._get_conf_for_record(record, "process"), {})
+
+    def test_get_record_env_ctx(self):
+        """`_get_record_env_ctx` returns env_ctx for the action, else {}."""
+        self.exchange_type_in.advanced_settings_edit = (
+            "execution_model:\n"
+            "  receive:\n"
+            "    env_ctx:\n"
+            "      foo: bar\n"
+            "      flag: true\n"
+            "  process:\n"
+            "    other_key: 1\n"
+        )
+        record = self.default_record
+        # Action with env_ctx -> mapping
+        self.assertEqual(
+            self.backend._get_record_env_ctx(record, "receive"),
+            {"foo": "bar", "flag": True},
+        )
+        # Action present but no env_ctx -> empty
+        self.assertEqual(self.backend._get_record_env_ctx(record, "process"), {})
+
+    def test_get_exec_handler_propagates_env_ctx(self):
+        """The handler returned by `_get_exec_handler` carries env_ctx keys."""
+        self.exchange_type_in.advanced_settings_edit = (
+            "execution_model:\n"
+            "  receive:\n"
+            "    env_ctx:\n"
+            "      edi_test_marker: hello\n"
+            "      edi_test_flag: true\n"
+        )
+        record = self.default_record
+        handler = self.backend._get_exec_handler(record, "receive")
+        ctx = handler.__self__.env.context
+        self.assertEqual(ctx.get("edi_test_marker"), "hello")
+        self.assertEqual(ctx.get("edi_test_flag"), True)
+        # Action without env_ctx -> handler context not polluted
+        handler_proc = self.backend._get_exec_handler(record, "process")
+        self.assertNotIn("edi_test_marker", handler_proc.__self__.env.context)
