@@ -115,6 +115,12 @@ msgid "Storage Handler for EDI"
 msgstr ""
 
 #. module: edi_storage_oca
+#. odoo-python
+#: code:addons/edi_storage_oca/models/edi_oca_storage_handler.py:0
+msgid "Storage error while reading %(path)s: %(error)s"
+msgstr ""
+
+#. module: edi_storage_oca
 #: model:ir.model.fields,help:edi_storage_oca.field_edi_backend__storage_id
 msgid "Storage for in-out files"
 msgstr ""
