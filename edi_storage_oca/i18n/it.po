@@ -28,7 +28,6 @@ msgstr "Tipo scambio EDI"
 
 #. module: edi_storage_oca
 #: model:ir.actions.server,name:edi_storage_oca.cron_check_storage_pending_input_ir_actions_server
-#: model:ir.cron,cron_name:edi_storage_oca.cron_check_storage_pending_input
 msgid "EDI backend storage check pending input"
 msgstr "Controllo ingressi in attesa deposito backend EDI"
 
@@ -51,8 +50,13 @@ msgstr "Deposito FS"
 #. module: edi_storage_oca
 #: model:ir.model.fields,help:edi_storage_oca.field_edi_exchange_type__exchange_filename_pattern
 msgid ""
-"For output exchange types this should be a formatting string with the following variables available (to be used between brackets, `{}`): `exchange_record`, `record_name`, `type` and `dt`. For instance, a valid string would be {record_name}-{type.code}-{dt}\n"
-"For input exchange types related to storage backends it should be a regex expression to filter the files to be fetched from the pending directory in the related storage. E.g: `.*my-type-[0-9]*.\\.csv`"
+"For output exchange types this should be a formatting string with the "
+"following variables available (to be used between brackets, `{}`): "
+"`exchange_record`, `record_name`, `type` and `dt`. For instance, a valid "
+"string would be {record_name}-{type.code}-{dt}\n"
+"For input exchange types related to storage backends it should be a regex "
+"expression to filter the files to be fetched from the pending directory in "
+"the related storage. E.g: `.*my-type-[0-9]*.\\.csv`"
 msgstr ""
 "Per i tipi di scambio in uscita questo dovrebbe essere una stringa di "
 "formattazione con le seguenti variabili disponibili (da utilizzare tra "
@@ -119,6 +123,17 @@ msgstr "Record creato da un file trovato nel deposito FS"
 #: model_terms:ir.ui.view,arch_db:edi_storage_oca.edi_backend_view_form
 msgid "Storage"
 msgstr "Deposito"
+
+#. module: edi_storage_oca
+#: model:ir.model,name:edi_storage_oca.model_edi_oca_storage_handler
+msgid "Storage Handler for EDI"
+msgstr ""
+
+#. module: edi_storage_oca
+#. odoo-python
+#: code:addons/edi_storage_oca/models/edi_oca_storage_handler.py:0
+msgid "Storage error while reading %(path)s: %(error)s"
+msgstr ""
 
 #. module: edi_storage_oca
 #: model:ir.model.fields,help:edi_storage_oca.field_edi_backend__storage_id
