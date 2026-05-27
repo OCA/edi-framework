@@ -34,6 +34,7 @@ class EdiExchangeConsumerTest(models.Model):
 class EdiTestExecution(models.AbstractModel):
     _name = "edi.framework.test.execution"
     _inherit = [
+        "edi.oca.handler.generate",
         "edi.oca.handler.process",
         "edi.oca.handler.check",
         "edi.oca.handler.send",

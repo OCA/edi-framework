@@ -93,9 +93,15 @@ class EDIBackendTestCaseBase(EDIBackendCommonTestCase):
         self._test_get_handler(user=user)
 
     def test_get_handler_no_handler(self):
-        self.exchange_type_in.process_model_id = False
-        self.exchange_type_in.input_validate_model_id = False
-        self.exchange_type_in.receive_model_id = False
+        self.env.cr.execute(
+            """UPDATE edi_exchange_type
+               SET process_model_id = NULL,
+                   input_validate_model_id = NULL,
+                   receive_model_id = NULL
+               WHERE id = %s""",
+            [self.exchange_type_in.id],
+        )
+        self.exchange_type_in.invalidate_recordset()
         vals = {
             "model": self.partner._name,
             "res_id": self.partner.id,

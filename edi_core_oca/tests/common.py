@@ -5,6 +5,7 @@
 
 import os
 
+from odoo.orm.model_classes import add_to_registry
 from odoo.tests.common import TransactionCase
 
 
@@ -19,6 +20,24 @@ class EDIBackendTestMixin:
     def _setup_env(cls, ctx=None):
         ctx = ctx or {}
         cls.env = cls.env(context=cls._setup_context(**ctx))
+        # Register EdiTestExecution early so _create_exchange_type can set default
+        # handler models — the new @api.constrains on edi.exchange.type requires
+        # send_model_id (output) and process_model_id (input) to be set.
+        # Guard prevents double-registration when individual test classes also call
+        # add_to_registry; pop() in cleanup is safe even if __delitem__ already ran.
+        if "edi.framework.test.execution" not in cls.registry:
+            from .fake_models import EdiTestExecution
+
+            add_to_registry(cls.registry, EdiTestExecution)
+            cls.registry._setup_models__(cls.env.cr, ["edi.framework.test.execution"])
+            cls.registry.init_models(
+                cls.env.cr, ["edi.framework.test.execution"], {"models_to_check": True}
+            )
+            cls.addClassCleanup(
+                lambda: cls.registry.__delitem__("edi.framework.test.execution")
+                if "edi.framework.test.execution" in cls.registry
+                else None
+            )
 
     @classmethod
     def _setup_records(cls):
@@ -84,6 +103,19 @@ class EDIBackendTestMixin:
 
     @classmethod
     def _create_exchange_type(cls, **kw):
+        # Mirror the pattern in edi_component_oca/tests/common.py: provide default
+        # handler models so every test exchange type satisfies the new constraint.
+        # Callers can override individual fields by passing explicit values.
+        if "edi.framework.test.execution" in cls.registry:
+            handler_model = cls.env["ir.model"]._get("edi.framework.test.execution")
+            if handler_model:
+                kw.setdefault("receive_model_id", handler_model.id)
+                kw.setdefault("generate_model_id", handler_model.id)
+                kw.setdefault("input_validate_model_id", handler_model.id)
+                kw.setdefault("output_validate_model_id", handler_model.id)
+                kw.setdefault("send_model_id", handler_model.id)
+                kw.setdefault("process_model_id", handler_model.id)
+                kw.setdefault("check_model_id", handler_model.id)
         model = cls.env["edi.exchange.type"]
         vals = {
             "name": "Test CSV exchange",

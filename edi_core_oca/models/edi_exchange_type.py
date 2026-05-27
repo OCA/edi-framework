@@ -261,6 +261,32 @@ class EDIExchangeType(models.Model):
     def set_settings(self, val):
         self.advanced_settings_edit = val
 
+    @api.constrains(
+        "direction",
+        "send_model_id",
+        "process_model_id",
+        "generate_model_id",
+        "exchange_file_auto_generate",
+    )
+    def _check_direction_handlers(self):
+        for rec in self:
+            if rec.direction == "output":
+                if not rec.send_model_id:
+                    raise exceptions.ValidationError(
+                        self.env._("Output exchange types require a Sender handler.")
+                    )
+                if rec.exchange_file_auto_generate and not rec.generate_model_id:
+                    raise exceptions.ValidationError(
+                        self.env._(
+                            "Output exchange types with 'Auto Generate' enabled "
+                            "require a Generator handler."
+                        )
+                    )
+            elif rec.direction == "input" and not rec.process_model_id:
+                raise exceptions.ValidationError(
+                    self.env._("Input exchange types require a Processor handler.")
+                )
+
     @api.constrains("backend_id", "backend_type_id")
     def _check_backend(self):
         for rec in self:

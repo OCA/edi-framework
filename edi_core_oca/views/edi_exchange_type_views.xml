@@ -83,6 +83,7 @@
                                 <field
                                     name="process_model_id"
                                     options="{'no_create': True}"
+                                    required="direction == 'input'"
                                 />
                                 <field
                                     name="input_validate_model_id"
@@ -96,10 +97,12 @@
                                 <field
                                     name="generate_model_id"
                                     options="{'no_create': True}"
+                                    required="direction == 'output' and exchange_file_auto_generate"
                                 />
                                 <field
                                     name="send_model_id"
                                     options="{'no_create': True}"
+                                    required="direction == 'output'"
                                 />
                                 <field
                                     name="output_validate_model_id"
