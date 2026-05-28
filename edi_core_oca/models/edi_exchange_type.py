@@ -147,6 +147,14 @@ class EDIExchangeType(models.Model):
         """,
     )
     advanced_settings = Serialized(default={}, compute="_compute_advanced_settings")
+    exchange_record_ids = fields.One2many(
+        comodel_name="edi.exchange.record",
+        inverse_name="type_id",
+    )
+    exchange_record_count = fields.Integer(
+        string="# Exchange Records",
+        compute="_compute_exchange_record_count",
+    )
     rule_ids = fields.One2many(
         comodel_name="edi.exchange.type.rule",
         inverse_name="type_id",
@@ -235,6 +243,17 @@ class EDIExchangeType(models.Model):
         by_type_id = dict(groupby(ack_for, lambda x: x.ack_type_id.id))
         for rec in self:
             rec.ack_for_type_ids = [x.id for x in by_type_id.get(rec.id, [])]
+
+    @api.depends("exchange_record_ids")
+    def _compute_exchange_record_count(self):
+        data = self.env["edi.exchange.record"]._read_group(
+            [("type_id", "in", self.ids)],
+            groupby=["type_id"],
+            aggregates=["__count"],
+        )
+        mapped_data = {type_.id: count for type_, count in data}
+        for rec in self:
+            rec.exchange_record_count = mapped_data.get(rec.id, 0)
 
     def get_settings(self):
         return self.advanced_settings
@@ -327,3 +346,16 @@ class EDIExchangeType(models.Model):
         default = dict(default or {})
         default.setdefault("code", f"{self.code}_COPY_FIXME")
         return super().copy_data(default=default)
+
+    def action_view_exchange_records(self):
+        self.ensure_one()
+        action = self.env["ir.actions.act_window"]._for_xml_id(
+            "edi_core_oca.act_open_edi_exchange_record_view"
+        )
+        action["domain"] = [("type_id", "=", self.id)]
+        action["context"] = {
+            "default_type_id": self.id,
+            "default_backend_id": self.backend_id.id,
+            "search_default_type_id": self.id,
+        }
+        return action

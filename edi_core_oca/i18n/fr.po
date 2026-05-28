@@ -96,6 +96,11 @@ msgid ""
 msgstr ""
 
 #. module: edi_core_oca
+#: model:ir.model.fields,field_description:edi_core_oca.field_edi_exchange_type__exchange_record_count
+msgid "# Exchange Records"
+msgstr ""
+
+#. module: edi_core_oca
 #: model_terms:ir.ui.view,arch_db:edi_core_oca.edi_exchange_consumer_mixin_buttons
 msgid "<span class=\"pe-4\"><i class=\"fa fa-retweet\"/> EDI actions</span>"
 msgstr ""
@@ -201,10 +206,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:edi_core_oca.field_edi_backend__active
 #: model:ir.model.fields,field_description:edi_core_oca.field_edi_configuration__active
 #: model:ir.model.fields,field_description:edi_core_oca.field_edi_configuration_trigger__active
+#: model:ir.model.fields,field_description:edi_core_oca.field_edi_exchange_record__active
 #: model:ir.model.fields,field_description:edi_core_oca.field_edi_exchange_type__active
 #: model:ir.model.fields,field_description:edi_core_oca.field_edi_exchange_type_rule__active
 #: model_terms:ir.ui.view,arch_db:edi_core_oca.edi_backend_view_search
 #: model_terms:ir.ui.view,arch_db:edi_core_oca.edi_configuration_view_search
+#: model_terms:ir.ui.view,arch_db:edi_core_oca.edi_exchange_record_view_search
 #: model_terms:ir.ui.view,arch_db:edi_core_oca.edi_exchange_type_rule_view_search
 #: model_terms:ir.ui.view,arch_db:edi_core_oca.edi_exchange_type_view_search
 msgid "Active"
@@ -252,10 +259,16 @@ msgid "Apply to this model"
 msgstr ""
 
 #. module: edi_core_oca
+#: model:ir.actions.server,name:edi_core_oca.ir_cron_archive_old_edi_records_ir_actions_server
+msgid "Archive Old EDI Exchange Records"
+msgstr ""
+
+#. module: edi_core_oca
 #: model_terms:ir.ui.view,arch_db:edi_core_oca.edi_backend_view_form
 #: model_terms:ir.ui.view,arch_db:edi_core_oca.edi_backend_view_search
 #: model_terms:ir.ui.view,arch_db:edi_core_oca.edi_configuration_trigger_view_form
 #: model_terms:ir.ui.view,arch_db:edi_core_oca.edi_configuration_view_form
+#: model_terms:ir.ui.view,arch_db:edi_core_oca.edi_exchange_record_view_search
 #: model_terms:ir.ui.view,arch_db:edi_core_oca.edi_exchange_type_rule_view_form
 #: model_terms:ir.ui.view,arch_db:edi_core_oca.edi_exchange_type_rule_view_search
 #: model_terms:ir.ui.view,arch_db:edi_core_oca.edi_exchange_type_view_form
@@ -277,6 +290,30 @@ msgstr ""
 "Génère automatiquement la sortie pour les enregistrements dont la charge "
 "utile est manquante. Si cette option est active, un cron se chargera de "
 "générer la sortie lorsqu'elle n'est pas encore définie. "
+
+#. module: edi_core_oca
+#: model:ir.model.fields,field_description:edi_core_oca.field_edi_backend__auto_archive_records_after_days
+msgid "Auto-archive records after (days)"
+msgstr ""
+
+#. module: edi_core_oca
+#: model:ir.model.fields,field_description:edi_core_oca.field_edi_backend__auto_delete_records_after_days
+msgid "Auto-delete archived records after (days)"
+msgstr ""
+
+#. module: edi_core_oca
+#: model:ir.model.fields,help:edi_core_oca.field_edi_backend__auto_archive_records_after_days
+msgid ""
+"Automatically archive EDI exchange records after X days. Set to <= 0 to "
+"disable auto-archiving."
+msgstr ""
+
+#. module: edi_core_oca
+#: model:ir.model.fields,help:edi_core_oca.field_edi_backend__auto_delete_records_after_days
+msgid ""
+"Automatically delete archived EDI exchange records after X days. Set to <= 0 "
+"to disable auto-deletion."
+msgstr ""
 
 #. module: edi_core_oca
 #: model:ir.model.fields,field_description:edi_core_oca.field_edi_configuration__backend_id
@@ -428,6 +465,11 @@ msgstr ""
 #. module: edi_core_oca
 #: model:ir.model.fields,field_description:edi_core_oca.field_edi_exchange_type__encoding_in_error_handler
 msgid "Decoding Error Handler"
+msgstr ""
+
+#. module: edi_core_oca
+#: model:ir.actions.server,name:edi_core_oca.ir_cron_delete_old_archived_edi_records_ir_actions_server
+msgid "Delete Old Archived EDI Exchange Records"
 msgstr ""
 
 #. module: edi_core_oca
@@ -753,6 +795,7 @@ msgstr ""
 #. module: edi_core_oca
 #: model:ir.model.fields,field_description:edi_core_oca.field_edi_exchange_consumer_mixin__exchange_record_ids
 #: model:ir.model.fields,field_description:edi_core_oca.field_edi_exchange_related_record__exchange_record_id
+#: model:ir.model.fields,field_description:edi_core_oca.field_edi_exchange_type__exchange_record_ids
 msgid "Exchange Record"
 msgstr ""
 
@@ -896,6 +939,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:edi_core_oca.act_open_edi_exchange_record_view
 #: model:ir.ui.menu,name:edi_core_oca.menu_edi_exchange_record_root
 #: model_terms:ir.ui.view,arch_db:edi_core_oca.edi_backend_view_form
+#: model_terms:ir.ui.view,arch_db:edi_core_oca.edi_exchange_type_view_form
 msgid "Exchanges"
 msgstr ""
 
@@ -1421,6 +1465,11 @@ msgid "Record ID=%d is not meant to be sent!"
 msgstr ""
 
 #. module: edi_core_oca
+#: model_terms:ir.ui.view,arch_db:edi_core_oca.edi_backend_view_form
+msgid "Records retention"
+msgstr ""
+
+#. module: edi_core_oca
 #: model_terms:ir.ui.view,arch_db:edi_core_oca.edi_exchange_record_view_form
 msgid "Regenerate"
 msgstr ""
@@ -1665,7 +1714,8 @@ msgstr ""
 #: model:ir.model.fields,help:edi_core_oca.field_edi_exchange_type__quick_exec
 msgid ""
 "When active, records of this type will be processed immediately without "
-"waiting for the cron to pass by."
+"waiting for the cron to pass by. Requires auto generate flag to be active as "
+"well. The cron will skip these records unless forced."
 msgstr ""
 
 #. module: edi_core_oca
