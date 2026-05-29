@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-11-15 17:06+0000\n"
+"PO-Revision-Date: 2026-05-29 13:46+0000\n"
 "Last-Translator: mymage <stefano.consolaro@mymage.it>\n"
 "Language-Team: none\n"
 "Language: it\n"
@@ -14,7 +14,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.6.2\n"
+"X-Generator: Weblate 5.15.2\n"
 
 #. module: edi_storage_oca
 #: model:ir.model,name:edi_storage_oca.model_edi_backend
@@ -127,13 +127,13 @@ msgstr "Deposito"
 #. module: edi_storage_oca
 #: model:ir.model,name:edi_storage_oca.model_edi_oca_storage_handler
 msgid "Storage Handler for EDI"
-msgstr ""
+msgstr "Gestore archivio per EDI"
 
 #. module: edi_storage_oca
 #. odoo-python
 #: code:addons/edi_storage_oca/models/edi_oca_storage_handler.py:0
 msgid "Storage error while reading %(path)s: %(error)s"
-msgstr ""
+msgstr "Errore archivio nella lettura di %(path)s: %(error)s"
 
 #. module: edi_storage_oca
 #: model:ir.model.fields,help:edi_storage_oca.field_edi_backend__storage_id
