@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-05-25 22:46+0000\n"
+"PO-Revision-Date: 2026-06-05 09:46+0000\n"
 "Last-Translator: mymage <stefano.consolaro@mymage.it>\n"
 "Language-Team: none\n"
 "Language: it\n"
@@ -157,7 +157,7 @@ msgstr ""
 #. module: edi_core_oca
 #: model:ir.model.fields,field_description:edi_core_oca.field_edi_exchange_type__exchange_record_count
 msgid "# Exchange Records"
-msgstr ""
+msgstr "N° record scambio"
 
 #. module: edi_core_oca
 #: model_terms:ir.ui.view,arch_db:edi_core_oca.edi_exchange_consumer_mixin_buttons
@@ -319,7 +319,7 @@ msgstr "Applica a questo modello"
 #. module: edi_core_oca
 #: model:ir.actions.server,name:edi_core_oca.ir_cron_archive_old_edi_records_ir_actions_server
 msgid "Archive Old EDI Exchange Records"
-msgstr ""
+msgstr "Archivia i vecchi record EDI"
 
 #. module: edi_core_oca
 #: model_terms:ir.ui.view,arch_db:edi_core_oca.edi_backend_view_form
@@ -352,12 +352,12 @@ msgstr ""
 #. module: edi_core_oca
 #: model:ir.model.fields,field_description:edi_core_oca.field_edi_backend__auto_archive_records_after_days
 msgid "Auto-archive records after (days)"
-msgstr ""
+msgstr "Auto archivia i record dopo (giorni)"
 
 #. module: edi_core_oca
 #: model:ir.model.fields,field_description:edi_core_oca.field_edi_backend__auto_delete_records_after_days
 msgid "Auto-delete archived records after (days)"
-msgstr ""
+msgstr "Auto cancella i record archiviati dopo (giorni)"
 
 #. module: edi_core_oca
 #: model:ir.model.fields,help:edi_core_oca.field_edi_backend__auto_archive_records_after_days
@@ -365,6 +365,8 @@ msgid ""
 "Automatically archive EDI exchange records after X days. Set to <= 0 to "
 "disable auto-archiving."
 msgstr ""
+"Archivia automaticamente i record di scambio EDI dopo X giorni. Impostare "
+"inferiore o uguale a 0 per disabilitare l'auto archiviazione."
 
 #. module: edi_core_oca
 #: model:ir.model.fields,help:edi_core_oca.field_edi_backend__auto_delete_records_after_days
@@ -372,6 +374,8 @@ msgid ""
 "Automatically delete archived EDI exchange records after X days. Set to <= 0 "
 "to disable auto-deletion."
 msgstr ""
+"Cancella automaticamente i record di scambio EDI archiviati dopo X giorni. "
+"Impostare inferiore o uguale a 0 per disabilitare l'auto cancellazione."
 
 #. module: edi_core_oca
 #: model:ir.model.fields,field_description:edi_core_oca.field_edi_configuration__backend_id
@@ -528,7 +532,7 @@ msgstr "Gestore errore decodifica"
 #. module: edi_core_oca
 #: model:ir.actions.server,name:edi_core_oca.ir_cron_delete_old_archived_edi_records_ir_actions_server
 msgid "Delete Old Archived EDI Exchange Records"
-msgstr ""
+msgstr "Cancella i vecchi record di scambio EDI archiviati"
 
 #. module: edi_core_oca
 #: model:ir.model.fields,help:edi_core_oca.field_edi_configuration__description
@@ -1547,7 +1551,7 @@ msgstr "Record ID=%d non è previsto che sia inviato!"
 #. module: edi_core_oca
 #: model_terms:ir.ui.view,arch_db:edi_core_oca.edi_backend_view_form
 msgid "Records retention"
-msgstr ""
+msgstr "Cancellazione record"
 
 #. module: edi_core_oca
 #: model_terms:ir.ui.view,arch_db:edi_core_oca.edi_exchange_record_view_form
@@ -1808,6 +1812,10 @@ msgid ""
 "waiting for the cron to pass by. Requires auto generate flag to be active as "
 "well. The cron will skip these records unless forced."
 msgstr ""
+"Quando attivi, i record di questo tipo verranno elaborati immediatamente, "
+"senza attendere il completamento del cron. Richiede che anche il flag di "
+"generazione automatica sia attivo. Il cron ignorerà questi record, a meno "
+"che non venga forzato."
 
 #. module: edi_core_oca
 #: model:ir.model.fields,help:edi_core_oca.field_edi_exchange_consumer_mixin__edi_disable_auto
