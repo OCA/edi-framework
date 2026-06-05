@@ -100,3 +100,26 @@ class EDIBackendCommonTestCase(TransactionCase, EDIBackendTestMixin):
         super().setUpClass()
         cls._setup_env()
         cls._setup_records()
+
+    def _make_global_error_conf(self, exchange_type):
+        """Register a global ``edi.configuration`` bound to the
+        ``on_edi_exchange_error`` event.
+
+        Its snippet writes a marker on the configuration so a test can assert
+        the error event actually fired. This is the observable behaviour that
+        distinguishes an errored exchange (which must notify, e.g. create the
+        activities handled by ``edi_notification_oca``) from one that merely
+        posts a chatter message via ``notify_action_complete``.
+        """
+        trigger = self.env.ref("edi_core_oca.edi_config_trigger_record_error")
+        return self.env["edi.configuration"].create(
+            {
+                "name": "Test notify on error",
+                "active": True,
+                "backend_id": self.backend.id,
+                "type_id": exchange_type.id,
+                "trigger_id": trigger.id,
+                "is_global": True,
+                "snippet_do": "conf.write({'description': 'error-event-fired'})",
+            }
+        )

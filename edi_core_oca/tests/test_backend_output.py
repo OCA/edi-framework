@@ -100,6 +100,17 @@ class EDIBackendTestOutputCase(EDIBackendCommonTestCase):
             "OOPS! Something went wrong :(", self.record.exchange_error_traceback
         )
 
+    def test_send_record_with_error_triggers_notify_error(self):
+        self.record.write({"edi_exchange_state": "output_pending"})
+        self.record._set_file_content(f"TEST {self.record.id}")
+        conf = self._make_global_error_conf(self.record.type_id)
+        self.record.with_context(
+            test_break_send="OOPS! Something went wrong :("
+        ).action_exchange_send()
+        # The error event must fire so downstream notifications (e.g.
+        # edi_notification_oca activities) are triggered.
+        self.assertEqual(conf.description, "error-event-fired")
+
     def test_send_invalid_direction(self):
         vals = {
             "model": self.partner._name,

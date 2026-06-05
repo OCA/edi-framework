@@ -85,6 +85,17 @@ class EDIBackendTestValidateCase(EDIBackendCommonTestCase):
         )
         self.assertIn("Data seems wrong!", self.record_in.exchange_error_traceback)
 
+    def test_receive_validate_record_error_triggers_notify_error(self):
+        self.record_in.write({"edi_exchange_state": "input_pending"})
+        exc = EDIValidationError("Data seems wrong!")
+        conf = self._make_global_error_conf(self.record_in.type_id)
+        self.backend.with_context(test_break_input_validate=exc).exchange_receive(
+            self.record_in
+        )
+        # The error event must fire so downstream notifications (e.g.
+        # edi_notification_oca activities) are triggered.
+        self.assertEqual(conf.description, "error-event-fired")
+
     def test_generate_validate_record(self):
         self.record_out.write({"edi_exchange_state": "new"})
         self.backend.exchange_generate(self.record_out)
@@ -118,6 +129,17 @@ class EDIBackendTestValidateCase(EDIBackendCommonTestCase):
             ],
         )
         self.assertIn("Data seems wrong!", self.record_out.exchange_error_traceback)
+
+    def test_generate_validate_record_error_triggers_notify_error(self):
+        self.record_out.write({"edi_exchange_state": "new"})
+        exc = EDIValidationError("Data seems wrong!")
+        conf = self._make_global_error_conf(self.record_out.type_id)
+        self.backend.with_context(test_break_output_validate=exc).exchange_generate(
+            self.record_out
+        )
+        # The error event must fire so downstream notifications (e.g.
+        # edi_notification_oca activities) are triggered.
+        self.assertEqual(conf.description, "error-event-fired")
 
     def test_validate_record_error_regenerate(self):
         self.record_out.write({"edi_exchange_state": "new"})

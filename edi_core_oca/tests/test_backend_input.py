@@ -77,6 +77,16 @@ class EDIBackendTestInputCase(EDIBackendCommonTestCase):
             self.record, [{"edi_exchange_state": "input_receive_error"}]
         )
 
+    def test_receive_no_allow_empty_file_triggers_notify_error(self):
+        self.record.edi_exchange_state = "input_pending"
+        conf = self._make_global_error_conf(self.record.type_id)
+        self.backend.with_context(
+            fake_output="", _edi_receive_break_on_error=False
+        ).exchange_receive(self.record)
+        # The error event must fire so downstream notifications (e.g.
+        # edi_notification_oca activities) are triggered.
+        self.assertEqual(conf.description, "error-event-fired")
+
     def test_receive_allow_empty_file_record(self):
         self.record.edi_exchange_state = "input_pending"
         self.record.type_id.allow_empty_files_on_receive = True
