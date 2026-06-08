@@ -141,8 +141,18 @@ class TestEDIBackendOutput(TestEDIStorageBase):
         """Already sent, update the state via cron."""
         self.record.edi_exchange_state = "output_sent"
         rec1 = self.record
-        partner2 = self.env.ref("base.res_partner_2")
-        partner3 = self.env.ref("base.res_partner_3")
+        partner2, partner3 = self.env["res.partner"].create(
+            [
+                {
+                    "name": "Acme Corporation",
+                    "is_company": True,
+                },
+                {
+                    "name": "Gemini Furniture",
+                    "is_company": True,
+                },
+            ]
+        )
         rec2 = self.record.copy(
             {
                 "model": partner2._name,

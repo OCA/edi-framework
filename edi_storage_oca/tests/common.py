@@ -12,7 +12,32 @@ FS_STORAGE_MOCK_PATH = "odoo.addons.edi_storage_oca.utils"
 class TestEDIStorageBase(EDIBackendCommonTestCase):
     @classmethod
     def _get_backend(cls):
-        return cls.env.ref("edi_storage_oca.demo_edi_backend_storage")
+        backend_type = cls.env["edi.backend.type"].create(
+            {
+                "name": "Demo EDI backend type",
+                "code": "demo_backend",
+            }
+        )
+        storage = cls.env["fs.storage"].create(
+            {
+                "name": "Odoo Filesystem Backend",
+                "protocol": "odoofs",
+                "code": "odoofs",
+            }
+        )
+        return cls.env["edi.backend"].create(
+            {
+                "name": "Storage Demo EDI backend",
+                "backend_type_id": backend_type.id,
+                "storage_id": storage.id,
+                "input_dir_pending": "demo_in/pending",
+                "input_dir_done": "demo_in/done",
+                "input_dir_error": "demo_in/error",
+                "output_dir_pending": "demo_out/pending",
+                "output_dir_done": "demo_out/done",
+                "output_dir_error": "demo_out/error",
+            }
+        )
 
     @classmethod
     def _setup_records(cls):

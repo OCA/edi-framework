@@ -7,7 +7,7 @@
     "summary": """
     Base module to allow exchanging files via storage backend (eg: SFTP).
     """,
-    "version": "18.0.1.1.0",
+    "version": "19.0.1.0.0",
     "development_status": "Beta",
     "license": "LGPL-3",
     "website": "https://github.com/OCA/edi-framework",
@@ -19,5 +19,4 @@
         "security/ir_model_access.xml",
         "views/edi_backend_views.xml",
     ],
-    "demo": ["demo/edi_backend_demo.xml"],
 }

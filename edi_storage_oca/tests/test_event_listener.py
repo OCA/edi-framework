@@ -6,10 +6,9 @@
 import base64
 from unittest import mock
 
-from odoo_test_helper import FakeModelLoader
+from odoo.orm.model_classes import add_to_registry
 
 from odoo.addons.edi_core_oca.tests.common import EDIBackendCommonTestCase
-from odoo.addons.edi_core_oca.tests.fake_models import EdiTestExecution
 
 STORAGE_MOVE_FILE_PATH = "odoo.addons.edi_storage_oca.utils.move_file"
 
@@ -17,7 +16,32 @@ STORAGE_MOVE_FILE_PATH = "odoo.addons.edi_storage_oca.utils.move_file"
 class TestStorageEventListener(EDIBackendCommonTestCase):
     @classmethod
     def _get_backend(cls):
-        return cls.env.ref("edi_storage_oca.demo_edi_backend_storage")
+        backend_type = cls.env["edi.backend.type"].create(
+            {
+                "name": "Demo EDI backend type",
+                "code": "demo_backend",
+            }
+        )
+        storage = cls.env["fs.storage"].create(
+            {
+                "name": "Odoo Filesystem Backend",
+                "protocol": "odoofs",
+                "code": "odoofs",
+            }
+        )
+        return cls.env["edi.backend"].create(
+            {
+                "name": "Storage Demo EDI backend",
+                "backend_type_id": backend_type.id,
+                "storage_id": storage.id,
+                "input_dir_pending": "demo_in/pending",
+                "input_dir_done": "demo_in/done",
+                "input_dir_error": "demo_in/error",
+                "output_dir_pending": "demo_out/pending",
+                "output_dir_done": "demo_out/done",
+                "output_dir_error": "demo_out/error",
+            }
+        )
 
     @classmethod
     def setUpClass(cls):
@@ -36,21 +60,22 @@ class TestStorageEventListener(EDIBackendCommonTestCase):
         }
         cls.record = cls.backend.create_record("test_csv_input", vals)
 
-    def setUp(self):
-        super().setUp()
-        self.loader = FakeModelLoader(self.env, self.__module__)
-        self.loader.backup_registry()
+    @classmethod
+    def _setup_records(cls):  # pylint:disable=missing-return
+        super()._setup_records()
+        # Load fake models ->/
+        from odoo.addons.edi_core_oca.tests.fake_models import EdiTestExecution
 
-        self.loader.update_registry((EdiTestExecution,))
-        fake_model = self.env["ir.model"].search(
-            [("model", "=", "edi.framework.test.execution")]
+        add_to_registry(cls.registry, EdiTestExecution)
+        cls.registry._setup_models__(cls.env.cr, ["edi.framework.test.execution"])
+        cls.registry.init_models(
+            cls.env.cr, ["edi.framework.test.execution"], {"models_to_check": True}
         )
-        self.exchange_type_in.process_model_id = fake_model
-        self.exchange_type_in.input_validate_model_id = fake_model
-
-    def tearDown(self):
-        self.loader.restore_registry()
-        super().tearDown()
+        cls.addClassCleanup(cls.registry.__delitem__, "edi.framework.test.execution")
+        cls.ExecutionAbstractModel = cls.env["edi.framework.test.execution"]
+        cls.model = cls.env["ir.model"]._get("edi.framework.test.execution")
+        cls.exchange_type_in.process_model_id = cls.model
+        cls.exchange_type_in.input_validate_model_id = cls.model
 
     def _patch_move_file(self):
         return mock.patch(STORAGE_MOVE_FILE_PATH, autospec=True, return_value=True)
