@@ -8,7 +8,7 @@ def migrate(env, version):
         env.cr,
         f"""
         UPDATE edi_exchange_type
-        SET send_model_id = { model.id }
+        SET send_model_id = {model.id}
         WHERE direction = 'output'
           AND send_model_id IS NULL
           AND EXISTS (

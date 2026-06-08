@@ -73,7 +73,7 @@ class TestStorageEventListener(EDIBackendCommonTestCase):
 
     def test_02_process_record_with_error(self):
         self.record.write({"edi_exchange_state": "input_received"})
-        self.record._set_file_content("TEST %d" % self.record.id)
+        self.record._set_file_content("TEST %d")
         with self._patch_move_file() as mocked:
             self.record.with_context(
                 test_break_process="OOPS! Something went wrong :("
