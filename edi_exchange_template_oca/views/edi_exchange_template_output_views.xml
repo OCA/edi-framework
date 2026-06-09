@@ -78,7 +78,7 @@
                 <field name="name" />
                 <field name="backend_id" />
                 <field name="template_key" />
-                <group expand="0" string="Group By">
+                <group>
                     <filter
                         name="group_by_backend_type_id"
                         string="Backend type"
