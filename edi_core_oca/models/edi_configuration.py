@@ -138,6 +138,7 @@ class EdiConfiguration(models.Model):
         :returns: dict -- evaluation context given to safe_eval
         """
         ctx = {
+            "env": self.env,
             "uid": self.env.uid,
             "user": self.env.user,
             "DotDict": DotDict,
