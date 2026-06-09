@@ -5,7 +5,7 @@
 
 import logging
 
-from odoo import fields, models
+from odoo import models
 
 _logger = logging.getLogger(__name__)
 
@@ -39,4 +39,4 @@ class EDIBackend(models.Model):
         ]
         candidates = self.output_template_model.search(base_domain)
         # Take the 1st one having allowed_type_ids set
-        return fields.first(candidates.sorted(lambda x: 0 if x.allowed_type_ids else 1))
+        return candidates.sorted(lambda x: 0 if x.allowed_type_ids else 1)[:1]
