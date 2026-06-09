@@ -121,6 +121,9 @@ class EDIExchangeTemplateMixin(models.AbstractModel):
         return ctx
 
     def _time_utils(self):
+        def first():
+            return lambda records: next(iter(records)) if len(records) > 1 else records
+
         return {
             "datetime": safe_eval.datetime,
             "dateutil": safe_eval.dateutil,
@@ -129,14 +132,14 @@ class EDIExchangeTemplateMixin(models.AbstractModel):
             "date_to_string": self._date_to_string,
             "datetime_to_string": self._datetime_to_string,
             "time_to_string": lambda dt: dt.strftime("%H:%M:%S") if dt else "",
-            "first_of": fields.first,
+            "first_of": first,
         }
 
     def _evaluate_code_snippet(self, **render_values):
         if not self._code_snippet_valued():
             return {}
         eval_ctx = dict(render_values, **self._get_code_snippet_eval_context())
-        safe_eval.safe_eval(self.code_snippet, eval_ctx, mode="exec", nocopy=True)
+        safe_eval.safe_eval(self.code_snippet, eval_ctx, mode="exec")
         result = eval_ctx.get("result", {})
         if not isinstance(result, dict):
             _logger.error("code_snippet should return a dict into `result`")

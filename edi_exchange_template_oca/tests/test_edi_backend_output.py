@@ -5,26 +5,31 @@ import json
 
 from freezegun import freeze_time
 from lxml import etree
-from odoo_test_helper import FakeModelLoader
+
+from odoo.orm.model_classes import add_to_registry
 
 from odoo.addons.edi_core_oca.tests.common import EDIBackendCommonTestCase
 
 
 class TestEDIBackendOutputBase(EDIBackendCommonTestCase):
     @classmethod
-    def tearDownClass(cls):
-        cls.loader.restore_registry()
-        super().tearDownClass()
+    def _setup_env(cls):
+        # Load fake models ->/
+        from odoo.addons.edi_core_oca.tests.fake_models import EdiTestExecution
+
+        add_to_registry(cls.registry, EdiTestExecution)
+        cls.registry._setup_models__(cls.env.cr, ["edi.framework.test.execution"])
+        cls.registry.init_models(
+            cls.env.cr,
+            ["edi.framework.test.execution"],
+            {"models_to_check": True},
+        )
+        cls.addClassCleanup(cls.registry.__delitem__, "edi.framework.test.execution")
+        return super()._setup_env()
 
     @classmethod
     def _setup_records(cls):
         res = super()._setup_records()
-        # Load fake models ->/
-        cls.loader = FakeModelLoader(cls.env, cls.__module__)
-        cls.loader.backup_registry()
-        from odoo.addons.edi_core_oca.tests.fake_models import EdiTestExecution
-
-        cls.loader.update_registry((EdiTestExecution,))
         cls.ExecutionAbstractModel = cls.env["edi.framework.test.execution"]
         cls.model = cls.env["ir.model"].search(
             [("model", "=", "edi.framework.test.execution")]
@@ -98,12 +103,10 @@ class TestEDIBackendOutputBase(EDIBackendCommonTestCase):
                 "key": "edi_exchange.test_output2",
                 "arch": """
             <t t-name="edi_exchange.test_output2">
-                <t t-name="edi_exchange.test_output2">
-                    <Record t-att-ref="record.ref">
-                        <Name t-esc="record.name" />
-                        <Custom t-att-bit="custom_bit" t-esc="baz"/>
-                    </Record>
-                </t>
+                <Record t-att-ref="record.ref">
+                    <Name t-esc="record.name" />
+                    <Custom t-att-bit="custom_bit" t-esc="baz"/>
+                </Record>
             </t>
             """,
             }
