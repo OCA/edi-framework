@@ -62,7 +62,6 @@ class EDIExchangeOutputTemplate(models.Model):
         * utc_now
         * date_to_string
         * render_edi_template
-        * get_info_provider
         * info
         """
         )
@@ -102,7 +101,6 @@ class EDIExchangeOutputTemplate(models.Model):
             "backend": exchange_record.backend_id,
             "template": self,
             "render_edi_template": self._render_template,
-            "get_info_provider": self._get_info_provider,
             "info": {},
         }
         values.update(kw)
@@ -140,22 +138,3 @@ class EDIExchangeOutputTemplate(models.Model):
 
     def _prettify_xml(self, xml_string):
         return etree.tostring(etree.fromstring(xml_string), pretty_print=True)
-
-    def _get_info_provider(self, exchange_record, work_ctx=None, usage=None, **kw):
-        """Retrieve component providing info to render a template.
-
-        TODO: improve this description.
-        TODO: add tests
-        """
-        default_work_ctx = dict(
-            exchange_record=exchange_record,
-            record=exchange_record.record,
-        )
-        default_work_ctx.update(work_ctx or {})
-        backend = exchange_record.backend_id
-        model = exchange_record.model or backend._name
-        usage_candidates = [usage or self.code + ".info"]
-        provider = backend._find_component(
-            model, usage_candidates, work_ctx=default_work_ctx, **kw
-        )
-        return provider
