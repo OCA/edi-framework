@@ -12,6 +12,8 @@ from odoo import fields, tools
 from odoo.exceptions import UserError
 from odoo.orm.model_classes import add_to_registry
 
+from odoo.addons.edi_core_oca.utils import EdiExchangeReturn
+
 from .common import EDIBackendCommonTestCase
 
 
@@ -76,6 +78,27 @@ class EDIBackendTestOutputCase(EDIBackendCommonTestCase):
                 fields.Datetime.to_string(self.record.exchanged_on),
                 "2020-10-21 10:00:00",
             )
+
+    def test_send_record_with_structured_result(self):
+        self.record.write({"edi_exchange_state": "output_pending"})
+        self.record._set_file_content(f"TEST {self.record.id}")
+        structured_result = EdiExchangeReturn(
+            "record.wms_exported before: {}\nrecord.wms_exported after: {'name': 'x'}",
+            code=200,
+        )
+        with mock.patch.object(type(self.backend), "_exchange_send") as mocked:
+            mocked.return_value = structured_result
+            res = self.record.action_exchange_send()
+        self.assertEqual(res, str(structured_result))
+        self.assertRecordValues(self.record, [{"edi_exchange_state": "output_sent"}])
+
+    def test_send_record_with_legacy_string_result_uses_send_ok_message(self):
+        self.record.write({"edi_exchange_state": "output_pending"})
+        self.record._set_file_content(f"TEST {self.record.id}")
+        with mock.patch.object(type(self.backend), "_exchange_send") as mocked:
+            mocked.return_value = "custom legacy message"
+            res = self.record.action_exchange_send()
+        self.assertEqual(res, self.record._exchange_status_message("send_ok"))
 
     def test_send_record_with_error(self):
         self.record.write({"edi_exchange_state": "output_pending"})
