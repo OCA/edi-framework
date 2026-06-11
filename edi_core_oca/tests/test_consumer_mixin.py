@@ -12,6 +12,7 @@ from lxml import etree
 from odoo.orm.model_classes import add_to_registry
 from odoo.tests import Form
 
+from ..utils import EDIExchangeActionResult
 from .common import EDIBackendCommonTestCase
 
 
@@ -209,7 +210,7 @@ result = not record._has_exchange_record(exchange_type, exchange_type.backend_id
     )
     @mock.patch("odoo.addons.edi_core_oca.models.edi_backend.EDIBackend._exchange_send")
     def test_edi_send_via_edi(self, mocked_send, mocked_generate, mocked_validate):
-        mocked_generate.return_value = "result"
+        mocked_generate.return_value = EDIExchangeActionResult.from_result("result")
         self.assertEqual(self.consumer_record.exchange_record_count, 0)
         self.consumer_record._edi_send_via_edi(
             self.exchange_type_new, backend=self.backend
@@ -227,7 +228,7 @@ result = not record._has_exchange_record(exchange_type, exchange_type.backend_id
     )
     @mock.patch("odoo.addons.edi_core_oca.models.edi_backend.EDIBackend._exchange_send")
     def test_edi_send_via_edi_ack(self, mocked_send, mocked_generate, mocked_validate):
-        mocked_generate.return_value = "result"
+        mocked_generate.return_value = EDIExchangeActionResult.from_result("result")
         vals = {
             "model": self.consumer_record._name,
             "res_id": self.consumer_record.id,
@@ -257,7 +258,7 @@ result = not record._has_exchange_record(exchange_type, exchange_type.backend_id
     def test_edi_send_via_edi_invalid_ack(
         self, mocked_send, mocked_generate, mocked_validate
     ):
-        mocked_generate.return_value = "result"
+        mocked_generate.return_value = EDIExchangeActionResult.from_result("result")
         vals = {
             "model": self.consumer_record._name,
             "res_id": self.consumer_record.id,
