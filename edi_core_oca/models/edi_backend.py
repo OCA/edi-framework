@@ -16,6 +16,7 @@ from odoo import exceptions, fields, models
 from odoo.exceptions import UserError
 
 from ..exceptions import EDINotImplementedError, EDIValidationError
+from ..utils import EdiExchangeReturn
 
 _logger = logging.getLogger(__name__)
 
@@ -242,7 +243,7 @@ class EDIBackend(models.Model):
         message = None
         res = ""
         try:
-            self._exchange_send(exchange_record)
+            send_result = self._exchange_send(exchange_record)
             _logger.debug("%s sent", exchange_record.identifier)
         except self._send_retryable_exceptions() as err:
             traceback = _get_exception_traceback()
@@ -267,8 +268,10 @@ class EDIBackend(models.Model):
             res = "__sql_error__"
             raise
         else:
-            # TODO: maybe the send handler should return desired message and state
-            message = exchange_record._exchange_status_message("send_ok")
+            if isinstance(send_result, EdiExchangeReturn):
+                message = str(send_result)
+            else:
+                message = exchange_record._exchange_status_message("send_ok")
             error = traceback = None
             state = (
                 "output_sent_and_processed"
