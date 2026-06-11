@@ -54,7 +54,7 @@ class EDIBackendTestJobsCase(EDIBackendCommonTestCase, JobMixin):
         action = record.action_view_related_queue_jobs()
         return self.env["queue.job"].search(action["domain"])
 
-    def test_output(self):
+    def _test_output_return(self, message, expected_message):
         job_counter = self.job_counter()
         vals = {
             "model": self.partner._name,
@@ -84,14 +84,20 @@ class EDIBackendTestJobsCase(EDIBackendCommonTestCase, JobMixin):
         job = self.backend.with_delay().exchange_send(record)
         created = job_counter.search_created()
         with mock.patch.object(type(self.backend), "_exchange_send") as mocked:
-            mocked.return_value = "ok"
+            mocked.return_value = message
             res = job.perform()
-            self.assertEqual(res, "Exchange sent")
+            self.assertEqual(res, expected_message)
             self.assertEqual(record.edi_exchange_state, "output_sent")
         self.assertEqual(created[0].name, "Send exchange file.")
         # Check related jobs
         record.invalidate_recordset()
         self.assertEqual(created, self._get_related_jobs(record))
+
+    def test_output_with_specific_return(self):
+        self._test_output_return("specific return message", "specific return message")
+
+    def test_output_no_return(self):
+        self._test_output_return("", "Exchange sent")
 
     def test_output_fail_retry(self):
         job_counter = self.job_counter()
