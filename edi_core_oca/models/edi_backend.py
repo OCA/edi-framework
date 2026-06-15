@@ -528,6 +528,7 @@ class EDIBackend(models.Model):
         error = traceback = False
         message = None
         content = None
+        res = ""
         try:
             content = self._exchange_receive(exchange_record)
             # Ignore result of FileNotFoundError/OSError
