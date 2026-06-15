@@ -51,7 +51,7 @@ class EDIBackendTestCaseBase(EDIBackendCommonTestCase):
         expected = {
             "type_id": self.exchange_type_in.id,
             "edi_exchange_state": "new",
-            "exchange_filename": "EDI_EXC_TEST-test_csv_input-2020-10-21-100000.csv",
+            "exchange_filename": "EDI_EXC_TEST-test_csv_input-2020-10-21-10-00-00.csv",
         }
         self.assertRecordValues(record, [expected])
         self.assertEqual(record.record, self.partner)

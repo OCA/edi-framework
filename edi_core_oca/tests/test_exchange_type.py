@@ -111,11 +111,11 @@ class EDIExchangeTypeTestCase(EDIBackendCommonTestCase):
         # Test with datetime in filename pattern
         self.exchange_type_out.exchange_file_ext = "csv"
         self.exchange_type_out.exchange_filename_pattern = "Test-File-{dt}"
-        self._test_exchange_filename("Test-File-2022-04-28-083724.csv")
+        self._test_exchange_filename("Test-File-2022-04-28-08-37-24.csv")
 
         # Add timezone on current user
         self.env.user.tz = "America/New_York"  # New_York time is -4h
-        self._test_exchange_filename("Test-File-2022-04-28-043724.csv")
+        self._test_exchange_filename("Test-File-2022-04-28-04-37-24.csv")
 
         # Force date pattern on advanced settings
         self.exchange_type_out.advanced_settings_edit = """
@@ -130,7 +130,7 @@ class EDIExchangeTypeTestCase(EDIBackendCommonTestCase):
             # Rome time is +2h
             force_tz: Europe/Rome
         """
-        self._test_exchange_filename("Test-File-2022-04-28-103724.csv")
+        self._test_exchange_filename("Test-File-2022-04-28-10-37-24.csv")
 
         # Force date pattern and timezone on advanced settings
         self.exchange_type_out.advanced_settings_edit = """
