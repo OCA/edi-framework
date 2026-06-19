@@ -11,6 +11,22 @@
                     <group>
                         <field name="job_channel_id" />
                         <field name="job_priority" />
+                        <field name="job_eta_enabled" />
+                        <field
+                            name="job_eta_hour"
+                            invisible="not job_eta_enabled"
+                            required="job_eta_enabled"
+                        />
+                        <field
+                            name="job_eta_minute"
+                            invisible="not job_eta_enabled"
+                            required="job_eta_enabled"
+                        />
+                        <field
+                            name="job_eta_tz"
+                            invisible="not job_eta_enabled"
+                            required="job_eta_enabled"
+                        />
                     </group>
                 </page>
             </notebook>

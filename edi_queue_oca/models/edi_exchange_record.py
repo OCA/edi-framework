@@ -47,6 +47,8 @@ class EdiExchangeRecord(models.Model):
         priority = exchange_type.job_priority
         if priority:
             params["priority"] = priority
+        if exchange_type.job_eta_enabled and (eta := exchange_type._get_job_eta()):
+            params["eta"] = eta
         # Avoid generating the same job for the same record if existing
         params["identity_key"] = exchange_record_job_identity_exact
         return params

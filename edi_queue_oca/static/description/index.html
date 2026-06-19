@@ -379,6 +379,10 @@ ul.auto-toc {
 records are generated using queue.</p>
 <p>No need of doing a configuration on it, however, we can specify priority
 and channel in exchange type.</p>
+<p>Exchange types can also define a daily execution time with <tt class="docutils literal">eta_time</tt>.
+The value is entered as a <tt class="docutils literal">float_time</tt> in the current user’s timezone
+(<tt class="docutils literal">22.5</tt> means 22:30 local time) and is converted at runtime to the
+next matching UTC datetime used as the queue job ETA.</p>
 <p><strong>Table of contents</strong></p>
 <div class="contents local topic" id="contents">
 <ul class="simple">

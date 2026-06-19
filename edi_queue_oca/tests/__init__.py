@@ -1,3 +1,4 @@
+from . import test_exchange_type
 from . import test_record
 from . import test_backend_jobs
 from . import test_backend_output_jobs
