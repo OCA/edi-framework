@@ -10,7 +10,6 @@ BH_NS = "http://www.unece.org/cefact/namespaces/StandardBusinessDocumentHeader"
 
 
 class BusinessHeaderTestCase(BaseTestCase):
-
     _schema_path = "edi_gs1:static/schemas/sbdh/StandardBusinessDocumentHeader.xsd"
 
     @classmethod

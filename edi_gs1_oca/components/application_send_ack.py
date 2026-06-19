@@ -7,8 +7,7 @@ from odoo.addons.component.core import Component
 
 
 class ApplicationSendAcknowledgement(Component):
-    """Generate GS1 applicationSendAcknowledgement.
-    """
+    """Generate GS1 applicationSendAcknowledgement."""
 
     _name = "gs1.output.applicationSendAcknowledgement"
     _inherit = "edi.gs1.output.mixin"
