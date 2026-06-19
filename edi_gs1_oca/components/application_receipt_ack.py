@@ -8,8 +8,7 @@ from odoo.addons.component.core import Component
 
 
 class ApplicationReceiptAcknowledgement(Component):
-    """Parse GS1 applicationReceiptAcknowledgement.
-    """
+    """Parse GS1 applicationReceiptAcknowledgement."""
 
     _name = "gs1.input.applicationReceiptAcknowledgement"
     _inherit = "edi.gs1.input.mixin"

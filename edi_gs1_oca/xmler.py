@@ -88,7 +88,6 @@ def dict2xml(input_dict, encoding="utf-8", pretty=False):
 def parse(input_dict, parent=None, pretty=False):
     parent = parent or {}
     for key, value in input_dict.items():
-
         if isinstance(value, (float, int)):
             # Enfoce strings here
             value = str(value)
