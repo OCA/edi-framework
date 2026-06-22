@@ -17,6 +17,22 @@ msgstr ""
 "X-Generator: Weblate 5.10.4\n"
 
 #. module: edi_queue_oca
+#: model:ir.model.fields,help:edi_queue_oca.field_edi_exchange_type__job_eta_enabled
+msgid ""
+"Accumulate all queue jobs for this exchange type and release them at the "
+"daily time configured below, instead of dispatching each job immediately. "
+"Use this when a trading partner only processes files at a fixed daily "
+"window, or to concentrate resource-intensive EDI work in off-peak hours."
+msgstr ""
+
+#. module: edi_queue_oca
+#: model:ir.model.fields,field_description:edi_queue_oca.field_edi_backend__display_name
+#: model:ir.model.fields,field_description:edi_queue_oca.field_edi_exchange_record__display_name
+#: model:ir.model.fields,field_description:edi_queue_oca.field_edi_exchange_type__display_name
+msgid "Display Name"
+msgstr ""
+
+#. module: edi_queue_oca
 #: model:ir.model,name:edi_queue_oca.model_edi_backend
 msgid "EDI Backend"
 msgstr "Backend EDI"
@@ -32,6 +48,43 @@ msgid "EDI exchange Record"
 msgstr "Record di scambio EDI"
 
 #. module: edi_queue_oca
+#: model:ir.model.fields,help:edi_queue_oca.field_edi_exchange_type__job_eta_tz
+msgid "ETA's timezone for jobs of this type"
+msgstr ""
+
+#. module: edi_queue_oca
+#: model:ir.model.fields,field_description:edi_queue_oca.field_edi_exchange_type__job_eta_enabled
+msgid "Enable ETA Scheduling"
+msgstr ""
+
+#. module: edi_queue_oca
+#: model:ir.model.fields,field_description:edi_queue_oca.field_edi_exchange_type__job_eta_hour
+msgid "Execution time - hour"
+msgstr ""
+
+#. module: edi_queue_oca
+#: model:ir.model.fields,field_description:edi_queue_oca.field_edi_exchange_type__job_eta_minute
+msgid "Execution time - minute"
+msgstr ""
+
+#. module: edi_queue_oca
+#: model:ir.model.fields,field_description:edi_queue_oca.field_edi_exchange_type__job_eta_tz
+msgid "Execution time - timezone"
+msgstr ""
+
+#. module: edi_queue_oca
+#: model:ir.model.fields,help:edi_queue_oca.field_edi_exchange_type__job_eta_hour
+msgid "Hour of the day at which jobs for this type should be scheduled."
+msgstr ""
+
+#. module: edi_queue_oca
+#: model:ir.model.fields,field_description:edi_queue_oca.field_edi_backend__id
+#: model:ir.model.fields,field_description:edi_queue_oca.field_edi_exchange_record__id
+#: model:ir.model.fields,field_description:edi_queue_oca.field_edi_exchange_type__id
+msgid "ID"
+msgstr ""
+
+#. module: edi_queue_oca
 #: model:ir.model.fields,field_description:edi_queue_oca.field_edi_exchange_type__job_channel_id
 msgid "Job Channel"
 msgstr "Canale lavoro"
@@ -45,6 +98,11 @@ msgstr "Priorità lavoro"
 #: model_terms:ir.ui.view,arch_db:edi_queue_oca.edi_exchange_record_form_view
 msgid "Jobs"
 msgstr "Lavori"
+
+#. module: edi_queue_oca
+#: model:ir.model.fields,help:edi_queue_oca.field_edi_exchange_type__job_eta_minute
+msgid "Minute of the hour at which jobs for this type should be scheduled."
+msgstr ""
 
 #. module: edi_queue_oca
 #: model_terms:ir.ui.view,arch_db:edi_queue_oca.edi_exchange_type_form_view
