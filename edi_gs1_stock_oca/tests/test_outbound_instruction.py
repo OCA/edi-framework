@@ -8,7 +8,6 @@ from .common import ShipmentTestCaseBase
 
 
 class OutboundInstructionTestCase(ShipmentTestCaseBase):
-
     _schema_path = "edi_gs1:static/schemas/gs1/ecom/WarehousingOutboundInstruction.xsd"
 
     @classmethod
@@ -68,8 +67,7 @@ class OutboundInstructionTestCase(ShipmentTestCaseBase):
                 "additionalShipmentIdentification": {
                     "attrs": {
                         # fmt: off
-                        "additionalShipmentIdentificationTypeCode":
-                            "GOODS_RECEIVER_ASSIGNED"
+                        "additionalShipmentIdentificationTypeCode": "GOODS_RECEIVER_ASSIGNED"
                         # fmt: on
                     },
                     "value": self.delivery.name,
@@ -80,8 +78,7 @@ class OutboundInstructionTestCase(ShipmentTestCaseBase):
                 "additionalPartyIdentification": {
                     "attrs": {
                         # fmt: off
-                        "additionalPartyIdentificationTypeCode":
-                            "BUYER_ASSIGNED_IDENTIFIER_FOR_A_PARTY"
+                        "additionalPartyIdentificationTypeCode": "BUYER_ASSIGNED_IDENTIFIER_FOR_A_PARTY"
                         # fmt: on
                     },
                     "value": "CARRIER#1",

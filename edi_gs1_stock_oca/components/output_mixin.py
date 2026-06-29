@@ -9,8 +9,7 @@ from odoo.addons.component.core import AbstractComponent
 
 
 class GS1OutputShipmentMessageMixin(AbstractComponent):
-    """Common gs1 output shipment mixin.
-    """
+    """Common gs1 output shipment mixin."""
 
     _name = "edi.gs1.output.shipment.mixin"
     _inherit = [
@@ -40,8 +39,7 @@ class GS1OutputShipmentMessageMixin(AbstractComponent):
             "additionalShipmentIdentification": {
                 "attrs": {
                     # fmt: off
-                    "additionalShipmentIdentificationTypeCode":
-                        "GOODS_RECEIVER_ASSIGNED"
+                    "additionalShipmentIdentificationTypeCode": "GOODS_RECEIVER_ASSIGNED"
                     # fmt: on
                 },
                 "value": self.record.name,
@@ -78,8 +76,7 @@ class GS1OutputShipmentMessageMixin(AbstractComponent):
             data["additionalPartyIdentification"] = {
                 "attrs": {
                     # fmt: off
-                    "additionalPartyIdentificationTypeCode":
-                        "BUYER_ASSIGNED_IDENTIFIER_FOR_A_PARTY"
+                    "additionalPartyIdentificationTypeCode": "BUYER_ASSIGNED_IDENTIFIER_FOR_A_PARTY"
                     # fmt: on
                 },
                 "value": record.ref,

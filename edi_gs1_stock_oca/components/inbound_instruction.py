@@ -32,8 +32,7 @@ class GS1InboundInstructionMessage(Component):
             "documentStatusCode": "ORIGINAL",
             "documentActionCode": self._document_action_code(),
             # fmt: off
-            "warehousingInboundInstructionShipment":
-                self._shipment_info(),
+            "warehousingInboundInstructionShipment": self._shipment_info(),
             # fmt: on
         }
         return {"warehousingInboundInstruction": data}
