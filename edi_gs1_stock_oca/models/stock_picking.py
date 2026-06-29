@@ -40,8 +40,7 @@ class StockPicking(models.Model):
 
     # TODO: check if sending is required
     def send_wh_inbound_instruction(self, send=False):
-        """Generate an Inbound Instruction for given delivery and send it.
-        """
+        """Generate an Inbound Instruction for given delivery and send it."""
         type_code = "warehousingInboundInstruction"
         return self._common_instruction(send, type_code)
 
@@ -50,8 +49,7 @@ class StockPicking(models.Model):
         return self.send_wh_inbound_instruction()
 
     def send_wh_outbound_instruction(self, send=False):
-        """Generate an Outbound Instruction for given delivery and send it.
-        """
+        """Generate an Outbound Instruction for given delivery and send it."""
         type_code = "warehousingOutboundInstruction"
         return self._common_instruction(send, type_code)
 

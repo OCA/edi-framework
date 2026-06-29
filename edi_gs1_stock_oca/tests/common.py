@@ -10,7 +10,7 @@ from odoo.tests.common import Form
 from odoo.addons.edi_gs1.tests.common import BaseTestCase
 
 
-class DeliveryMixin(object):
+class DeliveryMixin:
     @classmethod
     def _create_purchase_order(cls, values, view=None):
         """Create a purchase order

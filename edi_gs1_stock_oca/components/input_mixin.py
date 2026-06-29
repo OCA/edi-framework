@@ -6,8 +6,7 @@ from odoo.addons.component.core import AbstractComponent
 
 
 class GS1InputShipmentMessageMixin(AbstractComponent):
-    """Common gs1 input shipment mixin.
-    """
+    """Common gs1 input shipment mixin."""
 
     _name = "edi.gs1.input.shipment.mixin"
     _inherit = [

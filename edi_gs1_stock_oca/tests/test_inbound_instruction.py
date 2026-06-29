@@ -65,8 +65,7 @@ class InboundInstructionTestCase(ShipmentTestCaseBase):
                 "additionalShipmentIdentification": {
                     "attrs": {
                         # fmt: off
-                        "additionalShipmentIdentificationTypeCode":
-                            "GOODS_RECEIVER_ASSIGNED"
+                        "additionalShipmentIdentificationTypeCode": "GOODS_RECEIVER_ASSIGNED"
                         # fmt: on
                     },
                     "value": self.delivery.name,
@@ -77,8 +76,7 @@ class InboundInstructionTestCase(ShipmentTestCaseBase):
                 "additionalPartyIdentification": {
                     "attrs": {
                         # fmt: off
-                        "additionalPartyIdentificationTypeCode":
-                            "BUYER_ASSIGNED_IDENTIFIER_FOR_A_PARTY"
+                        "additionalPartyIdentificationTypeCode": "BUYER_ASSIGNED_IDENTIFIER_FOR_A_PARTY"
                         # fmt: on
                     },
                     "value": "CARRIER#1",
