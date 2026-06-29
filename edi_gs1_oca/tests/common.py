@@ -6,14 +6,12 @@ import os
 
 import xmlunittest
 
-from odoo.tests.common import tagged
-
-from odoo.addons.component.tests.common import SavepointComponentCase
+from odoo.tests.common import TransactionCase, tagged
 
 
 @tagged("-at_install", "post_install")
-class BaseTestCase(SavepointComponentCase, xmlunittest.XmlTestMixin):
-    _schema_path = "edi_gs1:static/schemas/sbdh/StandardBusinessDocumentHeader.xsd"
+class BaseTestCase(TransactionCase, xmlunittest.XmlTestMixin):
+    _schema_path = "edi_gs1_oca:static/schemas/sbdh/StandardBusinessDocumentHeader.xsd"
 
     @classmethod
     def setUpClass(cls):
@@ -21,9 +19,16 @@ class BaseTestCase(SavepointComponentCase, xmlunittest.XmlTestMixin):
         cls.env = cls.env(context=dict(cls.env.context, tracking_disable=True))
         cls.backend = cls._get_backend()
         # Logistic Services Provider (LSP)
-        cls.lsp_partner = cls.env.ref("base.res_partner_3")
+        cls.lsp_partner = cls.env["res.partner"].create(
+            {
+                "name": "Test LSP",
+                "email": "lsp@example.com",
+                "phone": "+1-212-555-0001",
+            }
+        )
         # Logistic Services Client (LSC)
         cls.lsc_partner = cls.env.ref("base.main_partner")
+        cls.lsc_partner.write({"email": "lsc@example.com", "phone": "+1-212-555-0002"})
         cls.backend.lsp_partner_id = cls.lsp_partner
         cls.backend.lsc_partner_id = cls.lsc_partner
 
@@ -36,14 +41,7 @@ class BaseTestCase(SavepointComponentCase, xmlunittest.XmlTestMixin):
 
     @classmethod
     def _get_backend(cls):
-        return cls.env.ref("edi_gs1.edi_backend_gs1_default")
-
-    def _dev_write_example_file(self, test_file, filename, content):
-        from pathlib import Path
-
-        path = Path(test_file).parent / ("examples/test." + filename)
-        with open(path, "w") as out:
-            out.write(content)
+        return cls.env.ref("edi_gs1_oca.edi_backend_gs1_default")
 
     def flatten(self, txt):
         return "".join([x.strip() for x in txt.splitlines()])
@@ -53,12 +51,7 @@ class BaseTestCase(SavepointComponentCase, xmlunittest.XmlTestMixin):
         with open(path) as thefile:
             return thefile.read()
 
-    _schema_path = ""
-
-    def _get_xml_handler(self):
-        return self.backend._find_component(
-            self.backend._name,
-            ["edi.xml"],
-            work_ctx={"schema_path": self._schema_path},
-            safe=False,
+    def _validate_xml(self, content, schema_path=None):
+        return self.env["edi.gs1.xml"].validate(
+            schema_path or self._schema_path, content
         )
