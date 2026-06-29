@@ -36,13 +36,13 @@
             <sh:StandardBusinessDocumentHeader>
                 <sh:HeaderVersion>1.0</sh:HeaderVersion>
                 <sh:Sender>
-                    <t t-call="edi_gs1.edi_exchange_business_header_contact">
+                    <t t-call="edi_gs1_oca.edi_exchange_business_header_contact">
                         <t t-set="partner" t-value="sender" />
                         <t t-set="contact_indentifier" t-value="'Buyer'" />
                     </t>
                 </sh:Sender>
                 <sh:Receiver>
-                    <t t-call="edi_gs1.edi_exchange_business_header_contact">
+                    <t t-call="edi_gs1_oca.edi_exchange_business_header_contact">
                         <t t-set="partner" t-value="receiver" />
                         <t t-set="contact_indentifier" t-value="'Seller'" />
                     </t>

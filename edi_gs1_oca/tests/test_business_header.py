@@ -10,7 +10,7 @@ BH_NS = "http://www.unece.org/cefact/namespaces/StandardBusinessDocumentHeader"
 
 
 class BusinessHeaderTestCase(BaseTestCase):
-    _schema_path = "edi_gs1:static/schemas/sbdh/StandardBusinessDocumentHeader.xsd"
+    _schema_path = "edi_gs1_oca:static/schemas/sbdh/StandardBusinessDocumentHeader.xsd"
 
     @classmethod
     def setUpClass(cls):
@@ -19,7 +19,7 @@ class BusinessHeaderTestCase(BaseTestCase):
 
     @classmethod
     def _setup_records(cls):
-        cls.bh_tmpl = cls.env.ref("edi_gs1.edi_exchange_template_business_header")
+        cls.output_handler = cls.env["edi.gs1.output.mixin"]
         vals = {
             "backend_id": cls.backend.id,
             "backend_type_id": cls.backend.backend_type_id.id,
@@ -28,11 +28,13 @@ class BusinessHeaderTestCase(BaseTestCase):
             "code": "test_type_out1",
             "exchange_file_ext": "txt",
             "exchange_filename_pattern": "{record.ref}-{type.code}-{dt}",
+            # Output types require a send handler (edi_core_oca constraint).
+            "send_model_id": cls.env.ref("edi_core_oca.model_edi_oca_handler_noop").id,
         }
         cls.exc_type = cls.env["edi.exchange.type"].create(vals)
-        cls.related_record = cls.env.ref("base.partner_demo")
+        # Does not really matter which record we bind the exchange to
+        cls.related_record = cls.env["res.partner"].create({"name": "Test Record"})
         vals = {
-            # Does not really matter which record we bind the exchange to
             "model": cls.related_record._name,
             "res_id": cls.related_record.id,
             "type_id": cls.exc_type.id,
@@ -40,21 +42,23 @@ class BusinessHeaderTestCase(BaseTestCase):
         cls.exc_record = cls.backend.create_record("test_type_out1", vals)
 
     def test_template_render_values(self):
-        values = self.bh_tmpl._get_render_values(self.exc_record)
+        values = self.output_handler._get_render_values(self.exc_record)
         expected = {
             "backend": self.backend,
             "exchange_record": self.exc_record,
             "instance_identifier": self.exc_record.identifier,
             "record": self.related_record,
-            "template": self.bh_tmpl,
         }
         for k, v in expected.items():
             self.assertEqual(values[k], v)
 
     @freeze_time("2020-07-08 07:30:00")
     def test_xml(self):
-        output = self.bh_tmpl.exchange_generate(
-            self.exc_record, sender=self.lsc_partner, receiver=self.lsp_partner
+        output = self.output_handler._render_edi_template(
+            self.exc_record,
+            "edi_gs1_oca.edi_exchange_business_header",
+            sender=self.lsc_partner,
+            receiver=self.lsp_partner,
         )
         expected = """
             <sh:StandardBusinessDocumentHeader xmlns:sh="{ns}">
@@ -94,5 +98,4 @@ class BusinessHeaderTestCase(BaseTestCase):
             date="2020-07-08T07:30:00",
         )
         self.assertXmlEquivalentOutputs(self.flatten(output), self.flatten(expected))
-        handler = self._get_xml_handler()
-        self.assertEqual(handler.validate(output), None)
+        self.assertEqual(self._validate_xml(output), None)
