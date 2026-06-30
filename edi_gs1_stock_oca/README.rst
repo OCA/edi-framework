@@ -14,9 +14,9 @@ GS1 EDI for stock
    !! source digest: sha256:58f873403235289f5c44a5f029c949b43b56fe09a12486f8c6b7763d06acc5f0
    !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-.. |badge1| image:: https://img.shields.io/badge/maturity-Alpha-red.png
+.. |badge1| image:: https://img.shields.io/badge/maturity-Beta-yellow.png
     :target: https://odoo-community.org/page/development-status
-    :alt: Alpha
+    :alt: Beta
 .. |badge2| image:: https://img.shields.io/badge/license-AGPL--3-blue.png
     :target: http://www.gnu.org/licenses/agpl-3.0-standalone.html
     :alt: License: AGPL-3
@@ -41,11 +41,6 @@ Provides support to generate or process the following messages:
    - Warehouse Inbound Notification [TODO]
    - Warehouse Outbound Instruction [TODO]
    - Warehouse Outbound Notification [TODO]
-
-.. IMPORTANT::
-   This is an alpha version, the data model and design can change at any time without warning.
-   Only for development or testing purpose, do not use in production.
-   `More details on development status <https://odoo-community.org/page/development-status>`_
 
 **Table of contents**
 
