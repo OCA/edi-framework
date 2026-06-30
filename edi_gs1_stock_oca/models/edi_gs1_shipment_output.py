@@ -2,47 +2,47 @@
 # @author: Simone Orsi <simahawk@gmail.com>
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
-from odoo import _, exceptions
+from odoo import exceptions, models
 from odoo.tools import DotDict
 
-from odoo.addons.component.core import AbstractComponent
 
+class GS1OutputShipmentMessageMixin(models.AbstractModel):
+    """Common GS1 output shipment mixin.
 
-class GS1OutputShipmentMessageMixin(AbstractComponent):
-    """Common gs1 output shipment mixin."""
+    Replaces the old ``edi.gs1.output.shipment.mixin`` component.
+    Concrete generators inherit this mixin together with
+    ``edi.oca.handler.generate``. All the info builders receive the
+    ``exchange_record`` and the work context (``shipper``, ``ls_buyer``,
+    ``ls_seller``, ...) as keyword arguments, since the component
+    ``self.work`` context does not exist anymore.
+    """
 
     _name = "edi.gs1.output.shipment.mixin"
-    _inherit = [
-        "edi.gs1.output.mixin",
-    ]
+    _inherit = "edi.gs1.output.mixin"
+    _description = "GS1 EDI output shipment mixin"
 
-    @property
-    def _work_context_validate_attrs(self):
-        return super()._work_context_validate_attrs + [
-            # instruction specific
-            "shipper",  # shipper tag
-            "ls_buyer",  # logisticServicesBuyer tag
-            "ls_seller",  # logisticServicesSeller tag
-        ]
-
-    def _shipment_info(self):
-        data = {"shipmentIdentification": self._shipment_identification()}
+    def _shipment_info(self, exchange_record, **kw):
+        data = {
+            "shipmentIdentification": self._shipment_identification(
+                exchange_record, **kw
+            )
+        }
         for key, handler in self._shipment_info_elements().items():
-            value = handler()
-            # Return empty dict or None in you handler to skip an element
+            value = handler(exchange_record, **kw)
+            # Return empty dict or None in your handler to skip an element
             if value:
                 data[key] = value
         return data
 
-    def _shipment_identification(self):
+    def _shipment_identification(self, exchange_record, **kw):
         return {
             "additionalShipmentIdentification": {
                 "attrs": {
                     # fmt: off
-                    "additionalShipmentIdentificationTypeCode": "GOODS_RECEIVER_ASSIGNED"
+                    "additionalShipmentIdentificationTypeCode": "GOODS_RECEIVER_ASSIGNED"  # noqa: E501
                     # fmt: on
                 },
-                "value": self.record.name,
+                "value": exchange_record.record.name,
             }
         }
 
@@ -53,17 +53,18 @@ class GS1OutputShipmentMessageMixin(AbstractComponent):
             "_shipment_items": self._shipment_items,
         }
 
-    def _get_shipper_record(self):
+    def _get_shipper_record(self, exchange_record, **kw):
         # We should get the carrier here
-        return self.work.shipper
+        return kw.get("shipper")
 
-    def _shipper(self):
+    def _shipper(self, exchange_record, **kw):
         """The carrier of the shipment."""
-        record = self._get_shipper_record()
+        record = self._get_shipper_record(exchange_record, **kw)
         if not record.gln_code and not record.ref:
             raise exceptions.ValidationError(
-                _("Either `gln_code` or `ref` is required for shipper: {}").format(
-                    record.name
+                self.env._(
+                    "Either `gln_code` or `ref` is required for shipper: %(name)s",
+                    name=record.name,
                 )
             )
         # `gln` is required in the schema.
@@ -76,14 +77,15 @@ class GS1OutputShipmentMessageMixin(AbstractComponent):
             data["additionalPartyIdentification"] = {
                 "attrs": {
                     # fmt: off
-                    "additionalPartyIdentificationTypeCode": "BUYER_ASSIGNED_IDENTIFIER_FOR_A_PARTY"
+                    "additionalPartyIdentificationTypeCode": "BUYER_ASSIGNED_IDENTIFIER_FOR_A_PARTY"  # noqa: E501
                     # fmt: on
                 },
                 "value": record.ref,
             }
         return data
 
-    def _package_total(self):
+    def _package_total(self, exchange_record, **kw):
+        record = exchange_record.record
         return [
             DotDict(
                 {
@@ -97,21 +99,26 @@ class GS1OutputShipmentMessageMixin(AbstractComponent):
                     "packageTypeCode": "AF",
                     "totalPackageQuantity": "2",
                     "totalGrossWeight": {
-                        "value": self.record.weight,
+                        "value": record.weight,
                         "attrs": {"measurementUnitCode": "KGM"},
                     },
                 }
             ),
         ]
 
-    def _shipment_items(self):
+    def _shipment_items(self, exchange_record, **kw):
         res = []
-        for i, item in enumerate(self._get_shipment_items(), start=1):
+        for i, item in enumerate(
+            self._get_shipment_items(exchange_record, **kw), start=1
+        ):
             res.append(self._shipment_item(item, i))
         return res
 
-    def _get_shipment_items(self):
-        return self.record.move_line_ids
+    def _get_shipment_items(self, exchange_record, **kw):
+        # Use stock moves (the planned demand): on Odoo 19 ``stock.move.line``
+        # no longer carries ``product_uom_qty`` and detailed move lines might
+        # not be created yet for a planned shipment.
+        return exchange_record.record.move_ids
 
     def _shipment_item(self, item, i=1):
         qty = item.product_uom_qty

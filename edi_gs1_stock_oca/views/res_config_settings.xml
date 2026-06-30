@@ -8,52 +8,25 @@
         <field name="inherit_id" ref="stock.res_config_settings_view_form" />
         <field name="priority" eval="90" />
         <field name="arch" type="xml">
-            <xpath expr="//div[@data-key='stock']" position="inside">
-                <h2>GS1</h2>
-                <div class="row mt16 o_settings_container" name="gs1_stock">
-                    <div
-                        class="col-12 col-lg-6 o_setting_box"
-                        name="gs1_stock_settings"
+            <xpath expr="//app[@name='stock']" position="inside">
+                <block title="GS1" name="gs1_setting_container">
+                    <setting
+                        id="gs1_main_uom_setting"
+                        string="GS1 main UoM"
+                        company_dependent="1"
+                        help="Determine the main UoM for GS1 stock file"
                     >
-                        <div class="o_setting_left_pane" />
-                        <div class="o_setting_right_pane">
-                            <label for="gs1_main_uom_id" />
-                            <span
-                                class="fa fa-lg fa-building-o"
-                                title="Values set here are company-specific."
-                                groups="base.group_multi_company"
-                            />
-                            <div class="text-muted">
-                                Determine the main UoM for GS1 stock file
-                            </div>
-                            <div class="row mt16">
-                                <label
-                                    for="gs1_main_uom_id"
-                                    class="col-lg-4 o_light_label"
-                                />
-                                <field name="gs1_main_uom_id" class="oe_inline" />
-                            </div>
-                        </div>
-                        <div class="o_setting_right_pane">
-                            <label for="gs1_second_uom_id" />
-                            <span
-                                class="fa fa-lg fa-building-o"
-                                title="Values set here are company-specific."
-                                groups="base.group_multi_company"
-                            />
-                            <div class="text-muted">
-                                Determine the secondary UoM for GS1 stock file
-                            </div>
-                            <div class="row mt16">
-                                <label
-                                    for="gs1_second_uom_id"
-                                    class="col-lg-4 o_light_label"
-                                />
-                                <field name="gs1_second_uom_id" class="oe_inline" />
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                        <field name="gs1_main_uom_id" />
+                    </setting>
+                    <setting
+                        id="gs1_second_uom_setting"
+                        string="GS1 second UoM"
+                        company_dependent="1"
+                        help="Determine the secondary UoM for GS1 stock file"
+                    >
+                        <field name="gs1_second_uom_id" />
+                    </setting>
+                </block>
             </xpath>
         </field>
     </record>

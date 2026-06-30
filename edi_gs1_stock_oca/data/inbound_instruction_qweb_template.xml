@@ -9,9 +9,7 @@
             xmlns:warehousing_inbound_instruction="urn:gs1:ecom:warehousing_inbound_instruction:xsd:3"
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         >
-            <t
-                t-raw="render_edi_template(exchange_record, 'gs1.BusinessHeader', sender=sender, receiver=receiver)"
-            />
+            <t t-out="business_header" />
             <t t-set="instruction_info" t-value="info.warehousingInboundInstruction" />
             <t
                 t-set="shipment_info"

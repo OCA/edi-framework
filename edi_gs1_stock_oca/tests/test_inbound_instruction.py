@@ -8,16 +8,18 @@ from .common import ShipmentTestCaseBase
 
 
 class InboundInstructionTestCase(ShipmentTestCaseBase):
+    _schema_path = (
+        "edi_gs1_oca:static/schemas/gs1/ecom/WarehousingInboundInstruction.xsd"
+    )
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
         cls._setup_order()
         cls.exc_type = cls.env.ref(
-            "edi_gs1_stock.edi_exchange_type_inbound_instruction"
+            "edi_gs1_stock_oca.edi_exchange_type_inbound_instruction"
         )
-        cls.exc_tmpl = cls.env.ref(
-            "edi_gs1_stock.edi_exchange_template_inbound_instruction"
-        )
+        cls.handler = cls.env["edi.gs1.generate.inbound.instruction"]
         vals = {
             "model": cls.delivery._name,
             "res_id": cls.delivery.id,
@@ -25,15 +27,14 @@ class InboundInstructionTestCase(ShipmentTestCaseBase):
         }
         cls.record = cls.backend.create_record(cls.exc_type.code, vals)
 
-    def test_get_template(self):
-        template = self.backend._get_template(self.record, "output", "generate")
-        self.assertEqual(template, self.exc_tmpl)
+    def test_generator_wired(self):
         self.assertEqual(
-            template.template_id.key, "edi_gs1_stock.edi_exchange_inbound_instruction"
+            self.exc_type.generate_model_id.model,
+            "edi.gs1.generate.inbound.instruction",
         )
 
-    def test_render_values(self):
-        values = self.exc_tmpl._get_render_values(self.record)
+    def test_work_ctx(self):
+        values = self.handler._get_work_ctx(self.record)
         expected = [
             ("sender", self.backend.lsc_partner_id),
             ("receiver", self.backend.lsp_partner_id),
@@ -44,28 +45,18 @@ class InboundInstructionTestCase(ShipmentTestCaseBase):
         ]
         for k, v in expected:
             self.assertEqual(values[k], v)
-
-        # Detailed test below
-        self.assertTrue(values["info"])
         self.assertTrue(values["shipper"])
-
-    def test_info_provider_bad_work_ctx(self):
-        with self.assertRaises(AttributeError) as err:
-            self.exc_tmpl._get_info_provider(self.record)
-            self.assertEqual(
-                str(err.exception), "`sender` is required for this component!"
-            )
 
     @freeze_time("2020-07-09 10:30:00")
     def test_info_provider_data(self):
-        values = self.exc_tmpl._get_render_values(self.record, shipper=self.carrier)
-        provider = self.exc_tmpl._get_info_provider(self.record, work_ctx=values)
+        work_ctx = self.handler._get_work_ctx(self.record)
+        work_ctx["shipper"] = self.carrier
         expected_shipment = {
             "shipmentIdentification": {
                 "additionalShipmentIdentification": {
                     "attrs": {
                         # fmt: off
-                        "additionalShipmentIdentificationTypeCode": "GOODS_RECEIVER_ASSIGNED"
+                        "additionalShipmentIdentificationTypeCode": "GOODS_RECEIVER_ASSIGNED"  # noqa: E501
                         # fmt: on
                     },
                     "value": self.delivery.name,
@@ -76,7 +67,7 @@ class InboundInstructionTestCase(ShipmentTestCaseBase):
                 "additionalPartyIdentification": {
                     "attrs": {
                         # fmt: off
-                        "additionalPartyIdentificationTypeCode": "BUYER_ASSIGNED_IDENTIFIER_FOR_A_PARTY"
+                        "additionalPartyIdentificationTypeCode": "BUYER_ASSIGNED_IDENTIFIER_FOR_A_PARTY"  # noqa: E501
                         # fmt: on
                     },
                     "value": "CARRIER#1",
@@ -127,13 +118,13 @@ class InboundInstructionTestCase(ShipmentTestCaseBase):
                 },
             ],
         }
-        info = provider.generate_info().warehousingInboundInstruction
+        info = self.handler.generate_info(
+            self.record, **work_ctx
+        ).warehousingInboundInstruction
         for k, v in expected_shipment.items():
             self.assertEqual(
                 info.warehousingInboundInstructionShipment[k], v, f"{k} does not match"
             )
-
-    _schema_path = "edi_gs1:static/schemas/gs1/ecom/WarehousingInboundInstruction.xsd"
 
     @freeze_time("2020-07-09 10:30:00")
     def test_xml(self):
@@ -141,5 +132,4 @@ class InboundInstructionTestCase(ShipmentTestCaseBase):
             edi_exchange_send=False
         ).action_send_wh_inbound_instruction()
         file_content = record._get_file_content()
-        handler = self._get_xml_handler()
-        self.assertEqual(handler.validate(file_content), None)
+        self.assertEqual(self._validate_xml(file_content), None)

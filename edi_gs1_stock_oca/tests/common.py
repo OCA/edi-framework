@@ -5,9 +5,9 @@
 from uuid import uuid4
 
 from odoo import fields
-from odoo.tests.common import Form
+from odoo.tests import Form
 
-from odoo.addons.edi_gs1.tests.common import BaseTestCase
+from odoo.addons.edi_gs1_oca.tests.common import BaseTestCase
 
 
 class DeliveryMixin:
@@ -46,16 +46,26 @@ class ShipmentTestCaseBase(BaseTestCase, DeliveryMixin):
         cls.env = cls.env(context=dict(cls.env.context, tracking_disable=True))
 
     @classmethod
+    def _create_product(cls, name, barcode):
+        return cls.env["product.product"].create(
+            {
+                "name": name,
+                "is_storable": True,
+                "type": "consu",
+                "barcode": barcode,
+                "weight": 1.0,
+            }
+        )
+
+    @classmethod
     def _setup_order(cls):
-        cls.product_a = cls.env.ref("product.product_product_4")
-        cls.product_a.barcode = "1" * 14
-        cls.product_b = cls.env.ref("product.product_product_4b")
-        cls.product_b.barcode = "2" * 14
-        cls.product_c = cls.env.ref("product.product_product_4c")
-        cls.product_c.barcode = "3" * 14
+        cls.product_a = cls._create_product("GS1 Product A", "1" * 14)
+        cls.product_b = cls._create_product("GS1 Product B", "2" * 14)
+        cls.product_c = cls._create_product("GS1 Product C", "3" * 14)
+        cls.vendor = cls.env["res.partner"].create({"name": "GS1 Vendor"})
         cls.purchase = cls._create_purchase_order(
             {
-                "partner_id": cls.env.ref("base.res_partner_10"),
+                "partner_id": cls.vendor,
                 "date_planned": "2020-07-12",
             }
         )
@@ -69,6 +79,11 @@ class ShipmentTestCaseBase(BaseTestCase, DeliveryMixin):
 
         cls.purchase.button_approve()
         cls.delivery = cls.purchase.picking_ids[0]
-        cls.carrier = cls.env.ref("base.res_partner_4")
-        cls.carrier.gln_code = "123".zfill(13)
-        cls.carrier.ref = "CARRIER#1"
+        cls.delivery.scheduled_date = "2020-07-12 12:00:00"
+        cls.carrier = cls.env["res.partner"].create(
+            {
+                "name": "GS1 Carrier",
+                "gln_code": "123".zfill(13),
+                "ref": "CARRIER#1",
+            }
+        )
