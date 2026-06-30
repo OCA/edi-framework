@@ -9,9 +9,7 @@
             xmlns:warehousing_outbound_instruction="urn:gs1:ecom:warehousing_outbound_instruction:xsd:3"
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         >
-            <t
-                t-raw="render_edi_template(exchange_record, 'gs1.BusinessHeader', sender=sender, receiver=ls_seller, doc_type='Warehousing Outbound Instruction')"
-            />
+            <t t-out="business_header" />
             <t t-set="instruction_info" t-value="info.warehousingOutboundInstruction" />
             <t
                 t-set="shipment_info"
@@ -48,17 +46,17 @@
                     </shipmentIdentification>
                     <t t-set="shipper" t-value="shipment_info.shipper" />
                     <shipper>
-                        <t t-call="edi_gs1.edi_exchange_contact_details">
+                        <t t-call="edi_gs1_oca.edi_exchange_contact_details">
                             <t t-set="contact" t-value="shipper" />
                         </t>
                     </shipper>
                     <receiver>
-                        <t t-call="edi_gs1.edi_exchange_contact_details">
+                        <t t-call="edi_gs1_oca.edi_exchange_contact_details">
                             <t t-set="contact" t-value="receiver" />
                         </t>
                     </receiver>
                     <shipTo>
-                        <t t-call="edi_gs1.edi_exchange_contact_details">
+                        <t t-call="edi_gs1_oca.edi_exchange_contact_details">
                             <t t-set="contact" t-value="shipto" />
                         </t>
                     </shipTo>
