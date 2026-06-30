@@ -7,24 +7,25 @@
     "summary": """
         Base module for GS1 standard EDI exchange related to stock.
     """,
-    "version": "13.0.1.0.0",
+    "version": "19.0.1.0.0",
+    "development_status": "Alpha",
     "license": "AGPL-3",
     "author": "ACSONE,Odoo Community Association (OCA)",
     "website": "https://github.com/OCA/edi-framework",
     "depends": [
-        "edi_gs1",
+        "edi_gs1_oca",
         "stock",
         "purchase_stock",
-        "delivery",
-        "edi_exchange_template",
+        # provides `carrier_id` and `weight` on stock.picking (Odoo 19 moved
+        # them out of `delivery` into `stock_delivery`)
+        "stock_delivery",
     ],
+    "external_dependencies": {"python": ["xmlunittest"]},
     "data": [
         "views/res_config_settings.xml",
         "views/stock_picking_view.xml",
         "data/edi_exchange_type.xml",
         "data/inbound_instruction_qweb_template.xml",
-        "data/inbound_instruction_output_template.xml",
         "data/outbound_instruction_qweb_template.xml",
-        "data/outbound_instruction_output_template.xml",
     ],
 }
