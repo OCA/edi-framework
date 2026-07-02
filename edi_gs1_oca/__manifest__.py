@@ -7,7 +7,7 @@
     "summary": """
         Base module for GS1 standard EDI exchange""",
     "version": "19.0.1.0.0",
-    "development_status": "Alpha",
+    "development_status": "Beta",
     "license": "AGPL-3",
     "website": "https://github.com/OCA/edi-framework",
     "author": "ACSONE,Odoo Community Association (OCA)",
