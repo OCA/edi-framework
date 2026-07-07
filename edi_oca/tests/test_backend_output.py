@@ -109,6 +109,25 @@ class EDIBackendTestOutputCase(EDIBackendCommonComponentRegistryTestCase):
             )
             mocked.assert_not_called()
 
+    def test_notify_related_record_on_generate_default(self):
+        before = len(self.partner.message_ids)
+        self.record.with_context(fake_output="yeah!").action_exchange_generate()
+        messages = self.partner.message_ids
+        self.assertEqual(len(messages) - before, 1)
+        self.assertIn("Exchange data generated", messages[:1].body)
+
+    def test_notify_related_record_on_generate_disabled(self):
+        self.record.type_id.notify_related_record_on_generate = False
+        before = len(self.partner.message_ids)
+        self.record.with_context(fake_output="yeah!").action_exchange_generate()
+        # Generate no longer posts a note on the related record...
+        self.assertEqual(len(self.partner.message_ids), before)
+        # ...but send still does.
+        self.record.action_exchange_send()
+        messages = self.partner.message_ids
+        self.assertEqual(len(messages) - before, 1)
+        self.assertIn("Exchange sent", messages[:1].body)
+
 
 class EDIBackendTestOutputJobsCase(EDIBackendCommonComponentRegistryTestCase):
     @classmethod

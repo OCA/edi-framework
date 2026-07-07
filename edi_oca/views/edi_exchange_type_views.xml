@@ -73,6 +73,27 @@
                                         widget="many2many_tags"
                                     />
                                 </group>
+                                <group
+                                    name="notifications"
+                                    string="Related-record notifications"
+                                >
+                                    <field
+                                        name="notify_related_record_on_generate"
+                                        invisible="direction == 'input'"
+                                    />
+                                    <field
+                                        name="notify_related_record_on_send"
+                                        invisible="direction == 'input'"
+                                    />
+                                    <field
+                                        name="notify_related_record_on_process"
+                                        invisible="direction == 'output'"
+                                    />
+                                    <field
+                                        name="notify_related_record_on_receive"
+                                        invisible="direction == 'output'"
+                                    />
+                                </group>
                                 <group name="scope" string="Scope">
                                     <field name="partner_ids" widget="many2many_tags" />
                                 </group>

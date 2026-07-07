@@ -185,6 +185,26 @@ class EDIExchangeType(models.Model):
         "(default is always 'Raise Error').",
     )
     allow_empty_files_on_receive = fields.Boolean(string="Allow Empty Files")
+    notify_related_record_on_generate = fields.Boolean(
+        string="Notify related record on generate",
+        default=True,
+        help="Post a note on the related record when the exchange is generated.",
+    )
+    notify_related_record_on_send = fields.Boolean(
+        string="Notify related record on send",
+        default=True,
+        help="Post a note on the related record when the exchange is sent.",
+    )
+    notify_related_record_on_process = fields.Boolean(
+        string="Notify related record on process",
+        default=True,
+        help="Post a note on the related record when the exchange is processed.",
+    )
+    notify_related_record_on_receive = fields.Boolean(
+        string="Notify related record on receive",
+        default=True,
+        help="Post a note on the related record when the exchange is received.",
+    )
 
     _sql_constraints = [
         (
@@ -285,6 +305,18 @@ class EDIExchangeType(models.Model):
         if hasattr(exchange_record.record, "_get_edi_exchange_record_name"):
             return exchange_record.record._get_edi_exchange_record_name(exchange_record)
         return slugify(exchange_record.record.display_name)
+
+    def _notify_related_record_on(self, action):
+        """Whether a chatter note should be posted on the related record.
+
+        Gated per stage via the `notify_related_record_on_*` toggles. Actions without a
+        dedicated toggle (e.g. `ack`) keep notifying to preserve legacy behavior.
+        """
+        self.ensure_one()
+        field_name = "notify_related_record_on_%s" % action
+        if field_name not in self._fields:
+            return True
+        return self[field_name]
 
     def is_partner_enabled(self, partner):
         """Check if given partner record is allowed for the current type.
