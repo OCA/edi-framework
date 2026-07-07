@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2025-10-06 07:42+0000\n"
+"PO-Revision-Date: 2026-07-07 10:46+0000\n"
 "Last-Translator: mymage <stefano.consolaro@mymage.it>\n"
 "Language-Team: none\n"
 "Language: it\n"
@@ -14,7 +14,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.10.4\n"
+"X-Generator: Weblate 5.15.2\n"
 
 #. module: edi_queue_oca
 #: model:ir.model.fields,help:edi_queue_oca.field_edi_exchange_type__job_eta_enabled
@@ -24,13 +24,19 @@ msgid ""
 "Use this when a trading partner only processes files at a fixed daily "
 "window, or to concentrate resource-intensive EDI work in off-peak hours."
 msgstr ""
+"Accumula tutti i processi in coda per questo tipo di scambio e li rilascia "
+"all'orario giornaliero configurato di seguito, anziché inviare ciascun "
+"processo immediatamente. Utilizza questa opzione quando un partner "
+"commerciale elabora i file solo in una finestra temporale giornaliera fissa "
+"o per concentrare le attività EDI che richiedono molte risorse nelle ore di "
+"minore affluenza."
 
 #. module: edi_queue_oca
 #: model:ir.model.fields,field_description:edi_queue_oca.field_edi_backend__display_name
 #: model:ir.model.fields,field_description:edi_queue_oca.field_edi_exchange_record__display_name
 #: model:ir.model.fields,field_description:edi_queue_oca.field_edi_exchange_type__display_name
 msgid "Display Name"
-msgstr ""
+msgstr "Nome visualizzato"
 
 #. module: edi_queue_oca
 #: model:ir.model,name:edi_queue_oca.model_edi_backend
@@ -50,39 +56,39 @@ msgstr "Record di scambio EDI"
 #. module: edi_queue_oca
 #: model:ir.model.fields,help:edi_queue_oca.field_edi_exchange_type__job_eta_tz
 msgid "ETA's timezone for jobs of this type"
-msgstr ""
+msgstr "Fuso orario di ETA per lavori di questo tipo"
 
 #. module: edi_queue_oca
 #: model:ir.model.fields,field_description:edi_queue_oca.field_edi_exchange_type__job_eta_enabled
 msgid "Enable ETA Scheduling"
-msgstr ""
+msgstr "Abilita schedulazione ETA"
 
 #. module: edi_queue_oca
 #: model:ir.model.fields,field_description:edi_queue_oca.field_edi_exchange_type__job_eta_hour
 msgid "Execution time - hour"
-msgstr ""
+msgstr "Orario di esecuzione - ora"
 
 #. module: edi_queue_oca
 #: model:ir.model.fields,field_description:edi_queue_oca.field_edi_exchange_type__job_eta_minute
 msgid "Execution time - minute"
-msgstr ""
+msgstr "Orario di esecuzione - minuto"
 
 #. module: edi_queue_oca
 #: model:ir.model.fields,field_description:edi_queue_oca.field_edi_exchange_type__job_eta_tz
 msgid "Execution time - timezone"
-msgstr ""
+msgstr "Orario esecuzione - fuso orario"
 
 #. module: edi_queue_oca
 #: model:ir.model.fields,help:edi_queue_oca.field_edi_exchange_type__job_eta_hour
 msgid "Hour of the day at which jobs for this type should be scheduled."
-msgstr ""
+msgstr "Ora del giorno alla quale schedulare i lavori di questo tipo."
 
 #. module: edi_queue_oca
 #: model:ir.model.fields,field_description:edi_queue_oca.field_edi_backend__id
 #: model:ir.model.fields,field_description:edi_queue_oca.field_edi_exchange_record__id
 #: model:ir.model.fields,field_description:edi_queue_oca.field_edi_exchange_type__id
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: edi_queue_oca
 #: model:ir.model.fields,field_description:edi_queue_oca.field_edi_exchange_type__job_channel_id
@@ -102,7 +108,7 @@ msgstr "Lavori"
 #. module: edi_queue_oca
 #: model:ir.model.fields,help:edi_queue_oca.field_edi_exchange_type__job_eta_minute
 msgid "Minute of the hour at which jobs for this type should be scheduled."
-msgstr ""
+msgstr "Minuto dell'ora al quale schedulare i lavori di questo tipo."
 
 #. module: edi_queue_oca
 #: model_terms:ir.ui.view,arch_db:edi_queue_oca.edi_exchange_type_form_view
