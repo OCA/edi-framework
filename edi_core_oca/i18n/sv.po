@@ -6,13 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0\n"
 "Report-Msgid-Bugs-To: \n"
-"Last-Translator: Automatically generated\n"
+"PO-Revision-Date: 2026-07-08 16:46+0000\n"
+"Last-Translator: Laura V <laura.valls@forgeflow.com>\n"
 "Language-Team: none\n"
 "Language: sv\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 5.15.2\n"
 
 #. module: edi_core_oca
 #: model:ir.model.fields,help:edi_core_oca.field_edi_exchange_type__advanced_settings_edit
@@ -52,6 +54,42 @@ msgid ""
 "            to provide your own configuration for whatever need you might have.\n"
 "        "
 msgstr ""
+"\n"
+"            Avancerade tekniska inställningar i YAML-format.\n"
+"            YAML-strukturen bör återge en dictionary.\n"
+"            Backenden kan använda dessa inställningar för automatiserade "
+"åtgärder.\n"
+"\n"
+"            För närvarande stöds följande konfiguration:\n"
+"\n"
+"              components:\n"
+"                generate:\n"
+"                  usage: $comp_usage\n"
+"                  # ange ett värde för komponentens work context\n"
+"                  work_ctx:\n"
+"                     opt1: True\n"
+"                validate:\n"
+"                  usage: $comp_usage\n"
+"                  env_ctx:\n"
+"                    # ange ett värde för hela bearbetningsmiljön\n"
+"                    opt2: False\n"
+"                check:\n"
+"                  usage: $comp_usage\n"
+"                send:\n"
+"                  usage: $comp_usage\n"
+"                receive:\n"
+"                  usage: $comp_usage\n"
+"                process:\n"
+"                  usage: $comp_usage\n"
+"\n"
+"              filename_pattern:\n"
+"                force_tz: Europe/Rome\n"
+"                date_pattern: %Y-%m-%d-%H-%M-%S\n"
+"\n"
+"            Under alla omständigheter kan du använda dessa inställningar\n"
+"            för att tillhandahålla din egen konfiguration för vilket behov "
+"du än har.\n"
+"        "
 
 #. module: edi_core_oca
 #: model:ir.model,name:edi_core_oca.model_edi_configuration_trigger
@@ -60,6 +98,9 @@ msgid ""
 "        Describe what triggers a specific action for a configuration.\n"
 "    "
 msgstr ""
+"\n"
+"        Beskriv vad som utlöser en specifik åtgärd för en konfiguration.\n"
+"    "
 
 #. module: edi_core_oca
 #: model:ir.model,name:edi_core_oca.model_edi_configuration
@@ -70,6 +111,13 @@ msgid ""
 "        to meet the specific needs of their business processes.\n"
 "    "
 msgstr ""
+"\n"
+"        Denna modell används för att konfigurera EDI-flöden (Electronic Data "
+"Interchange).\n"
+"        Den låter användare skapa sina egna konfigurationer, som kan "
+"anpassas\n"
+"        för att uppfylla de specifika behoven i deras affärsprocesser.\n"
+"    "
 
 #. module: edi_core_oca
 #: model:ir.model.fields,help:edi_core_oca.field_edi_backend__output_sent_processed_auto
@@ -79,6 +127,11 @@ msgid ""
 "    Usecase: the web service you send the file to processes it on the fly.\n"
 "    "
 msgstr ""
+"\n"
+"    Markera automatiskt posten som behandlad efter avsändning.\n"
+"    Användningsfall: den webbtjänst du skickar filen till behandlar den "
+"direkt.\n"
+"    "
 
 #. module: edi_core_oca
 #: model:ir.model.fields,help:edi_core_oca.field_edi_exchange_type_rule__kind
@@ -89,110 +142,116 @@ msgid ""
 "\n"
 "* Custom: let devs handle a custom behavior with specific developments\n"
 msgstr ""
+"\n"
+"* Formulärknapp: visa en knapp på den relaterade modellformuläret\n"
+"  när villkor från domän och snippet är uppfyllda\n"
+"\n"
+"* Anpassad: låt utvecklare hantera ett anpassat beteende med specifik "
+"utveckling\n"
 
 #. module: edi_core_oca
 #: model:ir.model.fields,field_description:edi_core_oca.field_edi_exchange_type__exchange_record_count
 msgid "# Exchange Records"
-msgstr ""
+msgstr "# Utväxlingsposter"
 
 #. module: edi_core_oca
 #: model_terms:ir.ui.view,arch_db:edi_core_oca.edi_exchange_consumer_mixin_buttons
 msgid "<span class=\"pe-4\"><i class=\"fa fa-retweet\"/> EDI actions</span>"
-msgstr ""
+msgstr "<span class=\"pe-4\"><i class=\"fa fa-retweet\"/> EDI-åtgärder</span>"
 
 #. module: edi_core_oca
 #: model_terms:ir.ui.view,arch_db:edi_core_oca.message_edi_exchange_link
 msgid "<strong>EDI exchange:</strong>"
-msgstr ""
+msgstr "<strong>EDI-utväxling:</strong>"
 
 #. module: edi_core_oca
 #: model_terms:ir.ui.view,arch_db:edi_core_oca.message_edi_exchange_link
 msgid "<strong>Message:</strong>"
-msgstr ""
+msgstr "<strong>Meddelande:</strong>"
 
 #. module: edi_core_oca
 #: model_terms:ir.ui.view,arch_db:edi_core_oca.message_edi_exchange_link
 msgid "<strong>State:</strong>"
-msgstr ""
+msgstr "<strong>Status:</strong>"
 
 #. module: edi_core_oca
 #: model_terms:ir.ui.view,arch_db:edi_core_oca.message_edi_exchange_link
 msgid "<strong>Type:</strong>"
-msgstr ""
+msgstr "<strong>Typ:</strong>"
 
 #. module: edi_core_oca
 #: model:ir.model.constraint,message:edi_core_oca.constraint_edi_exchange_related_record_related_record_unique
 msgid "A record can only be related once to a specific exchange record."
-msgstr ""
+msgstr "En post kan endast relateras en gång till en specifik utväxlingspost."
 
 #. module: edi_core_oca
 #: model_terms:ir.ui.view,arch_db:edi_core_oca.edi_exchange_record_view_form
 msgid "ACK"
-msgstr ""
+msgstr "ACK"
 
 #. module: edi_core_oca
 #: model:ir.model.fields,field_description:edi_core_oca.field_edi_exchange_record__ack_exchange_id
 msgid "ACK exchange"
-msgstr ""
+msgstr "ACK-utväxling"
 
 #. module: edi_core_oca
 #. odoo-python
 #: code:addons/edi_core_oca/models/edi_exchange_record.py:0
 msgid "ACK file is required for this exchange but not found."
-msgstr ""
+msgstr "ACK-fil krävs för denna utväxling men hittades inte."
 
 #. module: edi_core_oca
 #. odoo-python
 #: code:addons/edi_core_oca/models/edi_exchange_record.py:0
 msgid "ACK file received but contains errors."
-msgstr ""
+msgstr "ACK-fil mottagen men innehåller fel."
 
 #. module: edi_core_oca
 #. odoo-python
 #: code:addons/edi_core_oca/models/edi_exchange_record.py:0
 msgid "ACK file received."
-msgstr ""
+msgstr "ACK-fil mottagen."
 
 #. module: edi_core_oca
 #: model:ir.model.fields,help:edi_core_oca.field_edi_exchange_record__ack_exchange_id
 msgid "ACK generated for current exchange."
-msgstr ""
+msgstr "ACK genererad för aktuell utväxling."
 
 #. module: edi_core_oca
 #: model:ir.model.fields,field_description:edi_core_oca.field_edi_exchange_record__ack_received_on
 msgid "ACK received on"
-msgstr ""
+msgstr "ACK mottagen den"
 
 #. module: edi_core_oca
 #: model:ir.model,name:edi_core_oca.model_edi_exchange_consumer_mixin
 msgid "Abstract record where exchange records can be assigned"
-msgstr ""
+msgstr "Abstrakt post där utväxlingsposter kan tilldelas"
 
 #. module: edi_core_oca
 #: model:ir.model.fields,field_description:edi_core_oca.field_edi_exchange_record__ack_expected
 msgid "Ack Expected"
-msgstr ""
+msgstr "ACK förväntad"
 
 #. module: edi_core_oca
 #: model:ir.model.fields,field_description:edi_core_oca.field_edi_exchange_type__ack_type_id
 msgid "Ack exchange type"
-msgstr ""
+msgstr "ACK-utväxlingstyp"
 
 #. module: edi_core_oca
 #: model:ir.model.fields,field_description:edi_core_oca.field_edi_exchange_type__ack_for_type_ids
 msgid "Ack for exchange type"
-msgstr ""
+msgstr "ACK för utväxlingstyp"
 
 #. module: edi_core_oca
 #: model:ir.model.fields,field_description:edi_core_oca.field_edi_exchange_record__message_needaction
 msgid "Action Needed"
-msgstr ""
+msgstr "Åtgärd krävs"
 
 #. module: edi_core_oca
 #. odoo-python
 #: code:addons/edi_core_oca/models/edi_exchange_record.py:0
 msgid "Action retry: state moved back to '%s'"
-msgstr ""
+msgstr "Åtgärd försöks igen: status flyttad tillbaka till '%s'"
 
 #. module: edi_core_oca
 #: model:ir.model.fields,field_description:edi_core_oca.field_edi_backend__active
@@ -207,22 +266,22 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:edi_core_oca.edi_exchange_type_rule_view_search
 #: model_terms:ir.ui.view,arch_db:edi_core_oca.edi_exchange_type_view_search
 msgid "Active"
-msgstr ""
+msgstr "Aktiv"
 
 #. module: edi_core_oca
 #: model:ir.model.fields,field_description:edi_core_oca.field_edi_exchange_type__advanced_settings
 msgid "Advanced Settings"
-msgstr ""
+msgstr "Avancerade inställningar"
 
 #. module: edi_core_oca
 #: model:ir.model.fields,field_description:edi_core_oca.field_edi_exchange_type__advanced_settings_edit
 msgid "Advanced YAML settings"
-msgstr ""
+msgstr "Avancerade YAML-inställningar"
 
 #. module: edi_core_oca
 #: model_terms:ir.ui.view,arch_db:edi_core_oca.edi_exchange_type_view_form
 msgid "Advanced settings"
-msgstr ""
+msgstr "Avancerade inställningar"
 
 #. module: edi_core_oca
 #: model:ir.ui.menu,name:edi_core_oca.menu_edi_exchange_record_all
@@ -230,28 +289,29 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:edi_core_oca.edi_exchange_type_rule_view_search
 #: model_terms:ir.ui.view,arch_db:edi_core_oca.edi_exchange_type_view_search
 msgid "All"
-msgstr ""
+msgstr "Alla"
 
 #. module: edi_core_oca
 #: model:ir.model.fields,field_description:edi_core_oca.field_edi_exchange_type__allow_empty_files_on_receive
 msgid "Allow Empty Files"
-msgstr ""
+msgstr "Tillåt tomma filer"
 
 #. module: edi_core_oca
 #. odoo-python
 #: code:addons/edi_core_oca/models/edi_exchange_record.py:0
 msgid "An error happened while sending. Please check exchange record info."
 msgstr ""
+"Ett fel uppstod vid avsändning. Kontrollera utväxlingspostens information."
 
 #. module: edi_core_oca
 #: model:ir.model.fields,help:edi_core_oca.field_edi_exchange_type_rule__model_id
 msgid "Apply to this model"
-msgstr ""
+msgstr "Tillämpa på denna modell"
 
 #. module: edi_core_oca
 #: model:ir.actions.server,name:edi_core_oca.ir_cron_archive_old_edi_records_ir_actions_server
 msgid "Archive Old EDI Exchange Records"
-msgstr ""
+msgstr "Arkivera gamla EDI-utväxlingsposter"
 
 #. module: edi_core_oca
 #: model_terms:ir.ui.view,arch_db:edi_core_oca.edi_backend_view_form
@@ -264,12 +324,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:edi_core_oca.edi_exchange_type_view_form
 #: model_terms:ir.ui.view,arch_db:edi_core_oca.edi_exchange_type_view_search
 msgid "Archived"
-msgstr ""
+msgstr "Arkiverad"
 
 #. module: edi_core_oca
 #: model:ir.model.fields,field_description:edi_core_oca.field_edi_exchange_record__message_attachment_count
 msgid "Attachment Count"
-msgstr ""
+msgstr "Antal bilagor"
 
 #. module: edi_core_oca
 #: model:ir.model.fields,help:edi_core_oca.field_edi_exchange_type__exchange_file_auto_generate
@@ -277,16 +337,18 @@ msgid ""
 "Auto generate output for records missing their payload. If active, a cron "
 "will take care of generating the output when not set yet. "
 msgstr ""
+"Generera automatiskt utdata för poster som saknar sin payload. Om aktiv "
+"kommer en cron att generera utdata när det ännu inte är angivet. "
 
 #. module: edi_core_oca
 #: model:ir.model.fields,field_description:edi_core_oca.field_edi_backend__auto_archive_records_after_days
 msgid "Auto-archive records after (days)"
-msgstr ""
+msgstr "Arkivera poster automatiskt efter (dagar)"
 
 #. module: edi_core_oca
 #: model:ir.model.fields,field_description:edi_core_oca.field_edi_backend__auto_delete_records_after_days
 msgid "Auto-delete archived records after (days)"
-msgstr ""
+msgstr "Ta bort arkiverade poster automatiskt efter (dagar)"
 
 #. module: edi_core_oca
 #: model:ir.model.fields,help:edi_core_oca.field_edi_backend__auto_archive_records_after_days
@@ -294,6 +356,8 @@ msgid ""
 "Automatically archive EDI exchange records after X days. Set to <= 0 to "
 "disable auto-archiving."
 msgstr ""
+"Arkivera EDI-utväxlingsposter automatiskt efter X dagar. Ange <= 0 för att "
+"inaktivera automatisk arkivering."
 
 #. module: edi_core_oca
 #: model:ir.model.fields,help:edi_core_oca.field_edi_backend__auto_delete_records_after_days
@@ -301,6 +365,8 @@ msgid ""
 "Automatically delete archived EDI exchange records after X days. Set to <= 0"
 " to disable auto-deletion."
 msgstr ""
+"Ta bort arkiverade EDI-utväxlingsposter automatiskt efter X dagar. Ange <= 0 "
+"för att inaktivera automatisk borttagning."
 
 #. module: edi_core_oca
 #: model:ir.model.fields,field_description:edi_core_oca.field_edi_configuration__backend_id
@@ -310,63 +376,63 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:edi_core_oca.edi_exchange_record_view_search
 #: model_terms:ir.ui.view,arch_db:edi_core_oca.edi_exchange_type_view_search
 msgid "Backend"
-msgstr ""
+msgstr "Backend"
 
 #. module: edi_core_oca
 #: model_terms:ir.ui.view,arch_db:edi_core_oca.edi_backend_view_search
 msgid "Backend Type"
-msgstr ""
+msgstr "Backend-typ"
 
 #. module: edi_core_oca
 #. odoo-python
 #: code:addons/edi_core_oca/models/edi_configuration.py:0
 #: code:addons/edi_core_oca/models/edi_exchange_record.py:0
 msgid "Backend must match with exchange type's backend!"
-msgstr ""
+msgstr "Backend måste matcha utväxlingstypens backend!"
 
 #. module: edi_core_oca
 #. odoo-python
 #: code:addons/edi_core_oca/models/edi_exchange_type.py:0
 msgid "Backend should respect backend type!"
-msgstr ""
+msgstr "Backend bör respektera backend-typen!"
 
 #. module: edi_core_oca
 #: model:ir.model.fields,field_description:edi_core_oca.field_edi_exchange_record_create_wiz__backend_type_id
 #: model:ir.model.fields,field_description:edi_core_oca.field_edi_exchange_type__backend_type_id
 msgid "Backend type"
-msgstr ""
+msgstr "Backend-typ"
 
 #. module: edi_core_oca
 #: model:ir.model.constraint,message:edi_core_oca.constraint_edi_backend_type_uniq_code
 msgid "Backend type code must be unique!"
-msgstr ""
+msgstr "Backend-typkod måste vara unik!"
 
 #. module: edi_core_oca
 #. odoo-python
 #: code:addons/edi_core_oca/models/edi_configuration.py:0
 #: code:addons/edi_core_oca/models/edi_exchange_record.py:0
 msgid "Backend type must match with exchange type's backend type!"
-msgstr ""
+msgstr "Backend-typ måste matcha utväxlingstypens backend-typ!"
 
 #. module: edi_core_oca
 #: model:ir.ui.menu,name:edi_core_oca.menu_edi_backend_type
 msgid "Backend types"
-msgstr ""
+msgstr "Backend-typer"
 
 #. module: edi_core_oca
 #: model:ir.ui.menu,name:edi_core_oca.menu_edi_backend
 msgid "Backends"
-msgstr ""
+msgstr "Backends"
 
 #. module: edi_core_oca
 #: model_terms:ir.ui.view,arch_db:edi_core_oca.edi_exchange_record_create_form_view
 msgid "Cancel"
-msgstr ""
+msgstr "Avbryt"
 
 #. module: edi_core_oca
 #: model:ir.model.fields,field_description:edi_core_oca.field_edi_exchange_type__check_model_id
 msgid "Checker"
-msgstr ""
+msgstr "Kontrollant"
 
 #. module: edi_core_oca
 #: model:ir.model.fields,field_description:edi_core_oca.field_edi_backend__backend_type_code
@@ -375,38 +441,38 @@ msgstr ""
 #: model:ir.model.fields,field_description:edi_core_oca.field_edi_configuration_trigger__code
 #: model:ir.model.fields,field_description:edi_core_oca.field_edi_exchange_type__code
 msgid "Code"
-msgstr ""
+msgstr "Kod"
 
 #. module: edi_core_oca
 #: model:ir.model.constraint,message:edi_core_oca.constraint_edi_configuration_trigger_code_uniq
 msgid "Code must be unique"
-msgstr ""
+msgstr "Koden måste vara unik"
 
 #. module: edi_core_oca
 #: model:ir.model.fields,field_description:edi_core_oca.field_edi_backend__company_id
 #: model:ir.model.fields,field_description:edi_core_oca.field_edi_exchange_record__company_id
 msgid "Company"
-msgstr ""
+msgstr "Företag"
 
 #. module: edi_core_oca
 #: model:ir.ui.menu,name:edi_core_oca.menu_edi_config
 msgid "Config"
-msgstr ""
+msgstr "Konfiguration"
 
 #. module: edi_core_oca
 #: model:ir.ui.menu,name:edi_core_oca.menu_edi_configuration
 msgid "Configurations"
-msgstr ""
+msgstr "Konfigurationer"
 
 #. module: edi_core_oca
 #: model:ir.model,name:edi_core_oca.model_edi_exchange_record_create_wiz
 msgid "Create an Exchange Record"
-msgstr ""
+msgstr "Skapa en utväxlingspost"
 
 #. module: edi_core_oca
 #: model_terms:ir.ui.view,arch_db:edi_core_oca.edi_exchange_record_view_search
 msgid "Create date"
-msgstr ""
+msgstr "Skapandedatum"
 
 #. module: edi_core_oca
 #: model:ir.model.fields,field_description:edi_core_oca.field_edi_backend__create_uid
@@ -419,12 +485,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:edi_core_oca.field_edi_exchange_type__create_uid
 #: model:ir.model.fields,field_description:edi_core_oca.field_edi_exchange_type_rule__create_uid
 msgid "Created by"
-msgstr ""
+msgstr "Skapad av"
 
 #. module: edi_core_oca
 #: model_terms:ir.ui.view,arch_db:edi_core_oca.edi_exchange_record_view_search
 msgid "Created last 7 days"
-msgstr ""
+msgstr "Skapad de senaste 7 dagarna"
 
 #. module: edi_core_oca
 #: model:ir.model.fields,field_description:edi_core_oca.field_edi_backend__create_date
@@ -437,50 +503,50 @@ msgstr ""
 #: model:ir.model.fields,field_description:edi_core_oca.field_edi_exchange_type__create_date
 #: model:ir.model.fields,field_description:edi_core_oca.field_edi_exchange_type_rule__create_date
 msgid "Created on"
-msgstr ""
+msgstr "Skapad den"
 
 #. module: edi_core_oca
 #: model_terms:ir.ui.view,arch_db:edi_core_oca.edi_exchange_record_view_search
 msgid "Created today"
-msgstr ""
+msgstr "Skapad idag"
 
 #. module: edi_core_oca
 #: model:ir.model.fields.selection,name:edi_core_oca.selection__edi_exchange_type_rule__kind__custom
 msgid "Custom"
-msgstr ""
+msgstr "Anpassad"
 
 #. module: edi_core_oca
 #: model:ir.model.fields,field_description:edi_core_oca.field_edi_exchange_type__encoding_in_error_handler
 msgid "Decoding Error Handler"
-msgstr ""
+msgstr "Hantering av avkodningsfel"
 
 #. module: edi_core_oca
 #: model:ir.actions.server,name:edi_core_oca.ir_cron_delete_old_archived_edi_records_ir_actions_server
 msgid "Delete Old Archived EDI Exchange Records"
-msgstr ""
+msgstr "Ta bort gamla arkiverade EDI-utväxlingsposter"
 
 #. module: edi_core_oca
 #: model:ir.model.fields,help:edi_core_oca.field_edi_configuration__description
 #: model:ir.model.fields,help:edi_core_oca.field_edi_configuration_trigger__description
 msgid "Describe what the conf is for"
-msgstr ""
+msgstr "Beskriv vad konfigurationen är till för"
 
 #. module: edi_core_oca
 #: model:ir.model.fields,field_description:edi_core_oca.field_edi_configuration__description
 #: model:ir.model.fields,field_description:edi_core_oca.field_edi_configuration_trigger__description
 msgid "Description"
-msgstr ""
+msgstr "Beskrivning"
 
 #. module: edi_core_oca
 #: model:ir.model.fields,field_description:edi_core_oca.field_edi_exchange_record__direction
 #: model:ir.model.fields,field_description:edi_core_oca.field_edi_exchange_type__direction
 msgid "Direction"
-msgstr ""
+msgstr "Riktning"
 
 #. module: edi_core_oca
 #: model:ir.model.fields,field_description:edi_core_oca.field_edi_exchange_consumer_mixin__edi_disable_auto
 msgid "Disable auto"
-msgstr ""
+msgstr "Inaktivera automatisk"
 
 #. module: edi_core_oca
 #: model:ir.model.fields,field_description:edi_core_oca.field_edi_backend__display_name
@@ -503,29 +569,29 @@ msgstr ""
 #: model:ir.model.fields,field_description:edi_core_oca.field_edi_oca_handler_send__display_name
 #: model:ir.model.fields,field_description:edi_core_oca.field_ir_model__display_name
 msgid "Display Name"
-msgstr ""
+msgstr "Visningsnamn"
 
 #. module: edi_core_oca
 #: model_terms:ir.ui.view,arch_db:edi_core_oca.edi_exchange_type_rule_view_form
 msgid "Domain"
-msgstr ""
+msgstr "Domän"
 
 #. module: edi_core_oca
 #: model_terms:ir.ui.view,arch_db:edi_core_oca.view_partner_form
 msgid "EDI"
-msgstr ""
+msgstr "EDI"
 
 #. module: edi_core_oca
 #: model:res.groups,name:edi_core_oca.group_edi_advanced_settings_manager
 msgid "EDI Advanced Settings Manager"
-msgstr ""
+msgstr "EDI-ansvarig för avancerade inställningar"
 
 #. module: edi_core_oca
 #: model:ir.actions.act_window,name:edi_core_oca.act_open_edi_backend_view
 #: model:ir.model,name:edi_core_oca.model_edi_backend
 #: model_terms:ir.ui.view,arch_db:edi_core_oca.edi_backend_view_search
 msgid "EDI Backend"
-msgstr ""
+msgstr "EDI-backend"
 
 #. module: edi_core_oca
 #: model:ir.actions.act_window,name:edi_core_oca.act_open_edi_backend_type_view
@@ -533,34 +599,34 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:edi_core_oca.edi_backend_type_view_form
 #: model_terms:ir.ui.view,arch_db:edi_core_oca.edi_backend_type_view_search
 msgid "EDI Backend Type"
-msgstr ""
+msgstr "EDI-backend-typ"
 
 #. module: edi_core_oca
 #: model:ir.model.fields,field_description:edi_core_oca.field_edi_backend__backend_type_id
 msgid "EDI Backend type"
-msgstr ""
+msgstr "EDI-backend-typ"
 
 #. module: edi_core_oca
 #: model_terms:ir.ui.view,arch_db:edi_core_oca.edi_configuration_view_form
 msgid "EDI Config Before Do"
-msgstr ""
+msgstr "EDI-konfiguration före utförande"
 
 #. module: edi_core_oca
 #: model_terms:ir.ui.view,arch_db:edi_core_oca.edi_configuration_view_form
 msgid "EDI Config Do"
-msgstr ""
+msgstr "EDI-konfiguration utförande"
 
 #. module: edi_core_oca
 #: model:ir.actions.act_window,name:edi_core_oca.act_open_edi_configuration_view
 #: model_terms:ir.ui.view,arch_db:edi_core_oca.edi_configuration_view_form
 msgid "EDI Configuration"
-msgstr ""
+msgstr "EDI-konfiguration"
 
 #. module: edi_core_oca
 #: model_terms:ir.ui.view,arch_db:edi_core_oca.edi_exchange_record_view_form
 #: model_terms:ir.ui.view,arch_db:edi_core_oca.edi_exchange_record_view_search
 msgid "EDI Exchange Record"
-msgstr ""
+msgstr "EDI-utväxlingspost"
 
 #. module: edi_core_oca
 #: model:ir.actions.act_window,name:edi_core_oca.act_open_edi_exchange_type_view
@@ -568,149 +634,149 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:edi_core_oca.edi_exchange_type_view_form
 #: model_terms:ir.ui.view,arch_db:edi_core_oca.edi_exchange_type_view_search
 msgid "EDI Exchange Type"
-msgstr ""
+msgstr "EDI-utväxlingstyp"
 
 #. module: edi_core_oca
 #: model:ir.actions.act_window,name:edi_core_oca.act_open_edi_exchange_type_rule_view
 msgid "EDI Exchange Type Rule"
-msgstr ""
+msgstr "EDI-utväxlingstypregel"
 
 #. module: edi_core_oca
 #: model:ir.model,name:edi_core_oca.model_edi_exchange_type_rule
 msgid "EDI Exchange type rule"
-msgstr ""
+msgstr "EDI-utväxlingstypregel"
 
 #. module: edi_core_oca
 #: model:ir.model.fields,field_description:edi_core_oca.field_edi_id_mixin__edi_id
 msgid "EDI ID"
-msgstr ""
+msgstr "EDI-ID"
 
 #. module: edi_core_oca
 #: model:ir.model,name:edi_core_oca.model_edi_id_mixin
 msgid "EDI ID mixin"
-msgstr ""
+msgstr "EDI-ID-mixin"
 
 #. module: edi_core_oca
 #: model:ir.model,name:edi_core_oca.model_edi_oca_handler_check
 msgid "EDI OCA Handler Check"
-msgstr ""
+msgstr "EDI OCA-hantering kontroll"
 
 #. module: edi_core_oca
 #: model:ir.model,name:edi_core_oca.model_edi_oca_handler_generate
 msgid "EDI OCA Handler Generate"
-msgstr ""
+msgstr "EDI OCA-hantering generering"
 
 #. module: edi_core_oca
 #: model:ir.model,name:edi_core_oca.model_edi_oca_handler_input_validate
 msgid "EDI OCA Handler Input Validate"
-msgstr ""
+msgstr "EDI OCA-hantering inputvalidering"
 
 #. module: edi_core_oca
 #: model:ir.model,name:edi_core_oca.model_edi_oca_handler_output_validate
 msgid "EDI OCA Handler Output Validate"
-msgstr ""
+msgstr "EDI OCA-hantering outputvalidering"
 
 #. module: edi_core_oca
 #: model:ir.model,name:edi_core_oca.model_edi_oca_handler_process
 msgid "EDI OCA Handler Process"
-msgstr ""
+msgstr "EDI OCA-hantering bearbetning"
 
 #. module: edi_core_oca
 #: model:ir.model,name:edi_core_oca.model_edi_oca_handler_receive
 msgid "EDI OCA Handler Receive"
-msgstr ""
+msgstr "EDI OCA-hantering mottagning"
 
 #. module: edi_core_oca
 #: model:ir.model,name:edi_core_oca.model_edi_oca_handler_send
 msgid "EDI OCA Handler Send"
-msgstr ""
+msgstr "EDI OCA-hantering avsändning"
 
 #. module: edi_core_oca
 #: model:res.groups,name:edi_core_oca.group_edi_override_exchange_file_content
 msgid "EDI Override Exchange File Content"
-msgstr ""
+msgstr "EDI åsidosätt utväxlingsfilens innehåll"
 
 #. module: edi_core_oca
 #: model:ir.model,name:edi_core_oca.model_edi_exchange_record
 msgid "EDI exchange Record"
-msgstr ""
+msgstr "EDI-utväxlingspost"
 
 #. module: edi_core_oca
 #: model:ir.model,name:edi_core_oca.model_edi_exchange_related_record
 msgid "EDI exchange Related Record"
-msgstr ""
+msgstr "EDI-utväxling relaterad post"
 
 #. module: edi_core_oca
 #: model:ir.actions.server,name:edi_core_oca.cron_edi_backend_check_input_exchange_ir_actions_server
 msgid "EDI exchange check input sync"
-msgstr ""
+msgstr "EDI-utväxling kontroll av inputsynkronisering"
 
 #. module: edi_core_oca
 #: model:ir.actions.server,name:edi_core_oca.cron_edi_backend_check_output_exchange_ir_actions_server
 msgid "EDI exchange check output sync"
-msgstr ""
+msgstr "EDI-utväxling kontroll av outputsynkronisering"
 
 #. module: edi_core_oca
 #: model:ir.model.fields,field_description:edi_core_oca.field_edi_exchange_consumer_mixin__origin_exchange_type_id
 msgid "EDI origin exchange type"
-msgstr ""
+msgstr "EDI ursprunglig utväxlingstyp"
 
 #. module: edi_core_oca
 #: model:ir.model.fields,field_description:edi_core_oca.field_edi_exchange_consumer_mixin__origin_exchange_record_id
 msgid "EDI origin record"
-msgstr ""
+msgstr "EDI ursprunglig post"
 
 #. module: edi_core_oca
 #: model:ir.model.fields,help:edi_core_oca.field_edi_exchange_consumer_mixin__origin_exchange_record_id
 msgid "EDI record that originated this document."
-msgstr ""
+msgstr "EDI-post som är ursprunget till detta dokument."
 
 #. module: edi_core_oca
 #: model:ir.model.fields,field_description:edi_core_oca.field_edi_exchange_consumer_mixin__edi_config
 msgid "Edi Config"
-msgstr ""
+msgstr "EDI-konfiguration"
 
 #. module: edi_core_oca
 #: model_terms:ir.ui.view,arch_db:edi_core_oca.edi_configuration_view_search
 msgid "Edi Configuration"
-msgstr ""
+msgstr "EDI-konfiguration"
 
 #. module: edi_core_oca
 #: model:ir.model.fields,field_description:edi_core_oca.field_edi_exchange_consumer_mixin__edi_has_form_config
 msgid "Edi Has Form Config"
-msgstr ""
+msgstr "EDI har formulärkonfiguration"
 
 #. module: edi_core_oca
 #. odoo-python
 #: code:addons/edi_core_oca/models/edi_backend.py:0
 msgid "Empty files are not allowed for exchange type %(name)s (%(code)s)"
-msgstr ""
+msgstr "Tomma filer är inte tillåtna för utväxlingstypen %(name)s (%(code)s)"
 
 #. module: edi_core_oca
 #: model:ir.model.fields,field_description:edi_core_oca.field_edi_exchange_type_rule__enable_domain
 msgid "Enable on domain"
-msgstr ""
+msgstr "Aktivera på domän"
 
 #. module: edi_core_oca
 #: model:ir.model.fields,field_description:edi_core_oca.field_edi_exchange_type_rule__enable_snippet
 msgid "Enable on snippet"
-msgstr ""
+msgstr "Aktivera på snippet"
 
 #. module: edi_core_oca
 #: model:ir.model.fields,field_description:edi_core_oca.field_edi_exchange_type__partner_ids
 msgid "Enabled for partners"
-msgstr ""
+msgstr "Aktiverad för kontakter"
 
 #. module: edi_core_oca
 #: model:ir.model.fields,field_description:edi_core_oca.field_edi_exchange_type__encoding
 #: model_terms:ir.ui.view,arch_db:edi_core_oca.edi_exchange_type_view_form
 msgid "Encoding"
-msgstr ""
+msgstr "Kodning"
 
 #. module: edi_core_oca
 #: model:ir.model.fields,field_description:edi_core_oca.field_edi_exchange_type__encoding_out_error_handler
 msgid "Encoding Error Handler"
-msgstr ""
+msgstr "Hantering av kodningsfel"
 
 #. module: edi_core_oca
 #: model:ir.model.fields,help:edi_core_oca.field_edi_exchange_type__encoding
@@ -718,152 +784,154 @@ msgid ""
 "Encoding to be applied to generate/process the exchanged file.\n"
 "Example: UTF-8, Windows-1252, ASCII...(default is always 'UTF-8')"
 msgstr ""
+"Kodning som ska tillämpas för att generera/bearbeta den utväxlade filen.\n"
+"Exempel: UTF-8, Windows-1252, ASCII...(standard är alltid 'UTF-8')"
 
 #. module: edi_core_oca
 #: model_terms:ir.ui.view,arch_db:edi_core_oca.edi_exchange_record_view_form
 msgid "Error"
-msgstr ""
+msgstr "Fel"
 
 #. module: edi_core_oca
 #: model:ir.model.fields.selection,name:edi_core_oca.selection__edi_exchange_record__edi_exchange_state__input_processed_error
 msgid "Error on process"
-msgstr ""
+msgstr "Fel vid bearbetning"
 
 #. module: edi_core_oca
 #: model:ir.model.fields.selection,name:edi_core_oca.selection__edi_exchange_record__edi_exchange_state__input_receive_error
 msgid "Error on reception"
-msgstr ""
+msgstr "Fel vid mottagning"
 
 #. module: edi_core_oca
 #: model:ir.model.fields.selection,name:edi_core_oca.selection__edi_exchange_record__edi_exchange_state__validate_error
 msgid "Error on validation"
-msgstr ""
+msgstr "Fel vid validering"
 
 #. module: edi_core_oca
 #: model:ir.model.fields,field_description:edi_core_oca.field_edi_exchange_record__exchange_file
 msgid "Exchange File"
-msgstr ""
+msgstr "Utväxlingsfil"
 
 #. module: edi_core_oca
 #: model:ir.model.fields,field_description:edi_core_oca.field_edi_exchange_type__exchange_file_auto_generate
 msgid "Exchange File Auto Generate"
-msgstr ""
+msgstr "Automatisk generering av utväxlingsfil"
 
 #. module: edi_core_oca
 #: model:ir.model.fields,field_description:edi_core_oca.field_edi_exchange_type__exchange_file_ext
 msgid "Exchange File Ext"
-msgstr ""
+msgstr "Utväxlingsfilens filändelse"
 
 #. module: edi_core_oca
 #: model:ir.model.fields,field_description:edi_core_oca.field_edi_exchange_record__exchange_file_frozen
 msgid "Exchange File Frozen"
-msgstr ""
+msgstr "Utväxlingsfil låst"
 
 #. module: edi_core_oca
 #: model:ir.model.fields,field_description:edi_core_oca.field_edi_exchange_record__exchange_filechecksum
 msgid "Exchange Filechecksum"
-msgstr ""
+msgstr "Utväxlingsfilens kontrollsumma"
 
 #. module: edi_core_oca
 #: model:ir.model.fields,field_description:edi_core_oca.field_edi_exchange_record__exchange_filename
 msgid "Exchange Filename"
-msgstr ""
+msgstr "Utväxlingsfilnamn"
 
 #. module: edi_core_oca
 #: model:ir.model.fields,field_description:edi_core_oca.field_edi_exchange_type__exchange_filename_pattern
 msgid "Exchange Filename Pattern"
-msgstr ""
+msgstr "Mönster för utväxlingsfilnamn"
 
 #. module: edi_core_oca
 #: model:ir.model.fields,field_description:edi_core_oca.field_edi_exchange_type__exchange_filename_sequence_id
 msgid "Exchange Filename Sequence"
-msgstr ""
+msgstr "Sekvens för utväxlingsfilnamn"
 
 #. module: edi_core_oca
 #: model:ir.model.fields,field_description:edi_core_oca.field_edi_exchange_consumer_mixin__exchange_record_ids
 #: model:ir.model.fields,field_description:edi_core_oca.field_edi_exchange_related_record__exchange_record_id
 #: model:ir.model.fields,field_description:edi_core_oca.field_edi_exchange_type__exchange_record_ids
 msgid "Exchange Record"
-msgstr ""
+msgstr "Utväxlingspost"
 
 #. module: edi_core_oca
 #: model:ir.model.fields,field_description:edi_core_oca.field_edi_exchange_consumer_mixin__exchange_record_count
 msgid "Exchange Record Count"
-msgstr ""
+msgstr "Antal utväxlingsposter"
 
 #. module: edi_core_oca
 #: model:ir.model.fields,field_description:edi_core_oca.field_edi_exchange_consumer_mixin__exchange_related_record_ids
 msgid "Exchange Related Record"
-msgstr ""
+msgstr "Utväxling relaterad post"
 
 #. module: edi_core_oca
 #: model:ir.model.fields,field_description:edi_core_oca.field_edi_configuration__type_id
 #: model:ir.model.fields,field_description:edi_core_oca.field_edi_exchange_record_create_wiz__exchange_type_id
 msgid "Exchange Type"
-msgstr ""
+msgstr "Utväxlingstyp"
 
 #. module: edi_core_oca
 #. odoo-python
 #: code:addons/edi_core_oca/models/edi_exchange_record.py:0
 msgid "Exchange data generated"
-msgstr ""
+msgstr "Utväxlingsdata genererad"
 
 #. module: edi_core_oca
 #: model_terms:ir.ui.view,arch_db:edi_core_oca.edi_exchange_record_view_search
 msgid "Exchange date"
-msgstr ""
+msgstr "Utväxlingsdatum"
 
 #. module: edi_core_oca
 #: model:ir.model.fields,field_description:edi_core_oca.field_edi_exchange_record__exchange_error
 msgid "Exchange error"
-msgstr ""
+msgstr "Utväxlingsfel"
 
 #. module: edi_core_oca
 #: model:ir.model.fields,field_description:edi_core_oca.field_edi_exchange_record__exchange_error_traceback
 msgid "Exchange error traceback"
-msgstr ""
+msgstr "Utväxlingsfelets traceback"
 
 #. module: edi_core_oca
 #. odoo-python
 #: code:addons/edi_core_oca/models/edi_exchange_record.py:0
 msgid "Exchange not received"
-msgstr ""
+msgstr "Utväxling ej mottagen"
 
 #. module: edi_core_oca
 #. odoo-python
 #: code:addons/edi_core_oca/models/edi_exchange_record.py:0
 msgid "Exchange not valid"
-msgstr ""
+msgstr "Utväxling ej giltig"
 
 #. module: edi_core_oca
 #. odoo-python
 #: code:addons/edi_core_oca/models/edi_exchange_record.py:0
 msgid "Exchange processed successfully"
-msgstr ""
+msgstr "Utväxling behandlad utan fel"
 
 #. module: edi_core_oca
 #. odoo-python
 #: code:addons/edi_core_oca/models/edi_exchange_record.py:0
 msgid "Exchange processed with errors"
-msgstr ""
+msgstr "Utväxling behandlad med fel"
 
 #. module: edi_core_oca
 #. odoo-python
 #: code:addons/edi_core_oca/models/edi_exchange_record.py:0
 msgid "Exchange received successfully"
-msgstr ""
+msgstr "Utväxling mottagen utan fel"
 
 #. module: edi_core_oca
 #. odoo-python
 #: code:addons/edi_core_oca/models/edi_backend.py:0
 msgid "Exchange record ID=%d already has a file to process!"
-msgstr ""
+msgstr "Utväxlingspost ID=%d har redan en fil att bearbeta!"
 
 #. module: edi_core_oca
 #. odoo-python
 #: code:addons/edi_core_oca/models/edi_backend.py:0
 msgid "Exchange record ID=%d is not an outgoing record, cannot be generated"
-msgstr ""
+msgstr "Utväxlingspost ID=%d är inte en utgående post och kan inte genereras"
 
 #. module: edi_core_oca
 #. odoo-python
@@ -871,55 +939,56 @@ msgstr ""
 msgid ""
 "Exchange record ID=%d is not in draft state and has already an output value."
 msgstr ""
+"Utväxlingspost ID=%d är inte i utkaststatus och har redan ett utdatavärde."
 
 #. module: edi_core_oca
 #. odoo-python
 #: code:addons/edi_core_oca/models/edi_exchange_record.py:0
 msgid "Exchange sent"
-msgstr ""
+msgstr "Utväxling skickad"
 
 #. module: edi_core_oca
 #: model:ir.model.fields,field_description:edi_core_oca.field_edi_exchange_record__edi_exchange_state
 msgid "Exchange state"
-msgstr ""
+msgstr "Utväxlingsstatus"
 
 #. module: edi_core_oca
 #. odoo-python
 #: code:addons/edi_core_oca/models/edi_exchange_record.py:0
 msgid "Exchange state must respect direction!"
-msgstr ""
+msgstr "Utväxlingsstatus måste respektera riktningen!"
 
 #. module: edi_core_oca
 #: model:ir.model.fields,field_description:edi_core_oca.field_edi_exchange_record__type_id
 #: model_terms:ir.ui.view,arch_db:edi_core_oca.edi_exchange_type_rule_view_search
 msgid "Exchange type"
-msgstr ""
+msgstr "Utväxlingstyp"
 
 #. module: edi_core_oca
 #: model:ir.ui.menu,name:edi_core_oca.menu_edi_exchange_type_rule
 msgid "Exchange type rules"
-msgstr ""
+msgstr "Utväxlingstypregler"
 
 #. module: edi_core_oca
 #: model:ir.ui.menu,name:edi_core_oca.menu_edi_exchange_type
 #: model_terms:ir.ui.view,arch_db:edi_core_oca.edi_backend_view_form
 msgid "Exchange types"
-msgstr ""
+msgstr "Utväxlingstyper"
 
 #. module: edi_core_oca
 #: model:ir.model.fields,field_description:edi_core_oca.field_edi_exchange_record__exchanged_on
 msgid "Exchanged On"
-msgstr ""
+msgstr "Utväxlad den"
 
 #. module: edi_core_oca
 #: model_terms:ir.ui.view,arch_db:edi_core_oca.edi_exchange_record_view_search
 msgid "Exchanged last 7 days"
-msgstr ""
+msgstr "Utväxlad de senaste 7 dagarna"
 
 #. module: edi_core_oca
 #: model_terms:ir.ui.view,arch_db:edi_core_oca.edi_exchange_record_view_search
 msgid "Exchanged today"
-msgstr ""
+msgstr "Utväxlad idag"
 
 #. module: edi_core_oca
 #: model:ir.actions.act_window,name:edi_core_oca.act_open_edi_exchange_record_view
@@ -927,58 +996,58 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:edi_core_oca.edi_backend_view_form
 #: model_terms:ir.ui.view,arch_db:edi_core_oca.edi_exchange_type_view_form
 msgid "Exchanges"
-msgstr ""
+msgstr "Utväxlingar"
 
 #. module: edi_core_oca
 #: model:ir.actions.act_window,name:edi_core_oca.act_open_edi_exchange_record_view_failed
 msgid "Exchanges - failed"
-msgstr ""
+msgstr "Utväxlingar - misslyckade"
 
 #. module: edi_core_oca
 #: model:ir.actions.act_window,name:edi_core_oca.act_open_edi_exchange_record_view_inbound
 msgid "Exchanges - inbound"
-msgstr ""
+msgstr "Utväxlingar - inkommande"
 
 #. module: edi_core_oca
 #: model:ir.actions.act_window,name:edi_core_oca.act_open_edi_exchange_record_view_outbound
 msgid "Exchanges - outbound"
-msgstr ""
+msgstr "Utväxlingar - utgående"
 
 #. module: edi_core_oca
 #: model:ir.actions.act_window,name:edi_core_oca.act_open_edi_exchange_record_view_pending
 msgid "Exchanges - pending"
-msgstr ""
+msgstr "Utväxlingar - väntande"
 
 #. module: edi_core_oca
 #: model_terms:ir.ui.view,arch_db:edi_core_oca.edi_exchange_type_view_form
 msgid "Execution handlers"
-msgstr ""
+msgstr "Utförandehanterare"
 
 #. module: edi_core_oca
 #: model:ir.model.fields,field_description:edi_core_oca.field_edi_exchange_record__external_identifier
 msgid "External Identifier"
-msgstr ""
+msgstr "Extern identifierare"
 
 #. module: edi_core_oca
 #: model:ir.ui.menu,name:edi_core_oca.menu_edi_exchange_record_pending
 #: model_terms:ir.ui.view,arch_db:edi_core_oca.edi_exchange_record_view_search
 msgid "Failed"
-msgstr ""
+msgstr "Misslyckad"
 
 #. module: edi_core_oca
 #: model:ir.model.fields,help:edi_core_oca.field_edi_exchange_type_rule__enable_domain
 msgid "Filter domain to be checked on Models"
-msgstr ""
+msgstr "Filterdomän som ska kontrolleras på modeller"
 
 #. module: edi_core_oca
 #: model:ir.model.fields,field_description:edi_core_oca.field_edi_exchange_record__message_follower_ids
 msgid "Followers"
-msgstr ""
+msgstr "Följare"
 
 #. module: edi_core_oca
 #: model:ir.model.fields,field_description:edi_core_oca.field_edi_exchange_record__message_partner_ids
 msgid "Followers (Partners)"
-msgstr ""
+msgstr "Följare (kontakter)"
 
 #. module: edi_core_oca
 #: model:ir.model.fields,help:edi_core_oca.field_edi_exchange_type__exchange_filename_pattern
@@ -991,69 +1060,82 @@ msgid ""
 "- `dt` means datetime\n"
 "- `seq` means sequence. You need a sequence to be defined in `Exchange Filename Sequence` to use `seq`\n"
 msgstr ""
+"För utgående utväxlingstyper bör detta vara en formateringssträng med "
+"följande variabler tillgängliga (används inom klamrar, `{}`): "
+"`exchange_record`, `record_name`, `type`, `dt` och `seq`. En giltig sträng "
+"skulle till exempel vara {record_name}-{type.code}-{dt}-{seq}\n"
+"För mer information:\n"
+"- `exchange_record` betyder utväxlingspost\n"
+"- `record_name` betyder namnet på utväxlingsposten\n"
+"- `type` betyder koden för utväxlingspostens typ\n"
+"- `dt` betyder datum/tid\n"
+"- `seq` betyder sekvens. Du behöver en sekvens definierad i `Sekvens för "
+"utväxlingsfilnamn` för att använda `seq`\n"
 
 #. module: edi_core_oca
 #: model_terms:ir.ui.view,arch_db:edi_core_oca.edi_exchange_type_rule_view_form
 msgid "Form"
-msgstr ""
+msgstr "Formulär"
 
 #. module: edi_core_oca
 #: model:ir.model.fields.selection,name:edi_core_oca.selection__edi_exchange_type_rule__kind__form_btn
 msgid "Form button"
-msgstr ""
+msgstr "Formulärknapp"
 
 #. module: edi_core_oca
 #: model:ir.model.fields,field_description:edi_core_oca.field_edi_exchange_type_rule__form_btn_label
 msgid "Form button label"
-msgstr ""
+msgstr "Formulärknappens etikett"
 
 #. module: edi_core_oca
 #: model:ir.model.fields,field_description:edi_core_oca.field_edi_exchange_type_rule__form_btn_tooltip
 msgid "Form button tooltip"
-msgstr ""
+msgstr "Formulärknappens tooltip"
 
 #. module: edi_core_oca
 #: model_terms:ir.ui.view,arch_db:edi_core_oca.edi_exchange_record_create_form_view
 msgid "Generate"
-msgstr ""
+msgstr "Generera"
 
 #. module: edi_core_oca
 #: model:ir.actions.act_window,name:edi_core_oca.edi_exchange_record_create_act_window
 #: model_terms:ir.ui.view,arch_db:edi_core_oca.edi_exchange_record_create_form_view
 msgid "Generate Exchange Record"
-msgstr ""
+msgstr "Generera utväxlingspost"
 
 #. module: edi_core_oca
 #: model:ir.model.fields,field_description:edi_core_oca.field_edi_exchange_type__generate_model_id
 msgid "Generator"
-msgstr ""
+msgstr "Generator"
 
 #. module: edi_core_oca
 #: model:ir.model.fields,field_description:edi_core_oca.field_edi_configuration__is_global
 msgid "Global Configuration"
-msgstr ""
+msgstr "Global konfiguration"
 
 #. module: edi_core_oca
 #: model:ir.model.fields,help:edi_core_oca.field_edi_exchange_type__encoding_in_error_handler
 msgid ""
 "Handling of decoding errors on process (default is always 'Raise Error')."
 msgstr ""
+"Hantering av avkodningsfel vid bearbetning (standard är alltid 'Skapa fel')."
 
 #. module: edi_core_oca
 #: model:ir.model.fields,help:edi_core_oca.field_edi_exchange_type__encoding_out_error_handler
 msgid ""
 "Handling of encoding errors on generate (default is always 'Raise Error')."
 msgstr ""
+"Hantering av kodningsfel vid generering (standard är alltid 'Skapa fel')."
 
 #. module: edi_core_oca
 #: model:ir.model.fields,field_description:edi_core_oca.field_edi_exchange_record__has_message
 msgid "Has Message"
-msgstr ""
+msgstr "Har meddelande"
 
 #. module: edi_core_oca
 #: model:ir.model.fields,help:edi_core_oca.field_edi_exchange_type_rule__form_btn_tooltip
 msgid "Help message visible as tooltip on button h-over"
-msgstr ""
+msgstr "Hjälpmeddelande synligt som tooltip vid mus-over på knapp"
 
 #. module: edi_core_oca
 #: model:ir.model.fields,field_description:edi_core_oca.field_edi_backend__id
@@ -1076,12 +1158,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:edi_core_oca.field_edi_oca_handler_send__id
 #: model:ir.model.fields,field_description:edi_core_oca.field_ir_model__id
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: edi_core_oca
 #: model:ir.model.fields,field_description:edi_core_oca.field_edi_exchange_record__identifier
 msgid "Identifier"
-msgstr ""
+msgstr "Identifierare"
 
 #. module: edi_core_oca
 #: model:ir.model.fields,help:edi_core_oca.field_edi_exchange_type__ack_type_id
@@ -1089,16 +1171,18 @@ msgid ""
 "Identify the type of the ack. If this field is valued it means an hack is "
 "expected."
 msgstr ""
+"Identifiera ACK-typen. Om detta fält har ett värde innebär det att en ACK "
+"förväntas."
 
 #. module: edi_core_oca
 #: model:ir.model.fields,help:edi_core_oca.field_edi_exchange_record__message_needaction
 msgid "If checked, new messages require your attention."
-msgstr ""
+msgstr "Om markerat, nya meddelanden kräver din uppmärksamhet."
 
 #. module: edi_core_oca
 #: model:ir.model.fields,help:edi_core_oca.field_edi_exchange_record__message_has_error
 msgid "If checked, some messages have a delivery error."
-msgstr ""
+msgstr "Om markerad, några meddelanden har leveransfel."
 
 #. module: edi_core_oca
 #: model:ir.model.fields,help:edi_core_oca.field_edi_configuration__is_global
@@ -1106,6 +1190,8 @@ msgid ""
 "If checked, this configuration will be executed for all records, regardless "
 "of the partner relation."
 msgstr ""
+"Om markerat kommer denna konfiguration att utföras för alla poster, oavsett "
+"kontaktrelation."
 
 #. module: edi_core_oca
 #: model:ir.model.fields,help:edi_core_oca.field_edi_exchange_type__exchange_filename_sequence_id
@@ -1113,85 +1199,87 @@ msgid ""
 "If the `Exchange Filename Pattern` has `{seq}`, you should define a sequence"
 " in this field to show the sequence in your filename"
 msgstr ""
+"Om `Mönster för utväxlingsfilnamn` har `{seq}`, bör du definiera en sekvens "
+"i detta fält för att visa sekvensen i ditt filnamn"
 
 #. module: edi_core_oca
 #: model:ir.model.fields.selection,name:edi_core_oca.selection__edi_exchange_type__encoding_in_error_handler__ignore
 #: model:ir.model.fields.selection,name:edi_core_oca.selection__edi_exchange_type__encoding_out_error_handler__ignore
 msgid "Ignore"
-msgstr ""
+msgstr "Ignorera"
 
 #. module: edi_core_oca
 #: model_terms:ir.ui.view,arch_db:edi_core_oca.edi_configuration_view_search
 msgid "Inactive"
-msgstr ""
+msgstr "Inaktiv"
 
 #. module: edi_core_oca
 #: model:ir.ui.menu,name:edi_core_oca.menu_edi_exchange_record_inbound
 #: model_terms:ir.ui.view,arch_db:edi_core_oca.edi_exchange_record_view_search
 #: model_terms:ir.ui.view,arch_db:edi_core_oca.edi_exchange_type_view_search
 msgid "Inbound"
-msgstr ""
+msgstr "Inkommande"
 
 #. module: edi_core_oca
 #: model:ir.model.fields.selection,name:edi_core_oca.selection__edi_exchange_type__direction__input
 msgid "Input"
-msgstr ""
+msgstr "Input"
 
 #. module: edi_core_oca
 #: model:ir.model.fields,field_description:edi_core_oca.field_edi_exchange_type__input_validate_model_id
 msgid "Input Validator"
-msgstr ""
+msgstr "Inputvalidator"
 
 #. module: edi_core_oca
 #: model:ir.model.fields,help:edi_core_oca.field_edi_id_mixin__edi_id
 msgid "Internal or external identifier for records."
-msgstr ""
+msgstr "Intern eller extern identifierare för poster."
 
 #. module: edi_core_oca
 #: model:ir.model.fields,field_description:edi_core_oca.field_ir_model__is_edi_checker
 msgid "Is Edi Checker"
-msgstr ""
+msgstr "Är EDI-kontrollant"
 
 #. module: edi_core_oca
 #: model:ir.model.fields,field_description:edi_core_oca.field_ir_model__is_edi_generator
 msgid "Is Edi Generator"
-msgstr ""
+msgstr "Är EDI-generator"
 
 #. module: edi_core_oca
 #: model:ir.model.fields,field_description:edi_core_oca.field_ir_model__is_edi_input_validator
 msgid "Is Edi Input Validator"
-msgstr ""
+msgstr "Är EDI-inputvalidator"
 
 #. module: edi_core_oca
 #: model:ir.model.fields,field_description:edi_core_oca.field_ir_model__is_edi_output_validator
 msgid "Is Edi Output Validator"
-msgstr ""
+msgstr "Är EDI-outputvalidator"
 
 #. module: edi_core_oca
 #: model:ir.model.fields,field_description:edi_core_oca.field_ir_model__is_edi_processor
 msgid "Is Edi Processor"
-msgstr ""
+msgstr "Är EDI-processor"
 
 #. module: edi_core_oca
 #: model:ir.model.fields,field_description:edi_core_oca.field_ir_model__is_edi_receiver
 msgid "Is Edi Receiver"
-msgstr ""
+msgstr "Är EDI-mottagare"
 
 #. module: edi_core_oca
 #: model:ir.model.fields,field_description:edi_core_oca.field_ir_model__is_edi_sender
 msgid "Is Edi Sender"
-msgstr ""
+msgstr "Är EDI-avsändare"
 
 #. module: edi_core_oca
 #: model:ir.model.fields,field_description:edi_core_oca.field_edi_exchange_record__message_is_follower
 msgid "Is Follower"
-msgstr ""
+msgstr "Är Följare"
 
 #. module: edi_core_oca
 #: model:ir.model.fields,field_description:edi_core_oca.field_edi_exchange_type_rule__kind
 #: model_terms:ir.ui.view,arch_db:edi_core_oca.edi_exchange_type_rule_view_search
 msgid "Kind"
-msgstr ""
+msgstr "Slag"
 
 #. module: edi_core_oca
 #: model:ir.model.fields,field_description:edi_core_oca.field_edi_backend__write_uid
@@ -1204,7 +1292,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:edi_core_oca.field_edi_exchange_type__write_uid
 #: model:ir.model.fields,field_description:edi_core_oca.field_edi_exchange_type_rule__write_uid
 msgid "Last Updated by"
-msgstr ""
+msgstr "Senast uppdaterad av"
 
 #. module: edi_core_oca
 #: model:ir.model.fields,field_description:edi_core_oca.field_edi_backend__write_date
@@ -1217,17 +1305,17 @@ msgstr ""
 #: model:ir.model.fields,field_description:edi_core_oca.field_edi_exchange_type__write_date
 #: model:ir.model.fields,field_description:edi_core_oca.field_edi_exchange_type_rule__write_date
 msgid "Last Updated on"
-msgstr ""
+msgstr "Senast uppdaterad den"
 
 #. module: edi_core_oca
 #: model:ir.model.fields,field_description:edi_core_oca.field_edi_exchange_record__message_has_error
 msgid "Message Delivery error"
-msgstr ""
+msgstr "Meddelande leveransfel"
 
 #. module: edi_core_oca
 #: model:ir.model.fields,field_description:edi_core_oca.field_edi_exchange_record__message_ids
 msgid "Messages"
-msgstr ""
+msgstr "Meddelanden"
 
 #. module: edi_core_oca
 #: model:ir.model.fields,field_description:edi_core_oca.field_edi_configuration__model_id
@@ -1239,33 +1327,34 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:edi_core_oca.edi_exchange_record_view_search
 #: model_terms:ir.ui.view,arch_db:edi_core_oca.edi_exchange_type_rule_view_search
 msgid "Model"
-msgstr ""
+msgstr "Modell"
 
 #. module: edi_core_oca
 #: model:ir.model.fields,field_description:edi_core_oca.field_edi_exchange_type_rule__model
 msgid "Model code"
-msgstr ""
+msgstr "Modellkod"
 
 #. module: edi_core_oca
 #: model_terms:ir.ui.view,arch_db:edi_core_oca.edi_exchange_type_view_form
 msgid "Model rules"
-msgstr ""
+msgstr "Modellregler"
 
 #. module: edi_core_oca
 #: model:ir.model.fields,field_description:edi_core_oca.field_edi_configuration__model_name
 msgid "Model tech name"
-msgstr ""
+msgstr "Modellens tekniska namn"
 
 #. module: edi_core_oca
 #: model:ir.model.fields,help:edi_core_oca.field_edi_configuration__model_id
 #: model:ir.model.fields,help:edi_core_oca.field_edi_configuration_trigger__model_id
 msgid "Model the conf applies to. Leave blank to apply for all models"
 msgstr ""
+"Modell som konfigurationen gäller för. Lämna tomt för att gälla alla modeller"
 
 #. module: edi_core_oca
 #: model:ir.model,name:edi_core_oca.model_ir_model
 msgid "Models"
-msgstr ""
+msgstr "Modeller"
 
 #. module: edi_core_oca
 #: model:ir.model.fields,field_description:edi_core_oca.field_edi_backend__name
@@ -1275,310 +1364,310 @@ msgstr ""
 #: model:ir.model.fields,field_description:edi_core_oca.field_edi_exchange_type__name
 #: model:ir.model.fields,field_description:edi_core_oca.field_edi_exchange_type_rule__name
 msgid "Name"
-msgstr ""
+msgstr "Namn"
 
 #. module: edi_core_oca
 #: model:ir.model.fields.selection,name:edi_core_oca.selection__edi_exchange_record__edi_exchange_state__new
 msgid "New"
-msgstr ""
+msgstr "Ny"
 
 #. module: edi_core_oca
 #. odoo-python
 #: code:addons/edi_core_oca/models/edi_backend.py:0
 msgid "No handler for %(action)s"
-msgstr ""
+msgstr "Ingen hantering för %(action)s"
 
 #. module: edi_core_oca
 #: model:ir.model.fields,help:edi_core_oca.field_edi_exchange_record__exchange_file_frozen
 msgid "Not allowed to change the file anymore."
-msgstr ""
+msgstr "Inte längre tillåtet att ändra filen."
 
 #. module: edi_core_oca
 #: model:ir.model.fields,field_description:edi_core_oca.field_edi_exchange_record__message_needaction_counter
 msgid "Number of Actions"
-msgstr ""
+msgstr "Antal åtgärder"
 
 #. module: edi_core_oca
 #: model:ir.model.fields,field_description:edi_core_oca.field_edi_exchange_record__message_has_error_counter
 msgid "Number of errors"
-msgstr ""
+msgstr "Antal fel"
 
 #. module: edi_core_oca
 #: model:ir.model.fields,help:edi_core_oca.field_edi_exchange_record__message_needaction_counter
 msgid "Number of messages requiring action"
-msgstr ""
+msgstr "Antal meddelanden som kräver åtgärd"
 
 #. module: edi_core_oca
 #: model:ir.model.fields,help:edi_core_oca.field_edi_exchange_record__message_has_error_counter
 msgid "Number of messages with delivery error"
-msgstr ""
+msgstr "Antal meddelanden med leveransfel"
 
 #. module: edi_core_oca
 #: model_terms:ir.ui.view,arch_db:edi_core_oca.edi_exchange_record_view_form
 msgid "Open Record"
-msgstr ""
+msgstr "Öppna post"
 
 #. module: edi_core_oca
 #: model:ir.model.fields,help:edi_core_oca.field_edi_exchange_record__parent_id
 msgid "Original exchange which originated this record"
-msgstr ""
+msgstr "Ursprunglig utväxling som är ursprunget till denna post"
 
 #. module: edi_core_oca
 #: model:ir.ui.menu,name:edi_core_oca.menu_edi_exchange_record_outbound
 #: model_terms:ir.ui.view,arch_db:edi_core_oca.edi_exchange_record_view_search
 #: model_terms:ir.ui.view,arch_db:edi_core_oca.edi_exchange_type_view_search
 msgid "Outbound"
-msgstr ""
+msgstr "Utgående"
 
 #. module: edi_core_oca
 #: model:ir.model.fields.selection,name:edi_core_oca.selection__edi_exchange_type__direction__output
 msgid "Output"
-msgstr ""
+msgstr "Output"
 
 #. module: edi_core_oca
 #: model:ir.model.fields,field_description:edi_core_oca.field_edi_backend__output_sent_processed_auto
 msgid "Output Sent Processed Auto"
-msgstr ""
+msgstr "Output skickad behandlad automatiskt"
 
 #. module: edi_core_oca
 #: model:ir.model.fields,field_description:edi_core_oca.field_edi_exchange_type__output_validate_model_id
 msgid "Output Validator"
-msgstr ""
+msgstr "Outputvalidator"
 
 #. module: edi_core_oca
 #: model:ir.model.fields,field_description:edi_core_oca.field_edi_exchange_record__parent_id
 msgid "Parent"
-msgstr ""
+msgstr "Överordnad"
 
 #. module: edi_core_oca
 #: model_terms:ir.ui.view,arch_db:edi_core_oca.edi_exchange_record_view_search
 msgid "Parent exchange"
-msgstr ""
+msgstr "Överordnad utväxling"
 
 #. module: edi_core_oca
 #. odoo-python
 #: code:addons/edi_core_oca/models/edi_configuration.py:0
 #: model_terms:ir.ui.view,arch_db:edi_core_oca.edi_configuration_view_form
 msgid "Partners"
-msgstr ""
+msgstr "Kontakter"
 
 #. module: edi_core_oca
 #: model:ir.ui.menu,name:edi_core_oca.menu_edi_exchange_record_failed
 #: model_terms:ir.ui.view,arch_db:edi_core_oca.edi_exchange_record_view_search
 msgid "Pending"
-msgstr ""
+msgstr "Väntande"
 
 #. module: edi_core_oca
 #: model:ir.model.fields.selection,name:edi_core_oca.selection__edi_exchange_record__edi_exchange_state__input_processed
 msgid "Processed"
-msgstr ""
+msgstr "Behandlad"
 
 #. module: edi_core_oca
 #: model:ir.model.fields,field_description:edi_core_oca.field_edi_exchange_type__process_model_id
 msgid "Processor"
-msgstr ""
+msgstr "Processor"
 
 #. module: edi_core_oca
 #: model:ir.model.fields,field_description:edi_core_oca.field_edi_exchange_type__quick_exec
 msgid "Quick execution"
-msgstr ""
+msgstr "Snabbt utförande"
 
 #. module: edi_core_oca
 #: model:ir.model.fields.selection,name:edi_core_oca.selection__edi_exchange_type__encoding_in_error_handler__strict
 #: model:ir.model.fields.selection,name:edi_core_oca.selection__edi_exchange_type__encoding_out_error_handler__strict
 msgid "Raise Error"
-msgstr ""
+msgstr "Skapa fel"
 
 #. module: edi_core_oca
 #: model:ir.model.fields.selection,name:edi_core_oca.selection__edi_exchange_record__edi_exchange_state__input_received
 msgid "Received"
-msgstr ""
+msgstr "Mottagen"
 
 #. module: edi_core_oca
 #: model:ir.model.fields,field_description:edi_core_oca.field_edi_exchange_type__receive_model_id
 msgid "Receiver"
-msgstr ""
+msgstr "Mottagare"
 
 #. module: edi_core_oca
 #: model:ir.ui.menu,name:edi_core_oca.menu_edi_exchange_record_recent
 msgid "Recent"
-msgstr ""
+msgstr "Senaste"
 
 #. module: edi_core_oca
 #: model:ir.actions.act_window,name:edi_core_oca.act_open_edi_exchange_record_recent_view
 msgid "Recent exchanges"
-msgstr ""
+msgstr "Senaste utväxlingar"
 
 #. module: edi_core_oca
 #: model:ir.model.fields,field_description:edi_core_oca.field_edi_exchange_record__res_id
 #: model:ir.model.fields,field_description:edi_core_oca.field_edi_exchange_related_record__res_id
 msgid "Record"
-msgstr ""
+msgstr "Post"
 
 #. module: edi_core_oca
 #. odoo-python
 #: code:addons/edi_core_oca/models/edi_backend.py:0
 msgid "Record ID=%d has no file to process!"
-msgstr ""
+msgstr "Post ID=%d har ingen fil att bearbeta!"
 
 #. module: edi_core_oca
 #. odoo-python
 #: code:addons/edi_core_oca/models/edi_backend.py:0
 msgid "Record ID=%d has no file to send!"
-msgstr ""
+msgstr "Post ID=%d har ingen fil att skicka!"
 
 #. module: edi_core_oca
 #. odoo-python
 #: code:addons/edi_core_oca/models/edi_backend.py:0
 msgid "Record ID=%d is not meant to be processed"
-msgstr ""
+msgstr "Post ID=%d är inte avsedd att bearbetas"
 
 #. module: edi_core_oca
 #. odoo-python
 #: code:addons/edi_core_oca/models/edi_backend.py:0
 msgid "Record ID=%d is not meant to be sent!"
-msgstr ""
+msgstr "Post ID=%d är inte avsedd att skickas!"
 
 #. module: edi_core_oca
 #: model_terms:ir.ui.view,arch_db:edi_core_oca.edi_backend_view_form
 msgid "Records retention"
-msgstr ""
+msgstr "Bevarande av poster"
 
 #. module: edi_core_oca
 #: model_terms:ir.ui.view,arch_db:edi_core_oca.edi_exchange_record_view_form
 msgid "Regenerate"
-msgstr ""
+msgstr "Generera om"
 
 #. module: edi_core_oca
 #: model:ir.model.fields,field_description:edi_core_oca.field_edi_exchange_record__related_name
 msgid "Related Name"
-msgstr ""
+msgstr "Relaterat namn"
 
 #. module: edi_core_oca
 #: model:ir.model.fields,field_description:edi_core_oca.field_edi_exchange_record__related_record_exists
 msgid "Related Record Exists"
-msgstr ""
+msgstr "Relaterad post finns"
 
 #. module: edi_core_oca
 #: model_terms:ir.ui.view,arch_db:edi_core_oca.edi_exchange_record_view_form
 msgid "Related Records"
-msgstr ""
+msgstr "Relaterade poster"
 
 #. module: edi_core_oca
 #: model:ir.model.fields,field_description:edi_core_oca.field_edi_exchange_record__related_exchange_ids
 #: model_terms:ir.ui.view,arch_db:edi_core_oca.edi_exchange_record_view_form
 msgid "Related exchanges"
-msgstr ""
+msgstr "Relaterade utväxlingar"
 
 #. module: edi_core_oca
 #: model_terms:ir.ui.view,arch_db:edi_core_oca.edi_exchange_record_view_form
 msgid "Related record"
-msgstr ""
+msgstr "Relaterad post"
 
 #. module: edi_core_oca
 #: model:ir.model.fields,field_description:edi_core_oca.field_edi_exchange_record__related_record_ids
 msgid "Related records"
-msgstr ""
+msgstr "Relaterade poster"
 
 #. module: edi_core_oca
 #: model:ir.model.fields.selection,name:edi_core_oca.selection__edi_exchange_type__encoding_in_error_handler__surrogateescape
 #: model:ir.model.fields.selection,name:edi_core_oca.selection__edi_exchange_type__encoding_out_error_handler__surrogateescape
 msgid "Replace Byte with Individual Surrogate Code"
-msgstr ""
+msgstr "Ersätt byte med individuell surrogatkod"
 
 #. module: edi_core_oca
 #: model:ir.model.fields.selection,name:edi_core_oca.selection__edi_exchange_type__encoding_in_error_handler__backslashreplace
 #: model:ir.model.fields.selection,name:edi_core_oca.selection__edi_exchange_type__encoding_out_error_handler__backslashreplace
 msgid "Replace with Backslashed Escape Sequences"
-msgstr ""
+msgstr "Ersätt med bakstreck-escape-sekvenser"
 
 #. module: edi_core_oca
 #: model:ir.model.fields.selection,name:edi_core_oca.selection__edi_exchange_type__encoding_in_error_handler__replace
 #: model:ir.model.fields.selection,name:edi_core_oca.selection__edi_exchange_type__encoding_out_error_handler__replace
 msgid "Replace with Replacement Marker"
-msgstr ""
+msgstr "Ersätt med ersättningsmarkör"
 
 #. module: edi_core_oca
 #: model:ir.model.fields.selection,name:edi_core_oca.selection__edi_exchange_type__encoding_out_error_handler__xmlcharrefreplace
 msgid "Replace with XML/HTML Numeric Character Reference"
-msgstr ""
+msgstr "Ersätt med XML/HTML numerisk teckenreferens"
 
 #. module: edi_core_oca
 #: model:ir.model.fields,field_description:edi_core_oca.field_edi_exchange_record_create_wiz__res_id
 msgid "Res"
-msgstr ""
+msgstr "Res"
 
 #. module: edi_core_oca
 #: model:ir.actions.server,name:edi_core_oca.action_retry_edi_exchange_record
 #: model_terms:ir.ui.view,arch_db:edi_core_oca.edi_exchange_record_view_form
 msgid "Retry"
-msgstr ""
+msgstr "Försök igen"
 
 #. module: edi_core_oca
 #: model:ir.model.fields,field_description:edi_core_oca.field_edi_exchange_record__retryable
 msgid "Retryable"
-msgstr ""
+msgstr "Kan försökas igen"
 
 #. module: edi_core_oca
 #: model:ir.model.fields,field_description:edi_core_oca.field_edi_exchange_type__rule_ids
 msgid "Rule"
-msgstr ""
+msgstr "Regel"
 
 #. module: edi_core_oca
 #: model:ir.model.fields,help:edi_core_oca.field_edi_exchange_type__rule_ids
 msgid "Rules to handle exchanges and UI automatically"
-msgstr ""
+msgstr "Regler för att automatiskt hantera utväxlingar och gränssnitt"
 
 #. module: edi_core_oca
 #: model:ir.model.fields,field_description:edi_core_oca.field_edi_exchange_type__send_model_id
 msgid "Sender"
-msgstr ""
+msgstr "Avsändare"
 
 #. module: edi_core_oca
 #: model:ir.model.fields.selection,name:edi_core_oca.selection__edi_exchange_record__edi_exchange_state__output_sent
 msgid "Sent"
-msgstr ""
+msgstr "Skickat"
 
 #. module: edi_core_oca
 #: model:ir.model.fields.selection,name:edi_core_oca.selection__edi_exchange_record__edi_exchange_state__output_sent_and_error
 msgid "Sent and error"
-msgstr ""
+msgstr "Skickat och fel"
 
 #. module: edi_core_oca
 #: model:ir.model.fields.selection,name:edi_core_oca.selection__edi_exchange_record__edi_exchange_state__output_sent_and_processed
 msgid "Sent and processed"
-msgstr ""
+msgstr "Skickat och behandlat"
 
 #. module: edi_core_oca
 #: model:ir.model.fields,help:edi_core_oca.field_edi_exchange_record__ack_received_on
 #: model:ir.model.fields,help:edi_core_oca.field_edi_exchange_record__exchanged_on
 msgid "Sent or received on this date."
-msgstr ""
+msgstr "Skickat eller mottaget på detta datum."
 
 #. module: edi_core_oca
 #: model_terms:ir.ui.view,arch_db:edi_core_oca.edi_exchange_record_view_search
 msgid "Show all records created in the last 7 days"
-msgstr ""
+msgstr "Visa alla poster skapade de senaste 7 dagarna"
 
 #. module: edi_core_oca
 #: model_terms:ir.ui.view,arch_db:edi_core_oca.edi_exchange_record_view_search
 msgid "Show all records created today"
-msgstr ""
+msgstr "Visa alla poster skapade idag"
 
 #. module: edi_core_oca
 #: model_terms:ir.ui.view,arch_db:edi_core_oca.edi_exchange_type_rule_view_form
 msgid "Snippet"
-msgstr ""
+msgstr "Snippet"
 
 #. module: edi_core_oca
 #: model:ir.model.fields,field_description:edi_core_oca.field_edi_configuration__snippet_before_do
 msgid "Snippet Before Do"
-msgstr ""
+msgstr "Snippet före utförande"
 
 #. module: edi_core_oca
 #: model:ir.model.fields,field_description:edi_core_oca.field_edi_configuration__snippet_do
 msgid "Snippet Do"
-msgstr ""
+msgstr "Snippet utförande"
 
 #. module: edi_core_oca
 #: model:ir.model.fields,help:edi_core_oca.field_edi_exchange_type_rule__enable_snippet
@@ -1588,46 +1677,50 @@ msgid ""
 "        It will be executed if variable result has been defined as True\n"
 "        "
 msgstr ""
+"Kodsnippet som ska kontrolleras på modeller.\n"
+"        Du kan använda `record` och `exchange_type` här.\n"
+"        Den kommer att köras om variabeln result har definierats som True\n"
+"        "
 
 #. module: edi_core_oca
 #: model:ir.model.fields,help:edi_core_oca.field_edi_configuration__snippet_before_do
 msgid "Snippet to validate the state and collect records to do"
-msgstr ""
+msgstr "Snippet för att validera status och samla in poster att bearbeta"
 
 #. module: edi_core_oca
 #: model_terms:ir.ui.view,arch_db:edi_core_oca.edi_exchange_record_view_search
 msgid "State"
-msgstr ""
+msgstr "Status"
 
 #. module: edi_core_oca
 #: model_terms:ir.ui.view,arch_db:edi_core_oca.edi_exchange_record_view_form
 msgid "Status"
-msgstr ""
+msgstr "Status"
 
 #. module: edi_core_oca
 #: model_terms:ir.ui.view,arch_db:edi_core_oca.edi_exchange_record_view_search
 msgid "Successful"
-msgstr ""
+msgstr "Lyckad"
 
 #. module: edi_core_oca
 #: model:ir.model.constraint,message:edi_core_oca.constraint_edi_exchange_type_code_uniq
 msgid "The code must be unique per backend"
-msgstr ""
+msgstr "Koden måste vara unik per backend"
 
 #. module: edi_core_oca
 #: model:ir.model.constraint,message:edi_core_oca.constraint_edi_exchange_record_external_identifier_uniq
 msgid "The external_identifier must be unique for a type and a backend."
-msgstr ""
+msgstr "external_identifier måste vara unik för en typ och en backend."
 
 #. module: edi_core_oca
 #: model:ir.model.constraint,message:edi_core_oca.constraint_edi_exchange_record_identifier_uniq
 msgid "The identifier must be unique."
-msgstr ""
+msgstr "Identifieraren måste vara unik."
 
 #. module: edi_core_oca
 #: model:ir.model.fields,help:edi_core_oca.field_edi_exchange_record__retryable
 msgid "The record state can be rolled back manually in case of failure."
-msgstr ""
+msgstr "Postens status kan återställas manuellt vid fel."
 
 #. module: edi_core_oca
 #: model_terms:ir.ui.view,arch_db:edi_core_oca.edi_exchange_record_view_form
@@ -1635,27 +1728,30 @@ msgid ""
 "The related record is not available anymore.\n"
 "                                    Consider deleting this record too or fixing its relation."
 msgstr ""
+"Den relaterade posten är inte längre tillgänglig.\n"
+"                                    Överväg att också ta bort denna post "
+"eller åtgärda dess relation."
 
 #. module: edi_core_oca
 #: model:ir.model.fields,field_description:edi_core_oca.field_edi_configuration__trigger_id
 msgid "Trigger"
-msgstr ""
+msgstr "Utlösare"
 
 #. module: edi_core_oca
 #: model:ir.model.fields,help:edi_core_oca.field_edi_configuration__trigger_id
 msgid "Trigger that activates this configuration"
-msgstr ""
+msgstr "Utlösare som aktiverar denna konfiguration"
 
 #. module: edi_core_oca
 #: model:ir.model.fields,field_description:edi_core_oca.field_edi_exchange_type_rule__type_id
 #: model_terms:ir.ui.view,arch_db:edi_core_oca.edi_exchange_record_view_search
 msgid "Type"
-msgstr ""
+msgstr "Typ"
 
 #. module: edi_core_oca
 #: model:ir.model.fields,help:edi_core_oca.field_edi_exchange_type_rule__form_btn_label
 msgid "Type name used by default"
-msgstr ""
+msgstr "Typnamn som används som standard"
 
 #. module: edi_core_oca
 #: model:ir.model.fields,help:edi_core_oca.field_edi_configuration__snippet_do
@@ -1663,26 +1759,28 @@ msgid ""
 "Used to do something specific here.\n"
 "        Receives: operation, edi_action, vals, old_vals."
 msgstr ""
+"Används för att göra något specifikt här.\n"
+"        Tar emot: operation, edi_action, vals, old_vals."
 
 #. module: edi_core_oca
 #: model:ir.model.fields.selection,name:edi_core_oca.selection__edi_exchange_record__edi_exchange_state__input_pending
 msgid "Waiting to be received"
-msgstr ""
+msgstr "Väntar på att tas emot"
 
 #. module: edi_core_oca
 #: model:ir.model.fields.selection,name:edi_core_oca.selection__edi_exchange_record__edi_exchange_state__output_pending
 msgid "Waiting to be sent"
-msgstr ""
+msgstr "Väntar på att skickas"
 
 #. module: edi_core_oca
 #: model:ir.model.fields,field_description:edi_core_oca.field_edi_exchange_record__website_message_ids
 msgid "Website Messages"
-msgstr ""
+msgstr "Hemsidesmeddelanden"
 
 #. module: edi_core_oca
 #: model:ir.model.fields,help:edi_core_oca.field_edi_exchange_record__website_message_ids
 msgid "Website communication history"
-msgstr ""
+msgstr "Hemsidans kommunikationshistorik"
 
 #. module: edi_core_oca
 #: model:ir.model.fields,help:edi_core_oca.field_edi_exchange_type__quick_exec
@@ -1691,11 +1789,14 @@ msgid ""
 "waiting for the cron to pass by. Requires auto generate flag to be active as"
 " well. The cron will skip these records unless forced."
 msgstr ""
+"När aktiv kommer poster av denna typ att behandlas omedelbart utan att vänta "
+"på att cronjobbet körs. Kräver att automatisk generering också är aktiv. "
+"Cronjobbet kommer att hoppa över dessa poster om det inte tvingas."
 
 #. module: edi_core_oca
 #: model:ir.model.fields,help:edi_core_oca.field_edi_exchange_consumer_mixin__edi_disable_auto
 msgid "When marked, EDI automatic processing will be avoided"
-msgstr ""
+msgstr "När markerad undviks automatisk EDI-bearbetning"
 
 #. module: edi_core_oca
 #: model:ir.model.fields,help:edi_core_oca.field_edi_exchange_type__partner_ids
@@ -1703,14 +1804,17 @@ msgid ""
 "You can use this field to limit generating/processing exchanges for specific"
 " partners. Use it directly or within models rules (domain or snippet)."
 msgstr ""
+"Du kan använda detta fält för att begränsa generering/bearbetning av "
+"utväxlingar till specifika kontakter. Använd det direkt eller inom "
+"modellregler (domän eller snippet)."
 
 #. module: edi_core_oca
 #: model:ir.model.fields.selection,name:edi_core_oca.selection__edi_exchange_record__edi_exchange_state__output_error_on_send
 msgid "error on send"
-msgstr ""
+msgstr "fel vid avsändning"
 
 #. module: edi_core_oca
 #. odoo-python
 #: code:addons/edi_core_oca/models/edi_configuration.py:0
 msgid "id"
-msgstr ""
+msgstr "id"
