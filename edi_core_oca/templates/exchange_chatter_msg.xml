@@ -21,7 +21,7 @@
                     t-att-data-oe-model="exchange_record._name"
                     t-att-data-oe-id="exchange_record.id"
                 >
-                    <t t-esc="exchange_record.identifier" />
+                    <t t-out="exchange_record.identifier" />
                 </a>
             </span>
             <br />
@@ -33,7 +33,7 @@
                     t-att-data-oe-model="exc_type._name"
                     t-att-data-oe-id="exc_type.id"
                 >
-                    <t t-esc="exc_type.name" />
+                    <t t-out="exc_type.name" />
                 </a>
             </span>
             <br />
@@ -44,7 +44,7 @@
             <br />
             <span t-attf-class="exchange-message #{message_color_klass.get(level)}">
                 <strong>Message:</strong>
-                <span t-esc="message" />
+                <span t-out="message" />
             </span>
         </p>
     </template>
