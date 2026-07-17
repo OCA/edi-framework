@@ -496,6 +496,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:edi_core_oca.field_edi_oca_handler_check__display_name
 #: model:ir.model.fields,field_description:edi_core_oca.field_edi_oca_handler_generate__display_name
 #: model:ir.model.fields,field_description:edi_core_oca.field_edi_oca_handler_input_validate__display_name
+#: model:ir.model.fields,field_description:edi_core_oca.field_edi_oca_handler_noop__display_name
 #: model:ir.model.fields,field_description:edi_core_oca.field_edi_oca_handler_output_validate__display_name
 #: model:ir.model.fields,field_description:edi_core_oca.field_edi_oca_handler_process__display_name
 #: model:ir.model.fields,field_description:edi_core_oca.field_edi_oca_handler_receive__display_name
@@ -602,6 +603,11 @@ msgstr ""
 #. module: edi_core_oca
 #: model:ir.model,name:edi_core_oca.model_edi_oca_handler_input_validate
 msgid "EDI OCA Handler Input Validate"
+msgstr ""
+
+#. module: edi_core_oca
+#: model:ir.model,name:edi_core_oca.model_edi_oca_handler_noop
+msgid "EDI OCA Handler No-op"
 msgstr ""
 
 #. module: edi_core_oca
@@ -1069,6 +1075,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:edi_core_oca.field_edi_oca_handler_check__id
 #: model:ir.model.fields,field_description:edi_core_oca.field_edi_oca_handler_generate__id
 #: model:ir.model.fields,field_description:edi_core_oca.field_edi_oca_handler_input_validate__id
+#: model:ir.model.fields,field_description:edi_core_oca.field_edi_oca_handler_noop__id
 #: model:ir.model.fields,field_description:edi_core_oca.field_edi_oca_handler_output_validate__id
 #: model:ir.model.fields,field_description:edi_core_oca.field_edi_oca_handler_process__id
 #: model:ir.model.fields,field_description:edi_core_oca.field_edi_oca_handler_receive__id
@@ -1139,6 +1146,12 @@ msgstr ""
 #. module: edi_core_oca
 #: model:ir.model.fields,field_description:edi_core_oca.field_edi_exchange_type__input_validate_model_id
 msgid "Input Validator"
+msgstr ""
+
+#. module: edi_core_oca
+#. odoo-python
+#: code:addons/edi_core_oca/models/edi_exchange_type.py:0
+msgid "Input exchange types require a Processor handler."
 msgstr ""
 
 #. module: edi_core_oca
@@ -1342,6 +1355,20 @@ msgstr ""
 #. module: edi_core_oca
 #: model:ir.model.fields,field_description:edi_core_oca.field_edi_exchange_type__output_validate_model_id
 msgid "Output Validator"
+msgstr ""
+
+#. module: edi_core_oca
+#. odoo-python
+#: code:addons/edi_core_oca/models/edi_exchange_type.py:0
+msgid "Output exchange types require a Sender handler."
+msgstr ""
+
+#. module: edi_core_oca
+#. odoo-python
+#: code:addons/edi_core_oca/models/edi_exchange_type.py:0
+msgid ""
+"Output exchange types with 'Auto Generate' enabled require a Generator "
+"handler."
 msgstr ""
 
 #. module: edi_core_oca

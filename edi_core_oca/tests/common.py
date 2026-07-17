@@ -106,16 +106,23 @@ class EDIBackendTestMixin:
         # Mirror the pattern in edi_component_oca/tests/common.py: provide default
         # handler models so every test exchange type satisfies the new constraint.
         # Callers can override individual fields by passing explicit values.
-        if "edi.framework.test.execution" in cls.registry:
-            handler_model = cls.env["ir.model"]._get("edi.framework.test.execution")
-            if handler_model:
-                kw.setdefault("receive_model_id", handler_model.id)
-                kw.setdefault("generate_model_id", handler_model.id)
-                kw.setdefault("input_validate_model_id", handler_model.id)
-                kw.setdefault("output_validate_model_id", handler_model.id)
-                kw.setdefault("send_model_id", handler_model.id)
-                kw.setdefault("process_model_id", handler_model.id)
-                kw.setdefault("check_model_id", handler_model.id)
+        # When the fake execution model is not registered (test classes that
+        # skip _setup_env), fall back to the no-op handler shipped by the
+        # module so the constraint is still satisfied.
+        handler_model_name = (
+            "edi.framework.test.execution"
+            if "edi.framework.test.execution" in cls.registry
+            else "edi.oca.handler.noop"
+        )
+        handler_model = cls.env["ir.model"]._get(handler_model_name)
+        if handler_model:
+            kw.setdefault("receive_model_id", handler_model.id)
+            kw.setdefault("generate_model_id", handler_model.id)
+            kw.setdefault("input_validate_model_id", handler_model.id)
+            kw.setdefault("output_validate_model_id", handler_model.id)
+            kw.setdefault("send_model_id", handler_model.id)
+            kw.setdefault("process_model_id", handler_model.id)
+            kw.setdefault("check_model_id", handler_model.id)
         model = cls.env["edi.exchange.type"]
         vals = {
             "name": "Test CSV exchange",

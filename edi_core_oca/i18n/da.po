@@ -51,7 +51,8 @@ msgid ""
 "                date_pattern: %Y-%m-%d-%H-%M-%S\n"
 "\n"
 "            In any case, you can use these settings\n"
-"            to provide your own configuration for whatever need you might have.\n"
+"            to provide your own configuration for whatever need you might "
+"have.\n"
 "        "
 msgstr ""
 "\n"
@@ -106,8 +107,10 @@ msgstr ""
 #: model:ir.model,name:edi_core_oca.model_edi_configuration
 msgid ""
 "\n"
-"        This model is used to configure EDI (Electronic Data Interchange) flows.\n"
-"        It allows users to create their own configurations, which can be tailored\n"
+"        This model is used to configure EDI (Electronic Data Interchange) "
+"flows.\n"
+"        It allows users to create their own configurations, which can be "
+"tailored\n"
 "        to meet the specific needs of their business processes.\n"
 "    "
 msgstr ""
@@ -157,7 +160,8 @@ msgstr "# Udvekslingsposter"
 #. module: edi_core_oca
 #: model_terms:ir.ui.view,arch_db:edi_core_oca.edi_exchange_consumer_mixin_buttons
 msgid "<span class=\"pe-4\"><i class=\"fa fa-retweet\"/> EDI actions</span>"
-msgstr "<span class=\"pe-4\"><i class=\"fa fa-retweet\"/> EDI-handlinger</span>"
+msgstr ""
+"<span class=\"pe-4\"><i class=\"fa fa-retweet\"/> EDI-handlinger</span>"
 
 #. module: edi_core_oca
 #: model_terms:ir.ui.view,arch_db:edi_core_oca.message_edi_exchange_link
@@ -363,8 +367,8 @@ msgstr ""
 #. module: edi_core_oca
 #: model:ir.model.fields,help:edi_core_oca.field_edi_backend__auto_delete_records_after_days
 msgid ""
-"Automatically delete archived EDI exchange records after X days. Set to <= 0"
-" to disable auto-deletion."
+"Automatically delete archived EDI exchange records after X days. Set to <= 0 "
+"to disable auto-deletion."
 msgstr ""
 "Slet automatisk arkiverede EDI-udvekslingsposter efter X dage. Angiv til <= "
 "0 for at deaktivere automatisk sletning."
@@ -564,6 +568,7 @@ msgstr "Deaktivér automatisk"
 #: model:ir.model.fields,field_description:edi_core_oca.field_edi_oca_handler_check__display_name
 #: model:ir.model.fields,field_description:edi_core_oca.field_edi_oca_handler_generate__display_name
 #: model:ir.model.fields,field_description:edi_core_oca.field_edi_oca_handler_input_validate__display_name
+#: model:ir.model.fields,field_description:edi_core_oca.field_edi_oca_handler_noop__display_name
 #: model:ir.model.fields,field_description:edi_core_oca.field_edi_oca_handler_output_validate__display_name
 #: model:ir.model.fields,field_description:edi_core_oca.field_edi_oca_handler_process__display_name
 #: model:ir.model.fields,field_description:edi_core_oca.field_edi_oca_handler_receive__display_name
@@ -671,6 +676,11 @@ msgstr "EDI OCA-håndtering generering"
 #: model:ir.model,name:edi_core_oca.model_edi_oca_handler_input_validate
 msgid "EDI OCA Handler Input Validate"
 msgstr "EDI OCA-håndtering inputvalidering"
+
+#. module: edi_core_oca
+#: model:ir.model,name:edi_core_oca.model_edi_oca_handler_noop
+msgid "EDI OCA Handler No-op"
+msgstr ""
 
 #. module: edi_core_oca
 #: model:ir.model,name:edi_core_oca.model_edi_oca_handler_output_validate
@@ -1053,13 +1063,17 @@ msgstr "Følgere (partnere)"
 #. module: edi_core_oca
 #: model:ir.model.fields,help:edi_core_oca.field_edi_exchange_type__exchange_filename_pattern
 msgid ""
-"For output exchange types this should be a formatting string with the following variables available (to be used between brackets, `{}`): `exchange_record`, `record_name`, `type`, `dt` and `seq`. For instance, a valid string would be {record_name}-{type.code}-{dt}-{seq}\n"
+"For output exchange types this should be a formatting string with the "
+"following variables available (to be used between brackets, `{}`): "
+"`exchange_record`, `record_name`, `type`, `dt` and `seq`. For instance, a "
+"valid string would be {record_name}-{type.code}-{dt}-{seq}\n"
 "For more information:\n"
 "- `exchange_record` means exchange record\n"
 "- `record_name` means name of the exchange record\n"
 "- `type` means code of the exchange record type\n"
 "- `dt` means datetime\n"
-"- `seq` means sequence. You need a sequence to be defined in `Exchange Filename Sequence` to use `seq`\n"
+"- `seq` means sequence. You need a sequence to be defined in `Exchange "
+"Filename Sequence` to use `seq`\n"
 msgstr ""
 "For udgående udvekslingstyper skal dette være en formateringsstreng med "
 "følgende variabler til rådighed (skal bruges mellem klammer, `{}`): "
@@ -1153,6 +1167,7 @@ msgstr "Hjælpebesked synlig som tooltip ved museover på knap"
 #: model:ir.model.fields,field_description:edi_core_oca.field_edi_oca_handler_check__id
 #: model:ir.model.fields,field_description:edi_core_oca.field_edi_oca_handler_generate__id
 #: model:ir.model.fields,field_description:edi_core_oca.field_edi_oca_handler_input_validate__id
+#: model:ir.model.fields,field_description:edi_core_oca.field_edi_oca_handler_noop__id
 #: model:ir.model.fields,field_description:edi_core_oca.field_edi_oca_handler_output_validate__id
 #: model:ir.model.fields,field_description:edi_core_oca.field_edi_oca_handler_process__id
 #: model:ir.model.fields,field_description:edi_core_oca.field_edi_oca_handler_receive__id
@@ -1198,8 +1213,8 @@ msgstr ""
 #. module: edi_core_oca
 #: model:ir.model.fields,help:edi_core_oca.field_edi_exchange_type__exchange_filename_sequence_id
 msgid ""
-"If the `Exchange Filename Pattern` has `{seq}`, you should define a sequence"
-" in this field to show the sequence in your filename"
+"If the `Exchange Filename Pattern` has `{seq}`, you should define a sequence "
+"in this field to show the sequence in your filename"
 msgstr ""
 "Hvis `Mønster for udvekslingsfilnavn` har `{seq}`, bør du definere en "
 "sekvens i dette felt for at vise sekvensen i dit filnavn"
@@ -1231,6 +1246,12 @@ msgstr "Input"
 #: model:ir.model.fields,field_description:edi_core_oca.field_edi_exchange_type__input_validate_model_id
 msgid "Input Validator"
 msgstr "Inputvalidator"
+
+#. module: edi_core_oca
+#. odoo-python
+#: code:addons/edi_core_oca/models/edi_exchange_type.py:0
+msgid "Input exchange types require a Processor handler."
+msgstr ""
 
 #. module: edi_core_oca
 #: model:ir.model.fields,help:edi_core_oca.field_edi_id_mixin__edi_id
@@ -1436,6 +1457,20 @@ msgstr "Output sendt behandlet automatisk"
 #: model:ir.model.fields,field_description:edi_core_oca.field_edi_exchange_type__output_validate_model_id
 msgid "Output Validator"
 msgstr "Outputvalidator"
+
+#. module: edi_core_oca
+#. odoo-python
+#: code:addons/edi_core_oca/models/edi_exchange_type.py:0
+msgid "Output exchange types require a Sender handler."
+msgstr ""
+
+#. module: edi_core_oca
+#. odoo-python
+#: code:addons/edi_core_oca/models/edi_exchange_type.py:0
+msgid ""
+"Output exchange types with 'Auto Generate' enabled require a Generator "
+"handler."
+msgstr ""
 
 #. module: edi_core_oca
 #: model:ir.model.fields,field_description:edi_core_oca.field_edi_exchange_record__parent_id
@@ -1729,7 +1764,8 @@ msgstr "Postens status kan tilbageføres manuelt i tilfælde af fejl."
 #: model_terms:ir.ui.view,arch_db:edi_core_oca.edi_exchange_record_view_form
 msgid ""
 "The related record is not available anymore.\n"
-"                                    Consider deleting this record too or fixing its relation."
+"                                    Consider deleting this record too or "
+"fixing its relation."
 msgstr ""
 "Den relaterede post er ikke længere tilgængelig.\n"
 "                                    Overvej også at slette denne post eller "
@@ -1789,8 +1825,8 @@ msgstr "Hjemmesidens kommunikationshistorik"
 #: model:ir.model.fields,help:edi_core_oca.field_edi_exchange_type__quick_exec
 msgid ""
 "When active, records of this type will be processed immediately without "
-"waiting for the cron to pass by. Requires auto generate flag to be active as"
-" well. The cron will skip these records unless forced."
+"waiting for the cron to pass by. Requires auto generate flag to be active as "
+"well. The cron will skip these records unless forced."
 msgstr ""
 "Når aktiv, vil poster af denne type blive behandlet med det samme uden at "
 "vente på, at cronjobbet kører. Kræver, at automatisk generering også er "
@@ -1804,8 +1840,8 @@ msgstr "Når markeret, undgås automatisk EDI-behandling"
 #. module: edi_core_oca
 #: model:ir.model.fields,help:edi_core_oca.field_edi_exchange_type__partner_ids
 msgid ""
-"You can use this field to limit generating/processing exchanges for specific"
-" partners. Use it directly or within models rules (domain or snippet)."
+"You can use this field to limit generating/processing exchanges for specific "
+"partners. Use it directly or within models rules (domain or snippet)."
 msgstr ""
 "Du kan bruge dette felt til at begrænse generering/behandling af "
 "udvekslinger til bestemte kontakter. Brug det direkte eller inden for "

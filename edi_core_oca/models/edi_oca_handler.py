@@ -59,3 +59,26 @@ class EdiOcaHandlerCheck(models.AbstractModel):
 
     def check(self, exchange_record):
         pass
+
+
+class EdiOcaHandlerNoop(models.AbstractModel):
+    """No-op implementation of every EDI handler role.
+
+    ``edi.exchange.type`` requires handlers matching its direction (see
+    ``_check_direction_handlers``) but ``edi_core_oca`` ships no concrete
+    implementation. This handler performs no action and can be referenced by
+    demo/showcase exchange types, or used as a placeholder until a real
+    handler is configured.
+    """
+
+    _name = "edi.oca.handler.noop"
+    _inherit = [
+        "edi.oca.handler.generate",
+        "edi.oca.handler.input.validate",
+        "edi.oca.handler.output.validate",
+        "edi.oca.handler.send",
+        "edi.oca.handler.receive",
+        "edi.oca.handler.process",
+        "edi.oca.handler.check",
+    ]
+    _description = "EDI OCA Handler No-op"
