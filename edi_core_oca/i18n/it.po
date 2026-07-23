@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-06-05 09:46+0000\n"
+"PO-Revision-Date: 2026-07-23 09:46+0000\n"
 "Last-Translator: mymage <stefano.consolaro@mymage.it>\n"
 "Language-Team: none\n"
 "Language: it\n"
@@ -684,7 +684,7 @@ msgstr "Validazione ingresso handler OCA EDI"
 #. module: edi_core_oca
 #: model:ir.model,name:edi_core_oca.model_edi_oca_handler_noop
 msgid "EDI OCA Handler No-op"
-msgstr ""
+msgstr "No-op handler OCA EDI"
 
 #. module: edi_core_oca
 #: model:ir.model,name:edi_core_oca.model_edi_oca_handler_output_validate
@@ -1260,7 +1260,7 @@ msgstr "Validatore ingresso"
 #. odoo-python
 #: code:addons/edi_core_oca/models/edi_exchange_type.py:0
 msgid "Input exchange types require a Processor handler."
-msgstr ""
+msgstr "I tipi scambio ingresso richiedono un handler del processore."
 
 #. module: edi_core_oca
 #: model:ir.model.fields,help:edi_core_oca.field_edi_id_mixin__edi_id
@@ -1471,7 +1471,7 @@ msgstr "Validatore uscita"
 #. odoo-python
 #: code:addons/edi_core_oca/models/edi_exchange_type.py:0
 msgid "Output exchange types require a Sender handler."
-msgstr ""
+msgstr "I tipi di scambio in uscita richiedono un handler del mittente."
 
 #. module: edi_core_oca
 #. odoo-python
@@ -1480,6 +1480,8 @@ msgid ""
 "Output exchange types with 'Auto Generate' enabled require a Generator "
 "handler."
 msgstr ""
+"I tipi di scambio di uscita con 'Genera automaticamente' abilitato "
+"richiedono un handler del generatore."
 
 #. module: edi_core_oca
 #: model:ir.model.fields,field_description:edi_core_oca.field_edi_exchange_record__parent_id
