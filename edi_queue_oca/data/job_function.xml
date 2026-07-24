@@ -2,21 +2,25 @@
     <record id="job_fun_exchange_record_generate" model="queue.job.function">
         <field name="model_id" ref="edi_core_oca.model_edi_exchange_record" />
         <field name="method">action_exchange_generate</field>
+        <field name="on_fail_method">_job_on_fail_generate</field>
         <field name="channel_id" ref="channel_edi_exchange" />
     </record>
     <record id="job_fun_exchange_record_send" model="queue.job.function">
         <field name="model_id" ref="model_edi_exchange_record" />
         <field name="method">action_exchange_send</field>
+        <field name="on_fail_method">_job_on_fail_send</field>
         <field name="channel_id" ref="channel_edi_exchange" />
     </record>
     <record id="job_fun_exchange_record_receive" model="queue.job.function">
         <field name="model_id" ref="edi_core_oca.model_edi_exchange_record" />
         <field name="method">action_exchange_receive</field>
+        <field name="on_fail_method">_job_on_fail_receive</field>
         <field name="channel_id" ref="channel_edi_exchange" />
     </record>
     <record id="job_fun_exchange_record_process" model="queue.job.function">
         <field name="model_id" ref="edi_core_oca.model_edi_exchange_record" />
         <field name="method">action_exchange_process</field>
+        <field name="on_fail_method">_job_on_fail_process</field>
         <field name="channel_id" ref="channel_edi_exchange" />
     </record>
     <record id="job_fun_exchange_record_create_ack" model="queue.job.function">

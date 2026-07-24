@@ -165,3 +165,24 @@ class EDIBackendTestJobsCase(EDIBackendCommonTestCase, JobMixin):
         # Check related jobs
         record.invalidate_recordset()
         self.assertEqual(created, self._get_related_jobs(record))
+
+    def test_on_fail_job(self):
+        vals = {
+            "model": self.partner._name,
+            "res_id": self.partner.id,
+        }
+        record = self.backend.create_record("test_csv_output", vals)
+        self.assertEqual(record.edi_exchange_state, "new")
+        job = record.action_exchange_generate()
+        exc_vals = {
+            "exc_info": "Dummy traceback",
+            "exc_name": "Dummy exception",
+            "exc_message": "Dummy message",
+        }
+        job.on_fail(exc_vals)
+        self.assertEqual(record.edi_exchange_state, "validate_error")
+        self.assertEqual(
+            record.exchange_error,
+            ": ".join([exc_vals["exc_name"], exc_vals["exc_message"]]),
+        )
+        self.assertEqual(record.exchange_error_traceback, exc_vals["exc_info"])
