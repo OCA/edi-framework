@@ -43,13 +43,29 @@ XML2 = """
 
 class TestNSWrapper(TransactionCase):
     def test_purge1(self):
-        res = xml_purge_nswrapper(XML1)
+        with self.assertLogs(
+            "odoo.addons.edi_exchange_template_oca.utils", level="WARNING"
+        ):
+            res = xml_purge_nswrapper(XML1)
         self.assertNotIn("nswrapper", str(res))
 
     def test_purge2(self):
-        res = xml_purge_nswrapper(XML2)
+        with self.assertLogs(
+            "odoo.addons.edi_exchange_template_oca.utils", level="WARNING"
+        ):
+            res = xml_purge_nswrapper(XML2)
         self.assertNotIn("nswrapper", str(res))
 
     def test_purge3(self):
-        res = xml_purge_nswrapper(ORDER_RESP_WRAPPER_TMPL.format(XML2))
+        with self.assertLogs(
+            "odoo.addons.edi_exchange_template_oca.utils", level="WARNING"
+        ):
+            res = xml_purge_nswrapper(ORDER_RESP_WRAPPER_TMPL.format(XML2))
+        self.assertNotIn("nswrapper", str(res))
+
+    def test_no_nswrapper_no_warning(self):
+        with self.assertNoLogs(
+            "odoo.addons.edi_exchange_template_oca.utils", level="WARNING"
+        ):
+            res = xml_purge_nswrapper("<Foo><Bar>baz</Bar></Foo>")
         self.assertNotIn("nswrapper", str(res))
