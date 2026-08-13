@@ -5,7 +5,12 @@
         <field name="inherit_id" ref="edi_core_oca.edi_exchange_record_view_form" />
         <field name="arch" type="xml">
             <page name="related_records" position="after">
-                <page name="metadata" string="Metadata" groups="base.group_no_one">
+                <page
+                    name="metadata"
+                    string="Metadata"
+                    groups="base.group_no_one"
+                    invisible="not metadata_display"
+                >
                     <group name="metadata">
                         <field name="metadata_display" />
                     </group>

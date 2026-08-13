@@ -21,7 +21,11 @@ class EDIExchangeRecord(models.Model):
     @api.depends("metadata")
     def _compute_metadata_display(self):
         for rec in self:
-            rec.metadata_display = json.dumps(rec.metadata, sort_keys=True, indent=4)
+            rec.metadata_display = (
+                json.dumps(rec.metadata, sort_keys=True, indent=4)
+                if rec.metadata
+                else False
+            )
 
     def edi_set_metadata(self, data):
         self.metadata = data

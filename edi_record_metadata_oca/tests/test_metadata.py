@@ -40,6 +40,10 @@ class TestEDIMetadata(EDIBackendCommonTestCase):
         self.assertTrue(self.exc_record.metadata)
         self.assertTrue(self.exc_record.metadata_display)
 
+    def test_fields_no_metadata(self):
+        self.assertFalse(self.exc_record.metadata)
+        self.assertFalse(self.exc_record.metadata_display)
+
     def test_no_store(self):
         consumer_record = self.consumer_model.create(
             {
