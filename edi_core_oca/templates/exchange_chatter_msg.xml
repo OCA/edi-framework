@@ -5,11 +5,19 @@
             t-set="message_color_klass"
             t-value="{'error': 'text-danger', 'warning': 'text-warning'}"
         />
+        <t
+            t-set="exchange_record_path"
+            t-value="env.ref('edi_core_oca.act_open_edi_exchange_record_view').path"
+        />
+        <t
+            t-set="exc_type_path"
+            t-value="env.ref('edi_core_oca.act_open_edi_exchange_type_view').path"
+        />
         <p t-attf-class="edi-exchange level-#{level}">
             <span class="edi-exchange-ref">
                 <strong>EDI exchange:</strong>
                 <a
-                    t-attf-href="/web#id=#{exchange_record.id}&amp;model=#{exchange_record._name}&amp;view_type=form"
+                    t-attf-href="/odoo/#{exchange_record_path}/#{exchange_record.id}"
                     t-att-data-oe-model="exchange_record._name"
                     t-att-data-oe-id="exchange_record.id"
                 >
@@ -21,7 +29,7 @@
             <span class="edi-exchange-type">
                 <strong>Type:</strong>
                 <a
-                    t-attf-href="/web#id=#{exc_type.id}&amp;model=#{exc_type._name}&amp;view_type=form"
+                    t-attf-href="/odoo/#{exc_type_path}/#{exc_type.id}"
                     t-att-data-oe-model="exc_type._name"
                     t-att-data-oe-id="exc_type.id"
                 >

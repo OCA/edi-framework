@@ -330,6 +330,7 @@
 
     <record model="ir.actions.act_window" id="act_open_edi_exchange_record_recent_view">
         <field name="name">Recent exchanges</field>
+        <field name="path">edi-exchange-records-recent</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">edi.exchange.record</field>
         <field name="view_mode">list,form</field>
@@ -343,6 +344,7 @@
 
     <record model="ir.actions.act_window" id="act_open_edi_exchange_record_view">
         <field name="name">Exchanges</field>
+        <field name="path">edi-exchange-records</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">edi.exchange.record</field>
         <field name="view_mode">list,form</field>
@@ -356,6 +358,7 @@
         id="act_open_edi_exchange_record_view_pending"
     >
         <field name="name">Exchanges - pending</field>
+        <field name="path">edi-exchange-records-pending</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">edi.exchange.record</field>
         <field name="view_mode">list,form</field>
@@ -368,6 +371,7 @@
 
     <record model="ir.actions.act_window" id="act_open_edi_exchange_record_view_failed">
         <field name="name">Exchanges - failed</field>
+        <field name="path">edi-exchange-records-failed</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">edi.exchange.record</field>
         <field name="view_mode">list,form</field>
@@ -383,6 +387,7 @@
         id="act_open_edi_exchange_record_view_inbound"
     >
         <field name="name">Exchanges - inbound</field>
+        <field name="path">edi-exchange-records-inbound</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">edi.exchange.record</field>
         <field name="view_mode">list,form</field>
@@ -398,6 +403,7 @@
         id="act_open_edi_exchange_record_view_outbound"
     >
         <field name="name">Exchanges - outbound</field>
+        <field name="path">edi-exchange-records-outbound</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">edi.exchange.record</field>
         <field name="view_mode">list,form</field>

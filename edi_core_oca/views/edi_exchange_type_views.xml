@@ -207,6 +207,7 @@
     </record>
     <record model="ir.actions.act_window" id="act_open_edi_exchange_type_view">
         <field name="name">EDI Exchange Type</field>
+        <field name="path">edi-exchange-types</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">edi.exchange.type</field>
         <field name="view_mode">list,form</field>

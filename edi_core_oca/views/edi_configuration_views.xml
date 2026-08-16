@@ -91,6 +91,7 @@
     </record>
     <record model="ir.actions.act_window" id="act_open_edi_configuration_view">
         <field name="name">EDI Configuration</field>
+        <field name="path">edi-configurations</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">edi.configuration</field>
         <field name="view_mode">list,form</field>

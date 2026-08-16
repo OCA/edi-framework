@@ -100,6 +100,7 @@
     </record>
     <record model="ir.actions.act_window" id="act_open_edi_backend_view">
         <field name="name">EDI Backend</field>
+        <field name="path">edi-backends</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">edi.backend</field>
         <field name="view_mode">list,form</field>
