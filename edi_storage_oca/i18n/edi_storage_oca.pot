@@ -4,7 +4,7 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 18.0\n"
+"Project-Id-Version: Odoo Server 19.0\n"
 "Report-Msgid-Bugs-To: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -12,6 +12,14 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: \n"
+
+#. module: edi_storage_oca
+#: model:ir.model.fields,field_description:edi_storage_oca.field_edi_backend__display_name
+#: model:ir.model.fields,field_description:edi_storage_oca.field_edi_exchange_record__display_name
+#: model:ir.model.fields,field_description:edi_storage_oca.field_edi_exchange_type__display_name
+#: model:ir.model.fields,field_description:edi_storage_oca.field_edi_oca_storage_handler__display_name
+msgid "Display Name"
+msgstr ""
 
 #. module: edi_storage_oca
 #: model:ir.model,name:edi_storage_oca.model_edi_backend
@@ -49,6 +57,14 @@ msgstr ""
 msgid ""
 "For output exchange types this should be a formatting string with the following variables available (to be used between brackets, `{}`): `exchange_record`, `record_name`, `type` and `dt`. For instance, a valid string would be {record_name}-{type.code}-{dt}\n"
 "For input exchange types related to storage backends it should be a regex expression to filter the files to be fetched from the pending directory in the related storage. E.g: `.*my-type-[0-9]*.\\.csv`"
+msgstr ""
+
+#. module: edi_storage_oca
+#: model:ir.model.fields,field_description:edi_storage_oca.field_edi_backend__id
+#: model:ir.model.fields,field_description:edi_storage_oca.field_edi_exchange_record__id
+#: model:ir.model.fields,field_description:edi_storage_oca.field_edi_exchange_type__id
+#: model:ir.model.fields,field_description:edi_storage_oca.field_edi_oca_storage_handler__id
+msgid "ID"
 msgstr ""
 
 #. module: edi_storage_oca
