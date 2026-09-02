@@ -623,7 +623,9 @@ class EDIBackend(models.Model):
             len(pending_records),
         )
         for rec in pending_records:
-            rec.action_exchange_receive()
+            # Chained, so a record does not have to wait for the next run of
+            # this cron to be processed once it has been received.
+            rec.action_exchange_receive_process_chained()
 
         pending_process_records = self.exchange_record_model.search(
             self._input_pending_process_records_domain(record_ids=record_ids)
