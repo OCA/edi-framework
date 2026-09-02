@@ -698,3 +698,7 @@ class EDIExchangeRecord(models.Model):
     def action_exchange_generate_send_chained(self):
         self.action_exchange_generate()
         self.action_exchange_send()
+
+    def action_exchange_receive_process_chained(self):
+        self.action_exchange_receive()
+        self.action_exchange_process()

@@ -103,6 +103,13 @@ class EdiExchangeRecord(models.Model):
         job1.on_done(self.delayable(priority=0).action_exchange_send())
         job1.delay()
 
+    def action_exchange_receive_process_chained(self):
+        job1 = self.delayable().action_exchange_receive()
+        # Chain process job.
+        # Raise prio to max to process the record as soon as it lands.
+        job1.on_done(self.delayable(priority=0).action_exchange_process())
+        job1.delay()
+
     def _job_on_fail_generate(self, **kw):
         return self._job_on_fail_update("validate_error", **kw)
 
