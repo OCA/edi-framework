@@ -117,10 +117,15 @@ class EdiExchangeRecord(models.Model):
 
     def _job_on_fail_update(self, failed_state, **kw):
         self.ensure_one()
+        # ``exc_message`` is the first argument of the exception: it is not
+        # always a string (e.g. the errno of an ``OSError``) and may be missing.
+        error = ": ".join(
+            str(kw[k]) for k in ("exc_name", "exc_message") if kw.get(k) is not None
+        )
         self.write(
             {
                 "edi_exchange_state": failed_state,
-                "exchange_error": ": ".join([kw["exc_name"], kw["exc_message"]]),
-                "exchange_error_traceback": kw["exc_info"],
+                "exchange_error": error,
+                "exchange_error_traceback": kw.get("exc_info"),
             }
         )
