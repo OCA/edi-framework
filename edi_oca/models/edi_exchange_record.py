@@ -488,7 +488,7 @@ class EDIExchangeRecord(models.Model):
         Implementers can hook to this method to do something after any action ends.
         """
         if message:
-            self._notify_related_record(message)
+            self._notify_related_record(message, action=action)
 
         # Trigger generic action complete event on exchange record
         event_name = f"{action}_complete"
@@ -497,8 +497,14 @@ class EDIExchangeRecord(models.Model):
             # Trigger specific event on related record
             self._trigger_edi_event(event_name, target=self.record)
 
-    def _notify_related_record(self, message, level="info"):
-        """Post notification on the original records."""
+    def _notify_related_record(self, message, level="info", action=None):
+        """Post notification on the original records.
+
+        When `action` is given, the related-record note is gated by the exchange
+        type's `notify_related_record_on_<action>` toggle; `action=None` always posts.
+        """
+        if action and not self.type_id._notify_related_record_on(action):
+            return
         for rec in self.related_record_ids:
             rec._notify_related_record(message, level)
 
@@ -515,13 +521,16 @@ class EDIExchangeRecord(models.Model):
         target._event(name).notify(self, **kw)
 
     def _notify_done(self):
-        self._notify_related_record(self._exchange_status_message("process_ok"))
+        self._notify_related_record(
+            self._exchange_status_message("process_ok"), action="process"
+        )
         self._trigger_edi_event("done")
 
     def _notify_error(self, message_key):
         self._notify_related_record(
             self._exchange_status_message(message_key),
             level="error",
+            action="process",
         )
         self._trigger_edi_event("error")
 

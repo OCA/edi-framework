@@ -39,32 +39,66 @@
                             <field name="code" />
                             <field name="direction" />
                         </group>
-                        <group name="config">
-                            <field name="exchange_filename_pattern" />
-                            <field name="exchange_filename_sequence_id" />
-                            <field name="exchange_file_ext" />
-                            <field name="exchange_file_auto_generate" />
-                            <field name="ack_type_id" />
-                            <field name="ack_for_type_ids" widget="many2many_tags" />
-                            <field name="partner_ids" widget="many2many_tags" />
-                            <field name="job_channel_id" />
-                            <field name="quick_exec" />
-                            <field name="encoding" />
-                            <field
-                                name="encoding_out_error_handler"
-                                invisible="direction == 'input'"
-                            />
-                            <field
-                                name="encoding_in_error_handler"
-                                invisible="direction == 'output'"
-                            />
-                            <field
-                                name="allow_empty_files_on_receive"
-                                invisible="direction == 'output'"
-                            />
-                        </group>
                     </group>
                     <notebook>
+                        <page name="config" string="Configuration">
+                            <group name="config">
+                                <group name="file" string="File">
+                                    <field name="exchange_filename_pattern" />
+                                    <field name="exchange_filename_sequence_id" />
+                                    <field name="exchange_file_ext" />
+                                    <field name="encoding" />
+                                    <field
+                                        name="encoding_out_error_handler"
+                                        invisible="direction == 'input'"
+                                    />
+                                    <field
+                                        name="encoding_in_error_handler"
+                                        invisible="direction == 'output'"
+                                    />
+                                </group>
+                                <group name="automation" string="Automation">
+                                    <field name="exchange_file_auto_generate" />
+                                    <field name="quick_exec" />
+                                    <field name="job_channel_id" />
+                                    <field
+                                        name="allow_empty_files_on_receive"
+                                        invisible="direction == 'output'"
+                                    />
+                                </group>
+                                <group name="ack" string="Acknowledgement">
+                                    <field name="ack_type_id" />
+                                    <field
+                                        name="ack_for_type_ids"
+                                        widget="many2many_tags"
+                                    />
+                                </group>
+                                <group
+                                    name="notifications"
+                                    string="Related-record notifications"
+                                >
+                                    <field
+                                        name="notify_related_record_on_generate"
+                                        invisible="direction == 'input'"
+                                    />
+                                    <field
+                                        name="notify_related_record_on_send"
+                                        invisible="direction == 'input'"
+                                    />
+                                    <field
+                                        name="notify_related_record_on_process"
+                                        invisible="direction == 'output'"
+                                    />
+                                    <field
+                                        name="notify_related_record_on_receive"
+                                        invisible="direction == 'output'"
+                                    />
+                                </group>
+                                <group name="scope" string="Scope">
+                                    <field name="partner_ids" widget="many2many_tags" />
+                                </group>
+                            </group>
+                        </page>
                         <page
                             name="adv_settings"
                             string="Advanced settings"
