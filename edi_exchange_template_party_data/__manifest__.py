@@ -4,7 +4,7 @@
 {
     "name": "EDI Exchange Template - Party data",
     "summary": """Glue module between edi_exchange_template and edi_party_data""",
-    "version": "18.0.1.1.0",
+    "version": "18.0.1.1.1",
     "development_status": "Alpha",
     "license": "AGPL-3",
     "author": "Camptocamp,Odoo Community Association (OCA)",
