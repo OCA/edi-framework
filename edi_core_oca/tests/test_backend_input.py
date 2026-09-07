@@ -48,6 +48,31 @@ class EDIBackendTestInputCase(EDIBackendCommonTestCase):
     def setUp(self):
         super().setUp()
         self.ExecutionAbstractModel.reset_faked("receive")
+        self.ExecutionAbstractModel.reset_faked("process")
+
+    def test_input_sync_receives_and_processes_in_one_pass(self):
+        """A record the scheduled action receives is processed by the same run.
+
+        Scenario:
+            1. A record is waiting to be received.
+            2. Run the input sync once.
+        Expected:
+            - It is received and then processed, without waiting for the
+              scheduled action to come round again.
+        """
+        self.record.edi_exchange_state = "input_pending"
+
+        self.backend.with_context(fake_output="yeah!")._check_input_exchange_sync()
+
+        self.assertTrue(
+            self.ExecutionAbstractModel.check_called_for(self.record, "receive")
+        )
+        self.assertTrue(
+            self.ExecutionAbstractModel.check_called_for(self.record, "process")
+        )
+        self.assertRecordValues(
+            self.record, [{"edi_exchange_state": "input_processed"}]
+        )
 
     def test_receive_record_nothing_todo(self):
         self.backend.with_context(fake_output="yeah!").exchange_receive(self.record)

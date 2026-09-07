@@ -69,4 +69,28 @@ class EDIBackendTestOutputJobsCase(EDIBackendCommonTestCase):
             job = self.record.action_exchange_send()
             self.assertEqual(0, job.priority)
             trap.assert_jobs_count(4)
-        # TODO: test input in the same way
+
+    def test_generate_send_chained(self):
+        """Generating and sending a record queues one chain of two jobs.
+
+        Scenario:
+            1. Ask a new output record to be generated and sent.
+            2. Run the queued jobs.
+        Expected:
+            - A generate job and a send job are queued.
+            - The send job waits for the generate job and gets the top priority.
+            - Once both ran, the record has been sent.
+        """
+        with trap_jobs() as trap:
+            self.record.action_exchange_generate_send_chained()
+            trap.assert_jobs_count(2)
+            trap.assert_enqueued_job(self.record.action_exchange_generate)
+            trap.assert_enqueued_job(
+                self.record.action_exchange_send, properties={"priority": 0}
+            )
+            generate_job, send_job = sorted(
+                trap.enqueued_jobs, key=lambda job: job.method_name
+            )
+            self.assertEqual(send_job.depends_on, {generate_job})
+            trap.perform_enqueued_jobs()
+        self.assertRecordValues(self.record, [{"edi_exchange_state": "output_sent"}])
