@@ -38,11 +38,12 @@ of an exchange.
 This module provides default component and a mixin to be used for
 registering new components for specific backends.
 
-It's based on partner_identification so that the party information will
-include allowed ID numbers for a given exchange.
-
-You can configure which ID number categories are allowed on the exchange
-type.
+**Deprecated**: the actual party data lookup logic has moved to
+`edi_party_helper_oca`, which has no dependency on the `component`
+framework. This module now only wraps it in a component for backward
+compatibility and will be removed once its usages are ported over. A
+deprecation notice is logged on server startup while this module is
+installed.
 
 .. IMPORTANT::
    This is an alpha version, the data model and design can change at any time without warning.

@@ -11,5 +11,5 @@
     "maintainers": ["simahawk"],
     "website": "https://github.com/OCA/edi-framework",
     "depends": ["edi_exchange_template_oca", "edi_party_data_oca"],
-    "auto_install": True,
+    "post_load_hook": "post_load_hook",
 }
