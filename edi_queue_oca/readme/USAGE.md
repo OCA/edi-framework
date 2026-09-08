@@ -50,3 +50,13 @@ usual.
 
 An identity key is attached to every queued job, so re-triggering an action
 for a record that already has a pending job does not enqueue a duplicate.
+
+## Garbage collection of stranded jobs
+
+`queue_job` cancels dependent jobs only when a parent is explicitly cancelled,
+so a dependent of a *failed* parent stays in *Wait Dependencies* forever. The
+cron *EDI exchange garbage collect stale jobs* cancels those jobs once no
+parent can still bring them to execution, and only after a grace period (24
+hours by default, set by the system parameter
+`edi_queue_oca.gc_stale_jobs_grace_hours`) that leaves time to requeue the
+failed parent by hand. The cron is disabled by default.
