@@ -61,7 +61,13 @@ class EDIParty(Mapping):
         return self.partner[self.name_field]
 
     def _get_endpoint(self):
-        return {}
+        category = self.exchange_record.type_id.endpoint_partner_category_id
+        if not category:
+            return {}
+        id_number = self.partner.id_numbers.filtered(
+            lambda x: x.category_id == category
+        )[:1]
+        return self._get_identity(id_number) if id_number else {}
 
     def _get_identifiers(self):
         identifiers = self.partner.id_numbers.filtered(
@@ -75,9 +81,10 @@ class EDIParty(Mapping):
         return True
 
     def _get_identity(self, id_number):
+        category = id_number.category_id
         return DotDict(
             attrs={
-                "schemeID": id_number.category_id.code,
+                "schemeID": category.scheme or category.code,
             },
             value=id_number.name,
         )
