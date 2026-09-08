@@ -4,8 +4,8 @@
 {
     "name": "Edi Exchange Deduplicate OCA",
     "summary": """
-        Introduce a deduplication mechanism at the sending step""",
-    "version": "19.0.1.1.1",
+        Mark superseded exchange records as obsolete""",
+    "version": "19.0.2.0.0",
     "license": "LGPL-3",
     "author": "Camptocamp,Odoo Community Association (OCA)",
     "maintainers": ["simahawk", "etobella"],
