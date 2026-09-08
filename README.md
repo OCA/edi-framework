@@ -44,7 +44,7 @@ addon | version | maintainers | summary
 [edi_sale_oca](edi_sale_oca/) | 18.0.1.0.1 | <a href='https://github.com/simahawk'><img src='https://github.com/simahawk.png' width='32' height='32' style='border-radius:50%;' alt='simahawk'/></a> | Configuration and special behaviors for EDI on sales.
 [edi_sale_stock_oca](edi_sale_stock_oca/) | 18.0.1.0.0 | <a href='https://github.com/ivantodorovich'><img src='https://github.com/ivantodorovich.png' width='32' height='32' style='border-radius:50%;' alt='ivantodorovich'/></a> | Configuration and special behaviors for EDI on sales & stock.
 [edi_sale_ubl_oca](edi_sale_ubl_oca/) | 18.0.1.0.2 |  | Configuration and special behaviors for EDI UBL exchanges related to sales.
-[edi_sale_ubl_output_oca](edi_sale_ubl_output_oca/) | 18.0.1.3.0 |  | Configuration and special behaviors for EDI on sales.
+[edi_sale_ubl_output_oca](edi_sale_ubl_output_oca/) | 18.0.1.3.1 |  | Configuration and special behaviors for EDI on sales.
 [edi_state_oca](edi_state_oca/) | 18.0.1.0.3 | <a href='https://github.com/simahawk'><img src='https://github.com/simahawk.png' width='32' height='32' style='border-radius:50%;' alt='simahawk'/></a> | Allow to assign specific EDI states to related records.
 [edi_stock_oca](edi_stock_oca/) | 18.0.1.0.1 |  | Define EDI Configuration for Stock
 [edi_storage_oca](edi_storage_oca/) | 18.0.1.1.0 |  | Base module to allow exchanging files via storage backend (eg: SFTP).
