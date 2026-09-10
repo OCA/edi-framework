@@ -14,7 +14,7 @@ class EDIBackendTestCronDeduplicationCase(EDIBackendTestCronCase):
         self.exchange_type_out.write(
             {
                 "exchange_file_auto_generate": True,
-                "deduplicate_on_send": True,
+                "deduplicate_on_exchange": True,
                 "delete_obsolete_records": True,
             }
         )

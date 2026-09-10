@@ -32,11 +32,14 @@ Edi Exchange Deduplicate OCA
 
 |badge1| |badge2| |badge3| |badge4| |badge5|
 
-This module adds options for deduplication records before sending step
-on type:
+This module adds options for deduplication of exchange records on the
+exchange type:
 
-- deduplicate_on_send: check if a fresher one does not exist for the
-  same record. If so, mark the oldest one as obsolete.
+- deduplicate_on_exchange: when a record is created, check if older
+  records for the same record are still pending. If so, mark them as
+  obsolete, so only the freshest one is sent or processed. Records
+  without a related record match on the exchange type alone, which suits
+  full-dump payloads where only the latest one matters.
 - delete_obsolete_records: Delete records marked as obsolete.
 
 **Table of contents**
@@ -49,16 +52,18 @@ Configuration
 
 Go to "EDI -> Config -> Exchange Type".
 
-Enable "Deduplicate on Send" option -> Enable "Delete obsolete records"
-option.
+Enable "Deduplicate on Exchange" option -> Enable "Delete obsolete
+records" option.
 
 Usage
 =====
 
-With all the types that have been enabled "Deduplicate on Send" option,
-this module will check their records if a fresher one does not exist for
-the same record. If so, mark the oldest one as obsolete (except
-"block_obsolescence" records)
+With all the types that have been enabled "Deduplicate on Exchange"
+option, this module will check, when a record is created, if older
+records for the same record (or for the same type, when no record is
+linked) are still pending. If so, mark them as obsolete (except
+"block_obsolescence" records). An obsolete record is neither sent nor
+processed: its job does nothing.
 
 - "block_obsolescence" is an technical option on records to avoid
   marking them as obsolete.

@@ -29,10 +29,7 @@ class EDIExchangeRecord(models.Model):
     def create(self, vals_list):
         records = super().create(vals_list)
         for rec in records:
-            check_obsoleted_record = (
-                rec.type_id.direction == "output" and rec.type_id.deduplicate_on_send
-            )
-            if check_obsoleted_record:
+            if rec.type_id.deduplicate_on_exchange:
                 obsoleted_records = rec._edi_get_duplicates()
                 if obsoleted_records:
                     obsoleted_records.edi_exchange_state = "obsolete"

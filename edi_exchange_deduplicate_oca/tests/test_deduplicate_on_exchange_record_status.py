@@ -39,7 +39,7 @@ class TestDeduplicateOnExchangeRecordStatus(EDIDeduplicateTestCase):
     def test_default_status_deduplicates_new_records(self):
         self.exchange_type_out.write(
             {
-                "deduplicate_on_send": True,
+                "deduplicate_on_exchange": True,
             }
         )
         record1 = self.backend.create_record(
@@ -63,7 +63,7 @@ class TestDeduplicateOnExchangeRecordStatus(EDIDeduplicateTestCase):
     def test_custom_status_filter_is_used_for_deduplication(self):
         self.exchange_type_out.write(
             {
-                "deduplicate_on_send": True,
+                "deduplicate_on_exchange": True,
                 "deduplicate_on_exchange_record_status": "output_pending",
             }
         )
