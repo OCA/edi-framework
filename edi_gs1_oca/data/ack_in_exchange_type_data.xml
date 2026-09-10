@@ -12,14 +12,16 @@
          -->
         <field name="exchange_filename_pattern" />
         <field name="exchange_file_ext">xml</field>
-        <field name="input_validate_model_id" ref="model_edi_gs1_handler_validate" />
+        <field name="input_validate_model_id" ref="edi_xml_oca.model_edi_xml" />
         <field
             name="process_model_id"
             ref="model_edi_gs1_handler_application_receipt_ack"
         />
         <field name="advanced_settings_edit">
-gs1:
-  schema_path: edi_gs1_oca:static/schemas/gs1/ecom/ApplicationReceiptAcknowledgement.xsd
+execution_model:
+  input_validate:
+    env_ctx:
+      edi_xml_schema_path: edi_gs1_oca:static/schemas/gs1/ecom/ApplicationReceiptAcknowledgement.xsd
         </field>
     </record>
 </odoo>

@@ -15,14 +15,9 @@ class EdiGs1InputMixin(models.AbstractModel):
     _name = "edi.gs1.input.mixin"
     _description = "GS1 EDI input mixin"
 
-    def _get_schema_path(self, exchange_record):
-        settings = exchange_record.type_id.get_settings() or {}
-        return settings.get("gs1", {}).get("schema_path")
-
     def _parse(self, exchange_record):
-        schema_path = self._get_schema_path(exchange_record)
         content = exchange_record._get_file_content()
-        return self.env["edi.gs1.xml"].parse_xml(schema_path, content)
+        return self.env["edi.xml"].parse_xml(content)
 
     def _process_data(self, data, exchange_record):
         raise NotImplementedError()

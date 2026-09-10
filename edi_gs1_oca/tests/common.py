@@ -52,6 +52,6 @@ class BaseTestCase(TransactionCase, xmlunittest.XmlTestMixin):
             return thefile.read()
 
     def _validate_xml(self, content, schema_path=None):
-        return self.env["edi.gs1.xml"].validate(
+        return self.env["edi.xml"]._validate_xml(
             schema_path or self._schema_path, content
         )

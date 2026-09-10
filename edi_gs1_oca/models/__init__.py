@@ -1,4 +1,3 @@
-from . import edi_gs1_xml
 from . import edi_gs1_output
 from . import edi_gs1_input
 from . import edi_gs1_handler
