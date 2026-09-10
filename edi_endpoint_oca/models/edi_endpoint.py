@@ -33,6 +33,26 @@ class EDIEndpoint(models.Model):
         comodel_name="edi.exchange.type",
         domain="[('backend_type_id','=', backend_type_id)]",
     )
+    exec_mode = fields.Selection(default="create_exchange_record")
+
+    def _selection_exec_mode(self):
+        return super()._selection_exec_mode() + [
+            ("create_exchange_record", self.env._("Create exchange record")),
+        ]
+
+    def _handle_exec__create_exchange_record(self, request):
+        """Persist the raw HTTP body as an exchange record and acknowledge.
+
+        Covers the "receive and queue" case for incoming EDI endpoints,
+        avoiding the need for a per-endpoint code snippet.
+        """
+        record = self.create_exchange_record(
+            file_content=request.httprequest.get_data(),
+        )
+        return {
+            "payload": {"status": "queued", "id": record.identifier},
+            "status_code": 200,
+        }
 
     def create_exchange_record(self, file_content=None, encoding="utf-8", **vals):
         """Create an EDI exchange record from current endpoint.
@@ -46,6 +66,7 @@ class EDIEndpoint(models.Model):
             if not isinstance(file_content, bytes):
                 file_content = bytes(file_content, encoding)
             vals["exchange_file"] = base64.b64encode(file_content)
+            vals["edi_exchange_state"] = "input_received"
 
         rec = self.backend_id.create_record(self.exchange_type_id.code, vals)
         return rec
