@@ -392,13 +392,14 @@ work in off-peak hours.</p>
 <li><a class="reference internal" href="#per-type-job-configuration" id="toc-entry-3">Per-type job configuration</a></li>
 <li><a class="reference internal" href="#accumulating-jobs-until-a-fixed-daily-time" id="toc-entry-4">Accumulating jobs until a fixed daily time</a></li>
 <li><a class="reference internal" href="#duplicate-job-prevention" id="toc-entry-5">Duplicate-job prevention</a></li>
+<li><a class="reference internal" href="#garbage-collection-of-stranded-jobs" id="toc-entry-6">Garbage collection of stranded jobs</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#bug-tracker" id="toc-entry-6">Bug Tracker</a></li>
-<li><a class="reference internal" href="#credits" id="toc-entry-7">Credits</a><ul>
-<li><a class="reference internal" href="#authors" id="toc-entry-8">Authors</a></li>
-<li><a class="reference internal" href="#contributors" id="toc-entry-9">Contributors</a></li>
-<li><a class="reference internal" href="#maintainers" id="toc-entry-10">Maintainers</a></li>
+<li><a class="reference internal" href="#bug-tracker" id="toc-entry-7">Bug Tracker</a></li>
+<li><a class="reference internal" href="#credits" id="toc-entry-8">Credits</a><ul>
+<li><a class="reference internal" href="#authors" id="toc-entry-9">Authors</a></li>
+<li><a class="reference internal" href="#contributors" id="toc-entry-10">Contributors</a></li>
+<li><a class="reference internal" href="#maintainers" id="toc-entry-11">Maintainers</a></li>
 </ul>
 </li>
 </ul>
@@ -417,8 +418,8 @@ is installed.</p>
 <p>Each <strong>Exchange Type</strong> gains a <em>Queue</em> tab with optional settings:</p>
 <table border="1" class="docutils">
 <colgroup>
-<col width="39%" />
-<col width="61%" />
+<col width="40%" />
+<col width="60%" />
 </colgroup>
 <thead valign="bottom">
 <tr><th class="head">Field</th>
@@ -431,8 +432,8 @@ is installed.</p>
 <tt class="docutils literal">root.edi.high</tt>).</td>
 </tr>
 <tr><td><strong>Job priority</strong></td>
-<td>Integer priority passed to the queue job
-(lower = higher priority).</td>
+<td>Integer priority passed to the queue
+job (lower = higher priority).</td>
 </tr>
 <tr><td><strong>Enable ETA Scheduling</strong></td>
 <td>Toggle to activate daily job
@@ -482,9 +483,20 @@ as usual.</p>
 action for a record that already has a pending job does not enqueue a
 duplicate.</p>
 </div>
+<div class="section" id="garbage-collection-of-stranded-jobs">
+<h3><a class="toc-backref" href="#toc-entry-6">Garbage collection of stranded jobs</a></h3>
+<p><tt class="docutils literal">queue_job</tt> cancels dependent jobs only when a parent is explicitly
+cancelled, so a dependent of a <em>failed</em> parent stays in <em>Wait
+Dependencies</em> forever. The cron <em>EDI exchange garbage collect stale
+jobs</em> cancels those jobs once no parent can still bring them to
+execution, and only after a grace period (24 hours by default, set by
+the system parameter <tt class="docutils literal">edi_queue_oca.gc_stale_jobs_grace_hours</tt>) that
+leaves time to requeue the failed parent by hand. The cron is disabled
+by default.</p>
+</div>
 </div>
 <div class="section" id="bug-tracker">
-<h2><a class="toc-backref" href="#toc-entry-6">Bug Tracker</a></h2>
+<h2><a class="toc-backref" href="#toc-entry-7">Bug Tracker</a></h2>
 <p>Bugs are tracked on <a class="reference external" href="https://github.com/OCA/edi-framework/issues">GitHub Issues</a>.
 In case of trouble, please check there if your issue has already been reported.
 If you spotted it first, help us to smash it by providing a detailed and welcomed
@@ -492,16 +504,16 @@ If you spotted it first, help us to smash it by providing a detailed and welcome
 <p>Do not contact contributors directly about support or help with technical issues.</p>
 </div>
 <div class="section" id="credits">
-<h2><a class="toc-backref" href="#toc-entry-7">Credits</a></h2>
+<h2><a class="toc-backref" href="#toc-entry-8">Credits</a></h2>
 <div class="section" id="authors">
-<h3><a class="toc-backref" href="#toc-entry-8">Authors</a></h3>
+<h3><a class="toc-backref" href="#toc-entry-9">Authors</a></h3>
 <ul class="simple">
 <li>Dixmit</li>
 <li>Camptocamp</li>
 </ul>
 </div>
 <div class="section" id="contributors">
-<h3><a class="toc-backref" href="#toc-entry-9">Contributors</a></h3>
+<h3><a class="toc-backref" href="#toc-entry-10">Contributors</a></h3>
 <ul class="simple">
 <li>Simone Orsi &lt;<a class="reference external" href="mailto:simahawk&#64;gmail.com">simahawk&#64;gmail.com</a>&gt;</li>
 <li>Enric Tobella &lt;<a class="reference external" href="mailto:enric.tobella&#64;dixmit.com">enric.tobella&#64;dixmit.com</a>&gt;</li>
@@ -511,7 +523,7 @@ If you spotted it first, help us to smash it by providing a detailed and welcome
 </ul>
 </div>
 <div class="section" id="maintainers">
-<h3><a class="toc-backref" href="#toc-entry-10">Maintainers</a></h3>
+<h3><a class="toc-backref" href="#toc-entry-11">Maintainers</a></h3>
 <p>This module is maintained by the OCA.</p>
 <a class="reference external image-reference" href="https://odoo-community.org">
 <img alt="Odoo Community Association" src="https://odoo-community.org/logo.png" />
