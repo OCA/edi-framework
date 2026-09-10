@@ -46,6 +46,24 @@ class XMLTestCase(TransactionCase, XMLTestCaseMixin):
             raise_on_fail=True,
         )
 
+    def test_listify(self):
+        self.assertEqual(self.handler._listify(None), [])
+        self.assertEqual(self.handler._listify([]), [])
+        self.assertEqual(self.handler._listify({"a": "1"}), [{"a": "1"}])
+        self.assertEqual(
+            self.handler._listify([{"a": "1"}, {"a": "2"}]),
+            [{"a": "1"}, {"a": "2"}],
+        )
+
+    def test_listify_parsed_xml(self):
+        """A repeatable element has no stable shape: that's what _listify is for."""
+        one = self.handler.parse_xml("<root><item>a</item></root>")
+        several = self.handler.parse_xml("<root><item>a</item><item>b</item></root>")
+        self.assertEqual(one["item"], "a")
+        self.assertEqual(several["item"], ["a", "b"])
+        self.assertEqual(self.handler._listify(one["item"]), ["a"])
+        self.assertEqual(self.handler._listify(several["item"]), ["a", "b"])
+
     def test_xml(self):
         data = self.handler.parse_xml(TEST_XML)
         self.assertEqual(
