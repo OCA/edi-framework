@@ -13,6 +13,6 @@
     "author": "ACSONE,Camptocamp,Odoo Community Association (OCA)",
     "maintainers": ["simahawk"],
     "website": "https://github.com/OCA/edi-framework",
-    "depends": ["edi_component_oca"],
+    "depends": ["edi_core_oca"],
     "external_dependencies": {"python": ["xmltodict"]},
 }
