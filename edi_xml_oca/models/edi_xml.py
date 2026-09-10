@@ -44,6 +44,21 @@ class EdiXml(models.AbstractModel):
         """
         return self._xml_string_to_dict(file_content, **kw)
 
+    @staticmethod
+    def _listify(value):
+        """Normalize a parsed value into a list.
+
+        A repeatable element is mapped to a dict when the document holds a
+        single occurrence and to a list when it holds several. Callers
+        iterating on such an element need a stable shape.
+
+        :param value: value read from a parsed XML dict
+        :return: list, empty when the element is missing
+        """
+        if value is None:
+            return []
+        return value if isinstance(value, list) else [value]
+
     def validate(self, schema_path, xml_content, raise_on_fail=False):
         """Validate XML content against XSD schema.
 
