@@ -32,7 +32,7 @@ class EdiGs1HandlerValidate(models.AbstractModel):
             content = exchange_record._get_file_content()
         if isinstance(content, bytes):
             content = content.decode()
-        error = self.env["edi.gs1.xml"].validate(schema_path, content)
+        error = self.env["edi.xml"].validate(schema_path, content)
         if error:
             raise EDIValidationError(error)
         return None
@@ -69,13 +69,13 @@ class EdiGs1HandlerApplicationReceiptAck(models.AbstractModel):
         return self._get_status(data) == "RECEIVED"
 
     def _get_status(self, data):
-        try:
-            ack = data["applicationReceiptAcknowledgement"][0]
-        except IndexError as exc:
+        xml = self.env["edi.xml"]
+        acks = xml._listify(data.get("applicationReceiptAcknowledgement"))
+        if not acks:
             # Maybe raise an EDIValidationError?
             raise exceptions.ValidationError(
                 self.env._("applicationReceiptAcknowledgement element not found!")
-            ) from exc
-        status_wrapper = ack["applicationResponseDocumentLevel"][0]
+            )
+        levels = xml._listify(acks[0].get("applicationResponseDocumentLevel"))
         # options: ERROR, RECEIVED, WARNING
-        return status_wrapper["applicationResponseStatusCode"]
+        return levels[0]["applicationResponseStatusCode"]

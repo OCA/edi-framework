@@ -11,8 +11,8 @@
     "license": "AGPL-3",
     "website": "https://github.com/OCA/edi-framework",
     "author": "ACSONE,Odoo Community Association (OCA)",
-    "depends": ["edi_core_oca", "uom"],
-    "external_dependencies": {"python": ["xmlschema", "xmlunittest"]},
+    "depends": ["edi_core_oca", "edi_xml_oca", "uom"],
+    "external_dependencies": {"python": ["xmlunittest"]},
     "data": [
         "data/gs1_backend_data.xml",
         "data/ack_in_exchange_type_data.xml",
