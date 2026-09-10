@@ -3,8 +3,10 @@
 # License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl).
 
 from odoo.exceptions import UserError
+from odoo.tests.common import tagged
 
 from odoo.addons.component.tests.common import TransactionComponentCase
+from odoo.addons.edi_core_oca.tests.common import EDIBackendTestMixin
 
 from .common import XMLTestCaseMixin
 
@@ -17,11 +19,14 @@ TEST_XML = """<?xml version="1.0" encoding="UTF-8"?>
 """
 
 
-class XMLTestCase(TransactionComponentCase, XMLTestCaseMixin):
+@tagged("-at_install", "post_install")
+class XMLTestCase(TransactionComponentCase, EDIBackendTestMixin, XMLTestCaseMixin):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.backend = cls.env.ref("edi_core_oca.demo_edi_backend")
+        cls.env = cls.env(context=dict(cls.env.context, tracking_disable=True))
+        # Demo data is not installed by default anymore: build our own backend.
+        cls.backend = cls._get_backend()
         cls.handler = cls.backend._find_component(
             cls.backend._name,
             ["edi.xml"],
