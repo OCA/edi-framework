@@ -106,6 +106,10 @@ result = not record._has_exchange_record(exchange_type, exchange_type.backend_id
                 exchange_record.type_id, self.backend
             )
         )
+        self.assertEqual(action["context"].get("active_test"), False)
+        exchange_record.active = False
+        action = self.consumer_record.action_view_edi_records()
+        self.assertIn(exchange_record.id, action["domain"][0][2])
 
     def test_origin(self):
         vals = {
