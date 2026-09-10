@@ -576,10 +576,7 @@ class EDIExchangeRecord(models.Model):
 
     def _search(self, domain, offset=0, limit=None, order=None, **kw) -> Query:
         query = super()._search(
-            domain=domain,
-            offset=offset,
-            limit=limit,
-            order=order,
+            domain=domain, offset=offset, limit=limit, order=order, **kw
         )
         if self.env.is_superuser():
             # restrictions do not apply for the superuser
