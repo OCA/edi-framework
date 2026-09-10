@@ -3,45 +3,29 @@
 # License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl).
 
 import xmltodict
-from lxml import etree
 
-from odoo.exceptions import UserError
+from odoo import models
 from odoo.tools import file_path
 from odoo.tools.xml_utils import _check_with_xsd
 
-from odoo.addons.component.core import Component
 
-
-class XMLHandler(Component):
+class EdiXml(models.AbstractModel):
     """Validate and parse XML."""
 
-    _name = "edi.xml.handler"
-    _inherit = "edi.component.base.mixin"
-    _usage = "edi.xml"
+    _name = "edi.xml"
+    _description = "EDI XML helper"
 
-    _work_context_validate_attrs = ["schema_path"]
+    @staticmethod
+    def _resolve_schema_path(schema_path):
+        """Lookup the XSD schema.
 
-    def __init__(self, work_context):
-        super().__init__(work_context)
-        for key in self._work_context_validate_attrs:
-            if not hasattr(work_context, key):
-                raise AttributeError(f"'{key}' is required for this component!")
-
-        self.schema_path, self.schema = self._get_xsd_schema()
-
-    def _get_xsd_schema(self):
-        """Lookup and parse the XSD schema."""
+        :param schema_path: schema path as ``module:path``
+        """
         try:
-            mod_name, path = self.work.schema_path.split(":")
+            mod_name, path = schema_path.split(":")
         except ValueError as exc:
             raise ValueError("Path must be in the form `module:path`") from exc
-
-        schema_path = file_path(f"{mod_name}/{path}")
-        if not schema_path:
-            return UserError(f"XSD schema file not found: {self.work.schema_path}")
-
-        with open(schema_path) as schema_file:
-            return schema_path, etree.XMLSchema(etree.parse(schema_file))
+        return file_path(f"{mod_name}/{path}")
 
     def _xml_string_to_dict(self, xml_string, **kw):
         """Read xml_content and return a data dict.
@@ -59,9 +43,10 @@ class XMLHandler(Component):
         """
         return self._xml_string_to_dict(file_content, **kw)
 
-    def validate(self, xml_content, raise_on_fail=False):
+    def validate(self, schema_path, xml_content, raise_on_fail=False):
         """Validate XML content against XSD schema.
 
+        :param schema_path: schema path as ``module:path``
         :param xml_content: str containing xml data to validate
         :param raise_on_fail: turn on/off validation error exception on fail
 
@@ -69,17 +54,17 @@ class XMLHandler(Component):
             * None if validation is ok or skipped
             * error string if `raise_on_fail` is False and validation fails
         """
-
+        resolved_path = self._resolve_schema_path(schema_path)
         xml_content = (
             xml_content.encode("utf-8") if isinstance(xml_content, str) else xml_content
         )
         try:
-            with open(self.schema_path) as xsd_stream:
+            with open(resolved_path) as xsd_stream:
                 _check_with_xsd(xml_content, xsd_stream)
         except FileNotFoundError as exc:
             if raise_on_fail:
                 raise exc
-            return f"XSD schema file not found: {self.schema_path}"
+            return f"XSD schema file not found: {schema_path}"
         except Exception as exc:
             if raise_on_fail:
                 raise exc
