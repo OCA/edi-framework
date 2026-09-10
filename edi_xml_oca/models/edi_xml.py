@@ -5,7 +5,7 @@
 import xmltodict
 
 from odoo import models
-from odoo.tools import file_path
+from odoo.tools import file_open
 from odoo.tools.xml_utils import _check_with_xsd
 
 
@@ -17,15 +17,16 @@ class EdiXml(models.AbstractModel):
 
     @staticmethod
     def _resolve_schema_path(schema_path):
-        """Lookup the XSD schema.
+        """Turn the XSD schema path into an addon relative path.
 
         :param schema_path: schema path as ``module:path``
+        :return: path as ``module/path``, as expected by `file_open`
         """
         try:
             mod_name, path = schema_path.split(":")
         except ValueError as exc:
             raise ValueError("Path must be in the form `module:path`") from exc
-        return file_path(f"{mod_name}/{path}")
+        return f"{mod_name}/{path}"
 
     def _xml_string_to_dict(self, xml_string, **kw):
         """Read xml_content and return a data dict.
@@ -59,7 +60,7 @@ class EdiXml(models.AbstractModel):
             xml_content.encode("utf-8") if isinstance(xml_content, str) else xml_content
         )
         try:
-            with open(resolved_path) as xsd_stream:
+            with file_open(resolved_path) as xsd_stream:
                 _check_with_xsd(xml_content, xsd_stream)
         except FileNotFoundError as exc:
             if raise_on_fail:
