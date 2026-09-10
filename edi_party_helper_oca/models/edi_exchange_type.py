@@ -13,3 +13,9 @@ class EDIExchangeType(models.Model):
         comodel_name="res.partner.id_category",
         help="Allowed ID categories to be used to generate parties information.",
     )
+    endpoint_partner_category_id = fields.Many2one(
+        string="Endpoint ID category",
+        comodel_name="res.partner.id_category",
+        help="ID category whose id_number is used as the party's "
+        "`EndpointID` (only meaningful for output exchanges).",
+    )

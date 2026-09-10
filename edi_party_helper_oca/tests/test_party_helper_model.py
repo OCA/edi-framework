@@ -28,3 +28,13 @@ class PartyHelperModelTestCase(PartyHelperCommonTestCase):
         expected = self._make_expected_data(self.partner2, 2, allowed_codes=["cat2"])
         party = self._get_party(self.partner2)
         self.assertEqual(party, expected)
+
+    def test_data_endpoint_from_category(self):
+        self.exc_type.endpoint_partner_category_id = self.category1
+        expected = self._make_expected_data(
+            self.partner1,
+            1,
+            endpoint={"attrs": {"schemeID": "cat1"}, "value": "cat1-p1"},
+        )
+        party = self._get_party(self.partner1)
+        self.assertEqual(party, expected)
