@@ -17,18 +17,19 @@ msgstr ""
 "X-Generator: Weblate 5.6.2\n"
 
 #. module: edi_exchange_deduplicate_oca
-#: model:ir.model.fields,help:edi_exchange_deduplicate_oca.field_edi_exchange_type__deduplicate_on_send
-msgid ""
-"Before sending an exchange record, check if a fresher one does not exist for"
-" same record; if so, mark oldest one as obsolete."
-msgstr ""
-"Prima di inviare un record di scambio, controlla se ne esiste uno più "
-"recente per lo stesso record; se così, marca il vecchio come obsoleto."
-
-#. module: edi_exchange_deduplicate_oca
 #: model:ir.model.fields,field_description:edi_exchange_deduplicate_oca.field_edi_exchange_record__block_obsolescence
 msgid "Block Obsolescence"
 msgstr "Obsolescenza blocco"
+
+#. module: edi_exchange_deduplicate_oca
+#: model:ir.model.fields,field_description:edi_exchange_deduplicate_oca.field_edi_exchange_type__deduplicate_on_exchange_record_status
+msgid "Deduplicate On Exchange Record Status"
+msgstr ""
+
+#. module: edi_exchange_deduplicate_oca
+#: model:ir.model.fields,field_description:edi_exchange_deduplicate_oca.field_edi_exchange_type__deduplicate_on_exchange
+msgid "Deduplicate on Exchange"
+msgstr ""
 
 #. module: edi_exchange_deduplicate_oca
 #: model:ir.model.fields,field_description:edi_exchange_deduplicate_oca.field_edi_exchange_type__deduplicate_on_send
@@ -44,6 +45,18 @@ msgstr "Cancella record obsoleti"
 #: model:ir.model.fields,help:edi_exchange_deduplicate_oca.field_edi_exchange_type__delete_obsolete_records
 msgid "Delete records marked as obsolete."
 msgstr "Cancella record marcati come obsoleti."
+
+#. module: edi_exchange_deduplicate_oca
+#: model:ir.model.fields,help:edi_exchange_deduplicate_oca.field_edi_exchange_type__deduplicate_on_send
+msgid "Deprecated: alias of 'Deduplicate on Exchange'."
+msgstr ""
+
+#. module: edi_exchange_deduplicate_oca
+#: model:ir.model.fields,field_description:edi_exchange_deduplicate_oca.field_edi_backend__display_name
+#: model:ir.model.fields,field_description:edi_exchange_deduplicate_oca.field_edi_exchange_record__display_name
+#: model:ir.model.fields,field_description:edi_exchange_deduplicate_oca.field_edi_exchange_type__display_name
+msgid "Display Name"
+msgstr ""
 
 #. module: edi_exchange_deduplicate_oca
 #: model:ir.model,name:edi_exchange_deduplicate_oca.model_edi_backend
@@ -62,7 +75,6 @@ msgstr "Record di scambio EDI"
 
 #. module: edi_exchange_deduplicate_oca
 #: model:ir.actions.server,name:edi_exchange_deduplicate_oca.cron_edi_backend_delete_obsolete_records_ir_actions_server
-#: model:ir.cron,cron_name:edi_exchange_deduplicate_oca.cron_edi_backend_delete_obsolete_records
 msgid "EDI exchange delete obsolete records"
 msgstr "Scambio EDI cancella record obsoleti"
 
@@ -77,6 +89,37 @@ msgid "Flag record that can never be marked as obsolete"
 msgstr "Segna record che non devono mai essere marcati obsoleti"
 
 #. module: edi_exchange_deduplicate_oca
+#: model:ir.model.fields,field_description:edi_exchange_deduplicate_oca.field_edi_backend__id
+#: model:ir.model.fields,field_description:edi_exchange_deduplicate_oca.field_edi_exchange_record__id
+#: model:ir.model.fields,field_description:edi_exchange_deduplicate_oca.field_edi_exchange_type__id
+msgid "ID"
+msgstr ""
+
+#. module: edi_exchange_deduplicate_oca
+#. odoo-python
+#: code:addons/edi_exchange_deduplicate_oca/models/edi_exchange_type.py:0
+msgid ""
+"Invalid exchange state(s): %(invalid_states)s. Allowed values are: %"
+"(allowed_states)s"
+msgstr ""
+
+#. module: edi_exchange_deduplicate_oca
 #: model:ir.model.fields.selection,name:edi_exchange_deduplicate_oca.selection__edi_exchange_record__edi_exchange_state__obsolete
 msgid "Obsolete"
 msgstr "Obsoleto"
+
+#. module: edi_exchange_deduplicate_oca
+#: model:ir.model.fields,help:edi_exchange_deduplicate_oca.field_edi_exchange_type__deduplicate_on_exchange
+msgid ""
+"When an exchange record is created, mark the older ones for the same record "
+"that are still pending as obsolete, so only the freshest one is sent or "
+"processed. Records without a related record match on the exchange type "
+"alone, which suits full-dump payloads where only the latest one matters."
+msgstr ""
+
+#~ msgid ""
+#~ "Before sending an exchange record, check if a fresher one does not exist "
+#~ "for same record; if so, mark oldest one as obsolete."
+#~ msgstr ""
+#~ "Prima di inviare un record di scambio, controlla se ne esiste uno più "
+#~ "recente per lo stesso record; se così, marca il vecchio come obsoleto."
