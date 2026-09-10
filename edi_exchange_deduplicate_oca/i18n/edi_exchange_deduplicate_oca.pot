@@ -14,13 +14,6 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: edi_exchange_deduplicate_oca
-#: model:ir.model.fields,help:edi_exchange_deduplicate_oca.field_edi_exchange_type__deduplicate_on_send
-msgid ""
-"Before sending an exchange record, check if a fresher one does not exist for"
-" same record; if so, mark oldest one as obsolete."
-msgstr ""
-
-#. module: edi_exchange_deduplicate_oca
 #: model:ir.model.fields,field_description:edi_exchange_deduplicate_oca.field_edi_exchange_record__block_obsolescence
 msgid "Block Obsolescence"
 msgstr ""
@@ -28,6 +21,11 @@ msgstr ""
 #. module: edi_exchange_deduplicate_oca
 #: model:ir.model.fields,field_description:edi_exchange_deduplicate_oca.field_edi_exchange_type__deduplicate_on_exchange_record_status
 msgid "Deduplicate On Exchange Record Status"
+msgstr ""
+
+#. module: edi_exchange_deduplicate_oca
+#: model:ir.model.fields,field_description:edi_exchange_deduplicate_oca.field_edi_exchange_type__deduplicate_on_exchange
+msgid "Deduplicate on Exchange"
 msgstr ""
 
 #. module: edi_exchange_deduplicate_oca
@@ -43,6 +41,11 @@ msgstr ""
 #. module: edi_exchange_deduplicate_oca
 #: model:ir.model.fields,help:edi_exchange_deduplicate_oca.field_edi_exchange_type__delete_obsolete_records
 msgid "Delete records marked as obsolete."
+msgstr ""
+
+#. module: edi_exchange_deduplicate_oca
+#: model:ir.model.fields,help:edi_exchange_deduplicate_oca.field_edi_exchange_type__deduplicate_on_send
+msgid "Deprecated: alias of 'Deduplicate on Exchange'."
 msgstr ""
 
 #. module: edi_exchange_deduplicate_oca
@@ -100,4 +103,13 @@ msgstr ""
 #. module: edi_exchange_deduplicate_oca
 #: model:ir.model.fields.selection,name:edi_exchange_deduplicate_oca.selection__edi_exchange_record__edi_exchange_state__obsolete
 msgid "Obsolete"
+msgstr ""
+
+#. module: edi_exchange_deduplicate_oca
+#: model:ir.model.fields,help:edi_exchange_deduplicate_oca.field_edi_exchange_type__deduplicate_on_exchange
+msgid ""
+"When an exchange record is created, mark the older ones for the same record "
+"that are still pending as obsolete, so only the freshest one is sent or "
+"processed. Records without a related record match on the exchange type "
+"alone, which suits full-dump payloads where only the latest one matters."
 msgstr ""
