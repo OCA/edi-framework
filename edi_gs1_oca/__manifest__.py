@@ -23,5 +23,6 @@
         "views/edi_backend.xml",
         "views/uom_uom.xml",
     ],
+    "demo": ["demo/gs1_backend_demo.xml"],
     "post_init_hook": "post_init_hook",
 }

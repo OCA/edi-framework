@@ -55,7 +55,13 @@ class BaseTestCase(TransactionCase, xmlunittest.XmlTestMixin):
 
     @classmethod
     def _get_backend(cls):
-        return cls.env.ref("edi_gs1_oca.edi_backend_gs1_default")
+        """Own backend: the shipped one is demo data."""
+        return cls.env["edi.backend"].create(
+            {
+                "name": "GS1 test backend",
+                "backend_type_id": cls.env.ref("edi_gs1_oca.backend_type_gs1").id,
+            }
+        )
 
     def flatten(self, txt):
         return "".join([x.strip() for x in txt.splitlines()])
