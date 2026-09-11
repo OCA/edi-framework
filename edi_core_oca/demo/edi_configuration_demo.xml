@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="edi_conf_trigger_cron_hourly" model="edi.configuration.trigger">
+        <field name="name">On hourly schedule</field>
+        <field name="code">on_cron_hourly</field>
+        <field
+            name="description"
+        >Trigger when the hourly EDI scheduled action runs</field>
+    </record>
+    <record id="edi_conf_trigger_cron_daily" model="edi.configuration.trigger">
+        <field name="name">On daily schedule</field>
+        <field name="code">on_cron_daily</field>
+        <field
+            name="description"
+        >Trigger when the daily EDI scheduled action runs</field>
+    </record>
+
+    <record id="cron_edi_configuration_hourly" model="ir.cron">
+        <field name="name">EDI configuration hourly trigger</field>
+        <field name="active" eval="True" />
+        <field name="user_id" ref="base.user_root" />
+        <field name="interval_number">1</field>
+        <field name="interval_type">hours</field>
+        <field
+            name="nextcall"
+            eval="(DateTime.now() + timedelta(hours=1)).strftime('%Y-%m-%d %H:00:00')"
+        />
+        <field name="model_id" ref="edi_core_oca.model_edi_configuration" />
+        <field name="state">code</field>
+        <field name="code">model._cron_run_by_trigger("on_cron_hourly")</field>
+    </record>
+    <record id="cron_edi_configuration_daily" model="ir.cron">
+        <field name="name">EDI configuration daily trigger</field>
+        <field name="active" eval="True" />
+        <field name="user_id" ref="base.user_root" />
+        <field name="interval_number">1</field>
+        <field name="interval_type">days</field>
+        <field
+            name="nextcall"
+            eval="(DateTime.now() + timedelta(days=1)).strftime('%Y-%m-%d 00:00:00')"
+        />
+        <field name="model_id" ref="edi_core_oca.model_edi_configuration" />
+        <field name="state">code</field>
+        <field name="code">model._cron_run_by_trigger("on_cron_daily")</field>
+    </record>
+</odoo>

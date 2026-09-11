@@ -4,7 +4,11 @@
 import os
 import unittest
 
+from odoo import Command
 from odoo.orm.model_classes import add_to_registry
+from odoo.tests.common import RecordCapturer
+from odoo.tools import mute_logger
+from odoo.tools.convert import convert_file
 
 from .common import EDIBackendCommonTestCase
 
@@ -61,6 +65,21 @@ class TestEDIConfigurations(EDIBackendCommonTestCase):
         cls.exchange_type_out.send_model_id = cls.model
         cls.exchange_type_out.exchange_filename_pattern = "{record.id}"
         cls.edi_configuration = cls.env["edi.configuration"]
+        # The scheduled triggers are demo data, so load that file rather than
+        # declare a near-copy of it here -- which also tells us when the demo
+        # data itself stops loading.
+        convert_file(
+            cls.env,
+            "edi_core_oca",
+            "demo/edi_configuration_demo.xml",
+            None,
+            mode="init",
+            noupdate=True,
+        )
+        cls.cron_hourly_trigger = cls.env.ref(
+            "edi_core_oca.edi_conf_trigger_cron_hourly"
+        )
+        cls.cron_daily_trigger = cls.env.ref("edi_core_oca.edi_conf_trigger_cron_daily")
         cls.create_trigger = cls.env.ref("edi_core_oca.edi_conf_trigger_record_create")
         cls.write_trigger = cls.env.ref("edi_core_oca.edi_conf_trigger_record_write")
         cls.create_config = cls.edi_configuration.create(
@@ -85,6 +104,164 @@ class TestEDIConfigurations(EDIBackendCommonTestCase):
                 "snippet_do": "record._edi_send_via_edi(conf.type_id)",
             }
         )
+
+    def test_cron_run_by_trigger(self):
+        """A scheduled configuration runs on the records linked to it.
+
+        Scenario:
+            1. Add a configuration listening to the hourly schedule.
+            2. Link it to one consumer record, and leave another one alone.
+            3. Run the hourly scheduled action.
+        Expected:
+            - Only the linked record is processed.
+        """
+        conf = self.edi_configuration.create(
+            {
+                "name": "Hourly Config",
+                "trigger_id": self.cron_hourly_trigger.id,
+                "model_id": self.env["ir.model"]._get_id("edi.exchange.consumer.test"),
+                "snippet_do": 'record.write({"ref": "processed"})',
+            }
+        )
+        consumer_model = self.env["edi.exchange.consumer.test"]
+        linked = consumer_model.create(
+            {"name": "Linked", "edi_config_ids": [Command.link(conf.id)]}
+        )
+        unlinked = consumer_model.create({"name": "Unlinked"})
+
+        self.edi_configuration._cron_run_by_trigger("on_cron_hourly")
+
+        self.assertEqual(linked.ref, "processed")
+        self.assertFalse(unlinked.ref)
+
+    def test_cron_run_by_trigger_ignores_other_schedules(self):
+        """Each schedule only runs the configurations listening to it.
+
+        Scenario:
+            1. Add a configuration listening to the hourly schedule.
+            2. Link a consumer record to it.
+            3. Run the daily scheduled action.
+        Expected:
+            - The record is left untouched.
+        """
+        conf = self.edi_configuration.create(
+            {
+                "name": "Hourly Config",
+                "trigger_id": self.cron_hourly_trigger.id,
+                "model_id": self.env["ir.model"]._get_id("edi.exchange.consumer.test"),
+                "snippet_do": 'record.write({"ref": "processed"})',
+            }
+        )
+        record = self.env["edi.exchange.consumer.test"].create(
+            {"name": "Linked", "edi_config_ids": [Command.link(conf.id)]}
+        )
+
+        self.edi_configuration._cron_run_by_trigger("on_cron_daily")
+
+        self.assertFalse(record.ref)
+
+    @mute_logger("odoo.addons.edi_core_oca.models.edi_configuration")
+    def test_cron_run_by_trigger_skips_config_without_model(self):
+        """A scheduled configuration with no model does not stop the others.
+
+        Scenario:
+            1. Add a configuration listening to the hourly schedule without
+               telling it which model it applies to.
+            2. Add a second, complete one and link a consumer record to it.
+            3. Run the hourly scheduled action.
+        Expected:
+            - The incomplete configuration is skipped.
+            - The linked record is still processed.
+        """
+        hourly_trigger = self.cron_hourly_trigger
+        self.edi_configuration.create(
+            {
+                "name": "Hourly Config No Model",
+                "trigger_id": hourly_trigger.id,
+                "snippet_do": 'record.write({"ref": "processed"})',
+            }
+        )
+        conf = self.edi_configuration.create(
+            {
+                "name": "Hourly Config",
+                "trigger_id": hourly_trigger.id,
+                "model_id": self.env["ir.model"]._get_id("edi.exchange.consumer.test"),
+                "snippet_do": 'record.write({"ref": "processed"})',
+            }
+        )
+        record = self.env["edi.exchange.consumer.test"].create(
+            {"name": "Linked", "edi_config_ids": [Command.link(conf.id)]}
+        )
+
+        self.edi_configuration._cron_run_by_trigger("on_cron_hourly")
+
+        self.assertEqual(record.ref, "processed")
+
+    def test_get_records_model_without_relation(self):
+        """A model that cannot be linked to a configuration yields no record.
+
+        Scenario:
+            1. Ask a configuration for the records of a model carrying no
+               relation to EDI configurations.
+        Expected:
+            - It resolves to no record at all, rather than to every record of
+              that model.
+        """
+        conf = self.edi_configuration.create({"name": "Config On Countries"})
+        self.assertFalse(conf._get_records(self.env["res.country"]))
+
+    def test_cron_run_by_trigger_global_config(self):
+        """A global scheduled configuration runs once, bound to no record.
+
+        Scenario:
+            1. Add a global configuration listening to the hourly schedule,
+               with nothing subscribed to it, whose snippet picks the records
+               to work on by itself.
+            2. Run the hourly scheduled action.
+        Expected:
+            - The snippet runs, even though no record is linked to the
+              configuration.
+            - It runs exactly once, not once per record of the model.
+        """
+        consumer_model = self.env["edi.exchange.consumer.test"]
+        consumer_model.create({"name": "Target"})
+        consumer_model.create({"name": "Another target"})
+        self.edi_configuration.create(
+            {
+                "name": "Hourly Global Config",
+                "trigger_id": self.cron_hourly_trigger.id,
+                "model_id": self.env["ir.model"]._get_id("edi.exchange.consumer.test"),
+                "is_global": True,
+                "snippet_do": (
+                    'env["edi.exchange.consumer.test"].create('
+                    '{"name": "By global conf"})'
+                ),
+            }
+        )
+
+        with RecordCapturer(consumer_model, []) as capture:
+            self.edi_configuration._cron_run_by_trigger("on_cron_hourly")
+
+        self.assertEqual(len(capture.records), 1)
+        self.assertEqual(capture.records.name, "By global conf")
+
+    def test_action_view_partners(self):
+        """The button opens the partner list on the configuration's customers.
+
+        No relation from ``res.partner`` ships here, so there is nothing to
+        find and only the action itself can be asserted.
+        """
+        conf = self.edi_configuration.create(
+            {
+                "name": "Partner Config",
+                "model_id": self.env["ir.model"]._get_id("res.partner"),
+            }
+        )
+
+        action = conf.action_view_partners()
+
+        self.assertEqual(action["res_model"], "res.partner")
+        self.assertEqual(action["domain"], [("id", "in", [])])
 
     def test_edi_send_via_edi_config(self):
         # Check configuration on create
