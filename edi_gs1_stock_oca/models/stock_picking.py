@@ -4,7 +4,9 @@
 
 import logging
 
-from odoo import api, models
+from odoo import models
+from odoo.exceptions import UserError
+from odoo.fields import Domain
 
 _logger = logging.getLogger(__name__)
 
@@ -15,21 +17,51 @@ _logger = logging.getLogger(__name__)
 class StockPicking(models.Model):
     _inherit = "stock.picking"
 
-    @api.model
-    def get_backend_by_delivery(self):
-        """Retrieve GS1 backend by given delivery order (stock.picking).
+    def _gs1_backend_domain(self):
+        """Domain resolving the GS1 backend that serves this delivery.
 
-        You might have different LSP and pick up the right backend
-        based on the delivery order.
+        The backend is the one whose Logistic Services Provider runs the
+        warehouse the delivery comes from, and whose Logistic Services Client
+        is the company. Override to follow another convention.
         """
-        # TODO: how do we handle this?
-        # We could have a wizard of some special fields to set by record
-        # which backend to use.
-        return self.env.ref("edi_gs1_oca.edi_backend_gs1_default")
+        self.ensure_one()
+        warehouse = self.picking_type_id.warehouse_id
+        if not warehouse.partner_id:
+            # Without an LSP, `lsp_partner_id = False` would match any
+            # backend left unconfigured.
+            return Domain.FALSE
+        return Domain.AND(
+            [
+                [
+                    ("backend_type_id.code", "=", "gs1"),
+                    ("lsp_partner_id", "=", warehouse.partner_id.id),
+                    ("lsc_partner_id", "=", self.company_id.partner_id.id),
+                ],
+                Domain.OR(
+                    [
+                        [("company_id", "=", self.company_id.id)],
+                        [("company_id", "=", False)],
+                    ]
+                ),
+            ]
+        )
+
+    def get_backend_by_delivery(self):
+        """Retrieve the GS1 backend for this delivery, empty when none fits."""
+        self.ensure_one()
+        return self.env["edi.backend"].search(self._gs1_backend_domain(), limit=1)
 
     def _common_instruction(self, send, type_code):
         delivery = self
         edi_backend = self.get_backend_by_delivery()
+        if not edi_backend:
+            raise UserError(
+                self.env._(
+                    "No GS1 backend serves %(name)s: check the logistic "
+                    "services provider set on its warehouse.",
+                    name=delivery.name,
+                )
+            )
         values = {"model": delivery._name, "res_id": delivery.id}
         exchange_record = edi_backend.create_record(type_code, values)
         edi_backend.exchange_generate(exchange_record)
