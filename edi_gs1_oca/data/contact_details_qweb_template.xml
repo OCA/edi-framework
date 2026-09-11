@@ -2,7 +2,7 @@
 <odoo>
     <template id="edi_exchange_contact_details" name="Render GS1 Contact Details">
         <t t-set="company" t-value="contact.parent_id" />
-        <gln t-esc="contact.gln_code">0000000000044</gln>
+        <gln t-esc="gs1_gln(contact)">0000000000044</gln>
         <additionalPartyIdentification
             t-if="additionalPartyIdentification"
             t-att="additionalPartyIdentification.attrs"

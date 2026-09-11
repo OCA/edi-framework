@@ -3,10 +3,17 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
 import os
+from unittest.mock import patch
 
 import xmlunittest
 
 from odoo.tests.common import TransactionCase, tagged
+
+from odoo.addons.edi_gs1_oca.models.res_partner import ResPartner
+
+# `res.partner._gs1_gln` has no source in this addon, so the tests provide one.
+# Keep it a valid GLN (EAN-13 checksum): the GS1 schemas check the format.
+FAKE_GLN = "5450534005852"
 
 
 @tagged("-at_install", "post_install")
@@ -31,13 +38,20 @@ class BaseTestCase(TransactionCase, xmlunittest.XmlTestMixin):
         cls.lsc_partner.write({"email": "lsc@example.com", "phone": "+1-212-555-0002"})
         cls.backend.lsp_partner_id = cls.lsp_partner
         cls.backend.lsc_partner_id = cls.lsc_partner
-
-        # set fake GLN codes
-        cls.lsp_partner.gln_code = "1".zfill(13)
-        cls.lsc_partner.gln_code = "2".zfill(13)
+        cls._patch_partner_gln()
         # We have to trigger this gs1_code update manually in case of a submodule
         # update them.
         cls.env["uom.uom"]._execute_gs1_map_code()
+
+    @classmethod
+    def _patch_partner_gln(cls):
+        """Fake the GLN source, unless an integration module provides one."""
+        partner_cls = type(cls.env["res.partner"])
+        if partner_cls._gs1_gln is not ResPartner._gs1_gln:
+            return
+        cls.startClassPatcher(
+            patch.object(partner_cls, "_gs1_gln", lambda partner: FAKE_GLN)
+        )
 
     @classmethod
     def _get_backend(cls):
