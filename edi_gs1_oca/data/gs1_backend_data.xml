@@ -4,8 +4,4 @@
         <field name="name">GS1</field>
         <field name="code">gs1</field>
     </record>
-    <record id="edi_backend_gs1_default" model="edi.backend">
-        <field name="name">GS1 default</field>
-        <field name="backend_type_id" ref="backend_type_gs1" />
-    </record>
 </odoo>
