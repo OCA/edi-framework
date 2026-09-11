@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo noupdate="1">
+    <record id="backend_type_gs1" model="edi.backend.type">
+        <field name="name">GS1</field>
+        <field name="code">gs1</field>
+    </record>
+</odoo>

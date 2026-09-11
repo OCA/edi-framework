@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo noupdate="1">
+    <record id="edi_exchange_type_receipt_ack_in" model="edi.exchange.type">
+        <field name="backend_type_id" ref="backend_type_gs1" />
+        <field name="name">GS1 ApplicationReceiptAcknowledgement</field>
+        <field name="code">applicationReceiptAcknowledgement_in</field>
+        <field name="direction">input</field>
+        <!--
+            When this field is empty for "input ack"
+            we assume that we can rely on the original file name (of the parent record)
+            and a suffix ".ack".
+         -->
+        <field name="exchange_filename_pattern" />
+        <field name="exchange_file_ext">xml</field>
+        <field name="input_validate_model_id" ref="model_edi_gs1_handler_validate" />
+        <field
+            name="process_model_id"
+            ref="model_edi_gs1_handler_application_receipt_ack"
+        />
+        <field name="advanced_settings_edit">
+gs1:
+  schema_path: edi_gs1_oca:static/schemas/gs1/ecom/ApplicationReceiptAcknowledgement.xsd
+        </field>
+    </record>
+</odoo>
