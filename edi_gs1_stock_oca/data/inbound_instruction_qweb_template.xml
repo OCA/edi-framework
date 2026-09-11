@@ -26,10 +26,10 @@
                     >WH/IN/123456789</entityIdentification>
                 </warehousingInboundInstructionIdentification>
                 <logisticServicesBuyer>
-                    <gln t-esc="ls_buyer.gln_code" />
+                    <gln t-esc="gs1_gln(ls_buyer)" />
                 </logisticServicesBuyer>
                 <logisticServicesSeller>
-                    <gln t-esc="ls_seller.gln_code" />
+                    <gln t-esc="gs1_gln(ls_seller)" />
                 </logisticServicesSeller>
                 <warehousingInboundInstructionShipment>
                     <shipmentIdentification>
@@ -41,7 +41,7 @@
                     </shipmentIdentification>
                     <t t-set="shipper" t-value="shipment_info.shipper" />
                     <shipper>
-                        <gln t-esc="shipper.gln_code">0000000000044</gln>
+                        <gln t-esc="gs1_gln(shipper)">0000000000044</gln>
                         <additionalPartyIdentification
                             t-if="shipper.additionalPartyIdentification"
                             t-att="shipper.additionalPartyIdentification.attrs"
@@ -49,7 +49,7 @@
                         >CARRIER#1</additionalPartyIdentification>
                     </shipper>
                     <receiver>
-                        <gln t-esc="receiver.gln_code">0000000000001</gln>
+                        <gln t-esc="gs1_gln(receiver)">0000000000001</gln>
                     </receiver>
                     <t t-foreach="shipment_info.packageTotal" t-as="package_total">
                         <packageTotal>

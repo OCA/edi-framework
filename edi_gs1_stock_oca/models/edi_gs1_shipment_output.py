@@ -60,10 +60,11 @@ class GS1OutputShipmentMessageMixin(models.AbstractModel):
     def _shipper(self, exchange_record, **kw):
         """The carrier of the shipment."""
         record = self._get_shipper_record(exchange_record, **kw)
-        if not record.gln_code and not record.ref:
+        gln = record._gs1_gln()
+        if not gln and not record.ref:
             raise exceptions.ValidationError(
                 self.env._(
-                    "Either `gln_code` or `ref` is required for shipper: %(name)s",
+                    "Either a GLN or `ref` is required for shipper: %(name)s",
                     name=record.name,
                 )
             )
@@ -71,8 +72,8 @@ class GS1OutputShipmentMessageMixin(models.AbstractModel):
         # Depending on your LSP having a fake one and relying on
         # `additionalPartyIdentification` can be enough.
         data = {"gln_code": "".zfill(13)}
-        if record.gln_code:
-            data["gln_code"] = record.gln_code
+        if gln:
+            data["gln_code"] = gln
         if record.ref:
             data["additionalPartyIdentification"] = {
                 "attrs": {
