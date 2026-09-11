@@ -59,11 +59,22 @@ class EdiGs1OutputMixin(models.AbstractModel):
             "doc_type": None,
             "utc_now": self._utc_now,
             "date_to_string": self.date_to_string,
+            "gs1_gln": self._get_gs1_gln,
             "render_edi_template": self._render_edi_template,
             "info": {},
         }
         values.update(kw)
         return values
+
+    def _get_gs1_gln(self, party):
+        """Return the GLN of a party, as a record or as a built GS1 dict.
+
+        Templates render both: the work context holds partner records while
+        the `_shipment_info` handlers build plain dicts.
+        """
+        if isinstance(party, dict):
+            return party.get("gln_code") or ""
+        return party._gs1_gln()
 
     def _render_edi_template(self, exchange_record, xmlid, **kw):
         """Render a GS1 QWeb template.

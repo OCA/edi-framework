@@ -7,6 +7,13 @@ from odoo import fields, models
 class ResPartner(models.Model):
     _inherit = "res.partner"
 
-    # TODO: move to another module? Or, is there another module providing this?
-    gln_code = fields.Char()
     is_lsp = fields.Boolean(string="Is Logistic Services Provider (LSP)")
+
+    def _gs1_gln(self):
+        """Return the GLN of this partner.
+
+        This addon stores no GLN: an integration module provides the source,
+        be it a plain field or `partner_identification_gln`. Called on a
+        single partner or on an empty recordset.
+        """
+        return ""
