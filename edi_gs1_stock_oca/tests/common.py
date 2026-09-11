@@ -83,7 +83,6 @@ class ShipmentTestCaseBase(BaseTestCase, DeliveryMixin):
         cls.carrier = cls.env["res.partner"].create(
             {
                 "name": "GS1 Carrier",
-                "gln_code": "123".zfill(13),
                 "ref": "CARRIER#1",
             }
         )

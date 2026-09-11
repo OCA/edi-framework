@@ -26,10 +26,10 @@
                     >WH/OUT/123456789</entityIdentification>
                 </warehousingOutboundInstructionIdentification>
                 <logisticServicesBuyer>
-                    <gln t-esc="ls_buyer.gln_code" />
+                    <gln t-esc="gs1_gln(ls_buyer)" />
                 </logisticServicesBuyer>
                 <logisticServicesSeller>
-                    <gln t-esc="ls_seller.gln_code" />
+                    <gln t-esc="gs1_gln(ls_seller)" />
                 </logisticServicesSeller>
                 <warehousingOutboundInstructionShipment>
                     <note
