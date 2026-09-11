@@ -3,6 +3,14 @@
 # License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl).
 
 import hashlib
+from dataclasses import dataclass
+from typing import Any
+
+
+@dataclass
+class EdiExchangeActionResult:
+    output: Any = None
+    message: str | None = None
 
 
 def normalize_string(cls, a_string, sep="_"):

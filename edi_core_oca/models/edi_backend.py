@@ -16,6 +16,7 @@ from odoo import exceptions, fields, models
 from odoo.exceptions import UserError
 
 from ..exceptions import EDINotImplementedError, EDIValidationError
+from ..utils import EdiExchangeActionResult
 
 _logger = logging.getLogger(__name__)
 
@@ -126,8 +127,12 @@ class EDIBackend(models.Model):
             # Remove file to regenerate
             exchange_record.exchange_file = False
         self._check_exchange_generate(exchange_record, force=force)
-        output = self._exchange_generate(exchange_record, **kw)
-        message = None
+        action_result = self._ensure_action_result(
+            self._exchange_generate(exchange_record, **kw),
+            default_message=exchange_record._exchange_status_message("generate_ok"),
+        )
+        output = action_result.output
+        message = action_result.message
         encoding = exchange_record.type_id.encoding or "UTF-8"
         encoding_error_handler = (
             exchange_record.type_id.encoding_out_error_handler or "strict"
@@ -142,7 +147,6 @@ class EDIBackend(models.Model):
                 }
             )
         if output:
-            message = exchange_record._exchange_status_message("generate_ok")
             try:
                 with self.env.cr.savepoint():
                     self._validate_data(exchange_record, output)
@@ -203,7 +207,16 @@ class EDIBackend(models.Model):
     def _exchange_generate(self, exchange_record, **kw):
         exchange_function = self._get_exec_handler(exchange_record, "generate")
         ctx = self._get_record_env_ctx(exchange_record, "generate")
-        return exchange_function(exchange_record.with_context(**ctx), **kw)
+        result = exchange_function(exchange_record.with_context(**ctx), **kw)
+        return self._ensure_action_result(
+            result,
+            default_message=exchange_record._exchange_status_message("generate_ok"),
+        )
+
+    def _ensure_action_result(self, result, default_message=None):
+        if isinstance(result, EdiExchangeActionResult):
+            return result
+        return EdiExchangeActionResult(output=result, message=default_message)
 
     # TODO: add tests
     def _validate_data(self, exchange_record, value=None, **kw):
@@ -244,7 +257,9 @@ class EDIBackend(models.Model):
         res = ""
         try:
             with self.env.cr.savepoint():
-                self._exchange_send(exchange_record)
+                send_result = self._ensure_action_result(
+                    self._exchange_send(exchange_record)
+                )
                 _logger.debug("%s sent", exchange_record.identifier)
         except self._send_retryable_exceptions() as err:
             traceback = _get_exception_traceback()
@@ -269,15 +284,18 @@ class EDIBackend(models.Model):
             res = "__sql_error__"
             raise
         else:
-            # TODO: maybe the send handler should return desired message and state
-            message = exchange_record._exchange_status_message("send_ok")
+            message = (
+                send_result.message
+                or send_result.output
+                or exchange_record._exchange_status_message("send_ok")
+            )
             error = traceback = None
             state = (
                 "output_sent_and_processed"
                 if self.output_sent_processed_auto
                 else "output_sent"
             )
-            res = message
+            res = send_result.output or message
         finally:
             if res != "__sql_error__":
                 exchange_record.write(
@@ -329,7 +347,8 @@ class EDIBackend(models.Model):
     def _exchange_send(self, exchange_record):
         exchange_function = self._get_exec_handler(exchange_record, "send")
         ctx = self._get_record_env_ctx(exchange_record, "send")
-        return exchange_function(exchange_record.with_context(**ctx))
+        result = exchange_function(exchange_record.with_context(**ctx))
+        return self._ensure_action_result(result)
 
     def _cron_check_output_exchange_sync(self, **kw):
         for backend in self:
@@ -478,7 +497,9 @@ class EDIBackend(models.Model):
         res = None
         try:
             with self.env.cr.savepoint():
-                res = self._exchange_process(exchange_record)
+                process_result = self._exchange_process(exchange_record)
+                res = process_result.output
+                message = process_result.message
         except self._swallable_exceptions() as err:
             if self.env.context.get("_edi_process_break_on_error"):
                 raise
@@ -520,7 +541,8 @@ class EDIBackend(models.Model):
     def _exchange_process(self, exchange_record):
         exchange_function = self._get_exec_handler(exchange_record, "process")
         ctx = self._get_record_env_ctx(exchange_record, "process")
-        return exchange_function(exchange_record.with_context(**ctx))
+        result = exchange_function(exchange_record.with_context(**ctx))
+        return self._ensure_action_result(result)
 
     def exchange_receive(self, exchange_record):
         """Retrieve an incoming document."""
@@ -536,7 +558,11 @@ class EDIBackend(models.Model):
         res = None
         try:
             with self.env.cr.savepoint():
-                content = self._exchange_receive(exchange_record)
+                receive_result = self._ensure_action_result(
+                    self._exchange_receive(exchange_record)
+                )
+                content = receive_result.output
+                message = receive_result.message
                 # Ignore result of FileNotFoundError/OSError
                 if content is not None:
                     exchange_record._set_file_content(content)
@@ -559,7 +585,7 @@ class EDIBackend(models.Model):
             res = "__sql_error__"
             raise
         else:
-            message = exchange_record._exchange_status_message("receive_ok")
+            message = message or exchange_record._exchange_status_message("receive_ok")
             error = traceback = None
             state = "input_received"
             res = message
@@ -601,7 +627,8 @@ class EDIBackend(models.Model):
     def _exchange_receive(self, exchange_record):
         exchange_function = self._get_exec_handler(exchange_record, "receive")
         ctx = self._get_record_env_ctx(exchange_record, "receive")
-        return exchange_function(exchange_record.with_context(**ctx))
+        result = exchange_function(exchange_record.with_context(**ctx))
+        return self._ensure_action_result(result)
 
     def _cron_check_input_exchange_sync(self, **kw):
         for backend in self:
