@@ -4,6 +4,8 @@
 
 from freezegun import freeze_time
 
+from odoo.addons.edi_gs1_oca.tests.common import FAKE_GLN
+
 from .common import ShipmentTestCaseBase
 
 
@@ -63,7 +65,7 @@ class InboundInstructionTestCase(ShipmentTestCaseBase):
                 }
             },
             "shipper": {
-                "gln_code": "0000000000123",
+                "gln_code": FAKE_GLN,
                 "additionalPartyIdentification": {
                     "attrs": {
                         # fmt: off
