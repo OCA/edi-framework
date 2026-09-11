@@ -44,6 +44,9 @@ class ShipmentTestCaseBase(BaseTestCase, DeliveryMixin):
     def setUpClass(cls):
         super().setUpClass()
         cls.env = cls.env(context=dict(cls.env.context, tracking_disable=True))
+        # The backend is resolved from the delivery: its LSP runs the
+        # warehouse the pickings come from.
+        cls.env.ref("stock.warehouse0").partner_id = cls.backend.lsp_partner_id
 
     @classmethod
     def _create_product(cls, name, barcode):
