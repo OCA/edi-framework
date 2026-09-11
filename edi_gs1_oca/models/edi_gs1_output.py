@@ -9,8 +9,6 @@ import pytz
 from odoo import fields, models
 from odoo.tools import DotDict
 
-from ..utils import xml_purge_nswrapper
-
 
 class EdiGs1OutputMixin(models.AbstractModel):
     """Common GS1 output generation mixin.
@@ -68,8 +66,7 @@ class EdiGs1OutputMixin(models.AbstractModel):
         return values
 
     def _render_edi_template(self, exchange_record, xmlid, **kw):
-        """Render a GS1 QWeb template and purge the `nswrapper` helpers.
+        """Render a GS1 QWeb template.
         TODO: check if edi_exchange_template_oca could replace this rendering part"""
         values = self._get_render_values(exchange_record, **kw)
-        output = self.env["ir.qweb"]._render(xmlid, values)
-        return xml_purge_nswrapper(output)
+        return self.env["ir.qweb"]._render(xmlid, values)
