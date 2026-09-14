@@ -105,12 +105,28 @@ class EDIBackendTestProcessCase(EDIBackendCommonTestCase):
             record.action_exchange_process()
 
     def test_process_record_with_integrity_error(self):
+        # IntegrityError is permanent (e.g. a DB unique constraint
+        # violation): retrying the same data would fail again, so it must
+        # be swallowed and move the record to an error state instead of
+        # being re-raised and leaving it stuck in "input_received".
         self.record.write({"edi_exchange_state": "input_received"})
-        with self.assertRaises(IntegrityError):
-            self.backend.with_context(
-                test_break_process=IntegrityError("SQL error")
-            ).exchange_process(self.record)
-        self.assertRecordValues(self.record, [{"edi_exchange_state": "input_received"}])
-        self.assertFalse(self.record.exchange_error)
+        with self.assertRaisesRegex(IntegrityError, "SQL error"):
+            self.record.with_context(
+                test_break_process=IntegrityError("SQL error"),
+                _edi_process_break_on_error=True,
+            ).action_exchange_process()
+
+        self.record.with_context(
+            test_break_process=IntegrityError("SQL error")
+        ).action_exchange_process()
+        self.assertRecordValues(
+            self.record,
+            [
+                {
+                    "edi_exchange_state": "input_processed_error",
+                    "exchange_error": "SQL error",
+                }
+            ],
+        )
 
     # TODO: test ack file are processed

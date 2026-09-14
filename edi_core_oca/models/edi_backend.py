@@ -295,12 +295,20 @@ class EDIBackend(models.Model):
         return res
 
     def _swallable_exceptions(self):
-        # TODO: improve this list
+        # These errors are permanent because retrying the same data will fail again.
+        # They should be swallowed so the exchange can move to an error state.
+        #
+        # OperationalError is excluded because it may be transient and should be
+        # re-raised to allow retries.
         return (
             ValueError,
             FileNotFoundError,
             exceptions.UserError,
             exceptions.ValidationError,
+            IntegrityError,
+            TypeError,
+            LookupError,  # covers KeyError / IndexError
+            AttributeError,
         )
 
     def _send_retryable_exceptions(self):
