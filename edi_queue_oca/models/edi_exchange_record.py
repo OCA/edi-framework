@@ -91,3 +91,30 @@ class EdiExchangeRecord(models.Model):
         # Raise prio to max to send the record out as fast as possible.
         job1.on_done(self.delayable(priority=0).action_exchange_send())
         job1.delay()
+
+    def _job_on_fail_generate(self, **kw):
+        return self._job_on_fail_update("validate_error", **kw)
+
+    def _job_on_fail_send(self, **kw):
+        return self._job_on_fail_update("output_error_on_send", **kw)
+
+    def _job_on_fail_receive(self, **kw):
+        return self._job_on_fail_update("input_receive_error", **kw)
+
+    def _job_on_fail_process(self, **kw):
+        return self._job_on_fail_update("input_processed_error", **kw)
+
+    def _job_on_fail_update(self, failed_state, **kw):
+        self.ensure_one()
+        # ``exc_message`` is the first argument of the exception: it is not
+        # always a string (e.g. the errno of an ``OSError``) and may be missing.
+        error = ": ".join(
+            str(kw[k]) for k in ("exc_name", "exc_message") if kw.get(k) is not None
+        )
+        self.write(
+            {
+                "edi_exchange_state": failed_state,
+                "exchange_error": error,
+                "exchange_error_traceback": kw.get("exc_info"),
+            }
+        )
