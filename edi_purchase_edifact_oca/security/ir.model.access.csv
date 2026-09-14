@@ -1,0 +1,4 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_purchase_order_import,access_purchase_order_import,model_purchase_order_import,base.group_user,1,1,1,1
+access_edi_output_edifact_out_generate,access_edi_output_edifact_out_generate,model_edi_output_edifact_out_generate,base.group_user,1,1,1,1
+access_edi_input_process_edifact_input,access_edi_input_process_edifact_input,model_edi_input_process_edifact_input,base.group_user,1,1,1,1
