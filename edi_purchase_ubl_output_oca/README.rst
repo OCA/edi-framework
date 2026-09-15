@@ -1,7 +1,3 @@
-.. image:: https://odoo-community.org/readme-banner-image
-   :target: https://odoo-community.org/get-involved?utm_source=readme
-   :alt: Odoo Community Association
-
 ================
 EDI UBL Purchase
 ================
@@ -17,7 +13,7 @@ EDI UBL Purchase
 .. |badge1| image:: https://img.shields.io/badge/maturity-Alpha-red.png
     :target: https://odoo-community.org/page/development-status
     :alt: Alpha
-.. |badge2| image:: https://img.shields.io/badge/license-AGPL--3-blue.png
+.. |badge2| image:: https://img.shields.io/badge/licence-AGPL--3-blue.png
     :target: http://www.gnu.org/licenses/agpl-3.0-standalone.html
     :alt: License: AGPL-3
 .. |badge3| image:: https://img.shields.io/badge/github-OCA%2Fedi--framework-lightgray.png?logo=github
@@ -34,10 +30,10 @@ EDI UBL Purchase
 
 Handle purchase exchanges with the EDI framework.
 
-This module is mostly a glue module for `purchase_order_ubl` with `edi_oca`.
+This module is mostly a glue module for purchase_order_ubl with edi_oca.
 
-Allows you to generate and send purchase orders as UBL XML files
-with a simple configuration.
+Allows you to generate and send purchase orders as UBL XML files with a
+simple configuration.
 
 .. IMPORTANT::
    This is an alpha version, the data model and design can change at any time without warning.
@@ -63,17 +59,17 @@ Credits
 =======
 
 Authors
-~~~~~~~
+-------
 
 * Camptocamp
 
 Contributors
-~~~~~~~~~~~~
+------------
 
-* Simone Orsi <simone.orsi@camptocamp.com>
+- Simone Orsi <simone.orsi@camptocamp.com>
 
 Maintainers
-~~~~~~~~~~~
+-----------
 
 This module is maintained by the OCA.
 
