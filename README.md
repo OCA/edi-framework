@@ -36,7 +36,7 @@ addon | version | maintainers | summary
 [edi_party_helper_oca](edi_party_helper_oca/) | 18.0.1.0.1 | <a href='https://github.com/simahawk'><img src='https://github.com/simahawk.png' width='32' height='32' style='border-radius:50%;' alt='simahawk'/></a> | Retrieve party information for EDI exchanges, without any component dependency.
 [edi_product_oca](edi_product_oca/) | 18.0.1.0.0 |  | EDI framework configuration and base logic for products and products packaging
 [edi_purchase_oca](edi_purchase_oca/) | 18.0.1.0.0 |  | Define EDI Configuration for Purchase Orders
-[edi_purchase_ubl_output_oca](edi_purchase_ubl_output_oca/) | 18.0.1.0.0 | <a href='https://github.com/simahawk'><img src='https://github.com/simahawk.png' width='32' height='32' style='border-radius:50%;' alt='simahawk'/></a> | Handle outbound exchanges for purchases.
+[edi_purchase_ubl_output_oca](edi_purchase_ubl_output_oca/) | 18.0.1.0.1 | <a href='https://github.com/simahawk'><img src='https://github.com/simahawk.png' width='32' height='32' style='border-radius:50%;' alt='simahawk'/></a> | Handle outbound exchanges for purchases.
 [edi_queue_oca](edi_queue_oca/) | 18.0.1.1.0 |  | Set Queue Jobs on EDI
 [edi_record_metadata_oca](edi_record_metadata_oca/) | 18.0.1.0.5 | <a href='https://github.com/simahawk'><img src='https://github.com/simahawk.png' width='32' height='32' style='border-radius:50%;' alt='simahawk'/></a> | Allow to store metadata for related records.
 [edi_sale_endpoint](edi_sale_endpoint/) | 18.0.1.0.0 | <a href='https://github.com/simahawk'><img src='https://github.com/simahawk.png' width='32' height='32' style='border-radius:50%;' alt='simahawk'/></a> | Glue module between edi_sale_oca and edi_endpoint_oca.
