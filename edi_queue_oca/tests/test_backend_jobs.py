@@ -10,6 +10,7 @@ from odoo.orm.model_classes import add_to_registry
 from odoo.tests import tagged
 
 from odoo.addons.edi_core_oca.tests.common import EDIBackendCommonTestCase
+from odoo.addons.edi_core_oca.utils import EDIExchangeActionResult
 from odoo.addons.queue_job.exception import RetryableJobError
 from odoo.addons.queue_job.tests.common import JobMixin
 
@@ -76,7 +77,9 @@ class EDIBackendTestJobsCase(EDIBackendCommonTestCase, JobMixin):
             ) as mocked_generate,
             mock.patch.object(type(self.backend), "_validate_data") as mocked_validate,
         ):
-            mocked_generate.return_value = "filecontent"
+            mocked_generate.return_value = EDIExchangeActionResult.from_result(
+                "filecontent"
+            )
             mocked_validate.return_value = None
             res = job.perform()
             self.assertEqual(res, "Exchange data generated")
@@ -84,7 +87,7 @@ class EDIBackendTestJobsCase(EDIBackendCommonTestCase, JobMixin):
         job = self.backend.with_delay().exchange_send(record)
         created = job_counter.search_created()
         with mock.patch.object(type(self.backend), "_exchange_send") as mocked:
-            mocked.return_value = message
+            mocked.return_value = EDIExchangeActionResult.from_result(message)
             res = job.perform()
             self.assertEqual(res, expected_message)
             self.assertEqual(record.edi_exchange_state, "output_sent")
@@ -94,7 +97,7 @@ class EDIBackendTestJobsCase(EDIBackendCommonTestCase, JobMixin):
         self.assertEqual(created, self._get_related_jobs(record))
 
     def test_output_with_specific_return(self):
-        self._test_output_return("specific return message", "specific return message")
+        self._test_output_return("specific return message", "Exchange sent")
 
     def test_output_no_return(self):
         self._test_output_return("", "Exchange sent")
@@ -134,7 +137,9 @@ class EDIBackendTestJobsCase(EDIBackendCommonTestCase, JobMixin):
             ) as mocked_receive,
             mock.patch.object(type(self.backend), "_validate_data") as mocked_validate,
         ):
-            mocked_receive.return_value = "filecontent"
+            mocked_receive.return_value = EDIExchangeActionResult.from_result(
+                "filecontent"
+            )
             mocked_validate.return_value = None
             res = job.perform()
             # the state is not input_pending hence there's nothing to do
