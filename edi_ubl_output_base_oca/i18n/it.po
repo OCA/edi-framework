@@ -6,40 +6,42 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"Last-Translator: Automatically generated\n"
+"PO-Revision-Date: 2026-09-15 06:43+0000\n"
+"Last-Translator: mymage <stefano.consolaro@mymage.it>\n"
 "Language-Team: none\n"
 "Language: it\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 5.15.2\n"
 
 #. module: edi_ubl_output_base_oca
 #: model_terms:ir.ui.view,arch_db:edi_ubl_output_base_oca.qweb_tmpl_ubl_party
 msgid "ACME"
-msgstr ""
+msgstr "ACME"
 
 #. module: edi_ubl_output_base_oca
 #: model_terms:ir.ui.view,arch_db:edi_ubl_output_base_oca.qweb_tmpl_ubl_party
 msgid "Moderna Produkter AB"
-msgstr ""
+msgstr "Moderna Produkter AB"
 
 #. module: edi_ubl_output_base_oca
 #: model_terms:ir.ui.view,arch_db:edi_ubl_output_base_oca.qweb_tmpl_ubl_party
 msgid "Schweiz / Deutsch"
-msgstr ""
+msgstr "Svizzero / Tedesco"
 
 #. module: edi_ubl_output_base_oca
 #: model_terms:ir.ui.view,arch_db:edi_ubl_output_base_oca.qweb_tmpl_ubl_party
 msgid "VAT"
-msgstr ""
+msgstr "IVA"
 
 #. module: edi_ubl_output_base_oca
 #: model_terms:ir.ui.view,arch_db:edi_ubl_output_base_oca.qweb_tmpl_ubl_party
 msgid "de"
-msgstr ""
+msgstr "de"
 
 #. module: edi_ubl_output_base_oca
 #: model_terms:ir.ui.view,arch_db:edi_ubl_output_base_oca.qweb_tmpl_ubl_party
 msgid "de_CH"
-msgstr ""
+msgstr "de_CH"
