@@ -6,6 +6,8 @@ from collections import defaultdict
 
 from odoo import fields, models
 
+from ..utils import EDIExchangeActionResult
+
 
 class EdiExchangeConsumerTest(models.Model):
     _name = "edi.exchange.consumer.test"
@@ -45,7 +47,7 @@ class EdiTestExecution(models.AbstractModel):
 
     FAKED_COLLECTOR = defaultdict(list)
 
-    def _fake_it(self, exchange_record, kind):
+    def _fake_it(self, exchange_record, kind, use_edi_exchange_action_result=True):
         self.FAKED_COLLECTOR[kind].append(self._call_key(exchange_record))
         if self.env.context.get("test_break_" + kind):
             exception = self.env.context.get("test_break_" + kind, "YOU BROKE IT!")
@@ -55,7 +57,10 @@ class EdiTestExecution(models.AbstractModel):
         update_values = self.env.context.get("fake_update_values")
         if update_values:
             exchange_record.write(update_values)
-        return self.env.context.get("fake_output", self._call_key(exchange_record))
+        result = self.env.context.get("fake_output", self._call_key(exchange_record))
+        if use_edi_exchange_action_result:
+            result = EDIExchangeActionResult.from_result(result)
+        return result
 
     @classmethod
     def _call_key(cls, rec):
@@ -92,7 +97,7 @@ class EdiTestExecution(models.AbstractModel):
         return self._fake_it(exchange_record, "process")
 
     def check(self, exchange_record):
-        return self._fake_it(exchange_record, "check")
+        return self._fake_it(exchange_record, "check", False)
 
 
 class EdiTestExecutionExtra(models.AbstractModel):
