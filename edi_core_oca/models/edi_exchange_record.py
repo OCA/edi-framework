@@ -575,12 +575,13 @@ class EDIExchangeRecord(models.Model):
         self._trigger_edi_event("done", suffix="ack_received_error")
 
     def _search(self, domain, offset=0, limit=None, order=None, **kw) -> Query:
-        query = super()._search(
-            domain=domain, offset=offset, limit=limit, order=order, **kw
-        )
         if self.env.is_superuser():
             # restrictions do not apply for the superuser
-            return query
+            return super()._search(
+                domain=domain, offset=offset, limit=limit, order=order, **kw
+            )
+        # offset and limit are applied after the access filter
+        query = super()._search(domain=domain, order=order, **kw)
 
         # TODO highlight orphaned EDI records in UI:
         #  - self.model + self.res_id are set
@@ -590,22 +591,21 @@ class EDIExchangeRecord(models.Model):
         if query.is_empty():
             return query
         orig_ids = list(query)
-        ids = set(orig_ids)
-        result = []
+        allowed_ids = set()
         model_data = defaultdict(lambda: defaultdict(set))
         sub_query = """
             SELECT id, res_id, model
             FROM %(table)s
             WHERE id = ANY (%%(ids)s)
         """
-        for sub_ids in split_every(self.env.cr.IN_MAX, ids):
+        for sub_ids in split_every(self.env.cr.IN_MAX, orig_ids):
             self.env.cr.execute(
                 sub_query % {"table": self._table},
                 dict(ids=list(sub_ids)),
             )
             for eid, res_id, model in self.env.cr.fetchall():
                 if not model:
-                    result.append(eid)
+                    allowed_ids.add(eid)
                     continue
                 model_data[model][res_id].add(eid)
 
@@ -634,21 +634,14 @@ class EDIExchangeRecord(models.Model):
                 # Group "Settings" can list exchanges where record is deleted
                 allowed.extend(missing.ids)
             for target_id in allowed:
-                result += list(targets[target_id])
-        if len(orig_ids) == limit and len(result) < len(orig_ids):
-            extend_query = self._search(
-                domain,
-                offset=offset + len(orig_ids),
-                limit=limit,
-                order=order,
-            )
-            extend_ids = list(extend_query)
-            result.extend(extend_ids[: limit - len(result)])
-
-        if set(orig_ids) != set(result):
-            # Create a virgin query
-            query = self.browse(result)._as_query()
-        return query
+                allowed_ids.update(targets[target_id])
+        result = [eid for eid in orig_ids if eid in allowed_ids]
+        end = offset + limit if limit else None
+        page = result[offset:end]
+        if page == orig_ids:
+            return query
+        # Create a virgin query
+        return self.browse(page)._as_query()
 
     def read(self, fields=None, load="_classic_read"):
         """Override to explicitely call check_access_rule, that is not called
