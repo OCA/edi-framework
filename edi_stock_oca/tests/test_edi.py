@@ -2,6 +2,7 @@
 # License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl).
 from unittest import mock
 
+from odoo.addons.edi_core_oca.utils import EDIExchangeActionResult
 from odoo.addons.edi_oca.tests.common import EDIBackendCommonComponentTestCase
 
 
@@ -56,7 +57,8 @@ class TestProcessComponent(EDIBackendCommonComponentTestCase):
         return picking
 
     def _mock_generate(self, exc_rec):
-        return f"TRANSFER STATE {exc_rec.record.state}"
+        result = f"TRANSFER STATE {exc_rec.record.state}"
+        return EDIExchangeActionResult.from_result(result)
 
     @mock.patch("odoo.addons.edi_core_oca.models.edi_backend.EDIBackend._validate_data")
     @mock.patch(
