@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-05-29 13:46+0000\n"
+"PO-Revision-Date: 2026-09-16 14:37+0000\n"
 "Last-Translator: mymage <stefano.consolaro@mymage.it>\n"
 "Language-Team: none\n"
 "Language: it\n"
@@ -99,7 +99,7 @@ msgstr "EDI ha una maschera di configurazione"
 #: model:ir.model.fields,field_description:edi_purchase_oca.field_purchase_order__exchange_record_ids
 #: model:ir.model.fields,field_description:edi_purchase_oca.field_purchase_order_line__exchange_record_ids
 msgid "Exchange Record"
-msgstr "Record scambio"
+msgstr "Record di scambio"
 
 #. module: edi_purchase_oca
 #: model:ir.model.fields,field_description:edi_purchase_oca.field_purchase_order__exchange_record_count
