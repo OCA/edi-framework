@@ -5,8 +5,8 @@
 from odoo import fields, models
 
 
-class EDIExchangeConsumerMixin(models.AbstractModel):
-    _inherit = "edi.exchange.consumer.mixin"
+class SaleOrder(models.Model):
+    _inherit = "sale.order"
 
     origin_edi_endpoint_id = fields.Many2one(
         string="EDI origin endpoint",
@@ -14,5 +14,17 @@ class EDIExchangeConsumerMixin(models.AbstractModel):
         ondelete="set null",
         related="origin_exchange_record_id.edi_endpoint_id",
         # Store it to ease searching
+        store=True,
+    )
+
+
+class SaleOrderLine(models.Model):
+    _inherit = "sale.order.line"
+
+    origin_edi_endpoint_id = fields.Many2one(
+        string="EDI origin endpoint",
+        comodel_name="edi.endpoint",
+        ondelete="set null",
+        related="origin_exchange_record_id.edi_endpoint_id",
         store=True,
     )
