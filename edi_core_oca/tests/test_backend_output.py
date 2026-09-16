@@ -49,17 +49,21 @@ class EDIBackendTestOutputCase(EDIBackendCommonTestCase):
         self.assertEqual(self.record._get_file_content(), "yeah!")
 
     def test_generate_record_output_with_custom_action_result_message(self):
-        with mock.patch.object(type(self.backend), "_exchange_generate") as mocked:
-            mocked.return_value = EDIExchangeActionResult(
+        with mock.patch(
+            "odoo.addons.edi_core_oca.models.edi_backend.EDIBackend._exchange_generate",
+            return_value=EDIExchangeActionResult(
                 output="yeah!", message="Generated with custom message"
-            )
+            ),
+        ):
             message = self.record.action_exchange_generate()
         self.assertEqual(message, "Generated with custom message")
         self.assertEqual(self.record._get_file_content(), "yeah!")
 
     def test_generate_record_output_with_legacy_override_string(self):
-        with mock.patch.object(type(self.backend), "_exchange_generate") as mocked:
-            mocked.return_value = EDIExchangeActionResult.from_result("yeah!")
+        with mock.patch(
+            "odoo.addons.edi_core_oca.models.edi_backend.EDIBackend._exchange_generate",
+            return_value=EDIExchangeActionResult.from_result("yeah!"),
+        ):
             message = self.record.action_exchange_generate()
         self.assertEqual(message, self.record._exchange_status_message("generate_ok"))
         self.assertEqual(self.record._get_file_content(), "yeah!")
@@ -90,10 +94,12 @@ class EDIBackendTestOutputCase(EDIBackendCommonTestCase):
     def test_send_record_with_custom_action_result(self):
         self.record.write({"edi_exchange_state": "output_pending"})
         self.record._set_file_content(f"TEST {self.record.id}")
-        with mock.patch.object(type(self.backend), "_exchange_send") as mocked:
-            mocked.return_value = EDIExchangeActionResult(
+        with mock.patch(
+            "odoo.addons.edi_core_oca.models.edi_backend.EDIBackend._exchange_send",
+            return_value=EDIExchangeActionResult(
                 output="send-payload", message="Sent with custom message"
-            )
+            ),
+        ):
             res = self.record.action_exchange_send()
         self.assertEqual(res, "Sent with custom message")
         self.assertRecordValues(self.record, [{"edi_exchange_state": "output_sent"}])
