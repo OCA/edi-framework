@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="demo_edi_backend_type_stock_picking" model="edi.backend.type">
+        <field name="name">TRANSFER DEMO</field>
+        <field name="code">picking_demo</field>
+    </record>
+    <record id="demo_edi_backend" model="edi.backend">
+        <field name="name">TRANSFER DEMO</field>
+        <field name="backend_type_id" ref="demo_edi_backend_type_stock_picking" />
+    </record>
+</odoo>

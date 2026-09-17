@@ -1,0 +1,3 @@
+- Alba Riera \<alba.riera@creublanca.es\>
+- Alex Paris \<alex.paris@forgeflow.com\>
+- Simone Orsi \<simone.orsi@camptopcamp.com>

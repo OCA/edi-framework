@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="demo_edi_configuration_done" model="edi.configuration">
+        <field name="name">Demo Transfer - Done</field>
+        <field name="description">Show case state change to done</field>
+        <field name="type_id" ref="demo_edi_exc_type_order_out" />
+        <field name="backend_id" ref="demo_edi_backend" />
+        <field name="model_id" ref="stock.model_stock_picking" />
+        <field name="trigger_id" ref="edi_conf_trigger_stock_picking_state_change" />
+        <field name="snippet_do">
+# ('draft', 'Draft'),
+# ('waiting', 'Waiting Another Operation'),
+# ('confirmed', 'Waiting'),
+# ('assigned', 'Ready'),
+# ('done', 'Done'),
+# ('cancel', 'Cancelled'),
+if record.state in ('done', 'cancel', 'confirmed', 'assigned'):
+  record._edi_send_via_edi(conf.type_id)
+        </field>
+    </record>
+</odoo>
