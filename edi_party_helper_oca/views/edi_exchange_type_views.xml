@@ -7,6 +7,10 @@
             <group name="config" position="after">
                 <group name="party_config">
                     <field name="id_category_ids" widget="many2many_tags" />
+                    <field
+                        name="endpoint_partner_category_id"
+                        invisible="direction != 'output'"
+                    />
                 </group>
             </group>
         </field>

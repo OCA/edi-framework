@@ -1,2 +1,4 @@
 odoo-test-helper
 xmlunittest
+
+odoo-addon-partner_identification @ git+https://github.com/OCA/partner-contact@refs/pull/2431/head#subdirectory=partner_identification
