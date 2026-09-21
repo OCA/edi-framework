@@ -1,3 +1,6 @@
 odoo_test_helper
 responses
 xmlunittest
+mock
+
+odoo-addon-account_invoice_import @ git+https://github.com/OCA/edi.git@refs/pull/753/head#subdirectory=setup/account_invoice_import
