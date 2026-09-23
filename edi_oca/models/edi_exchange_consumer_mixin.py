@@ -154,7 +154,8 @@ class EDIExchangeConsumerMixin(models.AbstractModel):
                         continue
                     all_models[model] = new_models[model]
                 node.addprevious(etree.fromstring(new_arch))
-            res["arch"] = etree.tostring(doc)
+            # Same serialization as core ir.ui.view.get_view()
+            res["arch"] = etree.tostring(doc, encoding="unicode").replace("\t", "")
             res["models"] = frozendict(all_models)
         return res
 
