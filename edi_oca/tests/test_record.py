@@ -257,3 +257,17 @@ class EDIRecordTestCase(EDIBackendCommonTestCase):
         self.assertEqual(len(record.related_record_ids), 2)
         self.assertEqual(record.related_record_ids[0].record, self.partner)
         self.assertEqual(record.related_record_ids[1].record, spain)
+
+    def test_has_exchange_file(self):
+        vals = {
+            "model": self.partner._name,
+            "res_id": self.partner.id,
+        }
+        record = self.backend.create_record("test_csv_output", vals)
+        self.assertFalse(record.has_exchange_file)
+
+        record.exchange_file = base64.b64encode(b"ABC")
+        self.assertTrue(record.has_exchange_file)
+
+        record.exchange_file = False
+        self.assertFalse(record.has_exchange_file)
