@@ -29,6 +29,18 @@ msgid "EDI Party Helper"
 msgstr ""
 
 #. module: edi_party_helper_oca
+#: model:ir.model.fields,field_description:edi_party_helper_oca.field_edi_exchange_type__endpoint_partner_category_id
+msgid "Endpoint ID category"
+msgstr ""
+
+#. module: edi_party_helper_oca
 #: model:ir.model.fields,field_description:edi_party_helper_oca.field_edi_exchange_type__id_category_ids
 msgid "ID categories"
+msgstr ""
+
+#. module: edi_party_helper_oca
+#: model:ir.model.fields,help:edi_party_helper_oca.field_edi_exchange_type__endpoint_partner_category_id
+msgid ""
+"ID category whose id_number is used as the party's `EndpointID` (only "
+"meaningful for output exchanges)."
 msgstr ""
