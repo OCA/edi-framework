@@ -3,16 +3,30 @@
 # License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl).
 
 import xmltodict
+from lxml import etree
 
-from odoo import models
+from odoo import exceptions, models
 from odoo.tools import file_open
 from odoo.tools.xml_utils import _check_with_xsd
 
+from odoo.addons.edi_core_oca.exceptions import EDIValidationError
+
 
 class EdiXml(models.AbstractModel):
-    """Validate and parse XML."""
+    """Validate and parse XML.
+
+    Can be used as input/output validator on exchange types. The XSD schema
+    is read from the ``edi_xml_schema_path`` context key, set through the
+    exchange type advanced settings::
+
+        execution_model:
+          input_validate:
+            env_ctx:
+              edi_xml_schema_path: my_module:path/to/schema.xsd
+    """
 
     _name = "edi.xml"
+    _inherit = ["edi.oca.handler.input.validate", "edi.oca.handler.output.validate"]
     _description = "EDI XML helper"
 
     @staticmethod
@@ -59,29 +73,57 @@ class EdiXml(models.AbstractModel):
             return []
         return value if isinstance(value, list) else [value]
 
-    def validate(self, schema_path, xml_content, raise_on_fail=False):
-        """Validate XML content against XSD schema.
+    def input_validate(self, exchange_record, value=None, **kw):
+        return self._validate_exchange(exchange_record, value=value)
 
-        :param schema_path: schema path as ``module:path``
-        :param xml_content: str containing xml data to validate
-        :param raise_on_fail: turn on/off validation error exception on fail
+    def output_validate(self, exchange_record, value=None, **kw):
+        return self._validate_exchange(exchange_record, value=value)
 
-        :return:
-            * None if validation is ok or skipped
-            * error string if `raise_on_fail` is False and validation fails
+    def _validate_exchange(self, exchange_record, value=None):
+        """Validate the exchange content against the XSD set in the context.
+
+        :param exchange_record: edi.exchange.record
+        :param value: content to validate, defaults to the record file
+        :raise EDIValidationError: missing schema or invalid content
         """
-        resolved_path = self._resolve_schema_path(schema_path)
+        schema = self.env.context.get("edi_xml_schema_path")
+        if not schema:
+            raise EDIValidationError(
+                self.env._(
+                    "No XSD schema configured for exchange type %(code)s",
+                    code=exchange_record.type_id.code,
+                )
+            )
+        content = value if value is not None else exchange_record._get_file_content()
+        try:
+            self._validate_xml(schema, content)
+        except (
+            exceptions.UserError,
+            FileNotFoundError,
+            ValueError,
+            etree.LxmlError,
+        ) as exc:
+            raise EDIValidationError(str(exc)) from exc
+
+    def _validate_xml(self, schema, xml_content):
+        """Validate XML content against an XSD schema.
+
+        :param schema: addon file as ``module:path``,
+            or name of an ``ir.attachment`` ending with ``.xsd``
+        :param xml_content: str or bytes containing xml data to validate
+        :raise UserError: the content does not match the schema
+        :raise FileNotFoundError: the schema is not found
+        """
         xml_content = (
             xml_content.encode("utf-8") if isinstance(xml_content, str) else xml_content
         )
-        try:
-            with file_open(resolved_path) as xsd_stream:
+        if ":" in schema:
+            with file_open(self._resolve_schema_path(schema)) as xsd_stream:
                 _check_with_xsd(xml_content, xsd_stream)
-        except FileNotFoundError as exc:
-            if raise_on_fail:
-                raise exc
-            return f"XSD schema file not found: {schema_path}"
-        except Exception as exc:
-            if raise_on_fail:
-                raise exc
-            return str(exc)
+        elif schema.endswith(".xsd"):
+            # Schema and its imports are looked up in ir.attachment
+            _check_with_xsd(xml_content, schema, env=self.env)
+        else:
+            raise ValueError(
+                "Schema must be in the form `module:path` or an XSD attachment name"
+            )
