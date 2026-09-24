@@ -14,7 +14,11 @@
     "maintainers": ["etobella", "simahawk"],
     "website": "https://github.com/OCA/edi-framework",
     "depends": ["edi_core_oca", "webservice_core"],
-    "data": ["views/edi_backend.xml", "security/ir.model.access.csv"],
+    "data": [
+        "views/edi_backend.xml",
+        "views/edi_exchange_type.xml",
+        "security/ir.model.access.csv",
+    ],
     "demo": ["demo/edi_backend.xml"],
     "pre_init_hook": "pre_init_hook",
 }
