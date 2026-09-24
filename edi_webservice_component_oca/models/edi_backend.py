@@ -1,13 +1,13 @@
 # Copyright 2020 Dixmit
+# Copyright 2025 Camptocamp SA
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
-from odoo import fields, models
+from odoo import models
 
 
 class EdiBackend(models.Model):
     _inherit = "edi.backend"
 
-    webservice_backend_id = fields.Many2one("webservice.backend")
     _webservice_actions = ("send", "receive")
 
     def _get_component_usage_candidates(self, exchange_record, key):

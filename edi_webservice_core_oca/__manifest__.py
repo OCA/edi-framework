@@ -3,17 +3,18 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
 {
-    "name": "EDI WebService",
+    "name": "EDI WebService Core",
     "summary": """
-        Defines webservice integration from EDI Exchange records""",
-    "version": "18.0.2.0.0",
+        Webservice backend and send handler for EDI: no component
+        dependency""",
+    "version": "18.0.1.1.0",
     "license": "AGPL-3",
     "development_status": "Beta",
     "author": "Dixmit, Camptocamp, Odoo Community Association (OCA)",
     "maintainers": ["etobella", "simahawk"],
     "website": "https://github.com/OCA/edi-framework",
-    "depends": ["edi_webservice_core_oca", "edi_webservice_component_oca"],
-    "data": [],
-    "demo": [],
-    "post_load": "post_load_hook",
+    "depends": ["edi_core_oca", "webservice_core"],
+    "data": ["views/edi_backend.xml", "security/ir.model.access.csv"],
+    "demo": ["demo/edi_backend.xml"],
+    "pre_init_hook": "pre_init_hook",
 }
