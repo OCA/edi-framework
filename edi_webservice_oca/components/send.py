@@ -2,6 +2,8 @@
 # @author: Simone Orsi <simahawk@gmail.com>
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
+from requests import Response
+
 from odoo import _, exceptions
 
 from odoo.addons.component.core import Component
@@ -27,7 +29,13 @@ class EDIWebserviceSend(Component):
 
     def send(self):
         method, pargs, kwargs = self._get_call_params()
-        return self.webservice_backend.call(method, *pargs, **kwargs)
+        response = self.exchange_record.backend_id.webservice_backend_id.call(
+            method, *pargs, **kwargs
+        )
+        if not isinstance(response, Response):
+            # backward compat for obsolete `content_only` param
+            return response
+        return response.content
 
     def _get_call_params(self):
         try:
