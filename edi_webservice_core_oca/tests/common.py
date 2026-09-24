@@ -23,4 +23,29 @@ class TestEDIWebserviceCoreBase(EDIBackendCommonTestCase):
         cls.record.type_id.send_model_id = cls.env.ref(
             "edi_webservice_core_oca.model_edi_webservice_send"
         )
+        # The demo `webservice.backend` has a `{endpoint}` placeholder in its
+        # URL, meant for the old `url_params`-based YAML config - not for
+        # `webservice.endpoint`'s own path-based combining. Use a plain one.
+        cls.ws_backend = cls.env["webservice.backend"].create(
+            {
+                "name": "Test WS Backend",
+                "tech_name": "test_edi_webservice_send_backend",
+                "protocol": "http",
+                "url": "https://foo.test/",
+                "content_type": "application/xml",
+                "auth_type": "none",
+            }
+        )
+        cls.backend.webservice_backend_id = cls.ws_backend
+        cls.endpoint = cls.env["webservice.endpoint"].create(
+            {
+                "name": "Test endpoint",
+                "tech_name": "test_edi_webservice_send",
+                "description": "Test endpoint",
+                "backend_id": cls.ws_backend.id,
+                "http_method": "post",
+                "path": "push/here",
+            }
+        )
+        cls.record.type_id.webservice_endpoint_id = cls.endpoint
         return result

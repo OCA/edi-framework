@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2026 Camptocamp SA
+     License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
+<odoo>
+    <record id="edi_exchange_type_view_form_webservice" model="ir.ui.view">
+        <field
+            name="name"
+        >edi.exchange.type.form (webservice, in edi_webservice_core_oca)</field>
+        <field name="model">edi.exchange.type</field>
+        <field name="inherit_id" ref="edi_core_oca.edi_exchange_type_view_form" />
+        <field name="arch" type="xml">
+            <group name="handlers_right" position="inside">
+                <group
+                    name="webservice_settings"
+                    string="Webservice settings"
+                    invisible="not webservice_send_enabled"
+                >
+                    <field name="webservice_backend_id" invisible="1" />
+                    <field name="webservice_send_enabled" invisible="1" />
+                    <field
+                        name="webservice_endpoint_id"
+                        string="Endpoint"
+                        required="webservice_send_enabled"
+                        domain="[('backend_id', '=', webservice_backend_id)]"
+                        context="{'webservice_endpoint_display_path': 1}"
+                    />
+                    <field name="webservice_send_as_bytes" />
+                </group>
+            </group>
+        </field>
+    </record>
+</odoo>
