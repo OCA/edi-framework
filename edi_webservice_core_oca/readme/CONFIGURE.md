@@ -1,39 +1,34 @@
 Go to "EDI -\> Config -\> Backends" and edit or create one. Find the tab
 "Webservice" and add a webservice. On the webservice record you can
 specify all the general parameters to connect to the service (see
-`webservice_core` README for more details).
+`webservice_core` README for more details). On the webservice backend
+you can configure one or more `webservice.endpoint` records (path, HTTP
+method, ...).
 
 On the exchange type you want to send through a webservice, go to the
-"Execution handlers" tab and set "Sender" to "EDI WebService Send
-Handler".
+"Execution handlers" tab, set "Sender" to "EDI WebService Send Handler",
+then pick the "Endpoint" to call in the "Webservice settings" group that
+appears - it drives both the URL (backend URL + endpoint path) and the
+HTTP method.
 
-By default the call uses the backend's own configuration (URL, auth,
-...). If you want to take full control on if/how the webservice is used
-you can do it via the exchange type's advanced settings.
+Static headers and querystring params are best set directly on the
+`webservice.endpoint` record itself (its "Headers" and "URL Params"
+tabs) - prefer that over the exchange type's advanced settings below,
+which are meant for one-off, per-exchange-type overrides rather than
+the endpoint's own regular configuration.
 
-Hence, assuming your webservice has a URL configured as
-\`<https://my.endpoint/%7Bpath%7D>\`:
+If you still need extra call parameters beyond what the endpoint (and
+its own headers/URL params) provide, you can add them via the exchange
+type's advanced settings:
 
     execution_model:
       send:
         webservice:
-          method: post  # mandatory
           kwargs:
+            headers:
+              X-Custom-Header: foo
             url_params:
-              path: endpoint1/foo
-
-For each call related to this type, you'll get a POST request against
-https://my.endpoint/endpoint/foo.
-
-`url_params` can contain all the keys needed for URL interpolation.
-
-In addition, you can use `url` to override the full url used for the
-call per exchange type.
+              foo: baz
 
 If you want to send data as bytes you can use the option send_as_bytes
-like:
-
-    [...]
-          webservice:
-            send_as_bytes: true
-    [...]
+on the exchange type (same tab).
