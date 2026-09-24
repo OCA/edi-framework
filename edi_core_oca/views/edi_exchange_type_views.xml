@@ -72,43 +72,48 @@
                     </group>
                     <notebook>
                         <page name="exec_handlers" string="Execution handlers">
-                            <group
-                                name="input_handlers"
-                                invisible="direction != 'input'"
-                            >
-                                <field
-                                    name="receive_model_id"
-                                    options="{'no_create': True}"
-                                />
-                                <field
-                                    name="process_model_id"
-                                    options="{'no_create': True}"
-                                />
-                                <field
-                                    name="input_validate_model_id"
-                                    options="{'no_create': True}"
-                                />
-                            </group>
-                            <group
-                                name="output_handlers"
-                                invisible="direction != 'output'"
-                            >
-                                <field
-                                    name="generate_model_id"
-                                    options="{'no_create': True}"
-                                />
-                                <field
-                                    name="send_model_id"
-                                    options="{'no_create': True}"
-                                />
-                                <field
-                                    name="output_validate_model_id"
-                                    options="{'no_create': True}"
-                                />
-                                <field
-                                    name="check_model_id"
-                                    options="{'no_create': True}"
-                                />
+                            <group name="handlers_row">
+                                <group name="handlers_left">
+                                    <field
+                                        name="receive_model_id"
+                                        invisible="direction != 'input'"
+                                        options="{'no_create': True}"
+                                    />
+                                    <field
+                                        name="process_model_id"
+                                        invisible="direction != 'input'"
+                                        options="{'no_create': True}"
+                                    />
+                                    <field
+                                        name="input_validate_model_id"
+                                        invisible="direction != 'input'"
+                                        options="{'no_create': True}"
+                                    />
+                                    <field
+                                        name="generate_model_id"
+                                        invisible="direction != 'output'"
+                                        options="{'no_create': True}"
+                                    />
+                                    <field
+                                        name="send_model_id"
+                                        invisible="direction != 'output'"
+                                        options="{'no_create': True}"
+                                    />
+                                    <field
+                                        name="output_validate_model_id"
+                                        invisible="direction != 'output'"
+                                        options="{'no_create': True}"
+                                    />
+                                    <field
+                                        name="check_model_id"
+                                        invisible="direction != 'output'"
+                                        options="{'no_create': True}"
+                                    />
+                                </group>
+                                <!-- Extension point: handler-specific modules
+                                     (eg. edi_webservice_oca) inject their own
+                                     settings here as a right-side column. -->
+                                <group name="handlers_right" />
                             </group>
                         </page>
                         <page
