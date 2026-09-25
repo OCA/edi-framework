@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-09-15 06:43+0000\n"
+"PO-Revision-Date: 2026-09-25 21:46+0000\n"
 "Last-Translator: mymage <stefano.consolaro@mymage.it>\n"
 "Language-Team: none\n"
 "Language: it\n"
@@ -34,7 +34,7 @@ msgstr "Aiuto parte EDI"
 #. module: edi_party_helper_oca
 #: model:ir.model.fields,field_description:edi_party_helper_oca.field_edi_exchange_type__endpoint_partner_category_id
 msgid "Endpoint ID category"
-msgstr ""
+msgstr "Categoria ID endpoint"
 
 #. module: edi_party_helper_oca
 #: model:ir.model.fields,field_description:edi_party_helper_oca.field_edi_exchange_type__id_category_ids
@@ -47,3 +47,5 @@ msgid ""
 "ID category whose id_number is used as the party's `EndpointID` (only "
 "meaningful for output exchanges)."
 msgstr ""
+"Categoria di ID il cui id_number viene utilizzato come `EndpointID` della "
+"parte (rilevante solo per gli scambi in uscita)."
