@@ -3,12 +3,15 @@
 # License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl).
 
 import datetime
+import logging
 
 import pytz
-from psycopg2.extensions import AsIs
 
 from odoo import api, exceptions, fields, models
+from odoo.fields import Domain
 from odoo.tools import DotDict, safe_eval
+
+_logger = logging.getLogger(__name__)
 
 
 def date_to_datetime(dt):
@@ -239,22 +242,56 @@ class EdiConfiguration(models.Model):
         ]
         return self.search(domain)
 
-    def action_view_partners(self):
-        # TODO: add tests
-        partner_model = self.env["res.partner"]
-        partner_ids = set()
-        # Find partners linked to this conf no matter which field
-        query = "SELECT DISTINCT(partner_id) FROM %(table)s WHERE conf_id=%(conf_id)s"
-        for field in partner_model._fields.values():
-            if field.type == "many2many" and field.comodel_name == self._name:
-                self.env.cr.execute(
-                    query, {"table": AsIs(field.relation), "conf_id": self.id}
+    @api.model
+    def _cron_run_by_trigger(self, trigger_code):
+        """Execute every configuration listening to a scheduled trigger.
+
+        Scheduled triggers carry no originating record: the scheduled action
+        knows the trigger code and nothing else. A global configuration is
+        therefore executed once, bound to nothing; any other one is executed
+        against each of the records subscribed to it.
+        """
+        for conf in self.search([("trigger", "=", trigger_code)]):
+            if not conf.model_name:
+                # Event triggers fall back on the record that fired them, a
+                # scheduled one has none. Without a model there is not even an
+                # empty recordset to hand over to the snippet.
+                _logger.warning(
+                    "Scheduled EDI configuration %s has no model: skipped.",
+                    conf.display_name,
                 )
-                partner_ids.update([r[0] for r in self.env.cr.fetchall()])
+                continue
+            if conf.is_global:
+                # A global configuration is bound to no relation, so there is
+                # nothing to resolve: the snippet runs once and selects the
+                # records it works on by itself.
+                conf.edi_exec_snippet_do(self.env[conf.model_name])
+                continue
+            for record in conf._get_records(self.env[conf.model_name]):
+                conf.edi_exec_snippet_do(record)
+
+    def _get_records(self, model):
+        """Return the records of ``model`` subscribed to this configuration.
+
+        A record subscribes to a configuration through a many2many declared on
+        its own model -- there may be several such relations, one per EDI flow,
+        and a model holding none yields no record.
+        """
+        self.ensure_one()
+        return model.search(
+            Domain.OR(
+                Domain(fname, "in", self.ids)
+                for fname, field in model._fields.items()
+                if field.type == "many2many" and field.comodel_name == self._name
+            )
+        )
+
+    def action_view_partners(self):
+        partners = self._get_records(self.env["res.partner"])
         return {
             "type": "ir.actions.act_window",
             "name": self.env._("Partners"),
             "res_model": "res.partner",
             "view_mode": "list,form",
-            "domain": [("id", "in", list(partner_ids))],
+            "domain": [("id", "in", partners.ids)],
         }
