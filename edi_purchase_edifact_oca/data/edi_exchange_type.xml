@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo noupdate="1">
+    <record id="edi_exchange_type_purchase_order_out" model="edi.exchange.type">
+        <field name="backend_id" ref="edi_backend_edifact" />
+        <field name="backend_type_id" ref="edi_backend_type_edifact" />
+        <field name="name">EDIFACT-OUT-ORDER</field>
+        <field name="code">edifact_out_order</field>
+        <field name="direction">output</field>
+        <field name="exchange_filename_pattern">D{dt}</field>
+        <field name="exchange_file_ext">txt</field>
+        <field name="exchange_file_auto_generate">True</field>
+        <field name="encoding">iso-8859-1</field>
+        <field name="encoding_out_error_handler">strict</field>
+        <field name="encoding_in_error_handler">strict</field>
+        <field name="generate_model_id" ref="model_edi_output_edifact_out_generate" />
+        <field name="quick_exec" eval="True" />
+        <field name="advanced_settings_edit">
+            filename_pattern:
+                force_tz: Europe/Zurich
+                date_pattern: "%Y%m%d%H%M%S%f"
+        </field>
+    </record>
+
+    <record id="edi_exchange_type_purchase_order_input" model="edi.exchange.type">
+        <field name="backend_id" ref="edi_backend_edifact" />
+        <field name="backend_type_id" ref="edi_backend_type_edifact" />
+        <field name="name">EDIFACT-IN-DESPATCH-ADVICE</field>
+        <field name="code">edifact_in_despatch_advice</field>
+        <field name="exchange_filename_pattern">output.*</field>
+        <field name="exchange_file_ext">edi</field>
+        <field name="direction">input</field>
+        <field name="quick_exec" eval="True" />
+        <field name="exchange_file_auto_generate">True</field>
+        <field name="encoding">iso-8859-1</field>
+        <field name="encoding_out_error_handler">strict</field>
+        <field name="encoding_in_error_handler">strict</field>
+        <field name="process_model_id" ref="model_edi_input_process_edifact_input" />
+        <field name="advanced_settings_edit" />
+    </record>
+</odoo>
