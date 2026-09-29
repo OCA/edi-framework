@@ -958,6 +958,11 @@ msgid ""
 msgstr ""
 
 #. module: edi_oca
+#: model:ir.model.fields,field_description:edi_oca.field_edi_exchange_record__has_exchange_file
+msgid "Has Exchange File"
+msgstr ""
+
+#. module: edi_oca
 #: model:ir.model.fields,field_description:edi_oca.field_edi_exchange_record__has_message
 msgid "Has Message"
 msgstr ""
