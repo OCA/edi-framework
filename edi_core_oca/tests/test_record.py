@@ -9,6 +9,7 @@ from unittest import mock
 from freezegun import freeze_time
 
 from odoo import exceptions, fields
+from odoo.tests import new_test_user
 from odoo.tools import mute_logger
 
 from odoo.addons.edi_core_oca.utils import get_checksum
@@ -244,3 +245,20 @@ class EDIRecordTestCase(EDIBackendCommonTestCase):
         self.assertEqual(len(record.related_record_ids), 2)
         self.assertEqual(record.related_record_ids[0].record, self.partner)
         self.assertEqual(record.related_record_ids[1].record, spain)
+
+    def test_notify_related_record_as_user(self):
+        """Users that cannot read window actions can post the notification."""
+        user = new_test_user(
+            self.env,
+            login="edi_notify_user",
+            groups="base.group_user,base.group_partner_manager,base_edi.group_edi_user",
+        )
+        vals = {
+            "model": self.partner._name,
+            "res_id": self.partner.id,
+        }
+        record = self.backend.create_record("test_csv_output", vals)
+        record.with_user(user)._notify_related_record("Test notification")
+        message = self.partner.message_ids[0]
+        self.assertIn("Test notification", message.body)
+        self.assertIn(f"/odoo/edi-exchange-records/{record.id}", message.body)
