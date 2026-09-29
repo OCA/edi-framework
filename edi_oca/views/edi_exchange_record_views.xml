@@ -175,7 +175,7 @@
                         <page
                             name="error"
                             string="Error"
-                            attrs="{'invisible': [('exchange_error_traceback', '=', False)]}"
+                            invisible="not exchange_error_traceback"
                         >
                             <field name="exchange_error" />
                             <field name="exchange_error_traceback" />
