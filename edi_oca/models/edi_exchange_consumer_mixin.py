@@ -353,7 +353,8 @@ class EDIExchangeConsumerMixin(models.AbstractModel):
         we still want to generate a new up to date record to be sent.
 
         :param exchange_type: The exchange type to create the record for.
-        :param force: If True, will force the creation of the record in case of ack type.
+        :param force: If True, will force the creation of the record in case
+            of ack type.
         """
         if not self._edi_can_generate_ack(exchange_type, force=force):
             return False, False
@@ -388,8 +389,10 @@ class EDIExchangeConsumerMixin(models.AbstractModel):
     ):
         """Send EDI file via email using the provided action."""
         # FIXME: missing generation of the record and adding it as an attachment
-        # In this case, the record should be generated immediately and attached to the email.
-        # An alternative is to generate the record and have a component to send via email.
+        # In this case, the record should be generated immediately and
+        # attached to the email.
+        # An alternative is to generate the record and have a component to
+        # send via email.
 
         # Retrieve context and composer model
         ctx = ir_action.get("context", {})
@@ -405,7 +408,8 @@ class EDIExchangeConsumerMixin(models.AbstractModel):
         composer = composer_model.create({"subtype_id": subtype.id})
         composer.onchange_template_id_wrapper()
 
-        # Dynamically retrieve partners based on the provided method or fallback to parameter
+        # Dynamically retrieve partners based on the provided method or
+        # fallback to parameter
         if partner_method and hasattr(self, partner_method):
             composer.partner_ids = getattr(self, partner_method)().ids
         elif partners:

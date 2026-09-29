@@ -145,7 +145,9 @@ class TestEDIConfigurations(EDIBackendCommonComponentRegistryTestCase):
 old_state = old_value.get("state", False)\n
 new_state = vals.get("state", False)\n
 result = {\n
-    "change_state": True if old_state and new_state and old_state != new_state else False,\n
+    "change_state": bool(
+        old_state and new_state and old_state != new_state
+    ),\n
     "snippet_do_vars": snippet_do_vars,\n
     "record": record,\n
     "tracked_fields": tracked_fields,\n

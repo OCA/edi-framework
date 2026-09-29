@@ -207,7 +207,10 @@ class EdiConfiguration(models.Model):
         # Find partners linked to this conf no matter which field
         for field in partner_model._fields.values():
             if field.type == "many2many" and field.comodel_name == self._name:
-                query = "SELECT DISTINCT(partner_id) FROM %(table)s WHERE conf_id=%(conf_id)s"
+                query = (
+                    "SELECT DISTINCT(partner_id) FROM %(table)s "
+                    "WHERE conf_id=%(conf_id)s"
+                )
                 self.env.cr.execute(
                     query, {"table": AsIs(field.relation), "conf_id": self.id}
                 )
