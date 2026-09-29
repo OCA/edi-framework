@@ -1052,8 +1052,8 @@ msgstr "Gruppiert nach"
 msgid ""
 "Handling of decoding errors on process (default is always 'Raise Error')."
 msgstr ""
-"Behandlung von Decodierfehlern während des Prozesses (Standard ist immer „"
-"Fehler auslösen“)."
+"Behandlung von Decodierfehlern während des Prozesses (Standard ist immer "
+"„Fehler auslösen“)."
 
 #. module: edi_oca
 #: model:ir.model.fields,help:edi_oca.field_edi_exchange_type__encoding_out_error_handler
@@ -1062,6 +1062,11 @@ msgid ""
 msgstr ""
 "Behandlung von Kodierfehlern bei der Generierung (Standard ist immer „Fehler "
 "auslösen“)."
+
+#. module: edi_oca
+#: model:ir.model.fields,field_description:edi_oca.field_edi_exchange_record__has_exchange_file
+msgid "Has Exchange File"
+msgstr ""
 
 #. module: edi_oca
 #: model:ir.model.fields,field_description:edi_oca.field_edi_exchange_record__has_message
