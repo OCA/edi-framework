@@ -1,0 +1,6 @@
+{
+  "pull_requests": {
+    "OCA/edi-framework#131": "Version-scoped migration script 16.0.1.0.0; nothing to port.",
+    "OCA/edi-framework#146": "Fix for 6.0.1.0.2/post-migrate.py; nothing to port."
+  }
+}
