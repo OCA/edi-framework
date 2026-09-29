@@ -1,0 +1,6 @@
+{
+  "pull_requests": {
+    "OCA/edi-framework#220": "The _search method it patches was fully rewritten in edi_core_oca for the new query-object ORM API; the 'restore original ordering' step this PR moves doesn't exist there anymore (superseded by browse(result)._as_query(), which already preserves order). Nothing to port.",
+    "OCA/edi-framework#350": "Already present in edi_core_oca on 18.0 (res[\"arch\"] = etree.tostring(doc, encoding=\"unicode\").replace(\"\\t\", \"\")), arrived independently. Nothing to port."
+  }
+}
