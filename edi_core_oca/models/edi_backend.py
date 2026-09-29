@@ -125,7 +125,10 @@ class EDIBackend(models.Model):
         if force and exchange_record.exchange_file:
             # Remove file to regenerate
             exchange_record.exchange_file = False
-        self._check_exchange_generate(exchange_record, force=force)
+        # In case already generated: skip generating and check the state
+        check = self._output_check_generate(exchange_record, force=force)
+        if not check:
+            return "Nothing to do. Likely already generated."
         generate_result = self._exchange_generate(exchange_record, **kw)
         output = generate_result.output
         message = generate_result.message or exchange_record._exchange_status_message(
@@ -171,21 +174,8 @@ class EDIBackend(models.Model):
         exchange_record.notify_action_complete("generate", message=message)
         return message
 
-    # TODO: unify to all other checkes that return something
-    def _check_exchange_generate(self, exchange_record, force=False):
+    def _output_check_generate(self, exchange_record, force=False):
         exchange_record.ensure_one()
-        if (
-            exchange_record.edi_exchange_state != "new"
-            and exchange_record.exchange_file
-            and not force
-        ):
-            raise exceptions.UserError(
-                self.env._(
-                    "Exchange record ID=%d is not in draft state "
-                    "and has already an output value.",
-                    exchange_record.id,
-                )
-            )
         if exchange_record.direction != "output":
             raise exceptions.UserError(
                 self.env._(
@@ -201,6 +191,10 @@ class EDIBackend(models.Model):
                     exchange_record.id,
                 )
             )
+        return force or exchange_record.edi_exchange_state in [
+            "new",
+            "validate_error",
+        ]
 
     @EDIExchangeActionResult.wrap_result
     def _exchange_generate(self, exchange_record, **kw):
