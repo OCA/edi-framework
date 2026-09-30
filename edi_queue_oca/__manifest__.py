@@ -14,6 +14,7 @@
         "security/ir_model_access.xml",
         "data/job_channel.xml",
         "data/job_function.xml",
+        "data/cron.xml",
         "views/edi_exchange_record.xml",
     ],
     "demo": [],
