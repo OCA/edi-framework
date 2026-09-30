@@ -154,6 +154,42 @@ class EDIDeduplicateTestCase(EDIBackendCommonTestCase):
         self.assertEqual(record3.edi_exchange_state, "output_sent")
 
     @mute_logger(*LOGGERS)
+    def test_obsolete_record_not_generated(self):
+        """An obsolete record gets no file, even if its generation is requested.
+
+        Scenario:
+            1. Create two records for the same partner: the first one
+               becomes obsolete.
+            2. Generate the first record, as a job queued before it became
+               obsolete would do.
+        Expected:
+            - Nothing is generated and the record stays obsolete.
+        """
+        self.exchange_type_out.write(
+            {
+                "deduplicate_on_exchange": True,
+            }
+        )
+        record1 = self.backend.create_record(
+            "test_csv_output",
+            {
+                "model": self.partner._name,
+                "res_id": self.partner.id,
+            },
+        )
+        self.backend.create_record(
+            "test_csv_output",
+            {
+                "model": self.partner._name,
+                "res_id": self.partner.id,
+            },
+        )
+        self.assertEqual(record1.edi_exchange_state, "obsolete")
+        record1.action_exchange_generate()
+        self.assertFalse(record1.exchange_file)
+        self.assertEqual(record1.edi_exchange_state, "obsolete")
+
+    @mute_logger(*LOGGERS)
     def test_deduplicate_input_records(self):
         """Received records without a related record supersede each other.
 
