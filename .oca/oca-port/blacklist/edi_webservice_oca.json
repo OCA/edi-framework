@@ -1,0 +1,5 @@
+{
+  "pull_requests": {
+    "orphaned_commits": "ee8e6daf (pre-commit auto fixes, readme reformatting/manifest bump from the 16.0->17.0 migration) - moot for 18.0's independent migration. e2eab189 ([MIG] adds a _request_handler override for Odoo 17's test-mode HTTP mocking, used by test_backend.py/test_send.py's localhost.demo.odoo/foo.test URLs) - not needed on 18.0: test_backend.py's HTTP-touching test never actually calls out (only checks component matching), and test_send.py mocks via @responses.activate, intercepting at the requests library level instead. Different mocking strategy, not a gap. Nothing to port."
+  }
+}

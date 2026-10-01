@@ -1,0 +1,5 @@
+{
+  "pull_requests": {
+    "orphaned_commits": "40cae78e (pre-commit auto-fixes, readme reformatting/manifest bump from the 16.0->17.0 migration) and 948543e8 ([FIX] FS find_files returns relative paths instead of full paths) - the fix is already present in edi_storage_oca on 18.0, implemented slightly differently (list-comprehension filter instead of prefix-stripping). Nothing to port."
+  }
+}

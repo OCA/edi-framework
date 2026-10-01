@@ -1,0 +1,5 @@
+{
+  "pull_requests": {
+    "OCA/edi-framework#119": "Migration/lint-formatting commits from the original 16.0->17.0 migration of this addon (readme reformatting, manifest version bump); moot for 18.0, which has its own independent migration (OCA/edi-framework#163). Nothing to port."
+  }
+}
