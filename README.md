@@ -27,7 +27,7 @@ addon | version | maintainers | summary
 [edi_oca](edi_oca/) | 17.0.1.3.2 | <a href='https://github.com/simahawk'><img src='https://github.com/simahawk.png' width='32' height='32' style='border-radius:50%;' alt='simahawk'/></a> <a href='https://github.com/etobella'><img src='https://github.com/etobella.png' width='32' height='32' style='border-radius:50%;' alt='etobella'/></a> | Define backends, exchange types, exchange records, basic automation and views for handling EDI exchanges.
 [edi_project_oca](edi_project_oca/) | 17.0.1.0.0 |  | Define EDI Configuration for Projects and Tasks
 [edi_record_metadata_oca](edi_record_metadata_oca/) | 17.0.1.0.1 | <a href='https://github.com/simahawk'><img src='https://github.com/simahawk.png' width='32' height='32' style='border-radius:50%;' alt='simahawk'/></a> | Allow to store metadata for related records.
-[edi_storage_oca](edi_storage_oca/) | 17.0.1.0.0 |  | Base module to allow exchanging files via storage backend (eg: SFTP).
+[edi_storage_oca](edi_storage_oca/) | 17.0.1.0.1 |  | Base module to allow exchanging files via storage backend (eg: SFTP).
 [edi_webservice_oca](edi_webservice_oca/) | 17.0.1.0.1 | <a href='https://github.com/etobella'><img src='https://github.com/etobella.png' width='32' height='32' style='border-radius:50%;' alt='etobella'/></a> <a href='https://github.com/simahawk'><img src='https://github.com/simahawk.png' width='32' height='32' style='border-radius:50%;' alt='simahawk'/></a> | Defines webservice integration from EDI Exchange records
 
 [//]: # (end addons)
