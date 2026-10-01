@@ -49,7 +49,7 @@ class EDIExchangeTypeTestCase(EDIBackendCommonTestCase):
         self.exchange_type_out.advanced_settings_edit = f"""
         storage:
             path: {prefix}
-        """
+        """  # noqa: E231, E241
         self._do_test_storage_fullpath(prefix=prefix)
 
         # Force path on advanced settings using config param, but not defined
