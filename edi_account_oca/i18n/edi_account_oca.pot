@@ -102,11 +102,6 @@ msgid "Moves"
 msgstr ""
 
 #. module: edi_account_oca
-#: model:ir.model.fields,help:edi_account_oca.field_account_move__origin_edi_endpoint_id
-msgid "Record generated via this endpoint"
-msgstr ""
-
-#. module: edi_account_oca
 #: model:ir.model.fields,help:edi_account_oca.field_account_bank_statement_line__edi_disable_auto
 #: model:ir.model.fields,help:edi_account_oca.field_account_move__edi_disable_auto
 #: model:ir.model.fields,help:edi_account_oca.field_account_payment__edi_disable_auto
