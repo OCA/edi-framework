@@ -22,7 +22,7 @@ Available addons
 addon | version | maintainers | summary
 --- | --- | --- | ---
 [edi_account_oca](edi_account_oca/) | 17.0.1.0.0 | <a href='https://github.com/etobella'><img src='https://github.com/etobella.png' width='32' height='32' style='border-radius:50%;' alt='etobella'/></a> | Define EDI Configuration for Account Moves
-[edi_endpoint_oca](edi_endpoint_oca/) | 17.0.1.0.0 |  | Base module allowing configuration of custom endpoints for EDI framework.
+[edi_endpoint_oca](edi_endpoint_oca/) | 17.0.1.0.1 |  | Base module allowing configuration of custom endpoints for EDI framework.
 [edi_exchange_template_oca](edi_exchange_template_oca/) | 17.0.1.0.0 | <a href='https://github.com/simahawk'><img src='https://github.com/simahawk.png' width='32' height='32' style='border-radius:50%;' alt='simahawk'/></a> | Allows definition of exchanges via templates.
 [edi_oca](edi_oca/) | 17.0.1.3.2 | <a href='https://github.com/simahawk'><img src='https://github.com/simahawk.png' width='32' height='32' style='border-radius:50%;' alt='simahawk'/></a> <a href='https://github.com/etobella'><img src='https://github.com/etobella.png' width='32' height='32' style='border-radius:50%;' alt='etobella'/></a> | Define backends, exchange types, exchange records, basic automation and views for handling EDI exchanges.
 [edi_project_oca](edi_project_oca/) | 17.0.1.0.0 |  | Define EDI Configuration for Projects and Tasks
