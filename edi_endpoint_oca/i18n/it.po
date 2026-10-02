@@ -197,11 +197,6 @@ msgid "Identify the route with its main params"
 msgstr "Identifica la rotta con questi parametri principali"
 
 #. module: edi_endpoint_oca
-#: model:ir.model.fields,field_description:edi_endpoint_oca.field_edi_endpoint____last_update
-msgid "Last Modified on"
-msgstr "Ultima modifica il"
-
-#. module: edi_endpoint_oca
 #: model:ir.model.fields,field_description:edi_endpoint_oca.field_edi_endpoint__write_uid
 msgid "Last Updated by"
 msgstr "Ultimo aggiornamento di"
@@ -236,7 +231,6 @@ msgstr ""
 "Spento: record allineato con il registro, non c'è niente da fare."
 
 #. module: edi_endpoint_oca
-#: model:ir.model.fields,help:edi_endpoint_oca.field_edi_exchange_consumer_mixin__origin_edi_endpoint_id
 #: model:ir.model.fields,help:edi_endpoint_oca.field_edi_exchange_record__edi_endpoint_id
 msgid "Record generated via this endpoint"
 msgstr "Record generato attraverso questo endpoint"
@@ -286,8 +280,8 @@ msgid ""
 "\n"
 "%s"
 msgstr ""
-"I seguenti backend hanno endpoints allegati. Devono essere prima archiviati:"
-"\n"
+"I seguenti backend hanno endpoints allegati. Devono essere prima "
+"archiviati:\n"
 "\n"
 "%s"
 
@@ -300,3 +294,6 @@ msgstr "Utilizzarlo per classificare i percorsi insieme"
 #: model_terms:ir.ui.view,arch_db:edi_endpoint_oca.edi_backend_view_form
 msgid "endpoints configured"
 msgstr "endopoint configurati"
+
+#~ msgid "Last Modified on"
+#~ msgstr "Ultima modifica il"
