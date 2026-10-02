@@ -7,8 +7,6 @@ import lxml.etree as etree
 
 from odoo import fields, models
 
-from ..utils import xml_purge_nswrapper
-
 
 class EDIExchangeOutputTemplate(models.Model):
     """Define an output template to generate outgoing records' content."""
@@ -127,10 +125,8 @@ class EDIExchangeOutputTemplate(models.Model):
         return processor(output)
 
     def _post_process_output_qweb(self, output):
-        if self.output_type == "xml":
-            output = xml_purge_nswrapper(output)
-            if self.prettify:
-                output = self._prettify_xml(output)
+        if self.output_type == "xml" and self.prettify:
+            output = self._prettify_xml(output)
         return output
 
     def _post_process_output_json(self, output):

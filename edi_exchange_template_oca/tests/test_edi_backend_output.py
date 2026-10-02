@@ -257,7 +257,7 @@ class TestEDIBackendOutput(TestEDIBackendOutputBase):
             '<t t-name="edi_exchange.test_output2"><root><a>1</a></root></t>'
         )
         output = tmpl_out2.exchange_generate(record2)
-        self.assertEqual(output, b"<root><a>1</a></root>")
+        self.assertEqual(output.encode("utf-8"), b"<root><a>1</a></root>")
         tmpl_out2.prettify = True
         output = tmpl_out2.exchange_generate(record2)
         self.assertEqual(output, b"<root>\n  <a>1</a>\n</root>\n")

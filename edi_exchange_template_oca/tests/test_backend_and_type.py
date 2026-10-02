@@ -2,48 +2,33 @@
 # @author: Simone Orsi <simone.orsi@camptocamp.com>
 # License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl).
 from odoo.exceptions import ValidationError
-from odoo.tests.common import TransactionCase
+
+from odoo.addons.edi_core_oca.tests.common import EDIBackendCommonTestCase
 
 
-class TestExchangeType(TransactionCase):
+class TestExchangeType(EDIBackendCommonTestCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.backend_type = cls.env["edi.backend.type"].create(
-            {
-                "name": "Demo EDI backend type",
-                "code": "demo_backend",
-            }
+        cls.type_out1 = cls._create_exchange_type(
+            name="Type output 1",
+            direction="output",
+            code="test_type_out1",
+            exchange_file_ext="txt",
+            generate_model_id=cls.env.ref(
+                "edi_exchange_template_oca.model_edi_oca_template_handler"
+            ).id,
+            backend_type_id=cls.backend.backend_type_id.id,
         )
-        cls.backend = cls.env["edi.backend"].create(
-            {
-                "name": "Demo EDI backend",
-                "backend_type_id": cls.backend_type.id,
-            }
-        )
-        cls.type_out1 = cls.env["edi.exchange.type"].create(
-            {
-                "name": "Type output 1",
-                "direction": "output",
-                "code": "test_type_out1",
-                "exchange_file_ext": "txt",
-                "generate_model_id": cls.env.ref(
-                    "edi_exchange_template_oca.model_edi_oca_template_handler"
-                ).id,
-                "backend_type_id": cls.backend_type.id,
-            }
-        )
-        cls.type_out2 = cls.env["edi.exchange.type"].create(
-            {
-                "name": "Type output 2",
-                "direction": "output",
-                "code": "test_type_out2",
-                "exchange_file_ext": "txt",
-                "generate_model_id": cls.env.ref(
-                    "edi_exchange_template_oca.model_edi_oca_template_handler"
-                ).id,
-                "backend_type_id": cls.backend_type.id,
-            }
+        cls.type_out2 = cls._create_exchange_type(
+            name="Type output 2",
+            direction="output",
+            code="test_type_out2",
+            exchange_file_ext="txt",
+            generate_model_id=cls.env.ref(
+                "edi_exchange_template_oca.model_edi_oca_template_handler"
+            ).id,
+            backend_type_id=cls.backend.backend_type_id.id,
         )
         model = cls.env["edi.exchange.template.output"]
         qweb_tmpl = cls.env["ir.ui.view"].create(
@@ -61,7 +46,7 @@ class TestExchangeType(TransactionCase):
             {
                 "code": "tmpl_test_type_out1",
                 "name": "Out 1",
-                "backend_type_id": cls.backend_type.id,
+                "backend_type_id": cls.backend.backend_type_id.id,
                 "template_id": qweb_tmpl.id,
                 "output_type": "txt",
             }
@@ -70,7 +55,7 @@ class TestExchangeType(TransactionCase):
             {
                 "code": "tmpl_test_type_out2",
                 "name": "Out 2",
-                "backend_type_id": cls.backend_type.id,
+                "backend_type_id": cls.backend.backend_type_id.id,
                 "template_id": qweb_tmpl.id,
                 "output_type": "txt",
             }

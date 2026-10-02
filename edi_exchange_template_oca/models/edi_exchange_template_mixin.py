@@ -11,6 +11,8 @@ import pytz
 from odoo import fields, models
 from odoo.tools import DotDict, safe_eval
 
+from ..utils import first_of
+
 _logger = logging.getLogger(__name__)
 
 
@@ -121,9 +123,6 @@ class EDIExchangeTemplateMixin(models.AbstractModel):
         return ctx
 
     def _time_utils(self):
-        def first():
-            return lambda records: next(iter(records)) if len(records) > 1 else records
-
         return {
             "datetime": safe_eval.datetime,
             "dateutil": safe_eval.dateutil,
@@ -132,7 +131,7 @@ class EDIExchangeTemplateMixin(models.AbstractModel):
             "date_to_string": self._date_to_string,
             "datetime_to_string": self._datetime_to_string,
             "time_to_string": lambda dt: dt.strftime("%H:%M:%S") if dt else "",
-            "first_of": first,
+            "first_of": first_of,
         }
 
     def _evaluate_code_snippet(self, **render_values):
