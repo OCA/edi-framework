@@ -223,7 +223,6 @@ msgid ""
 msgstr ""
 
 #. module: edi_endpoint_oca
-#: model:ir.model.fields,help:edi_endpoint_oca.field_edi_exchange_consumer_mixin__origin_edi_endpoint_id
 #: model:ir.model.fields,help:edi_endpoint_oca.field_edi_exchange_record__edi_endpoint_id
 msgid "Record generated via this endpoint"
 msgstr ""
