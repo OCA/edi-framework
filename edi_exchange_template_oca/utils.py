@@ -42,3 +42,12 @@ def xml_purge_nswrapper(xml_content):
         parent.extend(nswrapper.getchildren())
         parent.remove(nswrapper)
     return etree.tostring(root)
+
+
+def first_of(records):
+    try:
+        iterable = iter(records)
+    except TypeError:
+        # not iterable, we will treat it as a single value
+        return records
+    return next(iterable, None)
