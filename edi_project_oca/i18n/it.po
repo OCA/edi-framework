@@ -117,12 +117,6 @@ msgid "Projects Exchange Record"
 msgstr "Record scambio progetti"
 
 #. module: edi_project_oca
-#: model:ir.model.fields,help:edi_project_oca.field_project_project__origin_edi_endpoint_id
-#: model:ir.model.fields,help:edi_project_oca.field_project_task__origin_edi_endpoint_id
-msgid "Record generated via this endpoint"
-msgstr "Record generato attraverso questo endpoint"
-
-#. module: edi_project_oca
 #: model:ir.model,name:edi_project_oca.model_project_task
 msgid "Task"
 msgstr "Lavoro"
@@ -143,3 +137,6 @@ msgstr "Record scambio lavori"
 #: model_terms:ir.ui.view,arch_db:edi_project_oca.project_project_view_form_simplified_inherit
 msgid "When marked, EDI automatic processing will be avoided"
 msgstr "Quando selezionata, l'elaborazione EDI automatica verrà evitata"
+
+#~ msgid "Record generated via this endpoint"
+#~ msgstr "Record generato attraverso questo endpoint"
