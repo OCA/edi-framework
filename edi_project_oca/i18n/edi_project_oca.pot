@@ -114,12 +114,6 @@ msgid "Projects Exchange Record"
 msgstr ""
 
 #. module: edi_project_oca
-#: model:ir.model.fields,help:edi_project_oca.field_project_project__origin_edi_endpoint_id
-#: model:ir.model.fields,help:edi_project_oca.field_project_task__origin_edi_endpoint_id
-msgid "Record generated via this endpoint"
-msgstr ""
-
-#. module: edi_project_oca
 #: model:ir.model,name:edi_project_oca.model_project_task
 msgid "Task"
 msgstr ""
