@@ -105,13 +105,11 @@ msgid "Moves"
 msgstr "Movimenti"
 
 #. module: edi_account_oca
-#: model:ir.model.fields,help:edi_account_oca.field_account_move__origin_edi_endpoint_id
-msgid "Record generated via this endpoint"
-msgstr "Record generato attraverso questo endpoint"
-
-#. module: edi_account_oca
 #: model:ir.model.fields,help:edi_account_oca.field_account_bank_statement_line__edi_disable_auto
 #: model:ir.model.fields,help:edi_account_oca.field_account_move__edi_disable_auto
 #: model:ir.model.fields,help:edi_account_oca.field_account_payment__edi_disable_auto
 msgid "When marked, EDI automatic processing will be avoided"
 msgstr "Quando selezionata, l'elaborazione EDI automatica verrà evitata"
+
+#~ msgid "Record generated via this endpoint"
+#~ msgstr "Record generato attraverso questo endpoint"
