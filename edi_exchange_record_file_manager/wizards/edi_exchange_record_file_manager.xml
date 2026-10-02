@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="edi_exchange_record_file_manager_view_form" model="ir.ui.view">
+        <field name="name">edi.exchange.record.file.manager.form</field>
+        <field name="model">edi.exchange.record.file.manager</field>
+        <field name="arch" type="xml">
+            <form string="Edit File">
+                <sheet>
+                    <!-- Add this ``div`` at the top to avoid being hidden if the ``file_content`` field is too long -->
+                    <div
+                        class="alert alert-info"
+                        role="status"
+                        invisible="state not in ('edit', 'replace')"
+                    >
+                        Clicking on "Proceed" will automatically update the Exchange Record's file.
+                    </div>
+                    <!-- State 1: setup -->
+                    <div name="state_setup" invisible="state != 'setup'">
+                        <group>
+                            <field
+                                name="mode"
+                                widget="radio"
+                                options="{'horizontal': true}"
+                                required="state == 'setup'"
+                            />
+                        </group>
+                    </div>
+                    <!-- State 2a: replace -->
+                    <div name="state_replace" invisible="state != 'replace'">
+                        <p>Here is the current file: <field
+                            name="exchange_record_file"
+                            readonly="1"
+                            filename="exchange_record_filename"
+                        /></p>
+                        <p>Please upload your new file here: <field
+                            name="new_file"
+                            filename="new_filename"
+                            required="state == 'replace'"
+                        /></p>
+                        <field name="new_filename" invisible="1" />
+                    </div>
+                    <!-- State 2b: edit -->
+                    <div name="state_edit" invisible="state != 'edit'">
+                        <group>
+                            <field name="ace_mode" required="state == 'edit'" />
+                        </group>
+                        <!--
+                            Field nodes in here are defined dynamically via ``_get_view()``,
+                            which creates N copies of the ``<field name="file_content"/>``
+                            node, one for each ``ace_mode`` value
+                        -->
+                    </div>
+                    <!-- State 3: done -->
+                    <div name="state_done" invisible="state != 'done'">
+                        <div class="alert alert-success" role="status">
+                            The file has been updated.
+                            <ul>
+                            <li>Clicking on "Retry" will retry the exchange.</li>
+                            <li>Clicking on "Close" will close the dialog window.</li>
+                        </ul>
+                        </div>
+                    </div>
+                </sheet>
+                <footer>
+                    <button
+                        name="button_proceed"
+                        type="object"
+                        string="Proceed"
+                        class="btn-primary"
+                        invisible="button_proceed_invisible"
+                    />
+                    <button
+                        name="button_retry"
+                        type="object"
+                        string="Retry"
+                        class="btn-primary"
+                        invisible="button_retry_invisible"
+                    />
+                    <button
+                        string="Cancel"
+                        class="btn-secondary"
+                        special="cancel"
+                        invisible="button_cancel_invisible"
+                    />
+                    <button
+                        string="Close"
+                        class="btn-secondary"
+                        special="cancel"
+                        invisible="button_close_invisible"
+                    />
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

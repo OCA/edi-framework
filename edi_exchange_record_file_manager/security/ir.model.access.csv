@@ -1,0 +1,2 @@
+id,name,model_id:id,group_id:id,perm_create,perm_read,perm_write,perm_unlink
+access_edi_exchange_record_file_manager_user,access_edi_exchange_record_file_manager user,model_edi_exchange_record_file_manager,edi_core_oca.group_edi_override_exchange_file_content,1,1,1,1
