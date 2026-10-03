@@ -4,7 +4,7 @@
 
 from requests import Response
 
-from odoo import _, exceptions
+from odoo import exceptions
 
 from odoo.addons.component.core import Component
 
@@ -42,7 +42,7 @@ class EDIWebserviceSend(Component):
             method = self.ws_settings["method"].lower()
         except KeyError as err:
             raise exceptions.UserError(
-                _("`method` is required in `webservice` type settings.")
+                self.env._("`method` is required in `webservice` type settings.")
             ) from err
         pargs = self.ws_settings.get("pargs", [])
         kwargs = self.ws_settings.get("kwargs", {})
