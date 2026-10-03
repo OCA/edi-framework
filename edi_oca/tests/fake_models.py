@@ -11,6 +11,14 @@ class EdiExchangeConsumerTest(models.Model):
     _description = "Model used only for test"
 
     name = fields.Char()
+    edi_config_ids = fields.Many2many(
+        string="EDI Purchase Config Ids",
+        comodel_name="edi.configuration",
+        relation="test_edi_configuration_rel",
+        column1="record_id",
+        column2="conf_id",
+        domain="[('model_name', '=', 'edi.exchange.consumer.test')]",
+    )
 
     def _get_edi_exchange_record_name(self, exchange_record):
         return self.id

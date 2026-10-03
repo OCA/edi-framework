@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <!-- The `ir_action` parameter must be passed in order to use `send_via_email`
+    Examlple:
+        <field name="snippet_do">record._edi_send_via_email(ir_action)</field>
+     -->
+
+    <record id="edi_conf_trigger_record_create" model="edi.configuration.trigger">
+      <field name="name">On record create</field>
+      <field name="code">on_record_create</field>
+      <field name="description">Trigger when a record is created</field>
+    </record>
+    <record id="edi_conf_trigger_record_write" model="edi.configuration.trigger">
+      <field name="name">On record write</field>
+      <field name="code">on_record_write</field>
+      <field name="description">Trigger when a record is updated</field>
+    </record>
+    <!-- TODO: these 2 have to be triggered somehow -->
+    <record id="edi_conf_trigger_send_via_email" model="edi.configuration.trigger">
+      <field name="name">Send via email</field>
+      <field name="code">on_send_via_email</field>
+      <field name="description">Send record via email TBD</field>
+    </record>
+    <record id="edi_conf_trigger_send_via_edi" model="edi.configuration.trigger">
+      <field name="name">Send via EDI</field>
+      <field name="code">on_send_via_edi</field>
+      <field name="description">Send record via EDI TBD</field>
+    </record>
+
+    <record id="edi_conf_send_via_email" model="edi.configuration">
+      <field name="name">Send Via Email</field>
+      <field name="active">False</field>
+      <field name="trigger_id" ref="edi_conf_trigger_send_via_email" />
+      <field name="snippet_do">record._edi_send_via_email()</field>
+    </record>
+    <record id="edi_conf_send_via_edi" model="edi.configuration">
+      <field name="name">Send Via EDI</field>
+      <field name="active">False</field>
+      <field name="trigger_id" ref="edi_conf_trigger_send_via_edi" />
+      <field name="snippet_do">record._edi_send_via_edi(conf.type_id)</field>
+    </record>
+</odoo>
