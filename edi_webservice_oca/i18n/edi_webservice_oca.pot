@@ -1,6 +1,5 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* edi_webservice_oca
 #
 msgid ""
 msgstr ""
@@ -12,24 +11,3 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: \n"
-
-#. module: edi_webservice_oca
-#: model:ir.model,name:edi_webservice_oca.model_edi_backend
-msgid "EDI Backend"
-msgstr ""
-
-#. module: edi_webservice_oca
-#: model_terms:ir.ui.view,arch_db:edi_webservice_oca.edi_backend_view_form
-msgid "Webservice"
-msgstr ""
-
-#. module: edi_webservice_oca
-#: model:ir.model.fields,field_description:edi_webservice_oca.field_edi_backend__webservice_backend_id
-msgid "Webservice Backend"
-msgstr ""
-
-#. module: edi_webservice_oca
-#. odoo-python
-#: code:addons/edi_webservice_oca/components/send.py:0
-msgid "`method` is required in `webservice` type settings."
-msgstr ""
