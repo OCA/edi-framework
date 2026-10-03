@@ -16,24 +16,15 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 "X-Generator: Weblate 4.17\n"
 
-#. module: edi_webservice_oca
-#: model:ir.model,name:edi_webservice_oca.model_edi_backend
-msgid "EDI Backend"
-msgstr "Backend EDI"
+#~ msgid "EDI Backend"
+#~ msgstr "Backend EDI"
 
-#. module: edi_webservice_oca
-#: model_terms:ir.ui.view,arch_db:edi_webservice_oca.edi_backend_view_form
-msgid "Webservice"
-msgstr "Servizio web"
+#~ msgid "Webservice"
+#~ msgstr "Servizio web"
 
-#. module: edi_webservice_oca
-#: model:ir.model.fields,field_description:edi_webservice_oca.field_edi_backend__webservice_backend_id
-msgid "Webservice Backend"
-msgstr "Backend servizio web"
+#~ msgid "Webservice Backend"
+#~ msgstr "Backend servizio web"
 
-#. module: edi_webservice_oca
-#. odoo-python
-#: code:addons/edi_webservice_oca/components/send.py:0
 #, python-format
-msgid "`method` is required in `webservice` type settings."
-msgstr "`method` è richiesto nelle impostazioni tipo `webservice`."
+#~ msgid "`method` is required in `webservice` type settings."
+#~ msgstr "`method` è richiesto nelle impostazioni tipo `webservice`."
