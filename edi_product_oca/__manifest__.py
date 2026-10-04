@@ -11,7 +11,14 @@
     "author": "ForgeFlow, Odoo Community Association (OCA)",
     "website": "https://github.com/OCA/edi-framework",
     "depends": [
+        # Odoo/core
         "product",
+        # OCA/edi-framework
+        # TODO: Replace this dependency with ``edi_core_oca`` in version 19.0
+        # For version 18.0 without ``edi_endpoint_oca``, CI fails
+        # because ``origin_edi_endpoint_id`` is set up on product models
+        # while its related target ``edi.exchange.record.edi_endpoint_id`` is absent.
+        # A glue module similar to ``edi_sale_endpoint`` does not currently solve it.
         "edi_endpoint_oca",
     ],
     "data": [
