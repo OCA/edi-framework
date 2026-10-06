@@ -1,3 +1,5 @@
 odoo-test-helper
 xmlunittest
 responses
+
+odoo-addon-webservice_core @ git+https://github.com/OCA/web-api@refs/pull/175/head#subdirectory=webservice_core
