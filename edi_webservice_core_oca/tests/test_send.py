@@ -5,8 +5,6 @@ from urllib.parse import urlparse
 import responses
 from requests import PreparedRequest, Session
 
-from odoo import exceptions
-
 from .common import TestEDIWebserviceCoreBase
 
 
@@ -15,22 +13,6 @@ class TestSend(TestEDIWebserviceCoreBase):
     def setUpClass(cls):
         cls._super_send = Session.send
         super().setUpClass()
-
-    @classmethod
-    def _setup_records(cls):
-        result = super()._setup_records()
-        cls.ws_backend = cls.backend.webservice_backend_id
-        cls.settings = """
-        execution_model:
-          send:
-            webservice:
-              method: post
-              kwargs:
-                url_params:
-                  endpoint: push/here
-        """
-        cls.record.type_id.set_settings(cls.settings)
-        return result
 
     @classmethod
     def _request_handler(cls, s: Session, r: PreparedRequest, /, **kw):
@@ -45,17 +27,23 @@ class TestSend(TestEDIWebserviceCoreBase):
     def test_call_params(self):
         handler = self._get_handler()
         ws_settings = handler._get_ws_settings(self.record)
-        method, pargs, kwargs = handler._get_call_params(self.record, ws_settings)
-        self.assertEqual(method, "post")
-        self.assertEqual(pargs, [])
+        kwargs = handler._get_call_params(self.record, ws_settings)
         self.assertEqual(kwargs["data"], "This is a simple file")
-        self.assertEqual(kwargs["url_params"], {"endpoint": "push/here"})
 
-    def test_no_method(self):
+    def test_call_params_extra_kwargs_from_settings(self):
+        settings = """
+        execution_model:
+          send:
+            webservice:
+              kwargs:
+                headers:
+                  X-Demo: demo-value
+        """
+        self.record.type_id.set_settings(settings)
         handler = self._get_handler()
-        msg = "`method` is required in `webservice` type settings"
-        with self.assertRaisesRegex(exceptions.UserError, msg):
-            handler._get_call_params(self.record, {})
+        ws_settings = handler._get_ws_settings(self.record)
+        kwargs = handler._get_call_params(self.record, ws_settings)
+        self.assertEqual(kwargs["headers"], {"X-Demo": "demo-value"})
 
     @responses.activate
     def test_send(self):
@@ -69,30 +57,18 @@ class TestSend(TestEDIWebserviceCoreBase):
         self.assertEqual(responses.calls[0].request.body, "This is a simple file")
 
     def test_send_as_bytes(self):
-        settings = """
-        execution_model:
-          send:
-            webservice:
-              method: post
-              send_as_bytes: true
-              kwargs:
-                url_params:
-                  endpoint: push/here
-        """
-        self.record.type_id.set_settings(settings)
+        self.record.type_id.webservice_send_as_bytes = True
         handler = self._get_handler()
         ws_settings = handler._get_ws_settings(self.record)
-        method, pargs, kwargs = handler._get_call_params(self.record, ws_settings)
+        kwargs = handler._get_call_params(self.record, ws_settings)
         self.assertEqual(kwargs["data"], b"This is a simple file")
 
     @responses.activate
     def test_exchange_send_dispatch(self):
-        # `send_model_id` on the exchange type is enough for the regular
-        # EDI framework dispatch (`backend.exchange_send`) to reach our
-        # handler - not just direct calls to it.
-        self.record.type_id.send_model_id = self.env.ref(
-            "edi_webservice_core_oca.model_edi_webservice_send"
-        )
+        # `send_model_id` + `webservice_endpoint_id` on the exchange type
+        # are enough for the regular EDI framework dispatch
+        # (`backend.exchange_send`) to reach our handler - not just direct
+        # calls to it.
         self.record.edi_exchange_state = "output_pending"
         url = "https://foo.test/push/here"
         responses.add(responses.POST, url, body="{}")
