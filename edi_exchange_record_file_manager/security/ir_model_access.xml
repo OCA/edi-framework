@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo noupdate="1">
+    <!--
+        To access the wizard, a user needs stricter permissions than the ones required
+        to access an EDI Exchange Record: by default, only users in "EDI Override
+        Exchange File Content" can use the wizard
+    -->
+    <record id="access_edi_exchange_record_file_manager_user" model="ir.model.access">
+        <field name="name">access_edi_exchange_record_file_manager user</field>
+        <field name="model_id" ref="model_edi_exchange_record_file_manager" />
+        <field
+            name="group_id"
+            ref="edi_core_oca.group_edi_override_exchange_file_content"
+        />
+        <field name="perm_read" eval="1" />
+        <field name="perm_create" eval="1" />
+        <field name="perm_write" eval="1" />
+        <field name="perm_unlink" eval="1" />
+    </record>
+</odoo>
