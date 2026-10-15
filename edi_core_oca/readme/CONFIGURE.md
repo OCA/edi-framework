@@ -92,6 +92,16 @@ The snippet receives at least two variables in its evaluation context:
 Plus the standard `edi_exec_snippet_do` extras (`operation`,
 `edi_action`, `old_value`, `vals`, ...).
 
+Triggers can also be fired by a scheduled action instead of by an
+exchange. Add an `edi.configuration.trigger` with a code of your own,
+then a scheduled action on `edi.configuration` running
+`model._cron_run_by_trigger("your_code")` on whatever period you need.
+No such trigger ships as data, since the periods a database needs are
+its own; the demo data has an hourly and a daily one to copy from.
+
+A scheduled trigger has no originating record, so its configurations run
+on the records linked to them, or once when they are global.
+
 Two complementary lookup modes are available, and they can be combined
 freely on the same flow.
 
