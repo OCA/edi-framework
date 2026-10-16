@@ -304,3 +304,136 @@ class EDIExchangeConsumerMixin(models.AbstractModel):
     def _edi_get_origin(self):
         self.ensure_one()
         return self.origin_exchange_record_id
+
+    # TODO: full unit test coverage
+    def _edi_send_via_edi(self, exchange_type, backend=None, force=False, **kw):
+        """Simply sending out a record via EDI.
+
+        If the exchange type requires an ack, it will be generated
+        if not already present.
+        """
+        exchange_record = None
+        # If we are sending an ack, we must check if we can generate it
+        if exchange_type.ack_for_type_ids:
+            # TODO: shall we raise an error if the ack is not possible?
+            if self._edi_can_generate_ack(exchange_type):
+                __, exchange_record = self._edi_get_or_create_ack_record(
+                    exchange_type, force=force
+                )
+        else:
+            exchange_record = self._edi_create_exchange_record(
+                exchange_type, backend=backend
+            )
+        # If quick exec is on, `exchange_generate_send` already ran
+        if exchange_record and not exchange_type.quick_exec:
+            exchange_record.action_exchange_generate_send(**kw)
+
+    # TODO: full unit test coverage
+    def _edi_can_generate_ack(self, exchange_type, force=False):
+        """Have to generate ack for this exchange type?
+
+        :param exchange_type: The exchange type to check.
+
+        It should be generated if:
+        - automation is not disabled and not forced
+        - origin exchange record is set (means it was originated by another record)
+        - origin exchange type is compatible with the configured ack types
+        """
+        if (self.edi_disable_auto and not force) or not self.origin_exchange_record_id:
+            return False
+        return self.origin_exchange_type_id in exchange_type.ack_for_type_ids
+
+    # TODO: full unit test coverage
+    def _edi_get_or_create_ack_record(self, exchange_type, backend=None, force=False):
+        """
+        Get or create a child record for the given exchange type.
+
+        If the record has not been sent out yet for whatever reason
+        (job delayed, job failed, send failed, etc)
+        we still want to generate a new up to date record to be sent.
+
+        :param exchange_type: The exchange type to create the record for.
+        :param force: If True, will force the creation of the record in case
+            of ack type.
+        """
+        if not self._edi_can_generate_ack(exchange_type, force=force):
+            return False, False
+        parent = self._edi_get_origin()
+        # Filter acks that are not valued yet.
+        exchange_record = self._get_exchange_record(exchange_type).filtered(
+            lambda x: not x.exchange_file
+        )
+        created = False
+        # If the record has not been sent out yet for whatever reason
+        # (job delayed, job failed, send failed, etc)
+        # we still want to generate a new up to date record to be sent.
+        still_pending = exchange_record.edi_exchange_state in (
+            "output_pending",
+            "output_error_on_send",
+        )
+        if not exchange_record or still_pending:
+            vals = exchange_record._exchange_child_record_values()
+            vals["parent_id"] = parent.id
+            # NOTE: to fully automatize this,
+            # is recommended to enable `quick_exec` on the type
+            # otherwise records will have to wait for the cron to pass by.
+            exchange_record = self._edi_create_exchange_record(
+                exchange_type, backend=backend, vals=vals
+            )
+            created = True
+        return created, exchange_record
+
+    # TODO: full unit test coverage
+    def _edi_send_via_email(
+        self, ir_action, subtype_ref=None, partner_method=None, partners=None
+    ):
+        """Send EDI file via email using the provided action."""
+        # FIXME: missing generation of the record and adding it as an attachment
+        # In this case, the record should be generated immediately and
+        # attached to the email.
+        # An alternative is to generate the record and have a component to
+        # send via email.
+
+        # Retrieve context and composer model
+        ctx = ir_action.get("context", {})
+        composer_model = self.env[ir_action["res_model"]].with_context(**ctx)
+
+        # Determine subtype and partner_ids dynamically based on model-specific logic
+        subtype = subtype_ref and self.env.ref(subtype_ref) or None
+        if not subtype:
+            return False
+
+        # THIS IS the part that should be delegated to a specific send component
+        # It could be also moved to its own module.
+        composer = composer_model.create({"subtype_id": subtype.id})
+        composer.onchange_template_id_wrapper()
+
+        # Dynamically retrieve partners based on the provided method or
+        # fallback to parameter
+        if partner_method and hasattr(self, partner_method):
+            composer.partner_ids = getattr(self, partner_method)().ids
+        elif partners:
+            composer.partner_ids = partners.ids
+        else:
+            return False
+
+        # Send the email
+        composer.send_mail()
+        return True
+
+    def write(self, vals):
+        # Generic event to match a state change
+        # TODO: this can be added to component_event for models having the state field
+        state_change = "state" in vals and "state" in self._fields
+        if state_change:
+            for rec in self:
+                rec._event(f"on_edi_{self._table}_before_state_change").notify(
+                    rec, state=vals["state"]
+                )
+        res = super().write(vals)
+        if state_change:
+            for rec in self:
+                rec._event(f"on_edi_{self._table}_state_change").notify(
+                    rec, state=vals["state"]
+                )
+        return res

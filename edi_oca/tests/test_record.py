@@ -139,6 +139,7 @@ class EDIRecordTestCase(EDIBackendCommonTestCase):
             {"name": "test_chan", "parent_id": parent_channel.id}
         )
         self.exchange_type_in.job_channel_id = channel
+        self.exchange_type_in.job_priority = 5
         # re-enable job delayed feature
         delayed = record.with_context(queue_job__no_delay=False).with_delay()
         # Silent useless warning
@@ -147,6 +148,7 @@ class EDIRecordTestCase(EDIBackendCommonTestCase):
         self.assertTrue(isinstance(delayed, DelayableRecordset))
         self.assertEqual(delayed.recordset, record)
         self.assertEqual(delayed.delayable.channel, "root.parent_test_chan.test_chan")
+        self.assertEqual(delayed.delayable.priority, 5)
 
     def test_create_child(self):
         vals = {
@@ -253,3 +255,17 @@ class EDIRecordTestCase(EDIBackendCommonTestCase):
         self.assertEqual(len(record.related_record_ids), 2)
         self.assertEqual(record.related_record_ids[0].record, self.partner)
         self.assertEqual(record.related_record_ids[1].record, spain)
+
+    def test_has_exchange_file(self):
+        vals = {
+            "model": self.partner._name,
+            "res_id": self.partner.id,
+        }
+        record = self.backend.create_record("test_csv_output", vals)
+        self.assertFalse(record.has_exchange_file)
+
+        record.exchange_file = base64.b64encode(b"ABC")
+        self.assertTrue(record.has_exchange_file)
+
+        record.exchange_file = False
+        self.assertFalse(record.has_exchange_file)

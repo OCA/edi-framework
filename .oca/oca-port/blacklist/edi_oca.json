@@ -1,0 +1,5 @@
+{
+  "pull_requests": {
+    "OCA/edi-framework#63": "The only two edi_oca-touching commits (a test fix + a later revert of unrelated prior history) net to zero; Nothing to port."
+  }
+}

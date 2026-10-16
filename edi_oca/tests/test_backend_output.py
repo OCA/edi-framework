@@ -73,10 +73,13 @@ class EDIBackendTestOutputCase(EDIBackendCommonComponentRegistryTestCase):
             [
                 {
                     "edi_exchange_state": "output_error_on_send",
+                    "exchange_error": "OOPS! Something went wrong :(",
                 }
             ],
         )
-        self.assertIn("OOPS! Something went wrong :(", self.record.exchange_error)
+        self.assertIn(
+            "OOPS! Something went wrong :(", self.record.exchange_error_traceback
+        )
 
     def test_send_invalid_direction(self):
         vals = {
@@ -130,7 +133,7 @@ class EDIBackendTestOutputJobsCase(EDIBackendCommonComponentRegistryTestCase):
     @classmethod
     def _setup_context(cls):
         # Re-enable jobs
-        return dict(super()._setup_context(), test_queue_job_no_delay=False)
+        return dict(super()._setup_context(), queue_job__no_delay=False)
 
     def test_job(self):
         with trap_jobs() as trap:

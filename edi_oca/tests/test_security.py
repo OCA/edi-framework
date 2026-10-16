@@ -174,9 +174,10 @@ class TestEDIExchangeRecordSecurity(EDIBackendCommonTestCase):
         exchange_record.res_id = -1
         self.user.write({"groups_id": [(4, self.group.id)]})
         logger_name = "odoo.addons.edi_oca.models.edi_exchange_record"
+        # Silly pylint complains about not having spaces after `:` and `,`
         expected_msg = (
-            f"WARNING:{logger_name}:"
-            f"Deleted record {exchange_record.model},{exchange_record.res_id} "
+            f"WARNING:{logger_name}:"  # noqa
+            f"Deleted record {exchange_record.model},{exchange_record.res_id} "  # noqa
             f"is referenced by edi.exchange.record [{exchange_record.id}]"
         )
         with self.assertLogs(logger_name, "WARNING") as watcher:
@@ -221,3 +222,16 @@ class TestEDIExchangeRecordSecurity(EDIBackendCommonTestCase):
         self.consumer_record.name = "no_rule"
         with self.assertRaisesRegex(AccessError, "doesn't have 'write' access"):
             exchange_record.with_user(self.user).write({"external_identifier": "1234"})
+
+    @mute_logger("odoo.addons.base.models.ir_model")
+    def test_no_group_no_read_child(self):
+        exchange_record = self.create_record()
+        model = self.consumer_record
+        # Create child record without specific model and res_id
+        # It should follow the access rights of the parent
+        child_exchange_record = self.backend.create_record(
+            "test_csv_output", {"parent_id": exchange_record.id}
+        )
+        msg = rf"not allowed to access '{model._description}' \({model._name}\)"
+        with self.assertRaisesRegex(AccessError, msg):
+            child_exchange_record.with_user(self.user).read()
