@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2020 Creu Blanca
+     License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl). -->
+<odoo>
+    <record id="view_partner_form" model="ir.ui.view">
+        <field name="name">res.partner.view.form</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="edi_core_oca.view_partner_form" />
+        <field name="arch" type="xml">
+            <group name="edi_main" position="after">
+                <group name="picking" string="Transfers">
+                    <field name="edi_stock_picking_conf_ids" colspan="6" nolabel="1">
+                        <list>
+                            <field name="name" />
+                            <field name="trigger_id" />
+                            <field name="type_id" />
+                            <field name="model_id" />
+                        </list>
+                    </field>
+                </group>
+            </group>
+        </field>
+    </record>
+</odoo>
