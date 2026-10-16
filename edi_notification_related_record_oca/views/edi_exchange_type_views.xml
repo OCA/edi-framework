@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="edi_exchange_type_view_form" model="ir.ui.view">
+        <field
+            name="name"
+        >edi.exchange.type.form - edi_notification_related_record_oca</field>
+        <field name="model">edi.exchange.type</field>
+        <field name="inherit_id" ref="edi_oca.edi_exchange_type_view_form" />
+        <field name="arch" type="xml">
+            <notebook position="inside">
+                <page
+                    name="related_record_notifications"
+                    string="Related Record Notifications"
+                >
+                    <group name="related_record_notifications">
+                        <field
+                            name="notify_related_record_on_generate"
+                            invisible="direction == 'input'"
+                        />
+                        <field
+                            name="notify_related_record_on_send"
+                            invisible="direction == 'input'"
+                        />
+                        <field name="notify_related_record_on_process" />
+                        <field
+                            name="notify_related_record_on_receive"
+                            invisible="direction == 'output'"
+                        />
+                    </group>
+                </page>
+            </notebook>
+        </field>
+    </record>
+</odoo>
