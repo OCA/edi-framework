@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2026 Dixmit
+     License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl). -->
+<odoo>
+    <record model="ir.ui.view" id="edi_backend_view_form">
+        <field name="model">edi.backend</field>
+        <field name="inherit_id" ref="edi_core_oca.edi_backend_view_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//notebook" position="inside">
+                <page string="EDI mail import">
+                    <group>
+                        <group>
+                            <div name="alias_def" colspan="2" class="pb-2">
+                                <!-- Always display the whole alias in edit mode. It depends in read only -->
+                                <!-- Need to add alias_id in view for getting alias_domain_id by default -->
+                                <field name="alias_id" invisible="1" />
+                                <label
+                                    for="alias_name"
+                                    class="fw-bold o_form_label"
+                                    string="Create EDI Records by sending an email to"
+                                />
+                                <field
+                                    name="alias_email"
+                                    class="oe_read_only d-inline"
+                                    widget="email"
+                                    readonly="1"
+                                    invisible="not alias_name"
+                                />
+                                <span class="oe_edit_only o_row">
+                                    <field name="alias_name" />@
+                                    <field
+                                    name="alias_domain_id"
+                                    class="oe_inline"
+                                    placeholder="e.g. domain.com"
+                                    options="{'no_create': True, 'no_open': True}"
+                                />
+                                </span>
+                            </div>
+                            <!-- the alias contact must appear when the user start typing and it must disappear
+                                when the string is deleted. -->
+                            <field
+                                name="alias_contact"
+                                class="oe_inline"
+                                string="Accept Emails From"
+                                invisible="not alias_email"
+                            />
+                        </group>
+                        <group>
+                            <div class="alert alert-info" role="alert">
+                                Define an alias to automatically create Exhange records from incoming emails.<p
+                            />
+                                The system will check on the possible exchange types linked to this backend and backend type to review if we can assign the type.
+                                The types will only be used if we set `Mail Record Policy` on the exchange type.
+                                If the policy is `pattern`, the system will try to find a file in the email matching the pattern defined on the exchange type and use the specific file.
+                                If the policy is `full`, the system will use the full email content as file for the exchange record as a JSON file named `email_message.json`.
+                            </div>
+                        </group>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+</odoo>
