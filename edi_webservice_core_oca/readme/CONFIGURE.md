@@ -30,5 +30,7 @@ type's advanced settings:
             url_params:
               foo: baz
 
+On a webservice endpoint, the *Exchange Types* smart button lists the exchange types sending through it.
+
 If you want to send data as bytes you can use the option send_as_bytes
 on the exchange type (same tab).
