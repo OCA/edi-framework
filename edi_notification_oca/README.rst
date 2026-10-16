@@ -32,22 +32,22 @@ EDI Notification
 
 |badge1| |badge2| |badge3| |badge4| |badge5|
 
-This module creates activities for users when an exchange record's
-process fails.
+This module makes the notifications of exchange records configurable,
+per exchange type, through notification rules.
 
-It also installs an ``edi.configuration`` rule
-(``Notify Users On Exchange Error``) that calls
-``edi.notification.tool`` on process errors.
+A rule reacts to one or more exchange statuses (generated, sent, send
+error, processed, process error, ACK missing, ...) and does one of the
+following:
 
-Exchange types must be configured properly to create such activities:
+-  **Note on related records**: posts the status note on the records the
+   exchange is related to.
+-  **Activity on exchange record**: schedules an activity on the
+   exchange record for the selected users and for the users of the
+   selected groups (eg: on process errors).
 
-- field "Notify On Process Error" must be checked to activate the
-  feature for the current exchange type
-- field "Activity Type Used When Notify On Process Error" is used to
-  define the type of the newly created activity
-- fields "Notify Groups On Process Error" and "Notify Users On Process
-  Error" are used to define the users that will be assigned to the newly
-  created activity
+Each exchange type gets a default *Notes on related records* rule with
+every status, so installing the module changes nothing until the rules
+are edited. Error notes are always posted on the related records.
 
 .. IMPORTANT::
    This is an alpha version, the data model and design can change at any time without warning.
@@ -62,19 +62,98 @@ Exchange types must be configured properly to create such activities:
 Configuration
 =============
 
-The module provides an ``edi.configuration`` entry named
-``Notify Users On Exchange Error``.
+Go to the **Notifications** page of an exchange type.
 
-You can review or adapt this configuration under EDI configurations if
-you need to change the trigger behavior or the executed snippets.
+To choose which notes are posted on the related records, edit the *Notes
+on related records* rule: remove the statuses whose note is not wanted,
+or archive the rule to keep only the error notes. Error notes
+(validation, send, receive and process errors, missing or erroneous
+acknowledgements) are always posted, so they cannot be selected on a
+*Note on related records* rule.
 
-To enable notifications for a specific exchange type:
+To schedule activities, add a rule of type *Activity on exchange
+record*:
 
-- enable *Notify On Process Error*
-- select an activity type in *Activity Type Used When Notify On Process
-  Error*
-- assign recipients with *Notify Groups On Process Error* and/or *Notify
-  Users On Process Error*
+-  select the statuses that schedule it, errors included;
+-  select its activity type, and the users and/or groups the activities
+   are assigned to. The users of a group include the users of the groups
+   implying it.
+
+Only the statuses matching the direction of the exchange type can be
+selected (eg: *Sent* only for output types).
+
+Development
+===========
+
+Every note ``edi_core_oca`` posts on the related records goes through
+``edi.exchange.record._notify_state(key, message, level)``, which this
+module overrides to apply the rules. ``key`` is the status
+(``_exchange_status_messages`` key) and matches the ``code`` of an
+``edi.notification.trigger``.
+
+-  A status with no trigger is always notified. A module calling
+   ``notify_action_complete`` with its own action (status
+   ``<action>_ok``) can add a trigger with that code to make it
+   configurable.
+
+-  ``_notify_related_record`` posts the note directly, bypassing the
+   rules. Call ``_notify_state`` instead.
+
+-  New exchange types get their default rule on creation. Types created
+   before the module install get it from the install hook or the
+   migration.
+
+-  A module declaring its own rules for its exchange types creates them
+   with the ``edi_notification_skip_default_rule`` context key, so they
+   do not get the default rule. In a data file, set it on the record of
+   the exchange type, and declare the rules as records of their own:
+
+   .. code:: xml
+
+      <record
+          id="exchange_type_x"
+          model="edi.exchange.type"
+          context="{'edi_notification_skip_default_rule': True}"
+      >
+          ...
+      </record>
+      <record id="exchange_type_x_rule" model="edi.notification.rule">
+          <field name="name">Notes on related records</field>
+          <field name="type_id" ref="exchange_type_x" />
+          <field
+              name="trigger_ids"
+              eval="[Command.set([ref('edi_notification_oca.trigger_send_ok')])]"
+          />
+      </record>
+
+Changelog
+=========
+
+19.0.2.0.0
+----------
+
+Features
+~~~~~~~~
+
+-  Notifications are configured by **notification rules** on the
+   exchange type (``edi.notification.rule``). A rule reacts to exchange
+   statuses, and either posts the status note on the related records or
+   schedules activities for users and groups.
+-  Every exchange type gets a default *Notes on related records* rule
+   with every non-error status, matching the behaviour without this
+   module. Error notes are always posted. Exchange types created with
+   the ``edi_notification_skip_default_rule`` context key get no default
+   rule.
+
+Breaking changes
+~~~~~~~~~~~~~~~~
+
+-  The *Notify On Process Error* fields of the exchange type, the
+   ``edi.notification.tool`` model and the *Notify Users On Exchange
+   Error* ``edi.configuration`` are removed. The migration creates the
+   default rule of every exchange type, and replaces each configured
+   process error notification with an activity rule on the same error
+   statuses, with the same activity type, groups and users.
 
 Bug Tracker
 ===========
@@ -93,12 +172,16 @@ Authors
 -------
 
 * Camptocamp
+* ForgeFlow
 
 Contributors
 ------------
 
-- Duong (Tran Quoc) <duontq@troz.com>
-- Simone Orsi <simone.orsi@camptocamp.com>
+-  Duong (Tran Quoc) <duontq@troz.com>
+-  Simone Orsi <simone.orsi@camptocamp.com>
+-  `ForgeFlow <https://www.forgeflow.com>`__:
+
+   -  Guillem Casassas <guillem.casassas@forgeflow.com>
 
 Maintainers
 -----------
