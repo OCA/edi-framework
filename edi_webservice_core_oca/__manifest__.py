@@ -17,6 +17,7 @@
     "data": [
         "views/edi_backend.xml",
         "views/edi_exchange_type.xml",
+        "views/webservice_endpoint.xml",
         "security/ir.model.access.csv",
     ],
     "demo": ["demo/edi_backend.xml"],
