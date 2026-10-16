@@ -20,4 +20,4 @@ class EDIExchangeInfoMixin(AbstractComponent):
         super().__init__(work_context)
         for key in self._work_context_validate_attrs:
             if not hasattr(work_context, key):
-                raise AttributeError(f"`{key}` is required for this component!")
+                raise AttributeError(f"'{key}' is required for this component!")
