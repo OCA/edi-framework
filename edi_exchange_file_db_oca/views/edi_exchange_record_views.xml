@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="edi_exchange_record_view_form" model="ir.ui.view">
+        <field name="name">edi.exchange.record.form - edi_exchange_file_db_oca</field>
+        <field name="model">edi.exchange.record</field>
+        <field name="inherit_id" ref="edi_oca.edi_exchange_record_view_form" />
+        <field name="arch" type="xml">
+            <page name="error" position="before">
+                <page
+                    name="file_content"
+                    string="File Content"
+                    invisible="not exchange_file_content_format and not exchange_file_content_too_large"
+                >
+                    <field name="exchange_file_content_format" invisible="1" />
+                    <field name="exchange_file_content_too_large" invisible="1" />
+                    <div
+                        class="alert alert-info"
+                        role="status"
+                        invisible="exchange_file_content_format != 'binary'"
+                    >
+                        This file is binary (<field
+                            name="exchange_file_content_mimetype"
+                            class="oe_inline"
+                        />) and cannot be displayed here: download it from the
+                        Exchange file field.
+                    </div>
+                    <div
+                        class="alert alert-info"
+                        role="status"
+                        invisible="not exchange_file_content_too_large"
+                    >
+                        The file is too large to be displayed here: download it
+                        from the Exchange file field.
+                    </div>
+                    <field
+                        name="exchange_file_content"
+                        widget="ace"
+                        options="{'mode': 'js'}"
+                        readonly="1"
+                        nolabel="1"
+                        colspan="2"
+                        invisible="exchange_file_content_format != 'json'"
+                    />
+                    <field
+                        name="exchange_file_content"
+                        widget="ace"
+                        options="{'mode': 'xml'}"
+                        readonly="1"
+                        nolabel="1"
+                        colspan="2"
+                        invisible="exchange_file_content_format != 'xml'"
+                    />
+                    <field
+                        name="exchange_file_content"
+                        class="font-monospace"
+                        readonly="1"
+                        nolabel="1"
+                        colspan="2"
+                        invisible="exchange_file_content_format != 'text'"
+                    />
+                </page>
+            </page>
+        </field>
+    </record>
+</odoo>
