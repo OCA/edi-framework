@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="edi_exchange_type_view_form" model="ir.ui.view">
+        <field name="name">edi.exchange.type.form - edi_exchange_file_db_oca</field>
+        <field name="model">edi.exchange.type</field>
+        <field name="inherit_id" ref="edi_oca.edi_exchange_type_view_form" />
+        <field name="arch" type="xml">
+            <field name="exchange_file_auto_generate" position="after">
+                <field name="store_file_content_in_db" />
+                <field
+                    name="file_content_db_max_size"
+                    invisible="not store_file_content_in_db"
+                />
+            </field>
+        </field>
+    </record>
+</odoo>
