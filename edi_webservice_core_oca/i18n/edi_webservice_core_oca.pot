@@ -14,13 +14,62 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: edi_webservice_core_oca
+#: model:ir.model.fields,help:edi_webservice_core_oca.field_edi_exchange_type__webservice_send_as_bytes
+msgid ""
+"By sending as bytes, `requests` won't try to guess and/or alter the encoding"
+" of the file being sent."
+msgstr ""
+
+#. module: edi_webservice_core_oca
 #: model:ir.model,name:edi_webservice_core_oca.model_edi_backend
 msgid "EDI Backend"
 msgstr ""
 
 #. module: edi_webservice_core_oca
+#: model:ir.model,name:edi_webservice_core_oca.model_edi_exchange_type
+msgid "EDI Exchange Type"
+msgstr ""
+
+#. module: edi_webservice_core_oca
 #: model:ir.model,name:edi_webservice_core_oca.model_edi_webservice_send
 msgid "EDI WebService Send Handler"
+msgstr ""
+
+#. module: edi_webservice_core_oca
+#: model_terms:ir.ui.view,arch_db:edi_webservice_core_oca.edi_exchange_type_view_form_webservice
+msgid "Endpoint"
+msgstr ""
+
+#. module: edi_webservice_core_oca
+#: model:ir.model.fields,field_description:edi_webservice_core_oca.field_webservice_endpoint__exchange_type_count
+msgid "Exchange Type Count"
+msgstr ""
+
+#. module: edi_webservice_core_oca
+#. odoo-python
+#: code:addons/edi_webservice_core_oca/models/webservice_endpoint.py:0
+#: model:ir.model.fields,field_description:edi_webservice_core_oca.field_webservice_endpoint__exchange_type_ids
+#: model_terms:ir.ui.view,arch_db:edi_webservice_core_oca.webservice_endpoint_view_form_edi
+msgid "Exchange Types"
+msgstr ""
+
+#. module: edi_webservice_core_oca
+#: model:ir.model.fields,field_description:edi_webservice_core_oca.field_edi_exchange_type__webservice_send_as_bytes
+msgid "Send As Bytes"
+msgstr ""
+
+#. module: edi_webservice_core_oca
+#: model:ir.model.fields,help:edi_webservice_core_oca.field_edi_exchange_type__webservice_send_enabled
+msgid ""
+"Technical flag: whether `send_model_id` inherits from the webservice send "
+"handler (`edi.webservice.send`), directly or via a custom extension. Used to"
+" show/hide webservice-specific settings on this type."
+msgstr ""
+
+#. module: edi_webservice_core_oca
+#: model:ir.model,name:edi_webservice_core_oca.model_webservice_endpoint
+#: model:ir.model.fields,field_description:edi_webservice_core_oca.field_edi_exchange_type__webservice_endpoint_id
+msgid "WebService Endpoint"
 msgstr ""
 
 #. module: edi_webservice_core_oca
@@ -30,11 +79,24 @@ msgstr ""
 
 #. module: edi_webservice_core_oca
 #: model:ir.model.fields,field_description:edi_webservice_core_oca.field_edi_backend__webservice_backend_id
+#: model:ir.model.fields,field_description:edi_webservice_core_oca.field_edi_exchange_type__webservice_backend_id
 msgid "Webservice Backend"
 msgstr ""
 
 #. module: edi_webservice_core_oca
-#. odoo-python
-#: code:addons/edi_webservice_core_oca/models/edi_webservice_send.py:0
-msgid "`method` is required in `webservice` type settings."
+#: model:ir.model.fields,field_description:edi_webservice_core_oca.field_edi_exchange_type__webservice_send_enabled
+msgid "Webservice Send Enabled"
+msgstr ""
+
+#. module: edi_webservice_core_oca
+#: model:ir.model.fields,help:edi_webservice_core_oca.field_edi_exchange_type__webservice_endpoint_id
+msgid ""
+"Webservice endpoint to call when sending through this exchange type (see "
+"`edi.webservice.send`). Extra call parameters can still be provided via the "
+"advanced YAML settings."
+msgstr ""
+
+#. module: edi_webservice_core_oca
+#: model_terms:ir.ui.view,arch_db:edi_webservice_core_oca.edi_exchange_type_view_form_webservice
+msgid "Webservice settings"
 msgstr ""
