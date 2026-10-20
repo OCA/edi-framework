@@ -1,7 +1,8 @@
 [project]
 name = "odoo-addons-oca-edi-framework"
-version = "19.0.20261016.0"
+version = "19.0.20261020.0"
 dependencies = [
+    "odoo-addon-edi_account_oca==19.0.*",
     "odoo-addon-edi_component_oca==19.0.*",
     "odoo-addon-edi_core_oca==19.0.*",
     "odoo-addon-edi_endpoint_oca==19.0.*",
