@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo noupdate="1">
+    <record id="cron_edi_backend_gc_stale_jobs" model="ir.cron" forcecreate="True">
+        <field name="name">EDI exchange garbage collect stale jobs</field>
+        <field name="active" eval="False" />
+        <field name="user_id" ref="base.user_root" />
+        <field name="interval_number">1</field>
+        <field name="interval_type">days</field>
+        <field name="model_id" ref="edi_core_oca.model_edi_backend" />
+        <field name="state">code</field>
+        <field name="code">model.search([])._job_gc_stale()</field>
+    </record>
+</odoo>
