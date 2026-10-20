@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2026 Camptocamp SA
+     @author Simone Orsi <simahawk@gmail.com>
+     License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
+<odoo>
+    <record id="webservice_endpoint_view_form_edi" model="ir.ui.view">
+        <field name="name">webservice.endpoint.form (in edi_webservice_core_oca)</field>
+        <field name="model">webservice.endpoint</field>
+        <field name="inherit_id" ref="webservice_core.webservice_endpoint_form_view" />
+        <field name="arch" type="xml">
+            <xpath expr="//sheet/div[hasclass('oe_title')]" position="before">
+                <div
+                    class="oe_button_box"
+                    name="button_box"
+                    invisible="exchange_type_count == 0"
+                >
+                    <button
+                        name="action_view_exchange_types"
+                        type="object"
+                        class="oe_stat_button"
+                        icon="fa-exchange"
+                    >
+                        <field
+                            name="exchange_type_count"
+                            widget="statinfo"
+                            string="Exchange Types"
+                        />
+                    </button>
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>
