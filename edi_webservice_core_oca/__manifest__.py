@@ -7,7 +7,7 @@
     "summary": """
         Webservice backend and send handler for EDI: no component
         dependency""",
-    "version": "18.0.1.1.0",
+    "version": "18.0.1.2.0",
     "license": "AGPL-3",
     "development_status": "Beta",
     "author": "Dixmit, Camptocamp, Odoo Community Association (OCA)",
