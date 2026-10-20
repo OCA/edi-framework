@@ -198,7 +198,7 @@ class EDIExchangeRecord(models.Model):
     def _compute_exchange_file_frozen(self):
         for rec in self:
             rec.exchange_file_frozen = bool(
-                rec.exchange_file
+                rec.with_context(bin_size=True).exchange_file
                 and rec.edi_exchange_state
                 in ("input_processed", "output_sent", "output_sent_and_processed")
             ) and not self.env.user.has_group(
