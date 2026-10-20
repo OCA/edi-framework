@@ -60,7 +60,15 @@ class EDIExchangeRecord(models.Model):
     )
     related_record_exists = fields.Boolean(compute="_compute_related_record_exists")
     related_name = fields.Char(compute="_compute_related_name", compute_sudo=True)
-    exchange_file = fields.Binary(attachment=True, copy=False)
+    exchange_file = fields.Binary(
+        attachment=True,
+        copy=False,
+        inverse="_inverse_exchange_file",
+    )
+    has_exchange_file = fields.Boolean(
+        default=False,
+        copy=False,
+    )
     exchange_filename = fields.Char(
         compute="_compute_exchange_filename", readonly=False, store=True
     )
@@ -98,6 +106,9 @@ class EDIExchangeRecord(models.Model):
         ],
     )
     exchange_error = fields.Text(string="Exchange error", readonly=True, copy=False)
+    exchange_error_traceback = fields.Text(
+        string="Exchange error traceback", readonly=True, copy=False
+    )
     # Relations w/ other records
     parent_id = fields.Many2one(
         comodel_name="edi.exchange.record",
@@ -157,6 +168,10 @@ class EDIExchangeRecord(models.Model):
                 continue
             if not rec.exchange_filename:
                 rec.exchange_filename = rec.type_id._make_exchange_filename(rec)
+
+    def _inverse_exchange_file(self):
+        for rec in self:
+            rec.has_exchange_file = bool(rec.exchange_file)
 
     @api.depends("exchange_file")
     def _compute_exchange_filechecksum(self):
@@ -405,6 +420,9 @@ class EDIExchangeRecord(models.Model):
         self.ensure_one()
         return self.backend_id.exchange_generate(self, **kw)
 
+    def action_exchange_generate_send(self, **kw):
+        return self.backend_id.exchange_generate_send(self, **kw)
+
     def action_exchange_send(self):
         self.ensure_one()
         return self.backend_id.exchange_send(self)
@@ -642,10 +660,15 @@ class EDIExchangeRecord(models.Model):
         for exc_rec in self.sudo():
             if not exc_rec.related_record_exists:
                 continue
-            by_model_rec_ids[exc_rec.model].add(exc_rec.res_id)
-            if exc_rec.model not in by_model_checker:
-                by_model_checker[exc_rec.model] = getattr(
-                    self.env[exc_rec.model], "get_edi_access", default_checker
+            model = exc_rec.model
+            res_id = exc_rec.res_id
+            if not model and exc_rec.parent_id:
+                model = exc_rec.parent_id.model
+                res_id = exc_rec.parent_id.res_id
+            by_model_rec_ids[model].add(res_id)
+            if model not in by_model_checker:
+                by_model_checker[model] = getattr(
+                    self.env[model], "get_edi_access", default_checker
                 )
 
         for model, rec_ids in by_model_rec_ids.items():
@@ -664,9 +687,13 @@ class EDIExchangeRecord(models.Model):
 
     def _job_delay_params(self):
         params = {}
-        channel = self.type_id.sudo().job_channel_id
+        exchange_type = self.type_id.sudo()
+        channel = exchange_type.job_channel_id
         if channel:
             params["channel"] = channel.complete_name
+        priority = exchange_type.job_priority
+        if priority:
+            params["priority"] = priority
         # Avoid generating the same job for the same record if existing
         params["identity_key"] = exchange_record_job_identity_exact
         return params
