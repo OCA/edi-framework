@@ -320,7 +320,9 @@ class EDIBackend(models.Model):
             raise exceptions.UserError(
                 self.env._("Record ID=%d is not meant to be sent!") % exchange_record.id
             )
-        if not exchange_record.exchange_file:
+        # Only check that a file exists: avoid loading its content, which may
+        # live in a filesystem storage.
+        if not exchange_record.with_context(bin_size=True).exchange_file:
             raise exceptions.UserError(
                 self.env._("Record ID=%d has no file to send!") % exchange_record.id
             )
