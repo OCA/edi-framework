@@ -67,9 +67,9 @@ class EDIEndpoint(models.Model):
                     _("Exchange type not compatible with selected backend type.")
                 )
 
-    def _handle_request(self, request):
+    def _handle_request(self, request, querystring_params=None):
         self._check_endpoint_ready(request=True)
-        return super()._handle_request(request)
+        return super()._handle_request(request, querystring_params=querystring_params)
 
     def action_view_edi_records(self):
         self.ensure_one()
