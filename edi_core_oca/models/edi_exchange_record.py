@@ -60,7 +60,14 @@ class EDIExchangeRecord(models.Model):
     )
     related_record_exists = fields.Boolean(compute="_compute_related_record_exists")
     related_name = fields.Char(compute="_compute_related_name", compute_sudo=True)
-    exchange_file = fields.Binary(attachment=True, copy=False)
+    exchange_file = fields.Binary(
+        attachment=True,
+        copy=False,
+        inverse="_inverse_exchange_file",
+    )
+    # Stored flag mirroring the presence of exchange_file: searching on it
+    # avoids the costly subqueries on ir_attachment.
+    has_exchange_file = fields.Boolean(default=False, copy=False)
     exchange_filename = fields.Char(
         compute="_compute_exchange_filename", readonly=False, store=True
     )
@@ -168,6 +175,10 @@ class EDIExchangeRecord(models.Model):
                 continue
             if not rec.exchange_filename:
                 rec.exchange_filename = rec.type_id._make_exchange_filename(rec)
+
+    def _inverse_exchange_file(self):
+        for rec in self:
+            rec.has_exchange_file = bool(rec.exchange_file)
 
     @api.depends("exchange_file")
     def _compute_exchange_filechecksum(self):
