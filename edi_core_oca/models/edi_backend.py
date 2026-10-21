@@ -320,7 +320,9 @@ class EDIBackend(models.Model):
             raise exceptions.UserError(
                 self.env._("Record ID=%d is not meant to be sent!") % exchange_record.id
             )
-        if not exchange_record.exchange_file:
+        # Only check that a file exists: avoid loading its content, which may
+        # live in a filesystem storage.
+        if not exchange_record.with_context(bin_size=True).exchange_file:
             raise exceptions.UserError(
                 self.env._("Record ID=%d has no file to send!") % exchange_record.id
             )
@@ -408,7 +410,7 @@ class EDIBackend(models.Model):
             ("type_id.exchange_file_auto_generate", "=", True),
             ("type_id.direction", "=", "output"),
             ("edi_exchange_state", "=", "new"),
-            ("exchange_file", "=", False),
+            ("has_exchange_file", "=", False),
         ]
         if record_ids:
             domain.append(("id", "in", record_ids))
@@ -651,7 +653,7 @@ class EDIBackend(models.Model):
             ("backend_id", "=", self.id),
             ("type_id.direction", "=", "input"),
             ("edi_exchange_state", "=", "input_pending"),
-            ("exchange_file", "=", False),
+            ("has_exchange_file", "=", False),
         ]
         if record_ids:
             domain.append(("id", "in", record_ids))
