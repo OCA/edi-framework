@@ -16,7 +16,7 @@ _logger = logging.getLogger(__name__)
 
 class EdiOcaHandlerGenerate(models.AbstractModel):
     _name = "edi.oca.component.handler"
-    _inherit = [
+    _inherit = [  # noqa: RUF012
         "edi.oca.handler.generate",
         "edi.oca.handler.input.validate",
         "edi.oca.handler.output.validate",

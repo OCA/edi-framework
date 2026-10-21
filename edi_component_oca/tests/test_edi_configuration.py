@@ -152,8 +152,8 @@ result = {\n
             self.consumer_record,
             tracked_fields=[],
             edi_action="generate",
-            old_vals={record_id: dict(state="draft")},
-            vals={record_id: dict(state="confirmed")},
+            old_vals={record_id: {"state": "draft"}},
+            vals={record_id: {"state": "confirmed"}},
         )
         # Check the new vals after execution
         self.assertEqual(vals, expected_value)

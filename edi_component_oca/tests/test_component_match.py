@@ -16,14 +16,14 @@ class EDIBackendTestMatchCase(EDIBackendCommonComponentRegistryTestCase):
             _inherit = "edi.component.mixin"
             _usage = "generate"
             _backend_type = "demo_backend"
-            _apply_on = ["res.partner"]
+            _apply_on = ["res.partner"]  # noqa: RUF012
 
         class MatchByExchangeTypeOnly(Component):
             _name = "exchange_type.only"
             _inherit = "edi.component.mixin"
             _usage = "generate"
             _exchange_type = "test_csv_output"
-            _apply_on = ["res.partner"]
+            _apply_on = ["res.partner"]  # noqa: RUF012
 
         class MatchByBackendExchangeType(Component):
             _name = "backend_type.and.exchange_type"
@@ -31,7 +31,7 @@ class EDIBackendTestMatchCase(EDIBackendCommonComponentRegistryTestCase):
             _usage = "generate"
             _backend_type = "demo_backend"
             _exchange_type = "test_csv_output"
-            _apply_on = ["res.partner"]
+            _apply_on = ["res.partner"]  # noqa: RUF012
 
         self._build_components(
             MatchByBackendTypeOnly,

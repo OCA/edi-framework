@@ -12,7 +12,7 @@ _logger = logging.getLogger(__name__)
 
 class EdiBackend(models.Model):
     _name = "edi.backend"
-    _inherit = ["edi.backend", "collection.base"]
+    _inherit = ["edi.backend", "collection.base"]  # noqa: RUF012
 
     def _get_component(self, exchange_record, key):
         record_conf = self._get_component_conf_for_record(exchange_record, key)
@@ -92,12 +92,7 @@ class EdiBackend(models.Model):
 
     def _get_component_usage_candidates(self, exchange_record, key):
         """Retrieve usage candidates for components."""
-        # fmt:off
-        base_usage = ".".join([
-            exchange_record.direction,
-            key,
-        ])
-        # fmt:on
+        base_usage = f"{exchange_record.direction}.{key}"
         record_conf = self._get_component_conf_for_record(exchange_record, key)
         candidates = [record_conf["usage"]] if record_conf else []
         candidates += [
@@ -112,5 +107,5 @@ class EdiBackend(models.Model):
     def _get_component_env_ctx(self, record_conf, key):
         env_ctx = record_conf.get("env_ctx", {})
         # You can use `edi_session` down in the stack to control logics.
-        env_ctx.update(dict(edi_framework_action=key))
+        env_ctx.update({"edi_framework_action": key})
         return env_ctx

@@ -6,7 +6,7 @@ from odoo.addons.component.core import Component
 
 
 class FakeComponentMixin(Component):
-    FAKED_COLLECTOR = []
+    FAKED_COLLECTOR = []  # noqa: RUF012
 
     # only for testing
     _action = ""
@@ -118,7 +118,6 @@ class FakeOutputValidate(FakeComponentMixin):
 
     def validate(self, value=None):
         self._fake_it()
-        return
 
 
 class FakeInputValidate(FakeComponentMixin):
@@ -132,13 +131,12 @@ class FakeInputValidate(FakeComponentMixin):
 
     def validate(self, value=None):
         self._fake_it()
-        return
 
 
 class FakeConfigurationListener(FakeComponentMixin):
     _name = "fake.configuration.listener"
     _inherit = "base.event.listener"
-    _apply_on = ["edi.exchange.consumer.test"]
+    _apply_on = ["edi.exchange.consumer.test"]  # noqa: RUF012
 
     def on_record_write(self, record, fields=None, **kwargs):
         trigger = "on_record_write"

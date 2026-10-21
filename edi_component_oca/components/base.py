@@ -36,7 +36,7 @@ class EDIBackendComponentMixin(AbstractComponent):
         Now, narrow match to `_match_attrs` attributes.
         """
         match_attrs = cls._match_attrs()
-        if not any([kw.get(k) for k in match_attrs]):
+        if not any(kw.get(k) for k in match_attrs):
             # No attr to check
             return True
 
@@ -53,10 +53,7 @@ class EDIBackendComponentMixin(AbstractComponent):
         if cls._backend_type not in (None, kw.get("backend_type")):
             return False
 
-        if cls._exchange_type not in (None, kw.get("exchange_type")):
-            return False
-
-        return True
+        return cls._exchange_type in (None, kw.get("exchange_type"))
 
 
 class EDIBackendRecordComponentMixin(AbstractComponent):
