@@ -1,0 +1,703 @@
+# Copyright 2020 ACSONE SA
+# Copyright 2021 Camptocamp SA
+# @author Simone Orsi <simahawk@gmail.com>
+# License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl).
+
+import logging
+from collections import defaultdict
+from typing import ClassVar
+
+from odoo import Command, api, exceptions, fields, models
+from odoo.exceptions import AccessError
+from odoo.orm.query import Query
+from odoo.tools import split_every
+from odoo.tools.binary import BinaryBytes
+
+from ..utils import get_checksum
+
+_logger = logging.getLogger(__name__)
+
+
+class EDIExchangeRecord(models.Model):
+    """
+    Define an exchange record.
+    """
+
+    _name = "edi.exchange.record"
+    _inherit = "mail.thread"
+    _description = "EDI exchange Record"
+    _order = "exchanged_on desc, id desc"
+    _rec_name = "identifier"
+
+    identifier = fields.Char(required=True, index=True, readonly=True, copy=False)
+    external_identifier = fields.Char(index=True, readonly=True, copy=False)
+    type_id = fields.Many2one(
+        string="Exchange type",
+        comodel_name="edi.exchange.type",
+        required=True,
+        ondelete="cascade",
+        bypass_search_access=True,
+        index=True,
+    )
+    direction = fields.Selection(related="type_id.direction")
+    backend_id = fields.Many2one(comodel_name="edi.backend", required=True)
+    model = fields.Char(
+        index=True,
+        required=False,
+        readonly=False,
+        compute="_compute_record",
+        inverse="_inverse_record",
+        store=True,
+        copy=False,
+    )
+    res_id = fields.Many2oneReference(
+        string="Record",
+        index=True,
+        required=False,
+        readonly=False,
+        model_field="model",
+        copy=False,
+        compute="_compute_record",
+        inverse="_inverse_record",
+        store=True,
+    )
+    related_record_exists = fields.Boolean(compute="_compute_related_record_exists")
+    related_name = fields.Char(compute="_compute_related_name", compute_sudo=True)
+    exchange_file = fields.Binary(attachment=True, copy=False)
+    exchange_filename = fields.Char(
+        compute="_compute_exchange_filename", readonly=False, store=True
+    )
+    exchange_filechecksum = fields.Char(
+        compute="_compute_exchange_filechecksum",
+        store=True,
+        tracking=True,
+        readonly=True,
+    )
+    exchanged_on = fields.Datetime(
+        help="Sent or received on this date.",
+        compute="_compute_exchanged_on",
+        store=True,
+        readonly=True,
+    )
+    exchange_file_frozen = fields.Boolean(
+        help="Not allowed to change the file anymore.",
+        compute="_compute_exchange_file_frozen",
+        compute_sudo=True,
+    )
+    edi_exchange_state = fields.Selection(
+        string="Exchange state",
+        readonly=True,
+        copy=False,
+        default="new",
+        index=True,
+        selection=[
+            # Common states
+            ("new", "New"),
+            ("validate_error", "Error on validation"),
+            # output exchange states
+            ("output_pending", "Waiting to be sent"),
+            ("output_error_on_send", "error on send"),
+            ("output_sent", "Sent"),
+            ("output_sent_and_processed", "Sent and processed"),
+            ("output_sent_and_error", "Sent and error"),
+            # input exchange states
+            ("input_pending", "Waiting to be received"),
+            ("input_received", "Received"),
+            ("input_receive_error", "Error on reception"),
+            ("input_processed", "Processed"),
+            ("input_processed_error", "Error on process"),
+        ],
+    )
+    exchange_error = fields.Text(string="Exchange error", readonly=True, copy=False)
+    exchange_error_traceback = fields.Text(
+        string="Exchange error traceback", readonly=True, copy=False
+    )
+    # Relations w/ other records
+    parent_id = fields.Many2one(
+        comodel_name="edi.exchange.record",
+        help="Original exchange which originated this record",
+        index=True,
+    )
+    related_exchange_ids = fields.One2many(
+        string="Related exchanges",
+        comodel_name="edi.exchange.record",
+        inverse_name="parent_id",
+    )
+    related_record_ids = fields.One2many(
+        string="Related records",
+        comodel_name="edi.exchange.related.record",
+        inverse_name="exchange_record_id",
+    )
+    ack_expected = fields.Boolean(compute="_compute_ack_expected")
+    # TODO: shall we add a constrain on the direction?
+    # In theory if the record is outgoing the ack should be incoming and vice versa.
+    ack_exchange_id = fields.Many2one(
+        string="ACK exchange",
+        comodel_name="edi.exchange.record",
+        help="ACK generated for current exchange.",
+        compute="_compute_ack_exchange_id",
+        store=True,
+        index=True,
+    )
+    ack_received_on = fields.Datetime(
+        string="ACK received on", related="ack_exchange_id.exchanged_on"
+    )
+    retryable = fields.Boolean(
+        compute="_compute_retryable",
+        help="The record state can be rolled back manually in case of failure.",
+    )
+    company_id = fields.Many2one("res.company")
+    active = fields.Boolean(default=True)
+
+    _identifier_uniq = models.Constraint(
+        "unique(identifier)", "The identifier must be unique."
+    )
+    _external_identifier_uniq = models.Constraint(
+        "unique(external_identifier, backend_id, type_id)",
+        "The external_identifier must be unique for a type and a backend.",
+    )
+
+    @api.depends("model", "res_id")
+    def _compute_related_name(self):
+        for rec in self:
+            related_record = rec.record
+            rec.related_name = related_record.display_name if related_record else ""
+
+    @api.depends("model", "type_id")
+    def _compute_exchange_filename(self):
+        for rec in self:
+            if not rec.type_id:
+                continue
+            if not rec.exchange_filename:
+                rec.exchange_filename = rec.type_id._make_exchange_filename(rec)
+
+    @api.depends("exchange_file")
+    def _compute_exchange_filechecksum(self):
+        for rec in self:
+            # Keep hashing the base64 representation, as in previous versions,
+            # so checksums of existing records stay valid.
+            content = rec.exchange_file.to_base64().encode()
+            rec.exchange_filechecksum = get_checksum(content)
+
+    @api.depends("edi_exchange_state")
+    def _compute_exchanged_on(self):
+        for rec in self:
+            if rec.edi_exchange_state in ("input_received", "output_sent"):
+                rec.exchanged_on = fields.Datetime.now()
+
+    @api.depends("exchange_file", "edi_exchange_state")
+    def _compute_exchange_file_frozen(self):
+        for rec in self:
+            rec.exchange_file_frozen = bool(
+                rec.exchange_file
+                and rec.edi_exchange_state
+                in ("input_processed", "output_sent", "output_sent_and_processed")
+            ) and not self.env.user.has_group(
+                "edi_core_oca.group_edi_override_exchange_file_content"
+            )
+
+    @api.constrains("edi_exchange_state")
+    def _constrain_edi_exchange_state(self):
+        for rec in self:
+            if rec.edi_exchange_state in ("new", "validate_error"):
+                continue
+            if not rec.edi_exchange_state.startswith(rec.direction):
+                raise exceptions.ValidationError(
+                    self.env._("Exchange state must respect direction!")
+                )
+
+    @api.depends("related_exchange_ids.type_id")
+    def _compute_ack_exchange_id(self):
+        for rec in self:
+            rec.ack_exchange_id = rec._get_ack_record()
+
+    def _get_ack_record(self):
+        if not self.type_id.ack_type_id:
+            return None
+        return self.related_exchange_ids.filtered(
+            lambda x: x.type_id == self.type_id.ack_type_id
+        ).sorted("id", reverse=True)[:1]
+
+    def _compute_ack_expected(self):
+        for rec in self:
+            rec.ack_expected = bool(self.type_id.ack_type_id)
+
+    def _get_edi_first_related_record_query(self):
+        query = """
+            WITH related_records AS (
+                SELECT
+                    exchange_record_id,
+                    res_id,
+                    model,
+                    ROW_NUMBER() OVER
+                    (PARTITION BY exchange_record_id ORDER BY id)
+                    AS row_num
+                FROM
+                    edi_exchange_related_record
+                WHERE
+                    exchange_record_id in %s
+            )
+            SELECT
+                exchange_record_id,
+                res_id,
+                model
+            FROM
+                related_records
+            WHERE
+                row_num = 1;
+        """
+        params = (tuple(self.ids),)
+        return query, params
+
+    def _get_edi_first_related_record_dict(self):
+        """
+        Returns a dictionary with exchange_record_id as key and
+        the first related record res_id and model as value.
+        """
+        self.env["edi.exchange.related.record"].flush_model()
+        if not self.ids:
+            return {}
+        query, params = self._get_edi_first_related_record_query()
+        self.env.cr.execute(query, params)
+        return {
+            rec[0]: {"res_id": rec[1], "model": rec[2]}
+            for rec in self.env.cr.fetchall()
+        }
+
+    @api.depends("related_record_ids")
+    def _compute_record(self):
+        """
+        Main related record is computed as the first related record created
+        for the exchange.
+        """
+        data = self._get_edi_first_related_record_dict()
+        for rec in self:
+            rec.res_id = data.get(rec.id, {}).get("res_id", False)
+            rec.model = data.get(rec.id, {}).get("model", False)
+
+    def _inverse_record(self):
+        """
+        Create related record when writing the main record for the exchange.
+        """
+        for rec in self:
+            if (
+                not rec.res_id
+                or not rec.model
+                or any(
+                    rel.res_id == rec.res_id and rel.model == rec.model
+                    for rel in rec.related_record_ids
+                )
+            ):
+                continue
+            rec.related_record_ids = [
+                Command.create({"res_id": rec.res_id, "model": rec.model})
+            ]
+
+    @api.depends("res_id", "model")
+    def _compute_related_record_exists(self):
+        for rec in self:
+            rec.related_record_exists = bool(rec.record)
+
+    def needs_ack(self):
+        return self.type_id.ack_type_id and not self.ack_exchange_id
+
+    _rollback_state_mapping: ClassVar[dict[str, str]] = {
+        # From: to
+        "output_error_on_send": "output_pending",
+        "output_sent_and_error": "output_pending",
+        "input_receive_error": "input_pending",
+        "input_processed_error": "input_received",
+    }
+
+    @api.depends("edi_exchange_state")
+    def _compute_retryable(self):
+        for rec in self:
+            rec.retryable = rec.edi_exchange_state in self._rollback_state_mapping
+
+    @property
+    def record(self):
+        # In some case the res_model (and res_id) could be empty so we have to load
+        # data from parent
+        if not self.model and not self.parent_id:
+            return None
+        if not self.model and self.parent_id:
+            return self.parent_id.record
+        return self.env[self.model].browse(self.res_id).exists()
+
+    def _set_file_content(
+        self, output_string, encoding="utf-8", field_name="exchange_file"
+    ):
+        """Handy method to no have to convert b64 back and forth."""
+        self.ensure_one()
+        if not isinstance(output_string, bytes):
+            output_string = bytes(output_string, encoding)
+        self[field_name] = BinaryBytes(output_string)
+
+    def _get_file_content(
+        self, field_name="exchange_file", binary=True, as_bytes=False
+    ):
+        """Handy method to not have to convert b64 back and forth."""
+        self.ensure_one()
+        encoding = self.type_id.encoding or "UTF-8"
+        decoding_error_handler = self.type_id.encoding_in_error_handler or "strict"
+        if not self[field_name]:
+            return ""
+        if binary:
+            res = self[field_name].content
+            return (
+                res.decode(encoding, errors=decoding_error_handler)
+                if not as_bytes
+                else res
+            )
+        return self[field_name].to_base64()
+
+    @api.depends("identifier", "res_id", "model", "type_id")
+    def _compute_display_name(self):
+        for rec in self:
+            rec_name = (
+                rec.record.display_name if rec.res_id and rec.model else rec.identifier
+            )
+            rec.display_name = f"[{rec.type_id.name}] {rec_name}"
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+            vals["identifier"] = self._get_identifier()
+        records = super().create(vals_list)
+        for rec in records:
+            if rec._quick_exec_enabled():
+                rec._execute_next_action()
+        return records
+
+    @api.model
+    def _get_identifier(self):
+        return self.env["ir.sequence"].next_by_code("edi.exchange")
+
+    def _quick_exec_enabled(self):
+        if self.env.context.get("edi__skip_quick_exec"):
+            return False
+        return self.type_id.quick_exec and self.backend_id.active
+
+    def _execute_next_action(self):
+        # The backend already knows how to handle records
+        # according to their direction and status.
+        # Let it decide.
+        backend = self.backend_id.with_context(edi__quick_exec=True)
+        if self.type_id.direction == "output":
+            backend._check_output_exchange_sync(record_ids=self.ids)
+        else:
+            backend._check_input_exchange_sync(record_ids=self.ids)
+
+    @api.constrains("backend_id", "type_id")
+    def _constrain_backend(self):
+        for rec in self:
+            if rec.type_id.backend_id:
+                if rec.type_id.backend_id != rec.backend_id:
+                    raise exceptions.ValidationError(
+                        self.env._("Backend must match with exchange type's backend!")
+                    )
+            else:
+                if rec.type_id.backend_type_id != rec.backend_id.backend_type_id:
+                    raise exceptions.ValidationError(
+                        self.env._(
+                            "Backend type must match with exchange type's backend type!"
+                        )
+                    )
+
+    @property
+    def _exchange_status_messages(self):
+        return {
+            # status: message
+            "generate_ok": self.env._("Exchange data generated"),
+            "send_ok": self.env._("Exchange sent"),
+            "send_ko": self.env._(
+                "An error happened while sending. Please check exchange record info."
+            ),
+            "process_ok": self.env._("Exchange processed successfully"),
+            "process_ko": self.env._("Exchange processed with errors"),
+            "receive_ok": self.env._("Exchange received successfully"),
+            "receive_ko": self.env._("Exchange not received"),
+            "ack_received": self.env._("ACK file received."),
+            "ack_missing": self.env._(
+                "ACK file is required for this exchange but not found."
+            ),
+            "ack_received_error": self.env._("ACK file received but contains errors."),
+            "validate_ko": self.env._("Exchange not valid"),
+        }
+
+    def _exchange_status_message(self, key):
+        return self._exchange_status_messages[key]
+
+    def action_exchange_generate(self, **kw):
+        self.ensure_one()
+        return self.backend_id.exchange_generate(self, **kw)
+
+    def action_exchange_send(self):
+        self.ensure_one()
+        return self.backend_id.exchange_send(self)
+
+    def action_exchange_generate_send(self, **kw):
+        return self.backend_id.exchange_generate_send(self, **kw)
+
+    def action_exchange_process(self):
+        self.ensure_one()
+        return self.backend_id.exchange_process(self)
+
+    def action_exchange_receive(self):
+        self.ensure_one()
+        return self.backend_id.exchange_receive(self)
+
+    def exchange_create_ack_record(self, **kw):
+        return self.exchange_create_child_record(
+            exc_type=self.type_id.ack_type_id, **kw
+        )
+
+    def exchange_create_child_record(self, exc_type=None, **kw):
+        exc_type = exc_type or self.type_id
+        values = self._exchange_child_record_values()
+        values.update(**kw)
+        return self.backend_id.create_record(exc_type.code, values)
+
+    def _exchange_child_record_values(self):
+        return {
+            "parent_id": self.id,
+            "model": self.model,
+            "res_id": self.res_id,
+        }
+
+    def action_retry(self):
+        for rec in self:
+            rec._retry_exchange_action()
+
+    def _retry_exchange_action(self):
+        """Move back to precedent state to retry exchange action if failed."""
+        if not self.retryable:
+            return False
+        new_state = self._rollback_state_mapping[self.edi_exchange_state]
+        fname = "edi_exchange_state"
+        self[fname] = new_state
+        display_state = self._fields[fname].convert_to_export(self[fname], self)
+        self.message_post(
+            body=self.env._("Action retry: state moved back to '%s'", display_state)
+        )
+        if self._quick_exec_enabled():
+            self._execute_next_action()
+        return True
+
+    def action_regenerate(self):
+        for rec in self:
+            rec.action_exchange_generate(force=True)
+
+    def action_open_related_record(self):
+        self.ensure_one()
+        if not self.related_record_exists:
+            return {}
+        return self.record._get_records_action()
+
+    def _set_related_record(self, odoo_record):
+        commands = []
+        for rec in odoo_record:
+            commands.append(Command.create({"model": rec._name, "res_id": rec.id}))
+        self.sudo().update({"related_record_ids": commands})
+
+    def action_open_related_exchanges(self):
+        self.ensure_one()
+        if not self.related_exchange_ids:
+            return {}
+        xmlid = "edi_core_oca.act_open_edi_exchange_record_view"
+        action = self.env["ir.actions.act_window"]._for_xml_id(xmlid)
+        action["domain"] = [("id", "in", self.related_exchange_ids.ids)]
+        return action
+
+    def notify_action_complete(self, action, message=None):
+        """Notify current record that an edi action has been completed.
+
+        Implementers should take care of calling this method
+        if they work on records w/o calling edi_backend methods (eg: action_send).
+
+        Implementers can hook to this method to do something after any action ends.
+        """
+        if message:
+            self._notify_related_record(message)
+
+        # Trigger generic action complete event on exchange record
+        event_name = f"{action}_complete"
+        self._trigger_edi_event(event_name)
+        if self.related_record_exists:
+            # Trigger specific event on related record
+            self._trigger_edi_event(event_name, target=self.record)
+
+    def _notify_related_record(self, message, level="info"):
+        """Post notification on the original records."""
+        for rec in self.related_record_ids:
+            rec._notify_related_record(message, level)
+
+    def _trigger_edi_event(self, name, suffix=None, target=None, **kw):
+        """Trigger a component event linked to this backend and edi exchange."""
+        event_name = self._trigger_edi_event_make_name(name, suffix)
+        target = target or self
+        global_configs = self.env["edi.configuration"].edi_get_conf_global(
+            self, event_name
+        )
+        for conf in global_configs:
+            conf.edi_exec_snippet_do(target, **kw)
+
+    def _trigger_edi_event_make_name(self, name, suffix=None):
+        return "on_edi_exchange_{name}{suffix}".format(
+            name=name,
+            suffix=("_" + suffix) if suffix else "",
+        )
+
+    def _notify_done(self):
+        self._notify_related_record(self._exchange_status_message("process_ok"))
+        self._trigger_edi_event("done")
+
+    def _notify_error(self, message_key):
+        self._notify_related_record(
+            self._exchange_status_message(message_key),
+            level="error",
+        )
+        self._trigger_edi_event("error")
+
+    def _notify_ack_received(self):
+        self._notify_related_record(self._exchange_status_message("ack_received"))
+        self._trigger_edi_event("done", suffix="ack_received")
+
+    def _notify_ack_missing(self):
+        self._notify_related_record(
+            self._exchange_status_message("ack_missing"),
+            level="warning",
+        )
+        self._trigger_edi_event("done", suffix="ack_missing")
+
+    def _notify_ack_received_error(self):
+        self._notify_related_record(
+            self._exchange_status_message("ack_received_error"),
+        )
+        self._trigger_edi_event("done", suffix="ack_received_error")
+
+    def _search(self, domain, offset=0, limit=None, order=None, **kw) -> Query:
+        query = super()._search(
+            domain=domain, offset=offset, limit=limit, order=order, **kw
+        )
+        if self.env.is_superuser():
+            # restrictions do not apply for the superuser
+            return query
+
+        # TODO highlight orphaned EDI records in UI:
+        #  - self.model + self.res_id are set
+        #  - self.record returns empty recordset
+        # Remark: self.record is @property, not field
+
+        if query.is_empty():
+            return query
+        orig_ids = list(query)
+        ids = set(orig_ids)
+        result = []
+        model_data = defaultdict(lambda: defaultdict(set))
+        sub_query = """
+            SELECT id, res_id, model
+            FROM %(table)s
+            WHERE id = ANY (%%(ids)s)
+        """
+        for sub_ids in split_every(self.env.cr.IN_MAX, ids):
+            self.env.cr.execute(
+                sub_query % {"table": self._table},
+                {"ids": list(sub_ids)},
+            )
+            for eid, res_id, model in self.env.cr.fetchall():
+                if not model:
+                    result.append(eid)
+                    continue
+                model_data[model][res_id].add(eid)
+
+        for model, targets in model_data.items():
+            try:
+                self.env[model].check_access("read")
+            except AccessError:  # no read access rights
+                continue
+            recs = self.env[model].browse(list(targets))
+            missing = recs - recs.exists()
+            if missing:
+                for res_id in missing.ids:
+                    _logger.warning(
+                        "Deleted record %s,%s is referenced by edi.exchange.record %s",
+                        model,
+                        res_id,
+                        list(targets[res_id]),
+                    )
+                recs = recs - missing
+            allowed = list(
+                self.env[model]
+                .with_context(active_test=False)
+                ._search([("id", "in", recs.ids)])
+            )
+            if self.env.is_system():
+                # Group "Settings" can list exchanges where record is deleted
+                allowed.extend(missing.ids)
+            for target_id in allowed:
+                result += list(targets[target_id])
+        if len(orig_ids) == limit and len(result) < len(orig_ids):
+            extend_query = self._search(
+                domain,
+                offset=offset + len(orig_ids),
+                limit=limit,
+                order=order,
+            )
+            extend_ids = list(extend_query)
+            result.extend(extend_ids[: limit - len(result)])
+
+        if set(orig_ids) != set(result):
+            # Create a virgin query
+            query = self.browse(result)._as_query()
+        return query
+
+    def read(self, fields=None, load="_classic_read"):
+        """Override to explicitely call check_access_rule, that is not called
+        by the ORM. It instead directly fetches ir.rules and apply them."""
+        self.check_access("read")
+        return super().read(fields=fields, load=load)
+
+    def check_access(self, operation):
+        """In order to check if we can access a record, we are checking if we can access
+        the related document"""
+        super().check_access(operation)
+        if self.env.is_superuser():
+            return
+        default_checker = self.env["edi.exchange.consumer.mixin"].get_edi_access
+        by_model_rec_ids = defaultdict(set)
+        by_model_checker = {}
+        for exc_rec in self.sudo():
+            if not exc_rec.related_record_exists:
+                continue
+            model = exc_rec.model
+            res_id = exc_rec.res_id
+            if not model and exc_rec.parent_id:
+                model = exc_rec.parent_id.model
+                res_id = exc_rec.parent_id.res_id
+            by_model_rec_ids[model].add(res_id)
+            if model not in by_model_checker:
+                by_model_checker[model] = getattr(
+                    self.env[model], "get_edi_access", default_checker
+                )
+
+        for model, rec_ids in by_model_rec_ids.items():
+            records = self.env[model].browse(rec_ids).with_user(self.env.uid)
+            checker = by_model_checker[model]
+            for record in records:
+                check_operation = checker(
+                    [record.id], operation, model_name=record._name
+                )
+                record.check_access(check_operation)
+
+    def write(self, vals):
+        self.check_access("write")
+        return super().write(vals)
+
+    def action_exchange_generate_send_chained(self):
+        self.action_exchange_generate()
+        self.action_exchange_send()
+
+    def action_exchange_receive_process_chained(self):
+        self.action_exchange_receive()
+        self.action_exchange_process()

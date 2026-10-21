@@ -1,0 +1,5 @@
+- Simone Orsi \<<simahawk@gmail.com>\>
+- Enric Tobella \<<enric.tobella@dixmit.com>\>
+- Manuel Regidor \<<manuel.regidor@sygel.es>\>
+- Thien Vo \<<thienvh@trobz.com>\>
+- Jordi Masvidal \<<jordi.masvidal@forgeflow.com>\>

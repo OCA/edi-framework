@@ -1,0 +1,744 @@
+# Copyright 2020 ACSONE SA
+# Copyright 2020 Dixmit
+# Copyright 2021 Camptocamp SA
+# @author Simone Orsi <simahawk@gmail.com>
+# License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl).
+
+import logging
+import traceback
+from io import StringIO
+
+from psycopg2 import IntegrityError, OperationalError
+
+from odoo import exceptions, fields, models
+from odoo.exceptions import UserError
+from odoo.tools.binary import BinaryBytes
+
+from ..exceptions import EDINotImplementedError, EDIValidationError
+from ..utils import EDIExchangeActionResult
+
+_logger = logging.getLogger(__name__)
+
+
+def _get_exception_msg(exc):
+    if hasattr(exc, "args") and isinstance(exc.args[0], str):
+        return exc.args[0]
+    return repr(exc)
+
+
+def _get_exception_traceback():
+    buff = StringIO()
+    traceback.print_exc(file=buff)
+    traceback_txt = buff.getvalue()
+    buff.close()
+    return traceback_txt
+
+
+class EDIBackend(models.Model):
+    """Generic backend to control EDI exchanges.
+
+    Backends can be organized with types.
+
+    The backend should be responsible for managing records.
+    For each record it can generate or parse their values
+    depending on their direction (incoming, outgoing)
+    and send or receive them automatically depending on their state.
+    """
+
+    _name = "edi.backend"
+    _description = "EDI Backend"
+
+    name = fields.Char(required=True)
+    backend_type_id = fields.Many2one(
+        string="EDI Backend type",
+        comodel_name="edi.backend.type",
+        required=True,
+        ondelete="restrict",
+    )
+    backend_type_code = fields.Char(related="backend_type_id.code")
+    output_sent_processed_auto = fields.Boolean(
+        help="""
+    Automatically set the record as processed after sending.
+    Usecase: the web service you send the file to processes it on the fly.
+    """
+    )
+    active = fields.Boolean(default=True)
+    company_id = fields.Many2one("res.company")
+    auto_archive_records_after_days = fields.Integer(
+        string="Auto-archive records after (days)",
+        default=0,
+        help="Automatically archive EDI exchange records after X days. "
+        "Set to <= 0 to disable auto-archiving.",
+    )
+    auto_delete_records_after_days = fields.Integer(
+        string="Auto-delete archived records after (days)",
+        default=0,
+        help="Automatically delete archived EDI exchange records after X days. "
+        "Set to <= 0 to disable auto-deletion.",
+    )
+
+    @property
+    def exchange_record_model(self):
+        return self.env["edi.exchange.record"]
+
+    def create_record(self, type_code, values):
+        """Create an exchange record for current backend.
+
+        :param type_code: edi.exchange.type code
+        :param values: edi.exchange.record values
+        :return: edi.exchange.record record
+        """
+        self.ensure_one()
+        _values = self._create_record_prepare_values(type_code, values)
+        return self.exchange_record_model.create(_values)
+
+    def _create_record_prepare_values(self, type_code, values):
+        res = values.copy()  # do not pollute original dict
+        exchange_type = self.env["edi.exchange.type"].search(
+            self._get_exchange_type_domain(type_code), limit=1
+        )
+        assert exchange_type, f"Exchange type not found: {type_code}"
+        res["type_id"] = exchange_type.id
+        res["backend_id"] = self.id
+        return res
+
+    def _get_exchange_type_domain(self, code):
+        return [
+            ("code", "=", code),
+            "|",
+            ("backend_id", "=", self.id),
+            "&",
+            ("backend_type_id", "=", self.backend_type_id.id),
+            ("backend_id", "=", False),
+        ]
+
+    def exchange_generate(self, exchange_record, store=True, force=False, **kw):
+        """Generate output content for given exchange record.
+
+        :param exchange_record: edi.exchange.record recordset
+        :param store: store output on the record itself
+        :param force: allow to re-generate the content
+        :param kw: keyword args to be propagated to output generate handler
+        """
+        self.ensure_one()
+        old_state = exchange_record.edi_exchange_state
+        if force and exchange_record.exchange_file:
+            # Remove file to regenerate
+            exchange_record.exchange_file = False
+        self._check_exchange_generate(exchange_record, force=force)
+        generate_result = self._exchange_generate(exchange_record, **kw)
+        output = generate_result.output
+        message = generate_result.message or exchange_record._exchange_status_message(
+            "generate_ok"
+        )
+        encoding = exchange_record.type_id.encoding or "UTF-8"
+        encoding_error_handler = (
+            exchange_record.type_id.encoding_out_error_handler or "strict"
+        )
+        if output and store:
+            if not isinstance(output, bytes):
+                output = output.encode(encoding, errors=encoding_error_handler)
+            exchange_record.update(
+                {
+                    "exchange_file": BinaryBytes(output),
+                    "edi_exchange_state": "output_pending",
+                }
+            )
+        if output:
+            try:
+                with self.env.cr.savepoint():
+                    self._validate_data(exchange_record, output)
+            except EDIValidationError as err:
+                traceback = _get_exception_traceback()
+                error = _get_exception_msg(err)
+                state = "validate_error"
+                exchange_record.update(
+                    {
+                        "edi_exchange_state": state,
+                        "exchange_error": error,
+                        "exchange_error_traceback": traceback,
+                    }
+                )
+                if old_state != state:
+                    exchange_record._notify_error("validate_ko")
+                # At this point `message` still holds the "generate_ok" success
+                # text set before validation ran. Generation succeeded but
+                # validation failed, so clear it: `_notify_error` has already
+                # posted the validation error (and fired the error event), and
+                # we must not let `notify_action_complete` below post the stale
+                # success message on top of it.
+                message = None
+        exchange_record.notify_action_complete("generate", message=message)
+        return message
+
+    # TODO: unify to all other checkes that return something
+    def _check_exchange_generate(self, exchange_record, force=False):
+        exchange_record.ensure_one()
+        if (
+            exchange_record.edi_exchange_state != "new"
+            and exchange_record.exchange_file
+            and not force
+        ):
+            raise exceptions.UserError(
+                self.env._(
+                    "Exchange record ID=%d is not in draft state "
+                    "and has already an output value.",
+                    exchange_record.id,
+                )
+            )
+        if exchange_record.direction != "output":
+            raise exceptions.UserError(
+                self.env._(
+                    "Exchange record ID=%d is not an outgoing record, "
+                    "cannot be generated",
+                    exchange_record.id,
+                )
+            )
+        if exchange_record.exchange_file:
+            raise exceptions.UserError(
+                self.env._(
+                    "Exchange record ID=%d already has a file to process!",
+                    exchange_record.id,
+                )
+            )
+
+    @EDIExchangeActionResult.wrap_result
+    def _exchange_generate(self, exchange_record, **kw):
+        exchange_function = self._get_exec_handler(exchange_record, "generate")
+        ctx = self._get_record_env_ctx(exchange_record, "generate")
+        return exchange_function(exchange_record.with_context(**ctx), **kw)
+
+    # TODO: add tests
+    def _validate_data(self, exchange_record, value=None, **kw):
+        if (
+            exchange_record.direction == "input"
+            and not exchange_record.exchange_file
+            and not exchange_record.type_id.allow_empty_files_on_receive
+        ):
+            raise ValueError(
+                self.env._(
+                    "Empty files are not allowed for exchange type %(name)s (%(code)s)",
+                    name=exchange_record.type_id.name,
+                    code=exchange_record.type_id.code,
+                )
+            )
+        try:
+            return self._exchange_validate_data(exchange_record, value=value, **kw)
+        except EDINotImplementedError:  # pylint: disable=W8138
+            # We use this exception for inheritance purpose only.
+            # If it fails, we assume that no validation is implemented
+            pass
+
+    @EDIExchangeActionResult.wrap_result
+    def _exchange_validate_data(self, exchange_record, value=None, **kw):
+        action = f"{exchange_record.type_id.direction}_validate"
+        exchange_function = self._get_exec_handler(exchange_record, action)
+        ctx = self._get_record_env_ctx(exchange_record, action)
+        return exchange_function(exchange_record.with_context(**ctx), value=value, **kw)
+
+    def exchange_send(self, exchange_record):
+        """Send exchange file."""
+        self.ensure_one()
+        exchange_record.ensure_one()
+        # In case already sent: skip sending and check the state
+        check = self._output_check_send(exchange_record)
+        if not check:
+            return self._failed_output_check_send_msg()
+        old_state = state = exchange_record.edi_exchange_state
+        error = traceback = False
+        message = None
+        res = ""
+        try:
+            with self.env.cr.savepoint():
+                send_result = self._exchange_send(exchange_record)
+                _logger.debug("%s sent", exchange_record.identifier)
+        except self._send_retryable_exceptions() as err:
+            traceback = _get_exception_traceback()
+            error = _get_exception_msg(err)
+            _logger.debug("%s send failed. To be retried.", exchange_record.identifier)
+            raise self._retryable_exception()(
+                error, **exchange_record._job_retry_params()
+            ) from err
+        except self._swallable_exceptions() as err:
+            if self.env.context.get("_edi_send_break_on_error"):
+                raise
+            traceback = _get_exception_traceback()
+            error = _get_exception_msg(err)
+            state = "output_error_on_send"
+            res = f"Error: {error}"
+            _logger.debug(
+                "%s send failed. Marked as errored.", exchange_record.identifier
+            )
+        except (OperationalError, IntegrityError):
+            # We don't want the finally block to be executed in this case as
+            # the cursor is already in an aborted state and any query will fail.
+            res = "__sql_error__"
+            raise
+        else:
+            res = message = (
+                send_result.message
+                or exchange_record._exchange_status_message("send_ok")
+            )
+            error = traceback = None
+            state = (
+                "output_sent_and_processed"
+                if self.output_sent_processed_auto
+                else "output_sent"
+            )
+        finally:
+            if res != "__sql_error__":
+                exchange_record.write(
+                    {
+                        "edi_exchange_state": state,
+                        "exchange_error": error,
+                        "exchange_error_traceback": traceback,
+                        # FIXME: this should come from _compute_exchanged_on
+                        # but somehow it's failing in send tests
+                        # (in record tests it works).
+                        "exchanged_on": fields.Datetime.now(),
+                    }
+                )
+                if old_state != state and state == "output_error_on_send":
+                    exchange_record._notify_error("send_ko")
+        exchange_record.notify_action_complete("send", message=message)
+        return res
+
+    def _swallable_exceptions(self):
+        # TODO: improve this list
+        return (
+            ValueError,
+            FileNotFoundError,
+            exceptions.UserError,
+            exceptions.ValidationError,
+        )
+
+    def _send_retryable_exceptions(self):
+        # To be modified in edi_queue_oca
+        return ()
+
+    def _retryable_exception(self):
+        return UserError
+
+    def _output_check_send(self, exchange_record):
+        if exchange_record.direction != "output":
+            raise exceptions.UserError(
+                self.env._("Record ID=%d is not meant to be sent!", exchange_record.id)
+            )
+        if not exchange_record.exchange_file:
+            raise exceptions.UserError(
+                self.env._("Record ID=%d has no file to send!", exchange_record.id)
+            )
+        return exchange_record.edi_exchange_state in [
+            "output_pending",
+            "output_error_on_send",
+        ]
+
+    @EDIExchangeActionResult.wrap_result
+    def _exchange_send(self, exchange_record):
+        exchange_function = self._get_exec_handler(exchange_record, "send")
+        ctx = self._get_record_env_ctx(exchange_record, "send")
+        return exchange_function(exchange_record.with_context(**ctx))
+
+    def _cron_check_output_exchange_sync(self, **kw):
+        for backend in self:
+            backend._check_output_exchange_sync(**kw)
+
+    def exchange_generate_send(self, recordset, skip_generate=False, skip_send=False):
+        """Generate and send output files for given records.
+
+        If both are False, the record will be generated and sent right away
+        with chained jobs.
+
+        If both `skip_generate` and `skip_send` are True, nothing will be done.
+        :param recordset: edi.exchange.record recordset
+        :param skip_generate: only send records
+        :param skip_send: only generate missing output
+        """
+        for rec in recordset:
+            if not skip_generate and not skip_send:
+                rec.action_exchange_generate_send_chained()
+            elif skip_send:
+                rec.action_exchange_generate()
+            elif not skip_send:
+                rec.action_exchange_send()
+
+    def _check_output_exchange_sync(
+        self, skip_send=False, skip_sent=True, record_ids=None
+    ):
+        """Lookup for pending output records and take care of them.
+
+        First work on records that need output generation.
+        Then work on records waiting for a state update.
+
+        :param skip_send: only generate missing output.
+        :param skip_sent: ignore records that were already sent.
+        """
+        # Generate output files
+        new_records = self._get_new_output_exchange_records(record_ids=record_ids)
+        _logger.info(
+            "EDI Exchange output sync: found %d new records to process.",
+            len(new_records),
+        )
+        if new_records:
+            self.exchange_generate_send(new_records, skip_send=skip_send)
+
+        if skip_send:
+            return
+        pending_records = self.exchange_record_model.search(
+            self._output_pending_records_domain(
+                skip_sent=skip_sent, record_ids=record_ids
+            )
+        )
+        _logger.info(
+            "EDI Exchange output sync: found %d pending records to process.",
+            len(pending_records),
+        )
+        for rec in pending_records:
+            if rec.edi_exchange_state == "output_pending":
+                rec.action_exchange_send()
+            else:
+                # TODO: run in job as well?
+                self._exchange_output_check_state(rec)
+
+    def _get_new_output_exchange_records(self, record_ids=None):
+        return self.exchange_record_model.search(
+            self._output_new_records_domain(record_ids=record_ids)
+        )
+
+    def _output_new_records_domain(self, record_ids=None):
+        """Domain for output records needing output content generation."""
+        domain = [
+            ("backend_id", "=", self.id),
+            ("type_id.exchange_file_auto_generate", "=", True),
+            ("type_id.direction", "=", "output"),
+            ("type_id.generate_model_id", "!=", False),
+            ("type_id.send_model_id", "!=", False),
+            ("edi_exchange_state", "=", "new"),
+            ("exchange_file", "=", False),
+        ]
+        if record_ids:
+            domain.append(("id", "in", record_ids))
+        # By default, it's pointless to consider records with quick_exec
+        # because they will be executed right away when created.
+        domain.append(
+            (
+                "type_id.quick_exec",
+                "=",
+                self.env.context.get("edi__quick_exec", False),
+            )
+        )
+        return domain
+
+    def _output_pending_records_domain(self, skip_sent=True, record_ids=None):
+        """Domain for pending output records.
+
+        Records might be waiting to be sent or have errors or have ack to handle."""
+        states = ("output_pending", "output_sent_and_error")
+        if not skip_sent:
+            # If you want to update sent records
+            # you'll have to provide a `check` component.
+            states += ("output_sent",)
+        domain = [
+            ("type_id.direction", "=", "output"),
+            ("type_id.send_model_id", "!=", False),
+            ("backend_id", "=", self.id),
+            ("edi_exchange_state", "in", states),
+        ]
+        if record_ids:
+            domain.append(("id", "in", record_ids))
+        return domain
+
+    def _exchange_output_check_state(self, exchange_record):
+        exchange_function = self._get_exec_handler(exchange_record, "check")
+        ctx = self._get_record_env_ctx(exchange_record, "check")
+        return exchange_function(exchange_record.with_context(**ctx))
+
+    def _exchange_process_check(self, exchange_record):
+        if not exchange_record.direction == "input":
+            raise exceptions.UserError(
+                self.env._(
+                    "Record ID=%d is not meant to be processed", exchange_record.id
+                )
+            )
+        if (
+            not exchange_record.exchange_file
+            and not exchange_record.type_id.allow_empty_files_on_receive
+        ):
+            raise exceptions.UserError(
+                self.env._("Record ID=%d has no file to process!", exchange_record.id)
+            )
+        return exchange_record.edi_exchange_state in [
+            "input_received",
+            "input_processed_error",
+        ]
+
+    def exchange_process(self, exchange_record):
+        """Process an incoming document."""
+        self.ensure_one()
+        exchange_record.ensure_one()
+        # In case already processed: skip processing and check the state
+        check = self._exchange_process_check(exchange_record)
+        if not check:
+            return "Nothing to do. Likely already processed."
+        old_state = state = exchange_record.edi_exchange_state
+        error = traceback = False
+        message = None
+        res = None
+        try:
+            with self.env.cr.savepoint():
+                process_result = self._exchange_process(exchange_record)
+                res = process_result.output
+                message = (
+                    process_result.message
+                    or exchange_record._exchange_status_message("process_ok")
+                )
+        except self._swallable_exceptions() as err:
+            if self.env.context.get("_edi_process_break_on_error"):
+                raise
+            traceback = _get_exception_traceback()
+            error = _get_exception_msg(err)
+            state = "input_processed_error"
+            res = f"Error: {error}"
+        except (OperationalError, IntegrityError):
+            # We don't want the finally block to be executed in this case as
+            # the cursor is already in an aborted state and any query will fail.
+            res = "__sql_error__"
+            raise
+        else:
+            error = traceback = None
+            state = "input_processed"
+        finally:
+            if res != "__sql_error__":
+                exchange_record.write(
+                    {
+                        "edi_exchange_state": state,
+                        "exchange_error": error,
+                        "exchange_error_traceback": traceback,
+                        # FIXME: this should come from _compute_exchanged_on
+                        # but somehow it's failing in send tests
+                        # (in record tests it works).
+                        "exchanged_on": fields.Datetime.now(),
+                    }
+                )
+            if (
+                state == "input_processed_error"
+                and old_state != "input_processed_error"
+            ):
+                exchange_record._notify_error("process_ko")
+            elif state == "input_processed":
+                exchange_record._notify_done()
+        exchange_record.notify_action_complete("process", message=message)
+        return res
+
+    @EDIExchangeActionResult.wrap_result
+    def _exchange_process(self, exchange_record):
+        exchange_function = self._get_exec_handler(exchange_record, "process")
+        ctx = self._get_record_env_ctx(exchange_record, "process")
+        return exchange_function(exchange_record.with_context(**ctx))
+
+    def exchange_receive(self, exchange_record):
+        """Retrieve an incoming document."""
+        self.ensure_one()
+        exchange_record.ensure_one()
+        # In case already processed: skip processing and check the state
+        check = self._exchange_receive_check(exchange_record)
+        if not check:
+            return "Nothing to do. Likely already received."
+        old_state = state = exchange_record.edi_exchange_state
+        error = traceback = False
+        message = None
+        res = None
+        try:
+            with self.env.cr.savepoint():
+                receive_result = self._exchange_receive(exchange_record)
+                content = receive_result.output
+                message = (
+                    receive_result.message
+                    or exchange_record._exchange_status_message("receive_ok")
+                )
+                # Ignore result of FileNotFoundError/OSError
+                if content is not None:
+                    exchange_record._set_file_content(content)
+                    self._validate_data(exchange_record)
+        except EDIValidationError as err:
+            traceback = _get_exception_traceback()
+            error = _get_exception_msg(err)
+            state = "validate_error"
+            res = f"Validation error: {error}"
+        except self._swallable_exceptions() as err:
+            if self.env.context.get("_edi_receive_break_on_error"):
+                raise
+            traceback = _get_exception_traceback()
+            error = _get_exception_msg(err)
+            state = "input_receive_error"
+            res = f"Input error: {error}"
+        except (OperationalError, IntegrityError):
+            # We don't want the finally block to be executed in this case as
+            # the cursor is already in an aborted state and any query will fail.
+            res = "__sql_error__"
+            raise
+        else:
+            message = message or exchange_record._exchange_status_message("receive_ok")
+            error = traceback = None
+            state = "input_received"
+            res = message
+        finally:
+            if res != "__sql_error__":
+                exchange_record.write(
+                    {
+                        "edi_exchange_state": state,
+                        "exchange_error": error,
+                        "exchange_error_traceback": traceback,
+                        # FIXME: this should come from _compute_exchanged_on
+                        # but somehow it's failing in send tests
+                        # (in record tests it works).
+                        "exchanged_on": fields.Datetime.now(),
+                    }
+                )
+                if old_state != state and state == "input_receive_error":
+                    exchange_record._notify_error("receive_ko")
+                if old_state != state and state == "validate_error":
+                    exchange_record._notify_error("validate_ko")
+        exchange_record.notify_action_complete("receive", message=message)
+        return res
+
+    def _exchange_receive_check(self, exchange_record):
+        # TODO: use `filtered_domain` + _input_pending_records_domain
+        # and raise one single error
+        # do the same for all the other check cases.
+        if not exchange_record.direction == "input":
+            raise exceptions.UserError(
+                self.env._(
+                    "Record ID=%d is not meant to be processed", exchange_record.id
+                )
+            )
+        return exchange_record.edi_exchange_state in [
+            "input_pending",
+            "input_receive_error",
+        ]
+
+    @EDIExchangeActionResult.wrap_result
+    def _exchange_receive(self, exchange_record):
+        exchange_function = self._get_exec_handler(exchange_record, "receive")
+        ctx = self._get_record_env_ctx(exchange_record, "receive")
+        return exchange_function(exchange_record.with_context(**ctx))
+
+    def _cron_check_input_exchange_sync(self, **kw):
+        for backend in self:
+            backend._check_input_exchange_sync(**kw)
+
+    # TODO: add tests
+    # TODO: consider splitting cron in 2 (1 for receiving, 1 for processing)
+    def _check_input_exchange_sync(self, record_ids=None, **kw):
+        """Lookup for pending input records and take care of them.
+
+        First work on records that need to receive input.
+        Then work on records waiting to be processed.
+        """
+        pending_records = self.exchange_record_model.search(
+            self._input_pending_records_domain(record_ids=record_ids)
+        )
+        _logger.info(
+            "EDI Exchange input sync: found %d pending records to receive.",
+            len(pending_records),
+        )
+        for rec in pending_records:
+            # Chained, so a record does not have to wait for the next run of
+            # this cron to be processed once it has been received.
+            rec.action_exchange_receive_process_chained()
+
+        pending_process_records = self.exchange_record_model.search(
+            self._input_pending_process_records_domain(record_ids=record_ids)
+        )
+        _logger.info(
+            "EDI Exchange input sync: found %d pending records to process.",
+            len(pending_process_records),
+        )
+        for rec in pending_process_records:
+            rec.action_exchange_process()
+
+    def _input_pending_records_domain(self, record_ids=None):
+        domain = [
+            ("backend_id", "=", self.id),
+            ("type_id.direction", "=", "input"),
+            ("type_id.receive_model_id", "!=", False),
+            ("edi_exchange_state", "=", "input_pending"),
+            ("exchange_file", "=", False),
+        ]
+        if record_ids:
+            domain.append(("id", "in", record_ids))
+        return domain
+
+    def _input_pending_process_records_domain(self, record_ids=None):
+        states = ("input_received",)
+        domain = [
+            ("backend_id", "=", self.id),
+            ("type_id.direction", "=", "input"),
+            ("type_id.process_model_id", "!=", False),
+            ("edi_exchange_state", "in", states),
+        ]
+        if record_ids:
+            domain.append(("id", "in", record_ids))
+        return domain
+
+    def _find_existing_exchange_records(
+        self, exchange_type, extra_domain=None, count_only=False
+    ):
+        domain = [
+            ("backend_id", "=", self.id),
+            ("type_id", "=", exchange_type.id),
+        ] + extra_domain or []
+        if count_only:
+            return self.env["edi.exchange.record"].search_count(domain)
+        else:
+            return self.env["edi.exchange.record"].search(domain)
+
+    def action_view_exchanges(self):
+        xmlid = "edi_core_oca.act_open_edi_exchange_record_view"
+        action = self.env["ir.actions.act_window"]._for_xml_id(xmlid)
+        action["context"] = {
+            "search_default_backend_id": self.id,
+            "default_backend_id": self.id,
+            "default_backend_type_id": self.backend_type_id.id,
+        }
+        return action
+
+    def action_view_exchange_types(self):
+        xmlid = "edi_core_oca.act_open_edi_exchange_type_view"
+        action = self.env["ir.actions.act_window"]._for_xml_id(xmlid)
+        action["context"] = {
+            "search_default_backend_id": self.id,
+            "default_backend_id": self.id,
+            "default_backend_type_id": self.backend_type_id.id,
+        }
+        return action
+
+    def _is_valid_edi_action(self, action, raise_if_not=False):
+        try:
+            assert action in ("generate", "send", "process", "receive", "check")
+            return True
+        except AssertionError:
+            if raise_if_not:
+                raise
+            return False
+
+    def _failed_output_check_send_msg(self):
+        return "Nothing to do. Likely already sent."
+
+    def _get_exec_handler(self, exchange_record, action):
+        model = exchange_record.type_id[f"{action}_model_id"].sudo()
+        if model:
+            ctx = self._get_record_env_ctx(exchange_record, action)
+            return getattr(self.env[model.model].with_context(**ctx), action)
+        raise EDINotImplementedError(
+            self.env._("No handler for %(action)s", action=action)
+        )
+
+    def _get_conf_for_record(self, exchange_record, key):
+        """Get the configuration for a given record and key."""
+        settings = exchange_record.type_id.get_settings()
+        return settings.get("execution_model", {}).get(key, {})
+
+    def _get_record_env_ctx(self, exchange_record, action):
+        # TODO: Maybe adding some keys on the configuration
+        return self._get_conf_for_record(exchange_record, action).get("env_ctx", {})

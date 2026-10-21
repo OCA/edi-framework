@@ -1,0 +1,181 @@
+# Copyright 2020 ACSONE
+# Copyright 2021 Camptocamp
+# @author: Simone Orsi <simahawk@gmail.com>
+# License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl).
+
+from unittest import mock
+
+from freezegun import freeze_time
+from psycopg2 import OperationalError
+
+from odoo import fields, tools
+from odoo.exceptions import UserError
+from odoo.orm.model_classes import add_to_registry
+
+from ..utils import EDIExchangeActionResult
+from .common import EDIBackendCommonTestCase
+
+
+class EDIBackendTestOutputCase(EDIBackendCommonTestCase):
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+
+        vals = {
+            "model": cls.partner._name,
+            "res_id": cls.partner.id,
+        }
+        cls.record = cls.backend.create_record("test_csv_output", vals)
+
+    @classmethod
+    def _setup_records(cls):  # pylint:disable=missing-return
+        super()._setup_records()
+        # Load fake models ->/
+        from .fake_models import EdiTestExecution
+
+        add_to_registry(cls.registry, EdiTestExecution)
+        cls.registry._setup_models__(cls.env.cr, ["edi.framework.test.execution"])
+        cls.registry.init_models(
+            cls.env.cr, ["edi.framework.test.execution"], {"models_to_check": True}
+        )
+        cls.addClassCleanup(cls.registry.__delitem__, "edi.framework.test.execution")
+        cls.ExecutionAbstractModel = cls.env["edi.framework.test.execution"]
+        cls.model = cls.env["ir.model"]._get("edi.framework.test.execution")
+        cls.exchange_type_out.generate_model_id = cls.model
+        cls.exchange_type_out.send_model_id = cls.model
+        cls.exchange_type_out.output_validate_model_id = cls.model
+
+    def setUp(self):
+        super().setUp()
+        self.ExecutionAbstractModel.reset_faked("generate")
+        self.ExecutionAbstractModel.reset_faked("send")
+        self.ExecutionAbstractModel.reset_faked("check")
+
+    def test_generate_record_output(self):
+        self.record.with_context(fake_output="yeah!").action_exchange_generate()
+        self.assertEqual(self.record._get_file_content(), "yeah!")
+
+    def test_generate_record_output_with_custom_action_result_message(self):
+        with mock.patch.object(type(self.backend), "_exchange_generate") as mocked:
+            mocked.return_value = EDIExchangeActionResult(
+                output="yeah!", message="Generated with custom message"
+            )
+            message = self.record.action_exchange_generate()
+        self.assertEqual(message, "Generated with custom message")
+        self.assertEqual(self.record._get_file_content(), "yeah!")
+
+    def test_generate_record_output_with_legacy_override_string(self):
+        with mock.patch.object(type(self.backend), "_exchange_generate") as mocked:
+            mocked.return_value = EDIExchangeActionResult.from_result("yeah!")
+            message = self.record.action_exchange_generate()
+        self.assertEqual(message, self.record._exchange_status_message("generate_ok"))
+        self.assertEqual(self.record._get_file_content(), "yeah!")
+
+    def test_generate_record_output_pdf(self):
+        pdf_content = tools.file_open(
+            "addons/edi_core_oca/tests/result.pdf", mode="rb"
+        ).read()
+        self.record.with_context(fake_output=pdf_content).action_exchange_generate()
+
+    def test_send_record(self):
+        self.record.write({"edi_exchange_state": "output_pending"})
+        self.record._set_file_content(f"TEST {self.record.id}")
+        self.assertFalse(self.record.exchanged_on)
+        with freeze_time("2020-10-21 10:00:00"):
+            self.record.action_exchange_send()
+            self.assertTrue(
+                self.ExecutionAbstractModel.check_called_for(self.record, "send")
+            )
+            self.assertRecordValues(
+                self.record, [{"edi_exchange_state": "output_sent"}]
+            )
+            self.assertEqual(
+                fields.Datetime.to_string(self.record.exchanged_on),
+                "2020-10-21 10:00:00",
+            )
+
+    def test_send_record_with_custom_action_result(self):
+        self.record.write({"edi_exchange_state": "output_pending"})
+        self.record._set_file_content(f"TEST {self.record.id}")
+        with mock.patch.object(type(self.backend), "_exchange_send") as mocked:
+            mocked.return_value = EDIExchangeActionResult(
+                output="send-payload", message="Sent with custom message"
+            )
+            res = self.record.action_exchange_send()
+        self.assertEqual(res, "Sent with custom message")
+        self.assertRecordValues(self.record, [{"edi_exchange_state": "output_sent"}])
+
+    def test_send_record_with_error(self):
+        self.record.write({"edi_exchange_state": "output_pending"})
+        self.record._set_file_content(f"TEST {self.record.id}")
+        self.assertFalse(self.record.exchanged_on)
+        self.record.with_context(
+            test_break_send="OOPS! Something went wrong :("
+        ).action_exchange_send()
+        self.assertTrue(
+            self.ExecutionAbstractModel.check_called_for(self.record, "send")
+        )
+        self.assertRecordValues(
+            self.record,
+            [
+                {
+                    "edi_exchange_state": "output_error_on_send",
+                    "exchange_error": "OOPS! Something went wrong :(",
+                }
+            ],
+        )
+        self.assertIn(
+            "OOPS! Something went wrong :(", self.record.exchange_error_traceback
+        )
+
+    def test_send_record_with_error_triggers_notify_error(self):
+        self.record.write({"edi_exchange_state": "output_pending"})
+        self.record._set_file_content(f"TEST {self.record.id}")
+        conf = self._make_global_error_conf(self.record.type_id)
+        self.record.with_context(
+            test_break_send="OOPS! Something went wrong :("
+        ).action_exchange_send()
+        # The error event must fire so downstream notifications (e.g.
+        # edi_notification_oca activities) are triggered.
+        self.assertEqual(conf.description, "error-event-fired")
+
+    def test_send_invalid_direction(self):
+        vals = {
+            "model": self.partner._name,
+            "res_id": self.partner.id,
+        }
+        record = self.backend.create_record("test_csv_input", vals)
+        with mock.patch.object(type(self.backend), "_exchange_send") as mocked:
+            mocked.return_value = "AAA"
+            with self.assertRaises(UserError) as err:
+                record.action_exchange_send()
+            self.assertEqual(
+                err.exception.args[0],
+                f"Record ID={record.id} is not meant to be sent!",
+            )
+            mocked.assert_not_called()
+
+    def test_send_not_generated_record(self):
+        vals = {
+            "model": self.partner._name,
+            "res_id": self.partner.id,
+        }
+        record = self.backend.create_record("test_csv_output", vals)
+        with mock.patch.object(type(self.backend), "_exchange_send") as mocked:
+            mocked.return_value = "AAA"
+            with self.assertRaises(UserError) as err:
+                record.action_exchange_send()
+            self.assertEqual(
+                err.exception.args[0], f"Record ID={record.id} has no file to send!"
+            )
+            mocked.assert_not_called()
+
+    def test_send_record_with_operational_error(self):
+        self.record.write({"edi_exchange_state": "output_pending"})
+        self.record._set_file_content(f"TEST {self.record.id}")
+        with self.assertRaises(OperationalError):
+            self.backend.with_context(
+                test_break_send=OperationalError("SQL error")
+            ).exchange_send(self.record)
+        self.assertRecordValues(self.record, [{"edi_exchange_state": "output_pending"}])
+        self.assertFalse(self.record.exchange_error)

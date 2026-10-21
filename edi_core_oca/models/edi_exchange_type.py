@@ -1,0 +1,384 @@
+# Copyright 2020 ACSONE SA
+# Copyright 2021 Camptocamp SA
+# @author Simone Orsi <simahawk@gmail.com>
+# License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl).
+import logging
+from datetime import UTC, datetime
+from zoneinfo import ZoneInfo
+
+from odoo import api, exceptions, fields, models
+from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT as DATETIME_FORMAT
+from odoo.tools import groupby
+
+from odoo.addons.base_sparse_field.models.fields import Serialized
+
+_logger = logging.getLogger(__name__)
+
+
+try:
+    import yaml
+except ImportError:
+    _logger.debug("`yaml` lib is missing")
+
+
+class EDIExchangeType(models.Model):
+    """
+    Define a kind of exchange.
+    """
+
+    _name = "edi.exchange.type"
+    _description = "EDI Exchange Type"
+
+    active = fields.Boolean(default=True, inverse="_inverse_active")
+    backend_id = fields.Many2one(
+        comodel_name="edi.backend",
+        ondelete="set null",
+    )
+    backend_type_id = fields.Many2one(
+        string="Backend type",
+        comodel_name="edi.backend.type",
+        required=True,
+        ondelete="restrict",
+    )
+    name = fields.Char(required=True)
+    code = fields.Char(required=True, copy=False)
+    direction = fields.Selection(
+        selection=[("input", "Input"), ("output", "Output")], required=True
+    )
+    exchange_filename_pattern = fields.Char(
+        default="{record_name}-{type.code}-{dt}",
+        help="For output exchange types this should be a formatting string "
+        "with the following variables available (to be used between "
+        "brackets, `{}`): `exchange_record`, `record_name`, `type`, "
+        "`dt` and `seq`. For instance, a valid string would be "
+        "{record_name}-{type.code}-{dt}-{seq}\n"
+        "For more information:\n"
+        "- `exchange_record` means exchange record\n"
+        "- `record_name` means name of the exchange record\n"
+        "- `type` means code of the exchange record type\n"
+        "- `dt` means datetime\n"
+        "- `seq` means sequence. You need a sequence to be defined in "
+        "`Exchange Filename Sequence` to use `seq`\n",
+    )
+    # TODO make required if exchange_filename_pattern is
+    exchange_file_ext = fields.Char()
+    # TODO: this flag should be probably deprecated
+    # because when an exchange w/o file is pending
+    # there's no reason not to generate it.
+    # Also this could be controlled more generally w/ edi auto settings.
+    exchange_file_auto_generate = fields.Boolean(
+        help="Auto generate output for records missing their payload. "
+        "If active, a cron will take care of generating the output when not set yet. "
+    )
+    ack_type_id = fields.Many2one(
+        string="Ack exchange type",
+        comodel_name="edi.exchange.type",
+        ondelete="set null",
+        help="Identify the type of the ack. "
+        "If this field is valued it means an hack is expected.",
+    )
+    ack_for_type_ids = fields.Many2many(
+        string="Ack for exchange type",
+        comodel_name="edi.exchange.type",
+        compute="_compute_ack_for_type_ids",
+    )
+    receive_model_id = fields.Many2one(
+        "ir.model", domain=[("is_edi_receiver", "=", True)], string="Receiver"
+    )
+    process_model_id = fields.Many2one(
+        "ir.model", domain=[("is_edi_processor", "=", True)], string="Processor"
+    )
+    check_model_id = fields.Many2one(
+        "ir.model", domain=[("is_edi_checker", "=", True)], string="Checker"
+    )
+    generate_model_id = fields.Many2one(
+        "ir.model", domain=[("is_edi_generator", "=", True)], string="Generator"
+    )
+    send_model_id = fields.Many2one(
+        "ir.model", domain=[("is_edi_sender", "=", True)], string="Sender"
+    )
+    input_validate_model_id = fields.Many2one(
+        "ir.model",
+        domain=[("is_edi_input_validator", "=", True)],
+        string="Input Validator",
+    )
+    output_validate_model_id = fields.Many2one(
+        "ir.model",
+        domain=[("is_edi_output_validator", "=", True)],
+        string="Output Validator",
+    )
+    advanced_settings_edit = fields.Text(
+        string="Advanced YAML settings",
+        help="""
+            Advanced technical settings as YAML format.
+            The YAML structure should reproduce a dictionary.
+            The backend might use these settings for automated operations.
+
+            Currently supported conf:
+
+              components:
+                generate:
+                  usage: $comp_usage
+                  # set a value for component work context
+                  work_ctx:
+                     opt1: True
+                validate:
+                  usage: $comp_usage
+                  env_ctx:
+                    # set a value for the whole processing env
+                    opt2: False
+                check:
+                  usage: $comp_usage
+                send:
+                  usage: $comp_usage
+                receive:
+                  usage: $comp_usage
+                process:
+                  usage: $comp_usage
+
+              filename_pattern:
+                force_tz: Europe/Rome
+                date_pattern: %Y-%m-%d-%H-%M-%S
+
+            In any case, you can use these settings
+            to provide your own configuration for whatever need you might have.
+        """,
+    )
+    advanced_settings = Serialized(default={}, compute="_compute_advanced_settings")
+    exchange_record_ids = fields.One2many(
+        comodel_name="edi.exchange.record",
+        inverse_name="type_id",
+    )
+    exchange_record_count = fields.Integer(
+        string="# Exchange Records",
+        compute="_compute_exchange_record_count",
+    )
+    rule_ids = fields.One2many(
+        comodel_name="edi.exchange.type.rule",
+        inverse_name="type_id",
+        help="Rules to handle exchanges and UI automatically",
+    )
+    quick_exec = fields.Boolean(
+        string="Quick execution",
+        help="When active, records of this type will be processed immediately "
+        "without waiting for the cron to pass by. "
+        "Requires auto generate flag to be active as well. "
+        "The cron will skip these records unless forced.",
+    )
+    partner_ids = fields.Many2many(
+        string="Enabled for partners",
+        comodel_name="res.partner",
+        help=(
+            "You can use this field to limit generating/processing exchanges "
+            "for specific partners. "
+            "Use it directly or within models rules (domain or snippet)."
+        ),
+    )
+    exchange_filename_sequence_id = fields.Many2one(
+        "ir.sequence",
+        help="If the `Exchange Filename Pattern` has `{seq}`, "
+        "you should define a sequence in this field to show "
+        "the sequence in your filename",
+    )
+    # https://docs.python.org/3/library/codecs.html#standard-encodings
+    encoding = fields.Char(
+        help="Encoding to be applied to generate/process the exchanged file.\n"
+        "Example: UTF-8, Windows-1252, ASCII...(default is always 'UTF-8')",
+    )
+    # https://docs.python.org/3/library/codecs.html#codec-base-classes
+    encoding_out_error_handler = fields.Selection(
+        string="Encoding Error Handler",
+        selection=[
+            ("strict", "Raise Error"),
+            ("ignore", "Ignore"),
+            ("replace", "Replace with Replacement Marker"),
+            ("backslashreplace", "Replace with Backslashed Escape Sequences"),
+            ("surrogateescape", "Replace Byte with Individual Surrogate Code"),
+            ("xmlcharrefreplace", "Replace with XML/HTML Numeric Character Reference"),
+        ],
+        help="Handling of encoding errors on generate "
+        "(default is always 'Raise Error').",
+    )
+    # https://docs.python.org/3/library/codecs.html#codec-base-classes
+    encoding_in_error_handler = fields.Selection(
+        string="Decoding Error Handler",
+        selection=[
+            ("strict", "Raise Error"),
+            ("ignore", "Ignore"),
+            ("replace", "Replace with Replacement Marker"),
+            ("backslashreplace", "Replace with Backslashed Escape Sequences"),
+            ("surrogateescape", "Replace Byte with Individual Surrogate Code"),
+        ],
+        help="Handling of decoding errors on process "
+        "(default is always 'Raise Error').",
+    )
+    allow_empty_files_on_receive = fields.Boolean(string="Allow Empty Files")
+
+    _code_uniq = models.Constraint(
+        "unique(code, backend_id)", "The code must be unique per backend"
+    )
+
+    def _inverse_active(self):
+        for rec in self:
+            # Disable rules if type gets disabled
+            if not rec.active:
+                rec.rule_ids.active = False
+
+    @api.depends("advanced_settings_edit")
+    def _compute_advanced_settings(self):
+        for rec in self:
+            rec.advanced_settings = rec._load_advanced_settings()
+
+    def _load_advanced_settings(self):
+        # TODO: validate settings w/ a schema.
+        # Could be done w/ Cerberus or JSON-schema.
+        # This would help documenting core and custom keys.
+        return yaml.safe_load(self.advanced_settings_edit or "") or {}
+
+    def _compute_ack_for_type_ids(self):
+        ack_for = self.search([("ack_type_id", "in", self.ids)])
+        by_type_id = dict(groupby(ack_for, lambda x: x.ack_type_id.id))
+        for rec in self:
+            rec.ack_for_type_ids = [x.id for x in by_type_id.get(rec.id, [])]
+
+    @api.depends("exchange_record_ids")
+    def _compute_exchange_record_count(self):
+        data = self.env["edi.exchange.record"]._read_group(
+            [("type_id", "in", self.ids)],
+            groupby=["type_id"],
+            aggregates=["__count"],
+        )
+        mapped_data = {type_.id: count for type_, count in data}
+        for rec in self:
+            rec.exchange_record_count = mapped_data.get(rec.id, 0)
+
+    def get_settings(self):
+        return self.advanced_settings
+
+    def set_settings(self, val):
+        self.advanced_settings_edit = val
+
+    @api.constrains(
+        "direction",
+        "send_model_id",
+        "process_model_id",
+        "generate_model_id",
+        "exchange_file_auto_generate",
+    )
+    def _check_direction_handlers(self):
+        for rec in self:
+            if rec.direction == "output":
+                if not rec.send_model_id:
+                    raise exceptions.ValidationError(
+                        self.env._("Output exchange types require a Sender handler.")
+                    )
+                if rec.exchange_file_auto_generate and not rec.generate_model_id:
+                    raise exceptions.ValidationError(
+                        self.env._(
+                            "Output exchange types with 'Auto Generate' enabled "
+                            "require a Generator handler."
+                        )
+                    )
+            elif rec.direction == "input" and not rec.process_model_id:
+                raise exceptions.ValidationError(
+                    self.env._("Input exchange types require a Processor handler.")
+                )
+
+    @api.constrains("backend_id", "backend_type_id")
+    def _check_backend(self):
+        for rec in self:
+            if not rec.backend_id:
+                continue
+            if rec.backend_id.backend_type_id != rec.backend_type_id:
+                raise exceptions.UserError(
+                    self.env._("Backend should respect backend type!")
+                )
+
+    def _make_exchange_filename_datetime(self):
+        """
+        Returns current datetime (now) using filename pattern
+        which can be set using advanced settings.
+
+        Example:
+          filename_pattern:
+            force_tz: Europe/Rome
+            date_pattern: %Y-%m-%d-%H-%M-%S
+        """
+        self.ensure_one()
+        pattern_settings = self.advanced_settings.get("filename_pattern", {})
+        force_tz = pattern_settings.get("force_tz", self.env.user.tz)
+        date_pattern = pattern_settings.get("date_pattern", DATETIME_FORMAT)
+        tz = ZoneInfo(force_tz) if force_tz else None
+        now = datetime.now(UTC).astimezone(tz)
+        return self.env["ir.http"]._slugify(now.strftime(date_pattern))
+
+    def _make_exchange_filename_sequence(self):
+        self.ensure_one()
+        return (
+            self.exchange_filename_sequence_id.next_by_id()
+            if self.exchange_filename_sequence_id
+            else ""
+        )
+
+    def _make_exchange_filename(self, exchange_record):
+        """Generate filename."""
+        pattern = self.exchange_filename_pattern
+        ext = self.exchange_file_ext
+        if ext:
+            pattern += ".{ext}"
+        dt = self._make_exchange_filename_datetime()
+        seq = self._make_exchange_filename_sequence()
+        record_name = self._get_record_name(exchange_record)
+        record = exchange_record
+        if exchange_record.model and exchange_record.res_id:
+            record = exchange_record.record
+        return pattern.format(
+            exchange_record=exchange_record,
+            record=record,
+            record_name=record_name,
+            type=self,
+            dt=dt,
+            seq=seq,
+            ext=ext,
+        )
+
+    def _get_record_name(self, exchange_record):
+        if not exchange_record.res_id or not exchange_record.model:
+            return self.env["ir.http"]._slugify(exchange_record.display_name or "")
+        if hasattr(exchange_record.record, "_get_edi_exchange_record_name"):
+            return exchange_record.record._get_edi_exchange_record_name(exchange_record)
+        return self.env["ir.http"]._slugify(exchange_record.record.display_name or "")
+
+    def is_partner_enabled(self, partner):
+        """Check if given partner record is allowed for the current type.
+
+        You can leverage this in your own logic to trigger or not
+        certain exchanges for specific partners.
+
+        For instance: a customer might require an ORDRSP while another does not.
+        """
+        exc_type = self.sudo()
+        if exc_type.partner_ids:
+            return partner.id in exc_type.partner_ids.ids
+        return True
+
+    def copy_data(self, default=None):
+        # OVERRIDE: ``code`` cannot be copied as it must me unique.
+        # Yet, we want to be able to duplicate a record from the UI.
+        self.ensure_one()
+        default = dict(default or {})
+        default.setdefault("code", f"{self.code}_COPY_FIXME")
+        return super().copy_data(default=default)
+
+    def action_view_exchange_records(self):
+        self.ensure_one()
+        action = self.env["ir.actions.act_window"]._for_xml_id(
+            "edi_core_oca.act_open_edi_exchange_record_view"
+        )
+        action["domain"] = [("type_id", "=", self.id)]
+        action["context"] = {
+            "default_type_id": self.id,
+            "default_backend_id": self.backend_id.id,
+            "search_default_type_id": self.id,
+        }
+        return action

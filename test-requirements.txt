@@ -1,0 +1,1 @@
+odoo-addon-base_edi @ git+https://github.com/ForgeFlow/edi@20.0-mig-base_edi#subdirectory=base_edi
