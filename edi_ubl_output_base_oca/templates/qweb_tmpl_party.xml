@@ -68,7 +68,7 @@
                 <cbc:Line t-if="partner.street2" t-esc="partner.street2" />
             </cac:AddressLine>
             <cac:Country t-if="partner.country_id">
-                <cbc:IdentificationCode t-field="partner.country_id" />
+                <cbc:IdentificationCode t-out="partner.country_id.code" />
             </cac:Country>
         </t>
     </template>

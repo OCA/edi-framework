@@ -155,9 +155,4 @@ class TestUblOutputBaseTemplates(TransactionCase):
         self.assertEqual(root.find("cbc:CityName", NS).text, "Lausanne")
         self.assertEqual(root.find("cbc:PostalZone", NS).text, "1000")
         self.assertEqual(root.find("cac:AddressLine/cbc:Line", NS).text, "Suite 2")
-        # `t-field` renders the Many2one's default display (name), not
-        # `.code` - pre-existing behavior carried over as-is from
-        # edi_sale_ubl_output_oca, not something to fix as part of this split.
-        self.assertEqual(
-            root.find("cac:Country/cbc:IdentificationCode", NS).text, "Switzerland"
-        )
+        self.assertEqual(root.find("cac:Country/cbc:IdentificationCode", NS).text, "CH")
