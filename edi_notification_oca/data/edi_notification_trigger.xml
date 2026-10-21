@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="trigger_generate_ok" model="edi.notification.trigger">
+        <field name="name">Generated</field>
+        <field name="code">generate_ok</field>
+        <field name="sequence">10</field>
+        <field name="direction">output</field>
+    </record>
+    <record id="trigger_validate_ko" model="edi.notification.trigger">
+        <field name="name">Validation error</field>
+        <field name="code">validate_ko</field>
+        <field name="sequence">20</field>
+        <field name="direction">both</field>
+        <field name="is_error" eval="True" />
+    </record>
+    <record id="trigger_send_ok" model="edi.notification.trigger">
+        <field name="name">Sent</field>
+        <field name="code">send_ok</field>
+        <field name="sequence">30</field>
+        <field name="direction">output</field>
+    </record>
+    <record id="trigger_send_ko" model="edi.notification.trigger">
+        <field name="name">Send error</field>
+        <field name="code">send_ko</field>
+        <field name="sequence">40</field>
+        <field name="direction">output</field>
+        <field name="is_error" eval="True" />
+    </record>
+    <record id="trigger_receive_ok" model="edi.notification.trigger">
+        <field name="name">Received</field>
+        <field name="code">receive_ok</field>
+        <field name="sequence">50</field>
+        <field name="direction">input</field>
+    </record>
+    <record id="trigger_receive_ko" model="edi.notification.trigger">
+        <field name="name">Receive error</field>
+        <field name="code">receive_ko</field>
+        <field name="sequence">60</field>
+        <field name="direction">input</field>
+        <field name="is_error" eval="True" />
+    </record>
+    <record id="trigger_process_ok" model="edi.notification.trigger">
+        <field name="name">Processed</field>
+        <field name="code">process_ok</field>
+        <field name="sequence">70</field>
+        <field name="direction">both</field>
+    </record>
+    <record id="trigger_process_ko" model="edi.notification.trigger">
+        <field name="name">Process error</field>
+        <field name="code">process_ko</field>
+        <field name="sequence">80</field>
+        <field name="direction">both</field>
+        <field name="is_error" eval="True" />
+    </record>
+    <record id="trigger_ack_received" model="edi.notification.trigger">
+        <field name="name">ACK received</field>
+        <field name="code">ack_received</field>
+        <field name="sequence">90</field>
+        <field name="direction">output</field>
+    </record>
+    <record id="trigger_ack_missing" model="edi.notification.trigger">
+        <field name="name">ACK missing</field>
+        <field name="code">ack_missing</field>
+        <field name="sequence">100</field>
+        <field name="direction">output</field>
+        <field name="is_error" eval="True" />
+    </record>
+    <record id="trigger_ack_received_error" model="edi.notification.trigger">
+        <field name="name">ACK received with errors</field>
+        <field name="code">ack_received_error</field>
+        <field name="sequence">110</field>
+        <field name="direction">output</field>
+        <field name="is_error" eval="True" />
+    </record>
+</odoo>
