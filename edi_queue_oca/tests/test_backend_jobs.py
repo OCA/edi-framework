@@ -1,0 +1,234 @@
+# Copyright 2020 ACSONE
+# @author: Simone Orsi <simahawk@gmail.com>
+# License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl).
+
+from unittest import mock
+
+from requests.exceptions import ConnectionError as ReqConnectionError
+
+from odoo.orm.model_classes import add_to_registry
+from odoo.tests import tagged
+
+from odoo.addons.edi_core_oca.tests.common import EDIBackendCommonTestCase
+from odoo.addons.edi_core_oca.utils import EDIExchangeActionResult
+from odoo.addons.queue_job.exception import RetryableJobError
+from odoo.addons.queue_job.tests.common import JobMixin
+
+
+@tagged("-at_install", "post_install")
+class EDIBackendTestJobsCase(EDIBackendCommonTestCase, JobMixin):
+    @classmethod
+    def _setup_context(cls):
+        return dict(super()._setup_context(), queue_job__no_delay=None)
+
+    @classmethod
+    def _setup_env(cls):
+        super()._setup_env()
+        # Load fake models ->/
+        from odoo.addons.edi_core_oca.tests.fake_models import EdiTestExecution
+
+        add_to_registry(cls.registry, EdiTestExecution)
+        cls.registry._setup_models__(cls.env.cr, ["edi.framework.test.execution"])
+        cls.registry.init_models(
+            cls.env.cr,
+            ["edi.framework.test.execution"],
+            {"models_to_check": True},
+        )
+        cls.addClassCleanup(cls.registry.__delitem__, "edi.framework.test.execution")
+        return super()._setup_env()
+
+    def setUp(self):
+        super().setUp()
+        self.model = self.env["ir.model"].search(
+            [("model", "=", "edi.framework.test.execution")]
+        )
+        self.exchange_type_out.generate_model_id = self.model
+        self.exchange_type_out.send_model_id = self.model
+        self.exchange_type_out.output_validate_model_id = self.model
+        self.exchange_type_in.receive_model_id = self.model
+        self.exchange_type_in.process_model_id = self.model
+        self.exchange_type_in.input_validate_model_id = self.model
+
+    def _get_related_jobs(self, record):
+        # Use domain in action to find all related jobs
+        record.ensure_one()
+        action = record.action_view_related_queue_jobs()
+        return self.env["queue.job"].search(action["domain"])
+
+    def _test_output_return(self, message, expected_message):
+        job_counter = self.job_counter()
+        vals = {
+            "model": self.partner._name,
+            "res_id": self.partner.id,
+        }
+        record = self.backend.create_record("test_csv_output", vals)
+        self.assertEqual(record.edi_exchange_state, "new")
+        job = self.backend.with_delay().exchange_generate(record)
+        created = job_counter.search_created()
+        self.assertEqual(len(created), 1)
+        self.assertEqual(
+            created.name, "Generate output content for given exchange record."
+        )
+        # Check related jobs
+        self.assertEqual(created, self._get_related_jobs(record))
+        with (
+            mock.patch.object(
+                type(self.backend), "_exchange_generate"
+            ) as mocked_generate,
+            mock.patch.object(type(self.backend), "_validate_data") as mocked_validate,
+        ):
+            mocked_generate.return_value = EDIExchangeActionResult.from_result(
+                "filecontent"
+            )
+            mocked_validate.return_value = None
+            res = job.perform()
+            self.assertEqual(res, "Exchange data generated")
+            self.assertEqual(record.edi_exchange_state, "output_pending")
+        job = self.backend.with_delay().exchange_send(record)
+        created = job_counter.search_created()
+        with mock.patch.object(type(self.backend), "_exchange_send") as mocked:
+            mocked.return_value = EDIExchangeActionResult.from_result(message)
+            res = job.perform()
+            self.assertEqual(res, expected_message)
+            self.assertEqual(record.edi_exchange_state, "output_sent")
+        self.assertEqual(created[0].name, "Send exchange file.")
+        # Check related jobs
+        record.invalidate_recordset()
+        self.assertEqual(created, self._get_related_jobs(record))
+
+    def test_output_with_specific_return(self):
+        self._test_output_return("specific return message", "Exchange sent")
+
+    def test_output_no_return(self):
+        self._test_output_return("", "Exchange sent")
+
+    def test_output_fail_retry(self):
+        job_counter = self.job_counter()
+        vals = {
+            "model": self.partner._name,
+            "res_id": self.partner.id,
+            "edi_exchange_state": "output_pending",
+        }
+        record = self.backend.create_record("test_csv_output", vals)
+        record._set_file_content("ABC")
+        job = self.backend.with_delay().exchange_send(record)
+        job_counter.search_created()
+        with mock.patch.object(type(self.backend), "_exchange_send") as mocked:
+            mocked.side_effect = ReqConnectionError("Connection broken")
+            with self.assertRaises(RetryableJobError):
+                job.perform()
+
+    def test_input(self):
+        job_counter = self.job_counter()
+        vals = {
+            "model": self.partner._name,
+            "res_id": self.partner.id,
+        }
+        record = self.backend.create_record("test_csv_input", vals)
+        job = self.backend.with_delay().exchange_receive(record)
+        created = job_counter.search_created()
+        self.assertEqual(len(created), 1)
+        self.assertEqual(created.name, "Retrieve an incoming document.")
+        # Check related jobs
+        self.assertEqual(created, self._get_related_jobs(record))
+        with (
+            mock.patch.object(
+                type(self.backend), "_exchange_receive"
+            ) as mocked_receive,
+            mock.patch.object(type(self.backend), "_validate_data") as mocked_validate,
+        ):
+            mocked_receive.return_value = EDIExchangeActionResult.from_result(
+                "filecontent"
+            )
+            mocked_validate.return_value = None
+            res = job.perform()
+            # the state is not input_pending hence there's nothing to do
+            self.assertEqual(res, "Nothing to do. Likely already received.")
+            record.edi_exchange_state = "input_pending"
+            res = job.perform()
+            # the state is not input_pending hence there's nothing to do
+            self.assertEqual(res, "Exchange received successfully")
+            self.assertEqual(record.edi_exchange_state, "input_received")
+        job = self.backend.with_delay().exchange_process(record)
+        created = job_counter.search_created()
+        self.assertEqual(created[0].name, "Process an incoming document.")
+
+    def test_input_processed_error(self):
+        vals = {
+            "model": self.partner._name,
+            "res_id": self.partner.id,
+            "edi_exchange_state": "input_received",
+        }
+        record = self.backend.create_record("test_csv_input", vals)
+        record._set_file_content("ABC")
+        # Process `input_received` records
+        job_counter = self.job_counter()
+        self.backend._check_input_exchange_sync()
+        created = job_counter.search_created()
+        # Create job
+        self.assertEqual(len(created), 1)
+        record.edi_exchange_state = "input_processed_error"
+        # Don't re-process `input_processed_error` records
+        self.backend._check_input_exchange_sync()
+        new_created = job_counter.search_created() - created
+        # Should not create new job
+        self.assertEqual(len(new_created), 0)
+        # Check related jobs
+        record.invalidate_recordset()
+        self.assertEqual(created, self._get_related_jobs(record))
+
+    def test_on_fail_job(self):
+        vals = {
+            "model": self.partner._name,
+            "res_id": self.partner.id,
+        }
+        record = self.backend.create_record("test_csv_output", vals)
+        self.assertEqual(record.edi_exchange_state, "new")
+        job = record.action_exchange_generate()
+        exc_vals = {
+            "exc_info": "Dummy traceback",
+            "exc_name": "Dummy exception",
+            "exc_message": "Dummy message",
+        }
+        job.on_fail(exc_vals)
+        self.assertEqual(record.edi_exchange_state, "validate_error")
+        self.assertEqual(
+            record.exchange_error,
+            ": ".join([exc_vals["exc_name"], exc_vals["exc_message"]]),
+        )
+        self.assertEqual(record.exchange_error_traceback, exc_vals["exc_info"])
+
+    def test_on_fail_job_non_string_message(self):
+        # The message is the first argument of the exception, which is the
+        # errno for an OSError, or may be missing altogether.
+        vals = {
+            "model": self.partner._name,
+            "res_id": self.partner.id,
+        }
+        record = self.backend.create_record("test_csv_output", vals)
+        job = record.action_exchange_generate()
+        job.on_fail(
+            {
+                "exc_info": "Dummy traceback",
+                "exc_name": "PermissionError",
+                "exc_message": 13,
+            }
+        )
+        self.assertEqual(record.edi_exchange_state, "validate_error")
+        self.assertEqual(record.exchange_error, "PermissionError: 13")
+        job.on_fail(
+            {
+                "exc_info": "Dummy traceback",
+                "exc_name": "JobFoundDead",
+                "exc_message": None,
+            }
+        )
+        self.assertEqual(record.exchange_error, "JobFoundDead")
+        job.on_fail(
+            {
+                "exc_info": "Dummy traceback",
+                "exc_name": None,
+                "exc_message": "Something went wrong",
+            }
+        )
+        self.assertEqual(record.exchange_error, "Something went wrong")

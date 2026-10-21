@@ -1,0 +1,5 @@
+odoo-addon-base_edi @ git+https://github.com/ForgeFlow/edi@20.0-mig-base_edi#subdirectory=base_edi
+odoo-addon-component @ git+https://github.com/ForgeFlow/connector@20.0-mig-component#subdirectory=component
+odoo-addon-component_event @ git+https://github.com/ForgeFlow/connector@20.0-mig-component_event#subdirectory=component_event
+odoo-addon-edi_core_oca @ git+https://github.com/ForgeFlow/edi-framework@20.0-mig-edi_core_oca#subdirectory=edi_core_oca
+odoo-addon-queue_job @ git+https://github.com/OCA/queue@refs/pull/999/head#subdirectory=queue_job
