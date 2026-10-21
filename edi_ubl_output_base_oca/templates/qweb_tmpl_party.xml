@@ -50,7 +50,10 @@
                 <cac:Contact t-if="show_contact">
                     <cbc:Name t-if="partner.name" t-esc="partner.name" />
                     <cbc:Telephone t-if="partner.phone" t-esc="partner.phone" />
-                    <cbc:ElectronicMail t-if="partner.email" t-esc="partner.email" />
+                    <cbc:ElectronicMail
+                        t-if="contact_email or partner.email"
+                        t-esc="contact_email or partner.email"
+                    />
                 </cac:Contact>
             </cac:Party>
         </t>
