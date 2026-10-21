@@ -1,0 +1,37 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* edi_component_oca
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0\n"
+"Report-Msgid-Bugs-To: \n"
+"PO-Revision-Date: 2025-10-14 06:34+0000\n"
+"Last-Translator: mymage <stefano.consolaro@mymage.it>\n"
+"Language-Team: none\n"
+"Language: it\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 5.10.4\n"
+
+#. module: edi_component_oca
+#: model:ir.model,name:edi_component_oca.model_edi_exchange_consumer_mixin
+msgid "Abstract record where exchange records can be assigned"
+msgstr "Record astratto dove i record di scambio possono essere assegnati"
+
+#. module: edi_component_oca
+#: model:ir.model,name:edi_component_oca.model_edi_oca_component_handler
+msgid "Component Handler for EDI"
+msgstr "Gestore componente per EDI"
+
+#. module: edi_component_oca
+#: model:ir.model,name:edi_component_oca.model_edi_backend
+msgid "EDI Backend"
+msgstr "Backend EDI"
+
+#. module: edi_component_oca
+#: model:ir.model,name:edi_component_oca.model_edi_exchange_record
+msgid "EDI exchange Record"
+msgstr "Record di scambio EDI"

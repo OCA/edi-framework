@@ -1,0 +1,50 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* edi_component_oca
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 19.0\n"
+"Report-Msgid-Bugs-To: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: edi_component_oca
+#: model:ir.model,name:edi_component_oca.model_edi_exchange_consumer_mixin
+msgid "Abstract record where exchange records can be assigned"
+msgstr ""
+
+#. module: edi_component_oca
+#: model:ir.model,name:edi_component_oca.model_edi_oca_component_handler
+msgid "Component Handler for EDI"
+msgstr ""
+
+#. module: edi_component_oca
+#: model:ir.model.fields,field_description:edi_component_oca.field_edi_backend__display_name
+#: model:ir.model.fields,field_description:edi_component_oca.field_edi_exchange_consumer_mixin__display_name
+#: model:ir.model.fields,field_description:edi_component_oca.field_edi_exchange_record__display_name
+#: model:ir.model.fields,field_description:edi_component_oca.field_edi_oca_component_handler__display_name
+msgid "Display Name"
+msgstr ""
+
+#. module: edi_component_oca
+#: model:ir.model,name:edi_component_oca.model_edi_backend
+msgid "EDI Backend"
+msgstr ""
+
+#. module: edi_component_oca
+#: model:ir.model,name:edi_component_oca.model_edi_exchange_record
+msgid "EDI exchange Record"
+msgstr ""
+
+#. module: edi_component_oca
+#: model:ir.model.fields,field_description:edi_component_oca.field_edi_backend__id
+#: model:ir.model.fields,field_description:edi_component_oca.field_edi_exchange_consumer_mixin__id
+#: model:ir.model.fields,field_description:edi_component_oca.field_edi_exchange_record__id
+#: model:ir.model.fields,field_description:edi_component_oca.field_edi_oca_component_handler__id
+msgid "ID"
+msgstr ""
