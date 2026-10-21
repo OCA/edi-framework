@@ -32,7 +32,7 @@ class EDIExchangeTypeTestCase(EDIQueueCommonTestCase):
         self.exchange_type_in.job_eta_minute = "00"
         self.assertEqual(
             self._get_job_eta(self.record),
-            datetime(2024, 1, 15, 22, 0, 0),
+            datetime(2024, 1, 15, 22, 0, 0),  # noqa: DTZ001
         )
 
     @freeze_time("2024-01-15 23:00:00")
@@ -44,7 +44,7 @@ class EDIExchangeTypeTestCase(EDIQueueCommonTestCase):
         self.exchange_type_in.job_eta_minute = "00"
         self.assertEqual(
             self._get_job_eta(self.record),
-            datetime(2024, 1, 16, 22, 0, 0),
+            datetime(2024, 1, 16, 22, 0, 0),  # noqa: DTZ001
         )
 
     @freeze_time("2024-01-15 20:00:00")
@@ -56,5 +56,5 @@ class EDIExchangeTypeTestCase(EDIQueueCommonTestCase):
         self.exchange_type_in.job_eta_minute = "00"
         self.assertEqual(
             self._get_job_eta(record=self.record),
-            datetime(2024, 1, 16, 0, 0, 0),
+            datetime(2024, 1, 16, 0, 0, 0),  # noqa: DTZ001
         )

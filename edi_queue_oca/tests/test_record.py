@@ -3,9 +3,8 @@
 # @author: Simone Orsi <simahawk@gmail.com>
 # License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl).
 
-from datetime import datetime
-
-import pytz
+from datetime import UTC, datetime
+from zoneinfo import ZoneInfo
 
 from odoo.addons.queue_job.delay import DelayableRecordset
 
@@ -51,12 +50,11 @@ class EDIRecordTestCase(EDIQueueCommonTestCase):
         self.exchange_type_in.job_eta_minute = "00"
         delayed = self._get_delayed(record)
         job_eta = delayed.delayable.eta
-        utc_tz = pytz.UTC
-        user_tz = pytz.timezone(self.env.user.tz or "UTC")
+        user_tz = ZoneInfo(self.env.user.tz or "UTC")
         target_22h_user = datetime.now(user_tz).replace(
             hour=22, minute=0, second=0, microsecond=0
         )
-        expected_eta = target_22h_user.astimezone(utc_tz).replace(tzinfo=None)
+        expected_eta = target_22h_user.astimezone(UTC).replace(tzinfo=None)
         self.assertTrue(isinstance(delayed, DelayableRecordset))
         self.assertEqual(delayed.recordset, record)
         self.assertEqual(job_eta, expected_eta)

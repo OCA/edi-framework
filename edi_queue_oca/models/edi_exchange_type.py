@@ -2,9 +2,9 @@
 # Copyright 2025 Dixmit
 # License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl).
 
-from datetime import datetime
+from datetime import UTC, datetime
+from zoneinfo import ZoneInfo
 
-import pytz
 from dateutil.relativedelta import relativedelta
 
 from odoo import api, fields, models
@@ -63,20 +63,15 @@ class EdiExchangeType(models.Model):
             return None
 
         self.ensure_one()
-        now = pytz.UTC.localize(datetime.utcnow())
-        eta = (
-            pytz.timezone(self.job_eta_tz)
-            .localize(
-                datetime(
-                    now.year,
-                    now.month,
-                    now.day,
-                    int(self.job_eta_hour),
-                    int(self.job_eta_minute),
-                )
-            )
-            .astimezone(pytz.UTC)
-        )
+        now = datetime.now(UTC)
+        eta = datetime(
+            now.year,
+            now.month,
+            now.day,
+            int(self.job_eta_hour),
+            int(self.job_eta_minute),
+            tzinfo=ZoneInfo(self.job_eta_tz),
+        ).astimezone(UTC)
         if eta < now:
             eta += relativedelta(days=1)
         return eta.replace(tzinfo=None)
