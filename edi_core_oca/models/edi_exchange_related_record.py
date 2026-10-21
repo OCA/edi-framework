@@ -57,4 +57,4 @@ class EDIExchangeRelatedRecord(models.Model):
         self.ensure_one()
         if not self.record:
             return {}
-        return self.record.get_formview_action()
+        return self.record._get_records_action()

@@ -72,7 +72,7 @@ class EdiOcaHandlerNoop(models.AbstractModel):
     """
 
     _name = "edi.oca.handler.noop"
-    _inherit = [
+    _inherit = (
         "edi.oca.handler.generate",
         "edi.oca.handler.input.validate",
         "edi.oca.handler.output.validate",
@@ -80,5 +80,5 @@ class EdiOcaHandlerNoop(models.AbstractModel):
         "edi.oca.handler.receive",
         "edi.oca.handler.process",
         "edi.oca.handler.check",
-    ]
+    )
     _description = "EDI OCA Handler No-op"

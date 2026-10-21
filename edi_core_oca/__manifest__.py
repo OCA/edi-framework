@@ -5,11 +5,8 @@
 
 {
     "name": "EDI",
-    "summary": """
-    Define backends, exchange types, exchange records,
-    basic automation and views for handling EDI exchanges.
-    """,
-    "version": "19.0.1.7.0",
+    "summary": "Backends, exchange types and records, automation and views for EDI",
+    "version": "20.0.1.0.0",
     "website": "https://github.com/OCA/edi-framework",
     "development_status": "Beta",
     "license": "LGPL-3",
@@ -30,7 +27,7 @@
         "data/ir_cron_archive_old_edi_records.xml",
         "data/ir_cron_delete_old_archived_edi_records.xml",
         "security/res_groups.xml",
-        "security/ir_model_access.xml",
+        "security/ir.access.csv",
         "views/edi_backend_views.xml",
         "views/edi_backend_type_views.xml",
         "views/edi_exchange_record_views.xml",

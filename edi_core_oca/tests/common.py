@@ -34,9 +34,11 @@ class EDIBackendTestMixin:
                 cls.env.cr, ["edi.framework.test.execution"], {"models_to_check": True}
             )
             cls.addClassCleanup(
-                lambda: cls.registry.__delitem__("edi.framework.test.execution")
-                if "edi.framework.test.execution" in cls.registry
-                else None
+                lambda: (
+                    cls.registry.__delitem__("edi.framework.test.execution")
+                    if "edi.framework.test.execution" in cls.registry
+                    else None
+                )
             )
 
     @classmethod

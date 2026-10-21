@@ -1,0 +1,19 @@
+id,name,model_id,group_id/id,operation,domain
+access_edi_backend_type_manager,access_edi_backend_type manager,edi.backend.type,base_edi.group_edi_manager,crud,
+access_edi_backend_type_user,access_edi_backend_type user,edi.backend.type,base.group_user,r,
+access_edi_backend_manager,access_edi_backend manager,edi.backend,base_edi.group_edi_manager,crud,
+access_edi_backend_user,access_edi_backend user,edi.backend,base.group_user,r,
+rule_edi_backend_multi_company,edi_backend multi-company,edi.backend,,crud,"['|',('company_id','=',False),('company_id', 'in', company_ids)]"
+access_edi_exchange_type_manager,access_edi_exchange_type manager,edi.exchange.type,base_edi.group_edi_manager,crud,
+access_edi_exchange_type_user,access_edi_exchange_type user,edi.exchange.type,base.group_user,r,
+access_edi_exchange_type_rule_manager,access_edi_exchange_type_rule manager,edi.exchange.type.rule,base_edi.group_edi_manager,crud,
+access_edi_exchange_type_rule_user,access_edi_exchange_type_rule user,edi.exchange.type.rule,base.group_user,r,
+rule_edi_exchange_record_manager,Manager EDI exchange records,edi.exchange.record,base_edi.group_edi_manager,crud,
+rule_edi_exchange_record_user,Assigned EDI exchange records,edi.exchange.record,base.group_user,crud,"['|', ('model', '!=', False), ('res_id', '=', 0)]"
+rule_edi_exchange_record_multi_company,edi_exchange_record multi-company,edi.exchange.record,,crud,"['|',('company_id','=',False),('company_id', 'in', company_ids)]"
+access_edi_exchange_related_record_user,access_edi_exchange_related_record user,edi.exchange.related.record,base.group_user,crud,
+access_edi_exchange_record_create_user,access_edi_exchange_record user,edi.exchange.record.create.wiz,base.group_user,crud,
+access_edi_configuration_manager,access_edi_configuration manager,edi.configuration,base_edi.group_edi_manager,crud,
+access_edi_configuration_user,access_edi_configuration user,edi.configuration,base.group_user,r,
+access_edi_configuration_trigger_manager,access_edi_configuration_trigger manager,edi.configuration.trigger,base_edi.group_edi_manager,crud,
+access_edi_configuration_trigger_user,access_edi_configuration_trigger user,edi.configuration.trigger,base.group_user,r,

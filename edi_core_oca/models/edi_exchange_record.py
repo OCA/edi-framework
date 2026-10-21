@@ -3,13 +3,15 @@
 # @author Simone Orsi <simahawk@gmail.com>
 # License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl).
 
-import base64
 import logging
 from collections import defaultdict
+from typing import ClassVar
 
 from odoo import Command, api, exceptions, fields, models
 from odoo.exceptions import AccessError
-from odoo.tools import Query, split_every
+from odoo.orm.query import Query
+from odoo.tools import split_every
+from odoo.tools.binary import BinaryBytes
 
 from ..utils import get_checksum
 
@@ -144,7 +146,7 @@ class EDIExchangeRecord(models.Model):
         compute="_compute_retryable",
         help="The record state can be rolled back manually in case of failure.",
     )
-    company_id = fields.Many2one("res.company", string="Company")
+    company_id = fields.Many2one("res.company")
     active = fields.Boolean(default=True)
 
     _identifier_uniq = models.Constraint(
@@ -172,9 +174,9 @@ class EDIExchangeRecord(models.Model):
     @api.depends("exchange_file")
     def _compute_exchange_filechecksum(self):
         for rec in self:
-            content = rec.exchange_file or ""
-            if not isinstance(content, bytes):
-                content = content.encode()
+            # Keep hashing the base64 representation, as in previous versions,
+            # so checksums of existing records stay valid.
+            content = rec.exchange_file.to_base64().encode()
             rec.exchange_filechecksum = get_checksum(content)
 
     @api.depends("edi_exchange_state")
@@ -299,7 +301,7 @@ class EDIExchangeRecord(models.Model):
     def needs_ack(self):
         return self.type_id.ack_type_id and not self.ack_exchange_id
 
-    _rollback_state_mapping = {
+    _rollback_state_mapping: ClassVar[dict[str, str]] = {
         # From: to
         "output_error_on_send": "output_pending",
         "output_sent_and_error": "output_pending",
@@ -329,7 +331,7 @@ class EDIExchangeRecord(models.Model):
         self.ensure_one()
         if not isinstance(output_string, bytes):
             output_string = bytes(output_string, encoding)
-        self[field_name] = base64.b64encode(output_string)
+        self[field_name] = BinaryBytes(output_string)
 
     def _get_file_content(
         self, field_name="exchange_file", binary=True, as_bytes=False
@@ -341,13 +343,13 @@ class EDIExchangeRecord(models.Model):
         if not self[field_name]:
             return ""
         if binary:
-            res = base64.b64decode(self[field_name])
+            res = self[field_name].content
             return (
                 res.decode(encoding, errors=decoding_error_handler)
                 if not as_bytes
                 else res
             )
-        return self[field_name]
+        return self[field_name].to_base64()
 
     @api.depends("identifier", "res_id", "model", "type_id")
     def _compute_display_name(self):
@@ -490,7 +492,7 @@ class EDIExchangeRecord(models.Model):
         self.ensure_one()
         if not self.related_record_exists:
             return {}
-        return self.record.get_formview_action()
+        return self.record._get_records_action()
 
     def _set_related_record(self, odoo_record):
         commands = []
@@ -601,7 +603,7 @@ class EDIExchangeRecord(models.Model):
         for sub_ids in split_every(self.env.cr.IN_MAX, ids):
             self.env.cr.execute(
                 sub_query % {"table": self._table},
-                dict(ids=list(sub_ids)),
+                {"ids": list(sub_ids)},
             )
             for eid, res_id, model in self.env.cr.fetchall():
                 if not model:

@@ -118,7 +118,7 @@ class EDIRecordTestCase(EDIBackendCommonTestCase):
         self.assertEqual(record.record, record1.record)
         # Don't use the vals to lets empty model and res_id
         record2 = self.backend.create_record(
-            "test_csv_output_ack", dict(parent_id=record.id)
+            "test_csv_output_ack", {"parent_id": record.id}
         )
         self.assertFalse(record2.model)
         self.assertEqual(record.record, record2.record)
@@ -194,8 +194,8 @@ class EDIRecordTestCase(EDIBackendCommonTestCase):
         self.assertFalse(record0.retryable)
 
     def test_checksum(self):
-        filecontent = base64.b64encode(b"ABC")
-        checksum1 = get_checksum(filecontent)
+        filecontent = base64.b64encode(b"ABC").decode()
+        checksum1 = get_checksum(filecontent.encode())
         vals = {
             "model": self.partner._name,
             "res_id": self.partner.id,
@@ -203,14 +203,14 @@ class EDIRecordTestCase(EDIBackendCommonTestCase):
         }
         record0 = self.backend.create_record("test_csv_output", vals)
         self.assertEqual(record0.exchange_filechecksum, checksum1)
-        filecontent = base64.b64encode(b"DEF")
-        checksum2 = get_checksum(filecontent)
+        filecontent = base64.b64encode(b"DEF").decode()
+        checksum2 = get_checksum(filecontent.encode())
         record0.exchange_file = filecontent
         self.assertEqual(record0.exchange_filechecksum, checksum2)
         self.assertNotEqual(record0.exchange_filechecksum, checksum1)
 
     def test_file_frozen(self):
-        filecontent = base64.b64encode(b"ABC")
+        filecontent = base64.b64encode(b"ABC").decode()
         vals = {
             "model": self.partner._name,
             "res_id": self.partner.id,

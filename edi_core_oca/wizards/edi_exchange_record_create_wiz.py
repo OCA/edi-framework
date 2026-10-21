@@ -22,4 +22,4 @@ class EdiExchangeRecordCreateWiz(models.TransientModel):
             self.exchange_type_id, self.backend_id
         )
         record._manual_notify_edi_generation(exchange_record)
-        return exchange_record.get_formview_action()
+        return exchange_record._get_records_action()

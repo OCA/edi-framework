@@ -35,23 +35,13 @@ class TestEDIExchangeRecordSecurity(EDIBackendCommonTestCase):
         super()._setup_records()
         cls.group = cls.env["res.groups"].create({"name": "Demo Group"})
         model = cls.env["ir.model"]._get("edi.exchange.consumer.test")
-        cls.ir_access = cls.env["ir.model.access"].create(
+        cls.ir_access = cls.env["ir.access"].create(
             {
-                "name": "model access",
+                "name": "Exchange Record access demo",
                 "model_id": model.id,
                 "group_id": cls.group.id,
-                "perm_read": True,
-                "perm_write": True,
-                "perm_create": True,
-                "perm_unlink": True,
-            }
-        )
-        cls.rule = cls.env["ir.rule"].create(
-            {
-                "name": "Exchange Record rule demo",
-                "model_id": model.id,
-                "domain_force": "[('name', '=', 'test')]",
-                "groups": [(4, cls.group.id)],
+                "operation": "crud",
+                "domain": "[('name', '=', 'test')]",
             }
         )
         cls.user = (
@@ -90,7 +80,7 @@ class TestEDIExchangeRecordSecurity(EDIBackendCommonTestCase):
         exchange_record = self.create_record()
         self.assertTrue(exchange_record)
 
-    @mute_logger("odoo.addons.base.models.ir_rule")
+    @mute_logger("odoo.addons.base.models.ir_access")
     def test_rule_no_create(self):
         self.user.write({"group_ids": [(4, self.group.id)]})
         self.consumer_record.name = "no_rule"
@@ -108,7 +98,7 @@ class TestEDIExchangeRecordSecurity(EDIBackendCommonTestCase):
         with self.assertRaisesRegex(AccessError, "You are not allowed to access"):
             exchange_record.with_user(self.user).read()
 
-    @mute_logger("odoo.addons.base.models.ir_rule")
+    @mute_logger("odoo.addons.base.models.ir_access")
     def test_rule_no_read(self):
         exchange_record = self.create_record()
         self.user.write({"group_ids": [(4, self.group.id)]})
@@ -131,7 +121,7 @@ class TestEDIExchangeRecordSecurity(EDIBackendCommonTestCase):
         self.user.write({"group_ids": [(4, self.group.id)]})
         self.assertTrue(exchange_record.with_user(self.user).unlink())
 
-    @mute_logger("odoo.addons.base.models.ir_rule")
+    @mute_logger("odoo.addons.base.models.ir_access")
     def test_rule_no_unlink(self):
         exchange_record = self.create_record()
         self.user.write({"group_ids": [(4, self.group.id)]})
@@ -218,7 +208,7 @@ class TestEDIExchangeRecordSecurity(EDIBackendCommonTestCase):
         exchange_record.with_user(self.user).write({"external_identifier": "1234"})
         self.assertEqual(exchange_record.external_identifier, "1234")
 
-    @mute_logger("odoo.addons.base.models.ir_rule")
+    @mute_logger("odoo.addons.base.models.ir_access")
     def test_rule_no_write(self):
         exchange_record = self.create_record()
         self.user.write({"group_ids": [(4, self.group.id)]})

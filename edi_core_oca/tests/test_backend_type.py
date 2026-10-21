@@ -18,11 +18,13 @@ class EDIBackendTypeTestCase(EDIBackendCommonTestCase):
 
     def test_type_code_uniq(self):
         existing_code = self.backend.backend_type_id.code
-        with mute_logger("odoo.sql_db"):
-            with self.assertRaises(psycopg2.IntegrityError):
-                self.backend_type_model.create(
-                    {"name": "Test new type", "code": existing_code}
-                )
+        with (
+            mute_logger("odoo.sql_db"),
+            self.assertRaises(psycopg2.IntegrityError),
+        ):
+            self.backend_type_model.create(
+                {"name": "Test new type", "code": existing_code}
+            )
 
     def test_copy(self):
         new_type = self.backend.backend_type_id.copy()

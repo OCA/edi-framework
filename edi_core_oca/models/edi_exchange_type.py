@@ -3,9 +3,8 @@
 # @author Simone Orsi <simahawk@gmail.com>
 # License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl).
 import logging
-from datetime import datetime
-
-from pytz import timezone, utc
+from datetime import UTC, datetime
+from zoneinfo import ZoneInfo
 
 from odoo import api, exceptions, fields, models
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT as DATETIME_FORMAT
@@ -32,7 +31,6 @@ class EDIExchangeType(models.Model):
 
     active = fields.Boolean(default=True, inverse="_inverse_active")
     backend_id = fields.Many2one(
-        string="Backend",
         comodel_name="edi.backend",
         ondelete="set null",
     )
@@ -178,7 +176,6 @@ class EDIExchangeType(models.Model):
     )
     exchange_filename_sequence_id = fields.Many2one(
         "ir.sequence",
-        "Exchange Filename Sequence",
         help="If the `Exchange Filename Pattern` has `{seq}`, "
         "you should define a sequence in this field to show "
         "the sequence in your filename",
@@ -311,8 +308,8 @@ class EDIExchangeType(models.Model):
         pattern_settings = self.advanced_settings.get("filename_pattern", {})
         force_tz = pattern_settings.get("force_tz", self.env.user.tz)
         date_pattern = pattern_settings.get("date_pattern", DATETIME_FORMAT)
-        tz = timezone(force_tz) if force_tz else None
-        now = datetime.now(utc).astimezone(tz)
+        tz = ZoneInfo(force_tz) if force_tz else None
+        now = datetime.now(UTC).astimezone(tz)
         return self.env["ir.http"]._slugify(now.strftime(date_pattern))
 
     def _make_exchange_filename_sequence(self):

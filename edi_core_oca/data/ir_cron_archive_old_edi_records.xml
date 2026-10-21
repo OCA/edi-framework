@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="UTF-8" ?>
 <odoo noupdate="1">
     <record id="ir_cron_archive_old_edi_records" model="ir.cron">
         <field name="name">Archive Old EDI Exchange Records</field>
@@ -19,7 +19,7 @@ for backend in backends:
     if records:
         records.action_archive()
         </field>
-        <field name="interval_number">1</field>
+        <field name="interval_number" eval="1" />
         <field name="interval_type">days</field>
         <field name="active" eval="True" />
         <field name="priority" eval="10" />

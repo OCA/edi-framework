@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="UTF-8" ?>
 <odoo noupdate="1">
     <record
         id="cron_edi_backend_check_output_exchange"
@@ -8,7 +8,7 @@
         <field name="name">EDI exchange check output sync</field>
         <field name="active" eval="True" />
         <field name="user_id" ref="base.user_root" />
-        <field name="interval_number">1</field>
+        <field name="interval_number" eval="1" />
         <field name="interval_type">hours</field>
         <field name="model_id" ref="edi_core_oca.model_edi_backend" />
         <field name="state">code</field>
@@ -23,7 +23,7 @@
         <field name="name">EDI exchange check input sync</field>
         <field name="active" eval="True" />
         <field name="user_id" ref="base.user_root" />
-        <field name="interval_number">1</field>
+        <field name="interval_number" eval="1" />
         <field name="interval_type">hours</field>
         <field name="model_id" ref="edi_core_oca.model_edi_backend" />
         <field name="state">code</field>

@@ -328,7 +328,7 @@
         </field>
     </record>
 
-    <record model="ir.actions.act_window" id="act_open_edi_exchange_record_recent_view">
+    <record id="act_open_edi_exchange_record_recent_view" model="ir.actions.act_window">
         <field name="name">Recent exchanges</field>
         <field name="path">edi-exchange-records-recent</field>
         <field name="type">ir.actions.act_window</field>
@@ -342,7 +342,7 @@
         <field name="context">{'search_default_filter_created_today': 1}</field>
     </record>
 
-    <record model="ir.actions.act_window" id="act_open_edi_exchange_record_view">
+    <record id="act_open_edi_exchange_record_view" model="ir.actions.act_window">
         <field name="name">Exchanges</field>
         <field name="path">edi-exchange-records</field>
         <field name="type">ir.actions.act_window</field>
@@ -354,8 +354,8 @@
     </record>
 
     <record
-        model="ir.actions.act_window"
         id="act_open_edi_exchange_record_view_pending"
+        model="ir.actions.act_window"
     >
         <field name="name">Exchanges - pending</field>
         <field name="path">edi-exchange-records-pending</field>
@@ -369,7 +369,7 @@
         >{'search_default_filter_pending': 1, 'search_default_filter_created_today': 1}</field>
     </record>
 
-    <record model="ir.actions.act_window" id="act_open_edi_exchange_record_view_failed">
+    <record id="act_open_edi_exchange_record_view_failed" model="ir.actions.act_window">
         <field name="name">Exchanges - failed</field>
         <field name="path">edi-exchange-records-failed</field>
         <field name="type">ir.actions.act_window</field>
@@ -383,8 +383,8 @@
     </record>
 
     <record
-        model="ir.actions.act_window"
         id="act_open_edi_exchange_record_view_inbound"
+        model="ir.actions.act_window"
     >
         <field name="name">Exchanges - inbound</field>
         <field name="path">edi-exchange-records-inbound</field>
@@ -399,8 +399,8 @@
     </record>
 
     <record
-        model="ir.actions.act_window"
         id="act_open_edi_exchange_record_view_outbound"
+        model="ir.actions.act_window"
     >
         <field name="name">Exchanges - outbound</field>
         <field name="path">edi-exchange-records-outbound</field>
@@ -414,8 +414,8 @@
         >{'search_default_filter_outbound': 1, 'search_default_filter_created_today': 1}</field>
     </record>
     <record
-        model="ir.actions.act_window.view"
         id="act_open_edi_exchange_record_view_form"
+        model="ir.actions.act_window.view"
     >
         <field name="act_window_id" ref="act_open_edi_exchange_record_view" />
         <field name="sequence" eval="20" />
@@ -423,8 +423,8 @@
         <field name="view_id" ref="edi_exchange_record_view_form" />
     </record>
     <record
-        model="ir.actions.act_window.view"
         id="act_open_edi_exchange_record_view_tree"
+        model="ir.actions.act_window.view"
     >
         <field name="act_window_id" ref="act_open_edi_exchange_record_view" />
         <field name="sequence" eval="10" />

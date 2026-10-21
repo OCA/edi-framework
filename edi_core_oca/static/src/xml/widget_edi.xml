@@ -7,9 +7,9 @@
                 <t t-set="btn" t-value="rule.form.btn" />
                 <button
                     t-if="btn"
+                    t-attf-class="o_edi_action btn #{btn.class != null ? btn.class : 'btn-sm btn-secondary'}"
                     t-on-click="(ev) => this.onClick(ev, rule)"
                     t-att-title="btn.tooltip"
-                    t-attf-class="o_edi_action btn #{btn.class != null ? btn.class : 'btn-sm btn-secondary'}"
                 >
                     <t t-esc="btn.label" />
                 </button>

@@ -17,7 +17,7 @@ class EDIBackendTestValidateCase(EDIBackendCommonTestCase):
         vals = {
             "model": cls.partner._name,
             "res_id": cls.partner.id,
-            "exchange_file": base64.b64encode(b"1234"),
+            "exchange_file": base64.b64encode(b"1234").decode(),
         }
         cls.record_in = cls.backend.create_record("test_csv_input", vals)
         vals.pop("exchange_file")

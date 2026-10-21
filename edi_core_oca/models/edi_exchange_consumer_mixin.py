@@ -61,7 +61,7 @@ class EDIExchangeConsumerMixin(models.AbstractModel):
         for record in self:
             config = record._edi_get_exchange_type_config()
             record.edi_config = config
-            record.edi_has_form_config = any([x.get("form") for x in config.values()])
+            record.edi_has_form_config = any(x.get("form") for x in config.values())
 
     @api.depends("exchange_related_record_ids")
     def _compute_exchange_record_ids(self):
@@ -190,7 +190,7 @@ class EDIExchangeConsumerMixin(models.AbstractModel):
         if backend:
             exchange_record = self._edi_create_exchange_record(exchange_type, backend)
             self._manual_notify_edi_generation(exchange_record)
-            return exchange_record.get_formview_action()
+            return exchange_record._get_records_action()
         return self._edi_get_create_record_wiz_action(exchange_type_id)
 
     def _manual_notify_edi_generation(self, exchange_record):

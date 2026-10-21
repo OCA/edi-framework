@@ -99,7 +99,7 @@ class EDIQuickExecTestCase(EDIBackendCommonTestCase):
         vals = {
             "model": self.partner._name,
             "res_id": self.partner.id,
-            "exchange_file": base64.b64encode(b"1234"),
+            "exchange_file": base64.b64encode(b"1234").decode(),
             "edi_exchange_state": "input_received",
         }
         record0 = self.backend.create_record("test_csv_input", vals)
@@ -115,7 +115,7 @@ class EDIQuickExecTestCase(EDIBackendCommonTestCase):
             "model": self.partner._name,
             "res_id": self.partner.id,
             "edi_exchange_state": "input_processed_error",
-            "exchange_file": base64.b64encode(b"1234"),
+            "exchange_file": base64.b64encode(b"1234").decode(),
         }
         record0 = self.backend.with_context(edi__skip_quick_exec=True).create_record(
             "test_csv_input", vals

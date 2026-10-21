@@ -112,7 +112,7 @@
             </search>
         </field>
     </record>
-    <record model="ir.actions.act_window" id="act_open_edi_exchange_type_rule_view">
+    <record id="act_open_edi_exchange_type_rule_view" model="ir.actions.act_window">
         <field name="name">EDI Exchange Type Rule</field>
         <field name="path">edi-exchange-type-rules</field>
         <field name="type">ir.actions.act_window</field>

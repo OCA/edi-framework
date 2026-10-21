@@ -1,7 +1,5 @@
 # Copyright 2024 ForgeFlow S.L. (https://www.forgeflow.com)
 # License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl).
-import base64
-
 import chardet
 
 from odoo.orm.model_classes import add_to_registry
@@ -51,7 +49,7 @@ class EDIBackendTestOutputCase(EDIBackendCommonTestCase):
         # Test decoding is applied correctly
         self.assertEqual(self.record._get_file_content(), "Palmotićeva")
         # Test encoding used
-        content = base64.b64decode(self.record.exchange_file)
+        content = self.record.exchange_file.content
         encoding = chardet.detect(content)["encoding"].lower()
         self.assertEqual(encoding, "utf-8")
 
@@ -67,7 +65,7 @@ class EDIBackendTestOutputCase(EDIBackendCommonTestCase):
         # Test decoding is applied correctly
         self.assertEqual(self.record._get_file_content(), "Palmotićeva")
         # Test encoding used
-        content = base64.b64decode(self.record.exchange_file)
+        content = self.record.exchange_file.content
         encoding = chardet.detect(content)["encoding"].lower()
         self.assertEqual(encoding, "utf-16")
 

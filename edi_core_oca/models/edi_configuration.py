@@ -5,8 +5,6 @@
 import datetime
 import logging
 
-import pytz
-
 from odoo import api, exceptions, fields, models
 from odoo.fields import Domain
 from odoo.tools import DotDict, safe_eval
@@ -24,7 +22,7 @@ def date_to_datetime(dt):
 def to_utc(dt):
     """Convert date or datetime to UTC."""
     # Gracefully convert to datetime if needed 1st
-    return date_to_datetime(dt).astimezone(pytz.UTC)
+    return date_to_datetime(dt).astimezone(datetime.UTC)
 
 
 class EdiConfiguration(models.Model):
@@ -51,7 +49,6 @@ class EdiConfiguration(models.Model):
     )
     model_id = fields.Many2one(
         "ir.model",
-        string="Model",
         help="Model the conf applies to. Leave blank to apply for all models",
     )
     model_name = fields.Char(
@@ -88,13 +85,15 @@ class EdiConfiguration(models.Model):
                     raise exceptions.ValidationError(
                         self.env._("Backend must match with exchange type's backend!")
                     )
-            elif rec.type_id:
-                if rec.type_id.backend_type_id != rec.backend_id.backend_type_id:
-                    raise exceptions.ValidationError(
-                        self.env._(
-                            "Backend type must match with exchange type's backend type!"
-                        )
+            elif (
+                rec.type_id
+                and rec.type_id.backend_type_id != rec.backend_id.backend_type_id
+            ):
+                raise exceptions.ValidationError(
+                    self.env._(
+                        "Backend type must match with exchange type's backend type!"
                     )
+                )
 
     # TODO: This function is also available in `edi_exchange_template`.
     # Consider adding this to util or mixin

@@ -4,7 +4,6 @@
 # @author Simone Orsi <simahawk@gmail.com>
 # License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl).
 
-import base64
 import logging
 import traceback
 from io import StringIO
@@ -13,6 +12,7 @@ from psycopg2 import IntegrityError, OperationalError
 
 from odoo import exceptions, fields, models
 from odoo.exceptions import UserError
+from odoo.tools.binary import BinaryBytes
 
 from ..exceptions import EDINotImplementedError, EDIValidationError
 from ..utils import EDIExchangeActionResult
@@ -63,7 +63,7 @@ class EDIBackend(models.Model):
     """
     )
     active = fields.Boolean(default=True)
-    company_id = fields.Many2one("res.company", string="Company")
+    company_id = fields.Many2one("res.company")
     auto_archive_records_after_days = fields.Integer(
         string="Auto-archive records after (days)",
         default=0,
@@ -140,7 +140,7 @@ class EDIBackend(models.Model):
                 output = output.encode(encoding, errors=encoding_error_handler)
             exchange_record.update(
                 {
-                    "exchange_file": base64.b64encode(output),
+                    "exchange_file": BinaryBytes(output),
                     "edi_exchange_state": "output_pending",
                 }
             )
@@ -210,16 +210,18 @@ class EDIBackend(models.Model):
 
     # TODO: add tests
     def _validate_data(self, exchange_record, value=None, **kw):
-        if exchange_record.direction == "input" and not exchange_record.exchange_file:
-            if not exchange_record.type_id.allow_empty_files_on_receive:
-                raise ValueError(
-                    self.env._(
-                        "Empty files are not allowed for exchange "
-                        "type %(name)s (%(code)s)",
-                        name=exchange_record.type_id.name,
-                        code=exchange_record.type_id.code,
-                    )
+        if (
+            exchange_record.direction == "input"
+            and not exchange_record.exchange_file
+            and not exchange_record.type_id.allow_empty_files_on_receive
+        ):
+            raise ValueError(
+                self.env._(
+                    "Empty files are not allowed for exchange type %(name)s (%(code)s)",
+                    name=exchange_record.type_id.name,
+                    code=exchange_record.type_id.code,
                 )
+            )
         try:
             return self._exchange_validate_data(exchange_record, value=value, **kw)
         except EDINotImplementedError:  # pylint: disable=W8138

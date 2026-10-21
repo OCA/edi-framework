@@ -205,7 +205,7 @@
             </search>
         </field>
     </record>
-    <record model="ir.actions.act_window" id="act_open_edi_exchange_type_view">
+    <record id="act_open_edi_exchange_type_view" model="ir.actions.act_window">
         <field name="name">EDI Exchange Type</field>
         <field name="path">edi-exchange-types</field>
         <field name="type">ir.actions.act_window</field>
@@ -223,8 +223,8 @@
         >{'search_default_filter_all': 1, 'active_test': False}</field>
     </record>
     <record
-        model="ir.actions.act_window.view"
         id="act_open_edi_exchange_type_view_form"
+        model="ir.actions.act_window.view"
     >
         <field name="act_window_id" ref="act_open_edi_exchange_type_view" />
         <field name="sequence" eval="20" />
@@ -232,8 +232,8 @@
         <field name="view_id" ref="edi_exchange_type_view_form" />
     </record>
     <record
-        model="ir.actions.act_window.view"
         id="act_open_edi_exchange_type_view_tree"
+        model="ir.actions.act_window.view"
     >
         <field name="act_window_id" ref="act_open_edi_exchange_type_view" />
         <field name="sequence" eval="10" />
