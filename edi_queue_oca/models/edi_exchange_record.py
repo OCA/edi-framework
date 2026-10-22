@@ -6,6 +6,7 @@ import functools
 from ast import literal_eval
 
 from odoo import fields, models
+from odoo.fields import Domain
 
 from ..utils import exchange_record_job_identity_exact
 
@@ -68,11 +69,15 @@ class EdiExchangeRecord(models.Model):
 
     def _compute_related_queue_jobs_count(self):
         for rec in self:
-            # TODO: We should refactor the object field on queue_job to use jsonb field
-            # so that we can search directly into it.
             rec.related_queue_jobs_count = rec.env["queue.job"].search_count(
-                [("func_string", "like", str(rec))]
+                rec._get_related_queue_job_domain()
             )
+
+    def _get_related_queue_job_domain(self):
+        """Domain of the queue jobs related to these exchange records."""
+        # TODO: We should refactor the object field on queue_job to use jsonb field
+        # so that we can search directly into it.
+        return Domain.OR(Domain("func_string", "like", str(rec)) for rec in self)
 
     def action_view_related_queue_jobs(self):
         self.ensure_one()
@@ -80,9 +85,7 @@ class EdiExchangeRecord(models.Model):
         action = self.env["ir.actions.act_window"]._for_xml_id(xmlid)
         # Searching based on task name:
         # Ex: `edi.exchange.record(1,).action_exchange_send()`
-        # TODO: We should refactor the object field on queue_job to use jsonb field
-        # so that we can search directly into it.
-        action["domain"] = [("func_string", "like", str(self))]
+        action["domain"] = list(self._get_related_queue_job_domain())
         # Purge default search filters from ctx to avoid hiding records
         ctx = action.get("context", {})
         if isinstance(ctx, str):
