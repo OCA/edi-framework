@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="demo_fs_storage_diapar" model="fs.storage">
+        <field name="name">Diapar FTP Storage</field>
+        <field name="code">diapar_ftp</field>
+        <field name="protocol">ftp</field>
+        <field name="options">{
+            "host": "127.0.0.1",
+            "username": "admin",
+            "password": "admin",
+            "port": 5000
+        }</field>
+    </record>
+</odoo>

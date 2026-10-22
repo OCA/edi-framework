@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="view_partner_form_inherit" model="ir.ui.view">
+        <field name="name">view.partner.form.inherit</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="purchase.view_partner_property_form" />
+        <field name="arch" type="xml">
+            <xpath
+                expr="//field[@name='property_purchase_currency_id']"
+                position="after"
+            >
+                <field name="is_edi" />
+                <field name="edi_purchase_supplier_id" invisible="not is_edi" />
+            </xpath>
+        </field>
+    </record>
+</odoo>

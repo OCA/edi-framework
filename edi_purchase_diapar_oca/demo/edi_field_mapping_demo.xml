@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <!-- BLE -->
+    <record id="demo_field_mapping_date_planned" model="edi.field.mapping">
+        <field name="name">Date Planned</field>
+        <field name="position">1</field>
+        <field name="sequence_start">24</field>
+        <field name="sequence_end">32</field>
+        <field name="is_date">True</field>
+        <field
+            name="mapping_field_id"
+            eval="ref('purchase.field_purchase_order_line__date_planned')"
+        />
+        <field
+            name="exchange_type_id"
+            eval="ref('edi_purchase_diapar_oca.demo_exchange_diapar_in_despatch_advice')"
+        />
+    </record>
+    <record id="demo_field_mapping_product_code" model="edi.field.mapping">
+        <field name="name">Product Code</field>
+        <field name="position">2</field>
+        <field name="sequence_start">16</field>
+        <field name="sequence_end">22</field>
+        <field
+            name="mapping_field_id"
+            eval="ref('product.field_product_supplierinfo__product_code')"
+        />
+        <field
+            name="exchange_type_id"
+            eval="ref('edi_purchase_diapar_oca.demo_exchange_diapar_in_despatch_advice')"
+        />
+    </record>
+    <record id="demo_field_mapping_product_qty" model="edi.field.mapping">
+        <field name="name">Product Quantity</field>
+        <field name="position">3</field>
+        <field name="sequence_start">52</field>
+        <field name="sequence_end">57</field>
+        <field
+            name="mapping_field_id"
+            eval="ref('purchase.field_purchase_order_line__product_qty')"
+        />
+        <field
+            name="exchange_type_id"
+            eval="ref('edi_purchase_diapar_oca.demo_exchange_diapar_in_despatch_advice')"
+        />
+    </record>
+    <!-- CH -->
+    <record id="demo_field_mapping_ch_supplier_code" model="edi.field.mapping">
+        <field name="name">Product Code</field>
+        <field name="position">1</field>
+        <field name="sequence_start">2</field>
+        <field name="sequence_end">8</field>
+        <field
+            name="mapping_field_id"
+            eval="ref('edi_purchase_diapar_oca.field_supplier_price_list__supplier_code')"
+        />
+        <field
+            name="exchange_type_id"
+            eval="ref('edi_purchase_diapar_oca.demo_exchange_diapar_in_purchase_price')"
+        />
+    </record>
+    <record id="demo_field_mapping_ch_product_name" model="edi.field.mapping">
+        <field name="name">Product Name</field>
+        <field name="position">2</field>
+        <field name="sequence_start">13</field>
+        <field name="sequence_end">38</field>
+        <field
+            name="mapping_field_id"
+            eval="ref('edi_purchase_diapar_oca.field_supplier_price_list__product_name')"
+        />
+        <field
+            name="exchange_type_id"
+            eval="ref('edi_purchase_diapar_oca.demo_exchange_diapar_in_purchase_price')"
+        />
+    </record>
+    <record id="demo_field_mapping_ch_price" model="edi.field.mapping">
+        <field name="name">Price HT</field>
+        <field name="position">3</field>
+        <field name="sequence_start">38</field>
+        <field name="sequence_end">47</field>
+        <field name="is_numeric">True</field>
+        <field
+            name="mapping_field_id"
+            eval="ref('edi_purchase_diapar_oca.field_supplier_price_list__price')"
+        />
+        <field
+            name="exchange_type_id"
+            eval="ref('edi_purchase_diapar_oca.demo_exchange_diapar_in_purchase_price')"
+        />
+        <field name="decimal_precision">4</field>
+    </record>
+    <record id="demo_field_mapping_ch_apply_date" model="edi.field.mapping">
+        <field name="name">Apply Date</field>
+        <field name="position">4</field>
+        <field name="sequence_start">96</field>
+        <field name="sequence_end">102</field>
+        <field name="is_date">True</field>
+        <field
+            name="mapping_field_id"
+            eval="ref('edi_purchase_diapar_oca.field_supplier_price_list__apply_date')"
+        />
+        <field
+            name="exchange_type_id"
+            eval="ref('edi_purchase_diapar_oca.demo_exchange_diapar_in_purchase_price')"
+        />
+    </record>
+</odoo>
