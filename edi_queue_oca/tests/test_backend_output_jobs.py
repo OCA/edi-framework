@@ -57,18 +57,15 @@ class EDIBackendTestOutputJobsCase(EDIBackendCommonTestCase):
             self.record.action_exchange_generate()
             self.record.action_exchange_generate()
             self.record.action_exchange_generate()
-            # identity key should prevent having new jobs for same record same file
+            # identity key should prevent having new jobs for same record
             trap.assert_jobs_count(2)
-            # but if we change the content
+            # even if the content changed: the job reads it when it runs
             self.record._set_file_content("something different")
-            # 1st call will schedule another job
             self.record.action_exchange_generate()
-            # the 2nd one not
-            self.record.action_exchange_generate()
-            trap.assert_jobs_count(3)
+            trap.assert_jobs_count(2)
             job = self.record.action_exchange_send()
             self.assertEqual(0, job.priority)
-            trap.assert_jobs_count(4)
+            trap.assert_jobs_count(2)
 
     def test_generate_send_chained(self):
         """Generating and sending a record queues one chain of two jobs.
@@ -94,3 +91,22 @@ class EDIBackendTestOutputJobsCase(EDIBackendCommonTestCase):
             self.assertEqual(send_job.depends_on, {generate_job})
             trap.perform_enqueued_jobs()
         self.assertRecordValues(self.record, [{"edi_exchange_state": "output_sent"}])
+
+    def test_generate_send_chained_then_sync(self):
+        """The output sync does not queue a second send for a chained record.
+
+        Scenario:
+            1. Ask a new output record to be generated and sent.
+            2. Generate its file, while the send job is still waiting.
+            3. Run the output sync.
+        Expected:
+            - Only the send job queued with the generation exists.
+        """
+        self.record.action_exchange_generate_send_chained()
+        self.record._set_file_content("something")
+        self.record.edi_exchange_state = "output_pending"
+        self.backend._check_output_exchange_sync(record_ids=self.record.ids)
+        send_jobs = self.env["queue.job"].search(
+            [("func_string", "=", f"{self.record}.action_exchange_send()")]
+        )
+        self.assertEqual(len(send_jobs), 1)

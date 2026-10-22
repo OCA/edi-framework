@@ -7,7 +7,7 @@ from ast import literal_eval
 
 from odoo import fields, models
 
-from ..utils import exchange_record_job_identity_exact
+from odoo.addons.queue_job.job import identity_exact
 
 
 class EdiExchangeRecord(models.Model):
@@ -50,7 +50,7 @@ class EdiExchangeRecord(models.Model):
         if exchange_type.job_eta_enabled and (eta := exchange_type._get_job_eta()):
             params["eta"] = eta
         # Avoid generating the same job for the same record if existing
-        params["identity_key"] = exchange_record_job_identity_exact
+        params["identity_key"] = identity_exact
         return params
 
     def with_delay(self, **kw):
