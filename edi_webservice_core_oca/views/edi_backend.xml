@@ -1,17 +1,51 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <!-- Copyright 2020 Dixmit
      Copyright 2021 Camptocamp SA
+     @author Simone Orsi <simahawk@gmail.com>
      License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
 <odoo>
     <record id="edi_backend_view_form" model="ir.ui.view">
         <field name="model">edi.backend</field>
         <field name="inherit_id" ref="edi_core_oca.edi_backend_view_form" />
         <field name="arch" type="xml">
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button
+                    type="object"
+                    name="action_manage_webservice_endpoints"
+                    class="oe_stat_button"
+                    icon="fa-plug"
+                    invisible="not webservice_backend_id"
+                >
+                    <field
+                        name="webservice_endpoint_count"
+                        widget="statinfo"
+                        string="Webservice endpoints"
+                    />
+                </button>
+            </xpath>
             <notebook position="inside">
                 <page name="webservice_config" string="Webservice">
                     <group>
                         <field name="webservice_backend_id" />
                     </group>
+                    <div>
+                        <field name="webservice_endpoint_count" /> endpoints configured
+                    </div>
+                    <button
+                        type="object"
+                        name="action_manage_webservice_endpoints"
+                        string="Manage endpoints"
+                        invisible="not webservice_backend_id"
+                    />
+                    <field name="webservice_endpoint_ids" nolabel="1" readonly="1">
+                        <list decoration-muted="not active">
+                            <field name="name" />
+                            <field name="tech_name" />
+                            <field name="http_method" />
+                            <field name="path" />
+                            <field name="active" column_invisible="1" />
+                        </list>
+                    </field>
                 </page>
             </notebook>
         </field>
