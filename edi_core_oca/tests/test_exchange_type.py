@@ -5,6 +5,7 @@
 
 from freezegun import freeze_time
 
+from odoo.fields import Command
 from odoo.tools import mute_logger
 
 from .common import EDIBackendCommonTestCase
@@ -147,26 +148,71 @@ class EDIExchangeTypeTestCase(EDIBackendCommonTestCase):
         self._test_exchange_filename("Test-File-0000001.csv")
 
     def test_archive_rules(self):
-        exc_type = self.exchange_type_out
-        rule1 = exc_type.rule_ids.create(
+        # Make sure to drop the ``active_test`` flag to be able to properly test
+        # whether archived rules can be found in the exchange type O2M field
+        ctx = dict(self.env.context)
+        ctx.pop("active_test", None)
+        exc_type = self.exchange_type_out.with_context(ctx)  # pylint: disable=W8121
+        exc_type.write(
             {
-                "type_id": exc_type.id,
-                "name": "Fake partner rule",
-                "model_id": self.env["ir.model"]._get("res.partner").id,
+                "rule_ids": [
+                    Command.clear(),  # Drop preexisting rules to avoid pollution
+                    Command.create(
+                        {
+                            "name": "Fake partner rule",
+                            "model_id": self.env["ir.model"]._get("res.partner").id,
+                        }
+                    ),
+                    Command.create(
+                        {
+                            "name": "Fake user rule",
+                            "model_id": self.env["ir.model"]._get("res.users").id,
+                        }
+                    ),
+                ]
             }
         )
-        rule2 = exc_type.rule_ids.create(
-            {
-                "type_id": exc_type.id,
-                "name": "Fake user rule",
-                "model_id": self.env["ir.model"]._get("res.users").id,
-            }
-        )
-        exc_type.active = False
-        rule1.invalidate_recordset()
-        rule2.invalidate_recordset()
-        self.assertFalse(rule1.active)
-        self.assertFalse(rule2.active)
+        rules = rule_1, rule_2 = exc_type.rule_ids
+
+        def _check_exc_type_rule_ids():
+            exc_type.invalidate_recordset(["rule_ids"])
+            self.assertEqual(exc_type.rule_ids, rules)
+
+        # Make sure both Exc Type and all its rules are active
+        self.assertTrue(exc_type.active)
+        self.assertTrue(rule_1.active)
+        self.assertTrue(rule_2.active)
+        _check_exc_type_rule_ids()
+
+        # Archive one of the rules, make sure the Exc Type and the other rule stay
+        # active, and the archived rule is still found in the Exc Type O2M field
+        rule_1.action_archive()
+        self.assertTrue(exc_type.active)
+        self.assertFalse(rule_1.active)
+        self.assertTrue(rule_2.active)
+        _check_exc_type_rule_ids()
+
+        # Archive the Exc Type, make sure both rules are archived, and they both are
+        # still found in the Exc Type O2M field
+        exc_type.action_archive()
+        self.assertFalse(exc_type.active)
+        self.assertFalse(rule_1.active)
+        self.assertFalse(rule_2.active)
+        _check_exc_type_rule_ids()
+
+        # Reactivate the Exc Type, make sure both rules are still archived, and they
+        # both are still found in the Exc Type O2M field
+        exc_type.action_unarchive()
+        self.assertTrue(exc_type.active)
+        self.assertFalse(rule_1.active)
+        self.assertFalse(rule_2.active)
+        _check_exc_type_rule_ids()
+
+        # Force ``active_test`` in record ctx => archived rules are found anyway
+        # (record context does not override field context)
+        for value in (True, False):
+            exc_type = exc_type.with_context(active_test=value)
+            _check_exc_type_rule_ids()
 
     def _create_exchange_record(self, exc_type):
         return self.backend.create_record(
