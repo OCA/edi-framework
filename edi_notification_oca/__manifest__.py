@@ -3,17 +3,19 @@
 
 {
     "name": "EDI Notification",
-    "summary": """Define notification activities on exchange records.""",
-    "version": "19.0.1.0.0",
+    "summary": """Configure the notifications of exchange records by rules.""",
+    "version": "19.0.2.0.0",
     "development_status": "Alpha",
     "license": "LGPL-3",
     "website": "https://github.com/OCA/edi-framework",
-    "author": "Camptocamp,Odoo Community Association (OCA)",
+    "author": "Camptocamp,ForgeFlow,Odoo Community Association (OCA)",
     "depends": ["edi_core_oca"],
     "data": [
+        "security/ir.model.access.csv",
         "data/mail_activity_type.xml",
-        "data/edi_configuration.xml",
+        "data/edi_notification_trigger.xml",
         "views/edi_exchange_type.xml",
     ],
+    "post_init_hook": "post_init_hook",
     "installable": True,
 }
