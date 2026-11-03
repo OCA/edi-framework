@@ -11,6 +11,7 @@ class EdiExchangeConsumerTest(models.Model):
     _description = "Model used only for test"
 
     name = fields.Char()
+    ref = fields.Char()
     edi_config_ids = fields.Many2many(
         string="EDI Purchase Config Ids",
         comodel_name="edi.configuration",

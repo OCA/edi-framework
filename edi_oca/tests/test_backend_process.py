@@ -3,6 +3,7 @@
 # License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl).
 
 import base64
+from unittest import mock
 
 from freezegun import freeze_time
 from psycopg2 import IntegrityError
@@ -101,5 +102,25 @@ class EDIBackendTestProcessCase(EDIBackendCommonComponentRegistryTestCase):
             ).exchange_process(self.record)
         self.assertRecordValues(self.record, [{"edi_exchange_state": "input_received"}])
         self.assertFalse(self.record.exchange_error)
+
+    def test_process_record_with_error_rollback(self):
+        self.record.write({"edi_exchange_state": "input_received"})
+        partner_name = self.partner.name
+
+        def _exchange_process(exchange_record):
+            self.partner.name = "Partially processed"
+            self.partner.flush_recordset()
+            raise ValueError("OOPS! Something went wrong :(")
+
+        with mock.patch.object(
+            type(self.backend), "_exchange_process", side_effect=_exchange_process
+        ):
+            self.backend.exchange_process(self.record)
+        self.assertRecordValues(
+            self.record, [{"edi_exchange_state": "input_processed_error"}]
+        )
+        # The changes made before the error are rolled back
+        self.partner.invalidate_recordset()
+        self.assertEqual(self.partner.name, partner_name)
 
     # TODO: test ack file are processed
