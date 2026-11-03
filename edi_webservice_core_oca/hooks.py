@@ -1,4 +1,5 @@
 # Copyright 2026 Camptocamp SA
+# @author Simone Orsi <simahawk@gmail.com>
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 import logging
 import re
@@ -14,6 +15,10 @@ MOVED_XMLIDS = [
     "access_webservice_backend_edi_manager",
     "edi_backend_view_form",
 ]
+
+# url_params key naming the endpoint path, e.g. `endpoint: ghx`. Moved to the
+# endpoint `path` even when the backend URL has no `{endpoint}` placeholder.
+ENDPOINT_PATH_KEY = "endpoint"
 
 
 def pre_init_hook(env):
@@ -111,9 +116,10 @@ def migrate_exchange_type(env, etype):
       moved from `components.send.work_ctx.webservice` to the new
       `execution_model.send.webservice` key.
     - `kwargs.url_params` entries are checked against the backend's own URL:
-      a key that fills a `{placeholder}` in it becomes the endpoint's
-      `path` and is dropped from the YAML; anything else stays in
-      `url_params` for manual review.
+      a key that fills a `{placeholder}` in it, or the `endpoint` key, becomes
+      the endpoint's `path` and is dropped from the YAML; anything else stays
+      in `url_params` for manual review. An auto-created endpoint gets that
+      path straight away.
 
     NOTE: rewriting the YAML re-serializes it, so any comments in
     `advanced_settings_edit` are lost for migrated types.
@@ -152,7 +158,9 @@ def migrate_exchange_type(env, etype):
                 etype.id,
             )
         else:
-            endpoint = _get_or_create_endpoint(env, etype, method)
+            endpoint = _get_or_create_endpoint(
+                env, etype, method, path=_endpoint_path_candidate(ws_settings)
+            )
             etype.webservice_endpoint_id = endpoint.id
 
     moved_keys = set()
@@ -167,7 +175,13 @@ def migrate_exchange_type(env, etype):
     return moved_keys
 
 
-def _get_or_create_endpoint(env, etype, method):
+def _endpoint_path_candidate(ws_settings):
+    """Return the value of the `endpoint` url_param, if any."""
+    url_params = (ws_settings or {}).get("kwargs", {}).get("url_params") or {}
+    return url_params.get(ENDPOINT_PATH_KEY)
+
+
+def _get_or_create_endpoint(env, etype, method, path=None):
     ws_backend = etype.backend_id.webservice_backend_id
     tech_name = etype.code
     endpoint = env["webservice.endpoint"].search(
@@ -184,6 +198,7 @@ def _get_or_create_endpoint(env, etype, method):
             ),
             "backend_id": ws_backend.id,
             "http_method": method.lower(),
+            "path": path or False,
         }
     )
     _logger.info(
@@ -198,10 +213,10 @@ def _get_or_create_endpoint(env, etype, method):
 def _move_matching_url_params(endpoint, ws_settings):
     """Move `{placeholder}` url_params into the endpoint's path.
 
-    A key that fills a `{placeholder}` in the backend's URL becomes the
-    endpoint's `path`, and is dropped from the YAML. Anything else is kept
-    in the YAML `url_params` for manual review (no querystring param is
-    created from it).
+    A key that fills a `{placeholder}` in the backend's URL, or the
+    `endpoint` key, becomes the endpoint's `path`, and is dropped from the
+    YAML. Anything else is kept in the YAML `url_params` for manual review
+    (no querystring param is created from it).
 
     Returns the set of keys moved to the path.
 
@@ -214,7 +229,7 @@ def _move_matching_url_params(endpoint, ws_settings):
     remaining = {}
     moved = set()
     for key, value in url_params.items():
-        if f"{{{key}}}" not in backend_url:
+        if f"{{{key}}}" not in backend_url and key != ENDPOINT_PATH_KEY:
             _logger.warning(
                 "webservice.endpoint(%s): url_param %r is not a placeholder in "
                 "the backend URL, kept in YAML for manual review.",
@@ -252,6 +267,40 @@ def _move_matching_url_params(endpoint, ws_settings):
     if not kwargs:
         ws_settings.pop("kwargs", None)
     return moved
+
+
+def migrate_execution_url_params(env, types=None):
+    """Move `url_params` of already migrated types onto their endpoint path.
+
+    Types migrated before `_move_matching_url_params` knew about the
+    `endpoint` key still carry it in `execution_model.send.webservice`.
+    Creates the endpoint when the type has none, using the same rules as
+    `migrate_exchange_type`. Returns the types that were processed.
+
+    """
+    if types is None:
+        types = env["edi.exchange.type"].search(
+            [("advanced_settings_edit", "like", "execution_model")]
+        )
+    done = env["edi.exchange.type"].browse()
+    for etype in types:
+        settings = yaml.safe_load(etype.advanced_settings_edit or "") or {}
+        ws_settings = (
+            (settings.get("execution_model") or {}).get("send", {}).get("webservice")
+        )
+        if not ws_settings or not (ws_settings.get("kwargs") or {}).get("url_params"):
+            continue
+        endpoint = etype.webservice_endpoint_id
+        if not endpoint:
+            method = ws_settings.get("method") or "post"
+            endpoint = _get_or_create_endpoint(
+                env, etype, method, path=_endpoint_path_candidate(ws_settings)
+            )
+            etype.webservice_endpoint_id = endpoint.id
+        _move_matching_url_params(endpoint, ws_settings)
+        etype.advanced_settings_edit = yaml.safe_dump(settings, sort_keys=False)
+        done |= etype
+    return done
 
 
 def _strip_url_placeholders(url, keys):
