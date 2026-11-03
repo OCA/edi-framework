@@ -10,6 +10,8 @@ import logging
 import traceback
 from io import StringIO
 
+from psycopg2 import IntegrityError, OperationalError
+
 from odoo import _, exceptions, fields, models
 
 from odoo.addons.component.exception import NoComponentError
@@ -233,7 +235,8 @@ class EDIBackend(models.Model):
         if output:
             message = exchange_record._exchange_status_message("generate_ok")
             try:
-                self._validate_data(exchange_record, output)
+                with self.env.cr.savepoint():
+                    self._validate_data(exchange_record, output)
             except EDIValidationError as err:
                 traceback = _get_exception_traceback()
                 error = _get_exception_msg(err)
@@ -316,8 +319,9 @@ class EDIBackend(models.Model):
         message = None
         res = ""
         try:
-            self._exchange_send(exchange_record)
-            _logger.debug("%s sent", exchange_record.identifier)
+            with self.env.cr.savepoint():
+                self._exchange_send(exchange_record)
+                _logger.debug("%s sent", exchange_record.identifier)
         except self._send_retryable_exceptions() as err:
             traceback = _get_exception_traceback()
             error = _get_exception_msg(err)
@@ -336,6 +340,11 @@ class EDIBackend(models.Model):
             _logger.debug(
                 "%s send failed. Marked as errored.", exchange_record.identifier
             )
+        except (OperationalError, IntegrityError):
+            # We don't want the finally block to be executed in this case as
+            # the cursor is already in an aborted state and any query will fail.
+            res = "__sql_error__"
+            raise
         else:
             # TODO: maybe the send handler should return desired message and state
             message = exchange_record._exchange_status_message("send_ok")
@@ -347,16 +356,18 @@ class EDIBackend(models.Model):
             )
             res = message
         finally:
-            exchange_record.write(
-                {
-                    "edi_exchange_state": state,
-                    "exchange_error": error,
-                    "exchange_error_traceback": traceback,
-                    # FIXME: this should come from _compute_exchanged_on
-                    # but somehow it's failing in send tests (in record tests it works).
-                    "exchanged_on": fields.Datetime.now(),
-                }
-            )
+            if res != "__sql_error__":
+                exchange_record.write(
+                    {
+                        "edi_exchange_state": state,
+                        "exchange_error": error,
+                        "exchange_error_traceback": traceback,
+                        # FIXME: this should come from _compute_exchanged_on
+                        # but somehow it's failing in send tests
+                        # (in record tests it works).
+                        "exchanged_on": fields.Datetime.now(),
+                    }
+                )
         exchange_record.notify_action_complete("send", message=message)
         return res
 
@@ -530,8 +541,10 @@ class EDIBackend(models.Model):
         old_state = state = exchange_record.edi_exchange_state
         error = traceback = False
         message = None
+        res = None
         try:
-            res = self._exchange_process(exchange_record)
+            with self.env.cr.savepoint():
+                res = self._exchange_process(exchange_record)
         except self._swallable_exceptions() as err:
             if self.env.context.get("_edi_process_break_on_error"):
                 raise
@@ -539,20 +552,27 @@ class EDIBackend(models.Model):
             error = _get_exception_msg(err)
             state = "input_processed_error"
             res = f"Error: {error}"
+        except (OperationalError, IntegrityError):
+            # We don't want the finally block to be executed in this case as
+            # the cursor is already in an aborted state and any query will fail.
+            res = "__sql_error__"
+            raise
         else:
             error = traceback = None
             state = "input_processed"
         finally:
-            exchange_record.write(
-                {
-                    "edi_exchange_state": state,
-                    "exchange_error": error,
-                    "exchange_error_traceback": traceback,
-                    # FIXME: this should come from _compute_exchanged_on
-                    # but somehow it's failing in send tests (in record tests it works).
-                    "exchanged_on": fields.Datetime.now(),
-                }
-            )
+            if res != "__sql_error__":
+                exchange_record.write(
+                    {
+                        "edi_exchange_state": state,
+                        "exchange_error": error,
+                        "exchange_error_traceback": traceback,
+                        # FIXME: this should come from _compute_exchanged_on
+                        # but somehow it's failing in send tests
+                        # (in record tests it works).
+                        "exchanged_on": fields.Datetime.now(),
+                    }
+                )
             if (
                 state == "input_processed_error"
                 and old_state != "input_processed_error"
@@ -581,12 +601,14 @@ class EDIBackend(models.Model):
         error = traceback = False
         message = None
         content = None
+        res = None
         try:
-            content = self._exchange_receive(exchange_record)
-            # Ignore result of FileNotFoundError/OSError
-            if content is not None:
-                exchange_record._set_file_content(content)
-                self._validate_data(exchange_record)
+            with self.env.cr.savepoint():
+                content = self._exchange_receive(exchange_record)
+                # Ignore result of FileNotFoundError/OSError
+                if content is not None:
+                    exchange_record._set_file_content(content)
+                    self._validate_data(exchange_record)
         except EDIValidationError as err:
             traceback = _get_exception_traceback()
             error = _get_exception_msg(err)
@@ -601,22 +623,29 @@ class EDIBackend(models.Model):
             state = "input_receive_error"
             message = exchange_record._exchange_status_message("receive_ko")
             res = f"Input error: {error}"
+        except (OperationalError, IntegrityError):
+            # We don't want the finally block to be executed in this case as
+            # the cursor is already in an aborted state and any query will fail.
+            res = "__sql_error__"
+            raise
         else:
             message = exchange_record._exchange_status_message("receive_ok")
             error = traceback = None
             state = "input_received"
             res = message
         finally:
-            exchange_record.write(
-                {
-                    "edi_exchange_state": state,
-                    "exchange_error": error,
-                    "exchange_error_traceback": traceback,
-                    # FIXME: this should come from _compute_exchanged_on
-                    # but somehow it's failing in send tests (in record tests it works).
-                    "exchanged_on": fields.Datetime.now(),
-                }
-            )
+            if res != "__sql_error__":
+                exchange_record.write(
+                    {
+                        "edi_exchange_state": state,
+                        "exchange_error": error,
+                        "exchange_error_traceback": traceback,
+                        # FIXME: this should come from _compute_exchanged_on
+                        # but somehow it's failing in send tests
+                        # (in record tests it works).
+                        "exchanged_on": fields.Datetime.now(),
+                    }
+                )
         exchange_record.notify_action_complete("receive", message=message)
         return res
 
