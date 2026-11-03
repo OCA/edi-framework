@@ -22,6 +22,14 @@ msgid "<span class=\"o_stat_text\">Exchanges</span>"
 msgstr "<span class=\"o_stat_text\">Scambi</span>"
 
 #. module: edi_endpoint_oca
+#: model:ir.model.fields,help:edi_endpoint_oca.field_edi_endpoint__full_url_display
+msgid ""
+"Absolute URL of this endpoint, ready to copy/paste. Resolved from the "
+"current request when available (matching what you're actually browsing), "
+"otherwise falls back to the 'web.base.url' system parameter."
+msgstr ""
+
+#. module: edi_endpoint_oca
 #: model:ir.model,name:edi_endpoint_oca.model_edi_exchange_consumer_mixin
 msgid "Abstract record where exchange records can be assigned"
 msgstr "Record astratto dove i record di scambio possono essere assegnati"
@@ -184,6 +192,11 @@ msgstr "Esegui come utente"
 #: model:ir.model.fields,field_description:edi_endpoint_oca.field_edi_endpoint__exec_mode
 msgid "Exec Mode"
 msgstr "Modo esecuzione"
+
+#. module: edi_endpoint_oca
+#: model:ir.model.fields,field_description:edi_endpoint_oca.field_edi_endpoint__full_url_display
+msgid "Full Url Display"
+msgstr ""
 
 #. module: edi_endpoint_oca
 #: model_terms:ir.ui.view,arch_db:edi_endpoint_oca.edi_endpoint_search_view
