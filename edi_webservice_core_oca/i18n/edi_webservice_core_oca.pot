@@ -41,6 +41,11 @@ msgid "Endpoint"
 msgstr ""
 
 #. module: edi_webservice_core_oca
+#: model:ir.model.fields,field_description:edi_webservice_core_oca.field_edi_backend__webservice_endpoint_count
+msgid "Endpoint Count"
+msgstr ""
+
+#. module: edi_webservice_core_oca
 #: model:ir.model.fields,field_description:edi_webservice_core_oca.field_webservice_endpoint__exchange_type_count
 msgid "Exchange Type Count"
 msgstr ""
@@ -51,6 +56,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:edi_webservice_core_oca.field_webservice_endpoint__exchange_type_ids
 #: model_terms:ir.ui.view,arch_db:edi_webservice_core_oca.webservice_endpoint_view_form_edi
 msgid "Exchange Types"
+msgstr ""
+
+#. module: edi_webservice_core_oca
+#: model_terms:ir.ui.view,arch_db:edi_webservice_core_oca.edi_backend_view_form
+msgid "Manage endpoints"
 msgstr ""
 
 #. module: edi_webservice_core_oca
@@ -97,6 +107,17 @@ msgid ""
 msgstr ""
 
 #. module: edi_webservice_core_oca
+#: model:ir.model.fields,field_description:edi_webservice_core_oca.field_edi_backend__webservice_endpoint_ids
+#: model_terms:ir.ui.view,arch_db:edi_webservice_core_oca.edi_backend_view_form
+msgid "Webservice endpoints"
+msgstr ""
+
+#. module: edi_webservice_core_oca
 #: model_terms:ir.ui.view,arch_db:edi_webservice_core_oca.edi_exchange_type_view_form_webservice
 msgid "Webservice settings"
+msgstr ""
+
+#. module: edi_webservice_core_oca
+#: model_terms:ir.ui.view,arch_db:edi_webservice_core_oca.edi_backend_view_form
+msgid "endpoints configured"
 msgstr ""
