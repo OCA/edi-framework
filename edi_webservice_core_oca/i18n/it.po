@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-10-06 09:46+0000\n"
+"PO-Revision-Date: 2026-11-04 13:46+0000\n"
 "Last-Translator: mymage <stefano.consolaro@mymage.it>\n"
 "Language-Team: none\n"
 "Language: it\n"
@@ -22,6 +22,8 @@ msgid ""
 "By sending as bytes, `requests` won't try to guess and/or alter the encoding "
 "of the file being sent."
 msgstr ""
+"Inviando i dati sotto forma di byte, `requests` non tenterà di indovinare e/"
+"o modificare la codifica del file trasmesso."
 
 #. module: edi_webservice_core_oca
 #: model:ir.model,name:edi_webservice_core_oca.model_edi_backend
@@ -31,7 +33,7 @@ msgstr "Backend EDI"
 #. module: edi_webservice_core_oca
 #: model:ir.model,name:edi_webservice_core_oca.model_edi_exchange_type
 msgid "EDI Exchange Type"
-msgstr ""
+msgstr "Tipo scambio EDI"
 
 #. module: edi_webservice_core_oca
 #: model:ir.model,name:edi_webservice_core_oca.model_edi_webservice_send
@@ -41,17 +43,17 @@ msgstr "Gestore di invio EDI servizio web"
 #. module: edi_webservice_core_oca
 #: model_terms:ir.ui.view,arch_db:edi_webservice_core_oca.edi_exchange_type_view_form_webservice
 msgid "Endpoint"
-msgstr ""
+msgstr "Endpoint"
 
 #. module: edi_webservice_core_oca
 #: model:ir.model.fields,field_description:edi_webservice_core_oca.field_edi_backend__webservice_endpoint_count
 msgid "Endpoint Count"
-msgstr ""
+msgstr "Conteggio endpoint"
 
 #. module: edi_webservice_core_oca
 #: model:ir.model.fields,field_description:edi_webservice_core_oca.field_webservice_endpoint__exchange_type_count
 msgid "Exchange Type Count"
-msgstr ""
+msgstr "Conteggio tipi scambio"
 
 #. module: edi_webservice_core_oca
 #. odoo-python
@@ -59,17 +61,17 @@ msgstr ""
 #: model:ir.model.fields,field_description:edi_webservice_core_oca.field_webservice_endpoint__exchange_type_ids
 #: model_terms:ir.ui.view,arch_db:edi_webservice_core_oca.webservice_endpoint_view_form_edi
 msgid "Exchange Types"
-msgstr ""
+msgstr "Tipi scambio"
 
 #. module: edi_webservice_core_oca
 #: model_terms:ir.ui.view,arch_db:edi_webservice_core_oca.edi_backend_view_form
 msgid "Manage endpoints"
-msgstr ""
+msgstr "Gestione endpoint"
 
 #. module: edi_webservice_core_oca
 #: model:ir.model.fields,field_description:edi_webservice_core_oca.field_edi_exchange_type__webservice_send_as_bytes
 msgid "Send As Bytes"
-msgstr ""
+msgstr "Invia come byte"
 
 #. module: edi_webservice_core_oca
 #: model:ir.model.fields,help:edi_webservice_core_oca.field_edi_exchange_type__webservice_send_enabled
@@ -78,12 +80,16 @@ msgid ""
 "handler (`edi.webservice.send`), directly or via a custom extension. Used to "
 "show/hide webservice-specific settings on this type."
 msgstr ""
+"Flag tecnico: indica se `send_model_id` eredita dal gestore di invio per "
+"webservice (`edi.webservice.send`), direttamente o tramite un'estensione "
+"personalizzata. Viene utilizzato per mostrare o nascondere le impostazioni "
+"specifiche per i webservice su questo tipo."
 
 #. module: edi_webservice_core_oca
 #: model:ir.model,name:edi_webservice_core_oca.model_webservice_endpoint
 #: model:ir.model.fields,field_description:edi_webservice_core_oca.field_edi_exchange_type__webservice_endpoint_id
 msgid "WebService Endpoint"
-msgstr ""
+msgstr "Endpoint del servizio web"
 
 #. module: edi_webservice_core_oca
 #: model_terms:ir.ui.view,arch_db:edi_webservice_core_oca.edi_backend_view_form
@@ -99,7 +105,7 @@ msgstr "Backend servizio web"
 #. module: edi_webservice_core_oca
 #: model:ir.model.fields,field_description:edi_webservice_core_oca.field_edi_exchange_type__webservice_send_enabled
 msgid "Webservice Send Enabled"
-msgstr ""
+msgstr "Invio servizio web abilitato"
 
 #. module: edi_webservice_core_oca
 #: model:ir.model.fields,help:edi_webservice_core_oca.field_edi_exchange_type__webservice_endpoint_id
@@ -108,22 +114,25 @@ msgid ""
 "`edi.webservice.send`). Extra call parameters can still be provided via the "
 "advanced YAML settings."
 msgstr ""
+"Endpoint del servizio web da richiamare durante l'invio tramite questo tipo "
+"di scambio (vedere `edit.web service.send`). È comunque possibile fornire "
+"parametri di chiamata aggiuntivi tramite le impostazioni YAML avanzate."
 
 #. module: edi_webservice_core_oca
 #: model:ir.model.fields,field_description:edi_webservice_core_oca.field_edi_backend__webservice_endpoint_ids
 #: model_terms:ir.ui.view,arch_db:edi_webservice_core_oca.edi_backend_view_form
 msgid "Webservice endpoints"
-msgstr ""
+msgstr "Endpoint del servizio web"
 
 #. module: edi_webservice_core_oca
 #: model_terms:ir.ui.view,arch_db:edi_webservice_core_oca.edi_exchange_type_view_form_webservice
 msgid "Webservice settings"
-msgstr ""
+msgstr "Impostazioni servizio web"
 
 #. module: edi_webservice_core_oca
 #: model_terms:ir.ui.view,arch_db:edi_webservice_core_oca.edi_backend_view_form
 msgid "endpoints configured"
-msgstr ""
+msgstr "endopoint configurati"
 
 #~ msgid "`method` is required in `webservice` type settings."
 #~ msgstr "`method` è richiesto nelle impostazioni tipo `webservice`."
