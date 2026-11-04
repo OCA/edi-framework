@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-09-15 06:43+0000\n"
+"PO-Revision-Date: 2026-11-04 13:46+0000\n"
 "Last-Translator: mymage <stefano.consolaro@mymage.it>\n"
 "Language-Team: none\n"
 "Language: it\n"
@@ -28,6 +28,10 @@ msgid ""
 "current request when available (matching what you're actually browsing), "
 "otherwise falls back to the 'web.base.url' system parameter."
 msgstr ""
+"URL assoluto di questo endpoint, pronto per essere copiato e incollato. "
+"Viene ricavato dalla richiesta corrente, quando disponibile (corrispondendo "
+"a ciò che si sta effettivamente consultando); in caso contrario, ricorre al "
+"parametro di sistema 'web.base.url'."
 
 #. module: edi_endpoint_oca
 #: model:ir.model,name:edi_endpoint_oca.model_edi_exchange_consumer_mixin
@@ -196,7 +200,7 @@ msgstr "Modo esecuzione"
 #. module: edi_endpoint_oca
 #: model:ir.model.fields,field_description:edi_endpoint_oca.field_edi_endpoint__full_url_display
 msgid "Full Url Display"
-msgstr ""
+msgstr "Visualizza URL completo"
 
 #. module: edi_endpoint_oca
 #: model_terms:ir.ui.view,arch_db:edi_endpoint_oca.edi_endpoint_search_view
