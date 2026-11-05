@@ -7,6 +7,8 @@ import base64
 import logging
 from collections import defaultdict
 
+from markupsafe import Markup
+
 from odoo import Command, api, exceptions, fields, models
 from odoo.exceptions import AccessError
 from odoo.tools import Query, split_every
@@ -524,6 +526,23 @@ class EDIExchangeRecord(models.Model):
         if self.related_record_exists:
             # Trigger specific event on related record
             self._trigger_edi_event(event_name, target=self.record)
+
+    def _log_state_check(self, message=None):
+        """Log a check of the state of this exchange on its chatter.
+
+        :param message: what the checker reported, if anything.
+        """
+        state = self._fields["edi_exchange_state"].convert_to_export(
+            self.edi_exchange_state, self
+        )
+        self.message_post(
+            body=Markup("%s<br/>%s")
+            % (
+                message or self.env._("Exchange state checked"),
+                self.env._("State: %s", state),
+            ),
+            subtype_xmlid="mail.mt_note",
+        )
 
     def _notify_related_record(self, message, level="info"):
         """Post notification on the original records."""
