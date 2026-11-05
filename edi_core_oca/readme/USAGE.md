@@ -29,3 +29,9 @@ The flow of an input record should be:
 - Reception of data
 - Checking data
 - Processing data
+
+## Checking the state of sent exchanges
+
+When the exchange type has a checker, the state of a sent output exchange is
+checked hourly by the "EDI exchange check output sync" cron. It can also be
+checked at any time with the "Check" button of the exchange.

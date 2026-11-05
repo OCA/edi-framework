@@ -63,6 +63,12 @@
                         invisible="not retryable"
                     />
                     <button
+                        name="action_exchange_check_state"
+                        type="object"
+                        string="Check"
+                        invisible="not state_checkable"
+                    />
+                    <button
                         name="action_regenerate"
                         type="object"
                         string="Regenerate"

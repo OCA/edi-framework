@@ -144,6 +144,10 @@ class EDIExchangeRecord(models.Model):
         compute="_compute_retryable",
         help="The record state can be rolled back manually in case of failure.",
     )
+    state_checkable = fields.Boolean(
+        compute="_compute_state_checkable",
+        help="The state of the sent exchange can be checked manually.",
+    )
     company_id = fields.Many2one("res.company", string="Company")
     active = fields.Boolean(default=True)
 
@@ -312,6 +316,15 @@ class EDIExchangeRecord(models.Model):
         for rec in self:
             rec.retryable = rec.edi_exchange_state in self._rollback_state_mapping
 
+    @api.depends("type_id.direction", "type_id.check_model_id", "edi_exchange_state")
+    def _compute_state_checkable(self):
+        for rec in self:
+            rec.state_checkable = (
+                rec.direction == "output"
+                and bool(rec.type_id.check_model_id)
+                and rec.edi_exchange_state in ("output_sent", "output_sent_and_error")
+            )
+
     @property
     def record(self):
         # In some case the res_model (and res_id) could be empty so we have to load
@@ -444,6 +457,17 @@ class EDIExchangeRecord(models.Model):
     def action_exchange_receive(self):
         self.ensure_one()
         return self.backend_id.exchange_receive(self)
+
+    def action_exchange_check_state(self):
+        for rec in self:
+            if not rec.state_checkable:
+                raise exceptions.UserError(
+                    self.env._(
+                        "The state of %(record)s cannot be checked.",
+                        record=rec.display_name,
+                    )
+                )
+            rec.backend_id._exchange_output_check_state(rec)
 
     def exchange_create_ack_record(self, **kw):
         return self.exchange_create_child_record(
