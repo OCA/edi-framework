@@ -1,0 +1,5 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_edi_notification_rule_manager,access_edi_notification_rule manager,model_edi_notification_rule,base_edi.group_edi_manager,1,1,1,1
+access_edi_notification_rule_user,access_edi_notification_rule user,model_edi_notification_rule,base.group_user,1,0,0,0
+access_edi_notification_trigger_manager,access_edi_notification_trigger manager,model_edi_notification_trigger,base_edi.group_edi_manager,1,0,0,0
+access_edi_notification_trigger_user,access_edi_notification_trigger user,model_edi_notification_trigger,base.group_user,1,0,0,0
