@@ -25,6 +25,29 @@ class EDIExchangeRecord(models.Model):
         self = self.filtered(lambda r: r.edi_exchange_state != "obsolete")
         return super()._constrain_edi_exchange_state()
 
+    @api.autovacuum
+    def _gc_delete_obsolete_records(self):
+        """Delete the obsolete records, oldest first, in batches of 1000.
+
+        Called from the base autovacuum cron, which commits after each batch
+        and calls it again while it returns remaining records.
+        """
+        limit = 1000
+        records = self.search(
+            self._obsolete_records_domain(),
+            order="create_date",
+            limit=limit + 1,
+        )
+        records[:limit].sudo().unlink()
+        return len(records[:limit]), len(records) > limit
+
+    @api.model
+    def _obsolete_records_domain(self):
+        """Domain of the obsolete records the autovacuum deletes."""
+        return Domain("edi_exchange_state", "=", "obsolete") & Domain(
+            "type_id.delete_obsolete_records", "=", True
+        )
+
     @api.model_create_multi
     def create(self, vals_list):
         records = super().create(vals_list)
