@@ -9,6 +9,7 @@ from collections import defaultdict
 
 from odoo import Command, api, exceptions, fields, models
 from odoo.exceptions import AccessError
+from odoo.fields import Domain
 from odoo.tools import Query, split_every
 
 from ..utils import get_checksum
@@ -573,6 +574,60 @@ class EDIExchangeRecord(models.Model):
             self._exchange_status_message("ack_received_error"),
         )
         self._trigger_edi_event("done", suffix="ack_received_error")
+
+    @api.autovacuum
+    def _gc_archive_old_records(self):
+        """Archive the records older than the archive delay of their backend,
+        in batches of 10000.
+
+        Called from the base autovacuum cron, which commits after each batch
+        and calls it again while it returns remaining records.
+        """
+        backends = self.env["edi.backend"].search(
+            [("auto_archive_records_after_days", ">", 0)]
+        )
+        domain = Domain.OR(
+            Domain("backend_id", "=", backend.id)
+            & Domain(
+                "create_date", "<", f"now -{backend.auto_archive_records_after_days}d"
+            )
+            for backend in backends
+        )
+        limit = 10000
+        records = self.search(
+            domain & Domain("active", "=", True),
+            order="create_date",
+            limit=limit + 1,
+        )
+        records[:limit].sudo().action_archive()
+        return len(records[:limit]), len(records) > limit
+
+    @api.autovacuum
+    def _gc_delete_old_archived_records(self):
+        """Delete the archived records older than the delete delay of their
+        backend, in batches of 1000.
+
+        Called from the base autovacuum cron, which commits after each batch
+        and calls it again while it returns remaining records.
+        """
+        backends = self.env["edi.backend"].search(
+            [("auto_delete_records_after_days", ">", 0)]
+        )
+        domain = Domain.OR(
+            Domain("backend_id", "=", backend.id)
+            & Domain(
+                "create_date", "<", f"now -{backend.auto_delete_records_after_days}d"
+            )
+            for backend in backends
+        )
+        limit = 1000
+        records = self.search(
+            domain & Domain("active", "=", False),
+            order="create_date",
+            limit=limit + 1,
+        )
+        records[:limit].sudo().unlink()
+        return len(records[:limit]), len(records) > limit
 
     def _search(self, domain, offset=0, limit=None, order=None, **kw) -> Query:
         if self.env.is_superuser():
