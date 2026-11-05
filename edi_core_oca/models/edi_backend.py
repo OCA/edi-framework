@@ -447,6 +447,13 @@ class EDIBackend(models.Model):
         return domain
 
     def _exchange_output_check_state(self, exchange_record):
+        """Check the state of a sent exchange, and log the check on it."""
+        check_result = self._exchange_check(exchange_record)
+        exchange_record._log_state_check(check_result.message)
+        return check_result.output
+
+    @EDIExchangeActionResult.wrap_result
+    def _exchange_check(self, exchange_record):
         exchange_function = self._get_exec_handler(exchange_record, "check")
         ctx = self._get_record_env_ctx(exchange_record, "check")
         return exchange_function(exchange_record.with_context(**ctx))
