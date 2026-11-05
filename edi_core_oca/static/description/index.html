@@ -410,25 +410,26 @@ related record), exchange type, backend and target model. See
 <li><a class="reference internal" href="#usage" id="toc-entry-9">Usage</a><ul>
 <li><a class="reference internal" href="#output-exchange-records" id="toc-entry-10">Output Exchange records</a></li>
 <li><a class="reference internal" href="#input-exchange-records" id="toc-entry-11">Input Exchange records</a></li>
+<li><a class="reference internal" href="#checking-the-state-of-sent-exchanges" id="toc-entry-12">Checking the state of sent exchanges</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#known-issues-roadmap" id="toc-entry-12">Known issues / Roadmap</a><ul>
-<li><a class="reference internal" href="#section-1" id="toc-entry-13">14.0.1.0.0</a></li>
-<li><a class="reference internal" href="#section-2" id="toc-entry-14">18.0.1.4.0</a></li>
+<li><a class="reference internal" href="#known-issues-roadmap" id="toc-entry-13">Known issues / Roadmap</a><ul>
+<li><a class="reference internal" href="#section-1" id="toc-entry-14">14.0.1.0.0</a></li>
+<li><a class="reference internal" href="#section-2" id="toc-entry-15">18.0.1.4.0</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#changelog" id="toc-entry-15">Changelog</a><ul>
-<li><a class="reference internal" href="#section-3" id="toc-entry-16">19.0.1.1.0 (2026-05-25)</a><ul>
-<li><a class="reference internal" href="#features" id="toc-entry-17">Features</a></li>
+<li><a class="reference internal" href="#changelog" id="toc-entry-16">Changelog</a><ul>
+<li><a class="reference internal" href="#section-3" id="toc-entry-17">19.0.1.1.0 (2026-05-25)</a><ul>
+<li><a class="reference internal" href="#features" id="toc-entry-18">Features</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li><a class="reference internal" href="#bug-tracker" id="toc-entry-18">Bug Tracker</a></li>
-<li><a class="reference internal" href="#credits" id="toc-entry-19">Credits</a><ul>
-<li><a class="reference internal" href="#authors" id="toc-entry-20">Authors</a></li>
-<li><a class="reference internal" href="#contributors" id="toc-entry-21">Contributors</a></li>
-<li><a class="reference internal" href="#maintainers" id="toc-entry-22">Maintainers</a></li>
+<li><a class="reference internal" href="#bug-tracker" id="toc-entry-19">Bug Tracker</a></li>
+<li><a class="reference internal" href="#credits" id="toc-entry-20">Credits</a><ul>
+<li><a class="reference internal" href="#authors" id="toc-entry-21">Authors</a></li>
+<li><a class="reference internal" href="#contributors" id="toc-entry-22">Contributors</a></li>
+<li><a class="reference internal" href="#maintainers" id="toc-entry-23">Maintainers</a></li>
 </ul>
 </li>
 </ul>
@@ -638,26 +639,33 @@ system to odoo.</p>
 <li>Processing data</li>
 </ul>
 </div>
+<div class="section" id="checking-the-state-of-sent-exchanges">
+<h3><a class="toc-backref" href="#toc-entry-12">Checking the state of sent exchanges</a></h3>
+<p>When the exchange type has a checker, the state of a sent output
+exchange is checked hourly by the “EDI exchange check output sync” cron.
+It can also be checked at any time with the “Check” button of the
+exchange.</p>
+</div>
 </div>
 <div class="section" id="known-issues-roadmap">
-<h2><a class="toc-backref" href="#toc-entry-12">Known issues / Roadmap</a></h2>
+<h2><a class="toc-backref" href="#toc-entry-13">Known issues / Roadmap</a></h2>
 <div class="section" id="section-1">
-<h3><a class="toc-backref" href="#toc-entry-13">14.0.1.0.0</a></h3>
+<h3><a class="toc-backref" href="#toc-entry-14">14.0.1.0.0</a></h3>
 <p>The module name has been changed from edi to edi_oca.</p>
 </div>
 <div class="section" id="section-2">
-<h3><a class="toc-backref" href="#toc-entry-14">18.0.1.4.0</a></h3>
+<h3><a class="toc-backref" href="#toc-entry-15">18.0.1.4.0</a></h3>
 <p>Components dependancy has been removed and set on a new dependant module
 <tt class="docutils literal">edi_component_oca</tt>. Module <tt class="docutils literal">edi_oca</tt> has been_renamed to
 <tt class="docutils literal">edi_core_oca</tt>.</p>
 </div>
 </div>
 <div class="section" id="changelog">
-<h2><a class="toc-backref" href="#toc-entry-15">Changelog</a></h2>
+<h2><a class="toc-backref" href="#toc-entry-16">Changelog</a></h2>
 <div class="section" id="section-3">
-<h3><a class="toc-backref" href="#toc-entry-16">19.0.1.1.0 (2026-05-25)</a></h3>
+<h3><a class="toc-backref" href="#toc-entry-17">19.0.1.1.0 (2026-05-25)</a></h3>
 <div class="section" id="features">
-<h4><a class="toc-backref" href="#toc-entry-17">Features</a></h4>
+<h4><a class="toc-backref" href="#toc-entry-18">Features</a></h4>
 <ul>
 <li><p class="first">Introduce a new system for <strong>global EDI events</strong> based on
 <tt class="docutils literal">edi.configuration</tt> that can replace the use of component events.</p>
@@ -684,7 +692,7 @@ and for the new filtering rules.</p>
 </div>
 </div>
 <div class="section" id="bug-tracker">
-<h2><a class="toc-backref" href="#toc-entry-18">Bug Tracker</a></h2>
+<h2><a class="toc-backref" href="#toc-entry-19">Bug Tracker</a></h2>
 <p>Bugs are tracked on <a class="reference external" href="https://github.com/OCA/edi-framework/issues">GitHub Issues</a>.
 In case of trouble, please check there if your issue has already been reported.
 If you spotted it first, help us to smash it by providing a detailed and welcomed
@@ -692,9 +700,9 @@ If you spotted it first, help us to smash it by providing a detailed and welcome
 <p>Do not contact contributors directly about support or help with technical issues.</p>
 </div>
 <div class="section" id="credits">
-<h2><a class="toc-backref" href="#toc-entry-19">Credits</a></h2>
+<h2><a class="toc-backref" href="#toc-entry-20">Credits</a></h2>
 <div class="section" id="authors">
-<h3><a class="toc-backref" href="#toc-entry-20">Authors</a></h3>
+<h3><a class="toc-backref" href="#toc-entry-21">Authors</a></h3>
 <ul class="simple">
 <li>ACSONE</li>
 <li>Dixmit</li>
@@ -702,7 +710,7 @@ If you spotted it first, help us to smash it by providing a detailed and welcome
 </ul>
 </div>
 <div class="section" id="contributors">
-<h3><a class="toc-backref" href="#toc-entry-21">Contributors</a></h3>
+<h3><a class="toc-backref" href="#toc-entry-22">Contributors</a></h3>
 <ul class="simple">
 <li>Simone Orsi &lt;<a class="reference external" href="mailto:simahawk&#64;gmail.com">simahawk&#64;gmail.com</a>&gt;</li>
 <li>Enric Tobella &lt;<a class="reference external" href="mailto:enric.tobella&#64;dixmit.com">enric.tobella&#64;dixmit.com</a>&gt;</li>
@@ -712,7 +720,7 @@ If you spotted it first, help us to smash it by providing a detailed and welcome
 </ul>
 </div>
 <div class="section" id="maintainers">
-<h3><a class="toc-backref" href="#toc-entry-22">Maintainers</a></h3>
+<h3><a class="toc-backref" href="#toc-entry-23">Maintainers</a></h3>
 <p>This module is maintained by the OCA.</p>
 <a class="reference external image-reference" href="https://odoo-community.org">
 <img alt="Odoo Community Association" src="https://odoo-community.org/logo.png" />

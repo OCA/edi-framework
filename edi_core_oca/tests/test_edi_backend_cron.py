@@ -2,6 +2,7 @@
 # @author: Simone Orsi <simahawk@gmail.com>
 # License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl).
 
+from odoo.exceptions import UserError
 from odoo.orm.model_classes import add_to_registry
 from odoo.tools import mute_logger
 
@@ -136,3 +137,42 @@ class EDIBackendTestCronCase(EDIBackendCommonTestCase):
         self.assertTrue(
             self.ExecutionAbstractModel.check_called_for(self.record1, "check")
         )
+
+    @mute_logger(*LOGGERS)
+    def test_action_check_state(self):
+        """A sent exchange can be checked from its form.
+
+        Scenario:
+            1. Give the output type a checker, and mark an exchange as sent.
+            2. Check it from the form, the service answering it is done.
+        Expected:
+            - Only the checker runs, nothing is generated or sent.
+            - The exchange is sent and processed.
+        """
+        self.exchange_type_out.check_model_id = self.model
+        self.record1.edi_exchange_state = "output_sent"
+        self.assertTrue(self.record1.state_checkable)
+        self.record1.with_context(
+            fake_update_values={"edi_exchange_state": "output_sent_and_processed"}
+        ).action_exchange_check_state()
+        self.assertEqual(self.record1.edi_exchange_state, "output_sent_and_processed")
+        self.assertTrue(
+            self.ExecutionAbstractModel.check_called_for(self.record1, "check")
+        )
+        self.assertTrue(
+            self.ExecutionAbstractModel.check_not_called_for(self.record1, "generate")
+        )
+        self.assertTrue(
+            self.ExecutionAbstractModel.check_not_called_for(self.record1, "send")
+        )
+
+    def test_state_not_checkable(self):
+        """The state cannot be checked without a checker, or once processed."""
+        self.exchange_type_out.check_model_id = False
+        self.record1.edi_exchange_state = "output_sent"
+        self.assertFalse(self.record1.state_checkable)
+        self.exchange_type_out.check_model_id = self.model
+        self.record1.edi_exchange_state = "output_sent_and_processed"
+        self.assertFalse(self.record1.state_checkable)
+        with self.assertRaisesRegex(UserError, "cannot be checked"):
+            self.record1.action_exchange_check_state()
