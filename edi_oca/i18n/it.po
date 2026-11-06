@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-05-29 13:46+0000\n"
+"PO-Revision-Date: 2026-11-06 14:04+0000\n"
 "Last-Translator: mymage <stefano.consolaro@mymage.it>\n"
 "Language-Team: none\n"
 "Language: it\n"
@@ -1317,7 +1317,7 @@ msgstr "Partner"
 #: model:ir.ui.menu,name:edi_oca.menu_edi_exchange_record_failed
 #: model_terms:ir.ui.view,arch_db:edi_oca.edi_exchange_record_view_search
 msgid "Pending"
-msgstr "In sospeso"
+msgstr "In attesa"
 
 #. module: edi_oca
 #: model:ir.model.fields.selection,name:edi_oca.selection__edi_exchange_record__edi_exchange_state__input_processed
