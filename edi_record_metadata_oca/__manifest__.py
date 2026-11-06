@@ -5,7 +5,7 @@
 {
     "name": "EDI record metadata",
     "summary": "Allow to store metadata for related records.",
-    "version": "19.0.1.0.2",
+    "version": "20.0.1.0.0",
     "development_status": "Beta",
     "license": "LGPL-3",
     "website": "https://github.com/OCA/edi-framework",
