@@ -1,0 +1,2 @@
+odoo-addon-base_edi @ git+https://github.com/ForgeFlow/edi@20.0-mig-base_edi#subdirectory=base_edi
+odoo-addon-edi_core_oca @ git+https://github.com/ForgeFlow/edi-framework@20.0-mig-edi_core_oca#subdirectory=edi_core_oca
