@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="demo_edi_exc_type_order_out" model="edi.exchange.type">
+        <field name="backend_type_id" ref="demo_edi_backend_type_stock_picking" />
+        <field name="backend_id" ref="demo_edi_backend" />
+        <field name="name">Demo Transfer Response</field>
+        <field name="code">demo_Transfer_out</field>
+        <field name="direction">output</field>
+        <field name="exchange_filename_pattern">{record_name}-{type.code}-{dt}</field>
+        <field name="exchange_file_ext">xml</field>
+    </record>
+</odoo>
