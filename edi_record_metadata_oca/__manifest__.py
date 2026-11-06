@@ -4,9 +4,7 @@
 
 {
     "name": "EDI record metadata",
-    "summary": """
-    Allow to store metadata for related records.
-    """,
+    "summary": "Allow to store metadata for related records.",
     "version": "19.0.1.0.2",
     "development_status": "Beta",
     "license": "LGPL-3",

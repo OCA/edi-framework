@@ -7,9 +7,7 @@ from odoo import fields, models
 
 class EDIMetadataConsumerFake(models.Model):
     _name = "edi.metadata.consumer.fake"
-    _inherit = [
-        "edi.exchange.consumer.mixin",
-    ]
+    _inherit = "edi.exchange.consumer.mixin"
     _description = "Model used only for test"
 
     name = fields.Char()
