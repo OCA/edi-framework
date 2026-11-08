@@ -6,43 +6,45 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"Last-Translator: Automatically generated\n"
+"PO-Revision-Date: 2026-11-08 22:46+0000\n"
+"Last-Translator: mymage <stefano.consolaro@mymage.it>\n"
 "Language-Team: none\n"
 "Language: it\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 5.15.2\n"
 
 #. module: edi_exchange_record_file_manager
 #: model:ir.model.fields,field_description:edi_exchange_record_file_manager.field_edi_exchange_record_file_manager__ace_mode
 msgid "Ace Mode"
-msgstr ""
+msgstr "Modalità Ace"
 
 #. module: edi_exchange_record_file_manager
 #: model:ir.model.fields,field_description:edi_exchange_record_file_manager.field_edi_exchange_record_file_manager__button_cancel_invisible
 msgid "Button Cancel Invisible"
-msgstr ""
+msgstr "Pulsante Annulla invisibile"
 
 #. module: edi_exchange_record_file_manager
 #: model:ir.model.fields,field_description:edi_exchange_record_file_manager.field_edi_exchange_record_file_manager__button_close_invisible
 msgid "Button Close Invisible"
-msgstr ""
+msgstr "Pulsante Chiudi invisibile"
 
 #. module: edi_exchange_record_file_manager
 #: model:ir.model.fields,field_description:edi_exchange_record_file_manager.field_edi_exchange_record__button_open_file_manager_invisible
 msgid "Button Open File Manager Invisible"
-msgstr ""
+msgstr "Pulsante Apri gestore file invisibile"
 
 #. module: edi_exchange_record_file_manager
 #: model:ir.model.fields,field_description:edi_exchange_record_file_manager.field_edi_exchange_record_file_manager__button_proceed_invisible
 msgid "Button Proceed Invisible"
-msgstr ""
+msgstr "Pulsante Procedi invisibile"
 
 #. module: edi_exchange_record_file_manager
 #: model_terms:ir.ui.view,arch_db:edi_exchange_record_file_manager.edi_exchange_record_file_manager_view_form
 msgid "Cancel"
-msgstr ""
+msgstr "Annulla"
 
 #. module: edi_exchange_record_file_manager
 #: model_terms:ir.ui.view,arch_db:edi_exchange_record_file_manager.edi_exchange_record_file_manager_view_form
@@ -50,211 +52,215 @@ msgid ""
 "Clicking on \"Proceed\" will automatically update the Exchange Record's "
 "file."
 msgstr ""
+"Facendo clic su \"Procedi\" verrà automaticamente aggiornato il file del "
+"record di scambio."
 
 #. module: edi_exchange_record_file_manager
 #: model_terms:ir.ui.view,arch_db:edi_exchange_record_file_manager.edi_exchange_record_file_manager_view_form
 msgid "Close"
-msgstr ""
+msgstr "Chiudi"
 
 #. module: edi_exchange_record_file_manager
 #: model_terms:ir.ui.view,arch_db:edi_exchange_record_file_manager.edi_exchange_record_file_manager_view_form
 msgid "Close this dialog and click on \"Retry\" to reschedule the exchange."
 msgstr ""
+"Chiudere questa finestra di dialogo e fare clic su \"Riprova\" per "
+"ripianificare lo scambio."
 
 #. module: edi_exchange_record_file_manager
 #: model:ir.model.fields,field_description:edi_exchange_record_file_manager.field_edi_exchange_record_file_manager__create_uid
 msgid "Created by"
-msgstr ""
+msgstr "Creato da"
 
 #. module: edi_exchange_record_file_manager
 #: model:ir.model.fields,field_description:edi_exchange_record_file_manager.field_edi_exchange_record_file_manager__create_date
 msgid "Created on"
-msgstr ""
+msgstr "Creato il"
 
 #. module: edi_exchange_record_file_manager
 #: model:ir.model.fields,field_description:edi_exchange_record_file_manager.field_edi_exchange_record_file_manager__display_name
 msgid "Display Name"
-msgstr ""
+msgstr "Nome visualizzato"
 
 #. module: edi_exchange_record_file_manager
 #: model:ir.model.fields.selection,name:edi_exchange_record_file_manager.selection__edi_exchange_record_file_manager__state__done
 msgid "Done"
-msgstr ""
+msgstr "Completato"
 
 #. module: edi_exchange_record_file_manager
 #: model:ir.model,name:edi_exchange_record_file_manager.model_edi_exchange_record_file_manager
 msgid "EDI Exchange Record File Manager"
-msgstr ""
+msgstr "Gestore file record di scambio EDI"
 
 #. module: edi_exchange_record_file_manager
 #: model:ir.model,name:edi_exchange_record_file_manager.model_edi_exchange_record
 msgid "EDI exchange Record"
-msgstr ""
+msgstr "Record di scambio EDI"
 
 #. module: edi_exchange_record_file_manager
 #: model:ir.model.fields.selection,name:edi_exchange_record_file_manager.selection__edi_exchange_record_file_manager__state__edit
 msgid "Edit"
-msgstr ""
+msgstr "Modifica"
 
 #. module: edi_exchange_record_file_manager
 #: model_terms:ir.ui.view,arch_db:edi_exchange_record_file_manager.edi_exchange_record_file_manager_view_form
 msgid "Edit File"
-msgstr ""
+msgstr "Modifica file"
 
 #. module: edi_exchange_record_file_manager
 #: model:ir.model.fields.selection,name:edi_exchange_record_file_manager.selection__edi_exchange_record_file_manager__mode__edit_in_place
 msgid "Edit file"
-msgstr ""
+msgstr "Modifica file"
 
 #. module: edi_exchange_record_file_manager
 #: model:ir.model.fields,field_description:edi_exchange_record_file_manager.field_edi_exchange_record_file_manager__exchange_record_file
 msgid "Exchange File"
-msgstr ""
+msgstr "File di scambio"
 
 #. module: edi_exchange_record_file_manager
 #: model:ir.model.fields,field_description:edi_exchange_record_file_manager.field_edi_exchange_record_file_manager__exchange_record_filename
 msgid "Exchange Filename"
-msgstr ""
+msgstr "Nome file di scambio"
 
 #. module: edi_exchange_record_file_manager
 #: model:ir.model.fields,field_description:edi_exchange_record_file_manager.field_edi_exchange_record_file_manager__exchange_record_id
 msgid "Exchange Record"
-msgstr ""
+msgstr "Record di scambio"
 
 #. module: edi_exchange_record_file_manager
 #: model:ir.model.fields,field_description:edi_exchange_record_file_manager.field_edi_exchange_record_file_manager__file_content
 msgid "File Content"
-msgstr ""
+msgstr "Contenuto del file"
 
 #. module: edi_exchange_record_file_manager
 #. odoo-python
 #: code:addons/edi_exchange_record_file_manager/wizards/edi_exchange_record_file_manager.py:0
 msgid "File edited through file manager."
-msgstr ""
+msgstr "File modificato tramite il gestore file."
 
 #. module: edi_exchange_record_file_manager
 #. odoo-python
 #: code:addons/edi_exchange_record_file_manager/wizards/edi_exchange_record_file_manager.py:0
 msgid "File replaced through file manager."
-msgstr ""
+msgstr "File sostituito tramite il gestore file."
 
 #. module: edi_exchange_record_file_manager
 #: model_terms:ir.ui.view,arch_db:edi_exchange_record_file_manager.edi_exchange_record_file_manager_view_form
 msgid "Here is the current file:"
-msgstr ""
+msgstr "Ecco il file attuale:"
 
 #. module: edi_exchange_record_file_manager
 #: model:ir.model.fields,field_description:edi_exchange_record_file_manager.field_edi_exchange_record_file_manager__id
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: edi_exchange_record_file_manager
 #: model:ir.model.fields.selection,name:edi_exchange_record_file_manager.selection__edi_exchange_record_file_manager__ace_mode__javascript
 msgid "JavaScript/JSON"
-msgstr ""
+msgstr "JavaScript/JSON"
 
 #. module: edi_exchange_record_file_manager
 #: model:ir.model.fields,field_description:edi_exchange_record_file_manager.field_edi_exchange_record_file_manager__write_uid
 msgid "Last Updated by"
-msgstr ""
+msgstr "Ultimo aggiornamento di"
 
 #. module: edi_exchange_record_file_manager
 #: model:ir.model.fields,field_description:edi_exchange_record_file_manager.field_edi_exchange_record_file_manager__write_date
 msgid "Last Updated on"
-msgstr ""
+msgstr "Ultimo aggiornamento il"
 
 #. module: edi_exchange_record_file_manager
 #: model_terms:ir.ui.view,arch_db:edi_exchange_record_file_manager.edi_exchange_record_view_form_inherit
 msgid "Manage File"
-msgstr ""
+msgstr "Gestisci file"
 
 #. module: edi_exchange_record_file_manager
 #: model:ir.model.fields,field_description:edi_exchange_record_file_manager.field_edi_exchange_record_file_manager__mode
 msgid "Mode"
-msgstr ""
+msgstr "Modalità"
 
 #. module: edi_exchange_record_file_manager
 #: model:ir.model.fields,field_description:edi_exchange_record_file_manager.field_edi_exchange_record_file_manager__new_file
 msgid "New File"
-msgstr ""
+msgstr "Nuovo file"
 
 #. module: edi_exchange_record_file_manager
 #: model:ir.model.fields,field_description:edi_exchange_record_file_manager.field_edi_exchange_record_file_manager__new_filename
 msgid "New Filename"
-msgstr ""
+msgstr "Nuovo nome file"
 
 #. module: edi_exchange_record_file_manager
 #. odoo-python
 #: code:addons/edi_exchange_record_file_manager/wizards/edi_exchange_record_file_manager.py:0
 msgid "Nothing left to do, please close the dialog"
-msgstr ""
+msgstr "Non resta altro da fare, chiudere la finestra di dialogo"
 
 #. module: edi_exchange_record_file_manager
 #: model:ir.model.fields.selection,name:edi_exchange_record_file_manager.selection__edi_exchange_record_file_manager__ace_mode__txt
 msgid "Plain text"
-msgstr ""
+msgstr "Testo semplice"
 
 #. module: edi_exchange_record_file_manager
 #. odoo-python
 #: code:addons/edi_exchange_record_file_manager/wizards/edi_exchange_record_file_manager.py:0
 msgid "Please select a 'Mode' option to proceed"
-msgstr ""
+msgstr "Selezionare un'opzione 'Modalità' per procedere"
 
 #. module: edi_exchange_record_file_manager
 #. odoo-python
 #: code:addons/edi_exchange_record_file_manager/wizards/edi_exchange_record_file_manager.py:0
 msgid "Please upload a new file"
-msgstr ""
+msgstr "Caricare un nuovo file"
 
 #. module: edi_exchange_record_file_manager
 #: model_terms:ir.ui.view,arch_db:edi_exchange_record_file_manager.edi_exchange_record_file_manager_view_form
 msgid "Please upload your new file:"
-msgstr ""
+msgstr "Caricare il nuovo file:"
 
 #. module: edi_exchange_record_file_manager
 #: model_terms:ir.ui.view,arch_db:edi_exchange_record_file_manager.edi_exchange_record_file_manager_view_form
 msgid "Proceed"
-msgstr ""
+msgstr "Procedi"
 
 #. module: edi_exchange_record_file_manager
 #: model:ir.model.fields.selection,name:edi_exchange_record_file_manager.selection__edi_exchange_record_file_manager__ace_mode__python
 msgid "Python"
-msgstr ""
+msgstr "Python"
 
 #. module: edi_exchange_record_file_manager
 #: model:ir.model.fields.selection,name:edi_exchange_record_file_manager.selection__edi_exchange_record_file_manager__ace_mode__qweb
 msgid "QWeb"
-msgstr ""
+msgstr "QWeb"
 
 #. module: edi_exchange_record_file_manager
 #: model:ir.model.fields.selection,name:edi_exchange_record_file_manager.selection__edi_exchange_record_file_manager__state__replace
 msgid "Replace"
-msgstr ""
+msgstr "Sostituisci"
 
 #. module: edi_exchange_record_file_manager
 #: model:ir.model.fields.selection,name:edi_exchange_record_file_manager.selection__edi_exchange_record_file_manager__mode__download_and_replace
 msgid "Replace file"
-msgstr ""
+msgstr "Sostituisci file"
 
 #. module: edi_exchange_record_file_manager
 #: model:ir.model.fields,field_description:edi_exchange_record_file_manager.field_edi_exchange_record_file_manager__exchange_record_retryable
 msgid "Retryable"
-msgstr ""
+msgstr "Riprovabile"
 
 #. module: edi_exchange_record_file_manager
 #: model:ir.model.fields.selection,name:edi_exchange_record_file_manager.selection__edi_exchange_record_file_manager__ace_mode__scss
 msgid "SCSS"
-msgstr ""
+msgstr "SCSS"
 
 #. module: edi_exchange_record_file_manager
 #: model:ir.model.fields.selection,name:edi_exchange_record_file_manager.selection__edi_exchange_record_file_manager__state__setup
 msgid "Setup"
-msgstr ""
+msgstr "Configurazione"
 
 #. module: edi_exchange_record_file_manager
 #: model:ir.model.fields,field_description:edi_exchange_record_file_manager.field_edi_exchange_record_file_manager__state
 msgid "State"
-msgstr ""
+msgstr "Stato"
 
 #. module: edi_exchange_record_file_manager
 #. odoo-python
@@ -263,17 +269,19 @@ msgid ""
 "The content cannot be encoded with the exchange type encoding "
 "(%(encoding)s): %(error)s"
 msgstr ""
+"Il contenuto non può essere codificato con la codifica del tipo di scambio (%"
+"(encoding)s): %(error)s"
 
 #. module: edi_exchange_record_file_manager
 #. odoo-python
 #: code:addons/edi_exchange_record_file_manager/wizards/edi_exchange_record_file_manager.py:0
 msgid "The file cannot be read"
-msgstr ""
+msgstr "Impossibile leggere il file"
 
 #. module: edi_exchange_record_file_manager
 #: model_terms:ir.ui.view,arch_db:edi_exchange_record_file_manager.edi_exchange_record_file_manager_view_form
 msgid "The file has been updated."
-msgstr ""
+msgstr "Il file è stato aggiornato."
 
 #. module: edi_exchange_record_file_manager
 #. odoo-python
@@ -282,19 +290,22 @@ msgid ""
 "The file is not consistent with the exchange type encoding %(encoding)s and "
 "error handler %(handler)s: %(error)s"
 msgstr ""
+"Il file non è coerente con la codifica del tipo di scambio %(encoding)s e "
+"con il gestore degli errori %(handler)s: %(error)s"
 
 #. module: edi_exchange_record_file_manager
 #. odoo-python
 #: code:addons/edi_exchange_record_file_manager/models/edi_exchange_record.py:0
 msgid "The file manager cannot be used now"
-msgstr ""
+msgstr "Impossibile utilizzare il gestore file in questo momento"
 
 #. module: edi_exchange_record_file_manager
 #: model:ir.model.fields,help:edi_exchange_record_file_manager.field_edi_exchange_record_file_manager__exchange_record_retryable
 msgid "The record state can be rolled back manually in case of failure."
 msgstr ""
+"Lo stato del record può essere ripristinato manualmente in caso di errore."
 
 #. module: edi_exchange_record_file_manager
 #: model:ir.model.fields.selection,name:edi_exchange_record_file_manager.selection__edi_exchange_record_file_manager__ace_mode__xml
 msgid "XML/HTML"
-msgstr ""
+msgstr "XML/HTML"
