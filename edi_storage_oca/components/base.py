@@ -5,6 +5,9 @@
 import logging
 from pathlib import PurePath
 
+from odoo import _
+from odoo.exceptions import UserError
+
 from odoo.addons.component.core import AbstractComponent
 
 from .. import utils
@@ -55,11 +58,16 @@ class EDIStorageComponentMixin(AbstractComponent):
         )
         return path
 
-    def _get_remote_file(self, state, filename=None, binary=False):
+    def _get_remote_file(
+        self, state, filename=None, binary=False, raise_if_missing=False
+    ):
         """Get file for current exchange_record in the given destination state.
 
         :param state: string ("pending", "done", "error")
         :param filename: custom file name, exchange_record filename used by default
+        :param raise_if_missing: when True, storage errors are re-raised as
+            swallable exceptions so the caller transitions the record to an
+            error state instead of treating "no content" as a successful read.
         :return: remote file content as string
         """
         path = self._get_remote_file_path(state, filename=filename)
@@ -76,12 +84,23 @@ class EDIStorageComponentMixin(AbstractComponent):
                 path,
                 state,
             )
+            if raise_if_missing:
+                raise
             return None
-        except OSError:
-            _logger.info(
-                "Ignored OSError when trying to get file %s into path %s for state %s",
+        except OSError as err:
+            _logger.warning(
+                "OSError when trying to get file %s into path %s for state %s: %s",
                 filename,
                 path,
                 state,
+                err,
             )
+            if raise_if_missing:
+                raise UserError(
+                    _(
+                        "Storage error while reading %(path)s: %(error)s",
+                        path=path.as_posix(),
+                        error=str(err),
+                    )
+                ) from err
             return None
