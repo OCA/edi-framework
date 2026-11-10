@@ -32,7 +32,11 @@ class EdiOcaStorageHandler(models.AbstractModel):
             return True
         filedata = exchange_record.exchange_file
         path = self._get_remote_file_path(exchange_record, "pending")
-        utils.add_file(exchange_record.backend_id.storage_id, path.as_posix(), filedata)
+        utils.add_file(
+            exchange_record.backend_id.get_conn_parameter("storage_id"),
+            path.as_posix(),
+            filedata,
+        )
 
     def receive(self, exchange_record):
         return self._get_remote_file(
@@ -49,7 +53,9 @@ class EdiOcaStorageHandler(models.AbstractModel):
         assert direction in ("input", "output")
         assert state in ("pending", "done", "error")
         return PurePath(
-            (backend[direction + "_dir_" + state] or "").strip().rstrip("/")
+            (backend.get_conn_parameter(direction + "_dir_" + state) or "")
+            .strip()
+            .rstrip("/")
         )
 
     def _get_remote_file_path(self, exchange_record, state, filename=None):
@@ -87,7 +93,9 @@ class EdiOcaStorageHandler(models.AbstractModel):
             # otherwise is impossible to retrieve input files and acks
             # (the date will never match)
             return utils.get_file(
-                exchange_record.backend_id.storage_id, path.as_posix(), binary=binary
+                exchange_record.backend_id.get_conn_parameter("storage_id"),
+                path.as_posix(),
+                binary=binary,
             )
         except FileNotFoundError:
             _logger.info(

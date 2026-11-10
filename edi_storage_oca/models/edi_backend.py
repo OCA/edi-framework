@@ -22,22 +22,40 @@ class EDIBackend(models.Model):
         help="Storage for in-out files",
         ondelete="restrict",
     )
-    """
-    We assume the exchanges happen it 2 ways (input, output)
-    and we have a hierarchy of directory like:
+    test_storage_id = fields.Many2one(
+        string="FS Storage (test)",
+        comodel_name="fs.storage",
+        help="Storage to use in test mode; falls back to the live storage when empty.",
+        ondelete="restrict",
+    )
 
-        from_A_to_B
-            |- pending
-            |- done
-            |- error
-        from_B_to_A
-            |- pending
-            |- done
-            |- error
+    def _edi_test_conn_param_fields(self):
+        # Whitelist the storage connection params: the FS storage
+        # record itself plus all *_dir_* fields.
+        return super()._edi_test_conn_param_fields() + [
+            "storage_id",
+            "input_dir_pending",
+            "input_dir_done",
+            "input_dir_error",
+            "output_dir_pending",
+            "output_dir_done",
+            "output_dir_error",
+        ]
 
-    where A and B are the partners exchanging data and they are in turn
-    sender and receiver and vice versa.
-    """
+    # We assume the exchanges happen it 2 ways (input, output)
+    # and we have a hierarchy of directory like:
+    #
+    #     from_A_to_B
+    #         |- pending
+    #         |- done
+    #         |- error
+    #     from_B_to_A
+    #         |- pending
+    #         |- done
+    #         |- error
+    #
+    # where A and B are the partners exchanging data and they are in turn
+    # sender and receiver and vice versa.
     # TODO: these paths should probably be by type instead
     # Here we can maybe set a common root folder for this exchange.
     input_dir_pending = fields.Char(
@@ -58,6 +76,36 @@ class EDIBackend(models.Model):
     output_dir_error = fields.Char(
         "Output error directory", help="Path to folder for error operations"
     )
+    test_input_dir_pending = fields.Char(
+        "Input pending directory (test)",
+        help="Path to folder for pending operations in test mode. "
+        "Falls back to the live directory when empty.",
+    )
+    test_input_dir_done = fields.Char(
+        "Input done directory (test)",
+        help="Path to folder for doneful operations in test mode. "
+        "Falls back to the live directory when empty.",
+    )
+    test_input_dir_error = fields.Char(
+        "Input error directory (test)",
+        help="Path to folder for error operations in test mode. "
+        "Falls back to the live directory when empty.",
+    )
+    test_output_dir_pending = fields.Char(
+        "Output pending directory (test)",
+        help="Path to folder for pending operations in test mode. "
+        "Falls back to the live directory when empty.",
+    )
+    test_output_dir_done = fields.Char(
+        "Output done directory (test)",
+        help="Path to folder for doneful operations in test mode. "
+        "Falls back to the live directory when empty.",
+    )
+    test_output_dir_error = fields.Char(
+        "Output error directory (test)",
+        help="Path to folder for error operations in test mode. "
+        "Falls back to the live directory when empty.",
+    )
 
     def _storage_cron_check_pending_input(self, **kw):
         for backend in self:
@@ -70,7 +118,9 @@ class EDIBackend(models.Model):
         check by pattern if the a new exchange record is required.
         """
         self.ensure_one()
-        if not self.storage_id or not self.input_dir_pending:
+        if not self.get_conn_parameter("storage_id") or not self.get_conn_parameter(
+            "input_dir_pending"
+        ):
             _logger.info(
                 "%s ignored: no storage and/or input directory specified.", self.name
             )
@@ -121,13 +171,16 @@ class EDIBackend(models.Model):
 
     def _storage_get_input_filenames(self, exchange_type):
         full_input_dir_pending = exchange_type._storage_fullpath(
-            self.input_dir_pending
+            self.get_conn_parameter("input_dir_pending")
         ).as_posix()
         if not exchange_type.exchange_filename_pattern:
             # If there is not pattern, return everything
             filenames = [
                 x
-                for x in utils.list_files(self.storage_id, full_input_dir_pending)
+                for x in utils.list_files(
+                    self.get_conn_parameter("storage_id"),
+                    full_input_dir_pending,
+                )
                 if x.strip("/")
             ]
             return filenames
@@ -138,7 +191,11 @@ class EDIBackend(models.Model):
         pattern = "".join(bits)
         return [
             x
-            for x in utils.find_files(self.storage_id, pattern, full_input_dir_pending)
+            for x in utils.find_files(
+                self.get_conn_parameter("storage_id"),
+                pattern,
+                full_input_dir_pending,
+            )
             if x.strip("/")
         ]
 
@@ -146,7 +203,7 @@ class EDIBackend(models.Model):
         return {
             "exchange_filename": file_name,
             "edi_exchange_state": "input_pending",
-            "storage_id": self.storage_id.id,
+            "storage_id": self.get_conn_parameter("storage_id").id,
         }
 
     def _storage_on_edi_exchange_done(self, exchange_record):
@@ -157,23 +214,23 @@ class EDIBackend(models.Model):
         bound to the 'on_edi_exchange_done' trigger.
         """
         self.ensure_one()
-        storage = exchange_record.storage_id
+        storage = exchange_record.backend_id.get_conn_parameter("storage_id")
         if exchange_record.direction != "input" or not storage:
             return False
-        if not self.input_dir_done:
+        if not self.get_conn_parameter("input_dir_done"):
             return False
         file_name = exchange_record.exchange_filename
         pending_dir = exchange_record.type_id._storage_fullpath(
-            self.input_dir_pending
+            self.get_conn_parameter("input_dir_pending")
         ).as_posix()
         done_dir = exchange_record.type_id._storage_fullpath(
-            self.input_dir_done
+            self.get_conn_parameter("input_dir_done")
         ).as_posix()
         error_dir = exchange_record.type_id._storage_fullpath(
-            self.input_dir_error
+            self.get_conn_parameter("input_dir_error")
         ).as_posix()
         res = utils.move_file(storage, pending_dir, done_dir, file_name)
-        if not res and self.input_dir_error:
+        if not res and self.get_conn_parameter("input_dir_error"):
             res = utils.move_file(storage, error_dir, done_dir, file_name)
         return res
 
@@ -185,16 +242,16 @@ class EDIBackend(models.Model):
         bound to the 'on_edi_exchange_error' trigger.
         """
         self.ensure_one()
-        storage = exchange_record.storage_id
+        storage = exchange_record.backend_id.get_conn_parameter("storage_id")
         if exchange_record.direction != "input" or not storage:
             return False
-        if not self.input_dir_error:
+        if not self.get_conn_parameter("input_dir_error"):
             return False
         file_name = exchange_record.exchange_filename
         pending_dir = exchange_record.type_id._storage_fullpath(
-            self.input_dir_pending
+            self.get_conn_parameter("input_dir_pending")
         ).as_posix()
         error_dir = exchange_record.type_id._storage_fullpath(
-            self.input_dir_error
+            self.get_conn_parameter("input_dir_error")
         ).as_posix()
         return utils.move_file(storage, pending_dir, error_dir, file_name)
