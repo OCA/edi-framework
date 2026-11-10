@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2025-10-07 09:43+0000\n"
+"PO-Revision-Date: 2026-11-10 13:46+0000\n"
 "Last-Translator: mymage <stefano.consolaro@mymage.it>\n"
 "Language-Team: none\n"
 "Language: it\n"
@@ -14,7 +14,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.10.4\n"
+"X-Generator: Weblate 5.15.2\n"
 
 #. module: edi_oca
 #: model:ir.model.fields,help:edi_oca.field_edi_exchange_type__advanced_settings_edit
@@ -101,6 +101,9 @@ msgid ""
 "        Describe what triggers a specific action for a configuration.\n"
 "    "
 msgstr ""
+"\n"
+"        Descrive cosa attiva un'azione specifica per una configurazione.\n"
+"    "
 
 #. module: edi_oca
 #: model:ir.model,name:edi_oca.model_edi_configuration
@@ -113,6 +116,14 @@ msgid ""
 "        to meet the specific needs of their business processes.\n"
 "    "
 msgstr ""
+"\n"
+"        Questo modello è usato per configurare i flussi EDI (Electronic Data "
+"Interchange).\n"
+"        Consente agli utenti di creare le proprie configurazioni, che "
+"possono essere adattate\n"
+"        per soddisfare le esigenze specifiche dei propri processi "
+"aziendali.\n"
+"    "
 
 #. module: edi_oca
 #: model:ir.model.fields,help:edi_oca.field_edi_backend__output_sent_processed_auto
@@ -423,7 +434,7 @@ msgstr "Codice"
 #. module: edi_oca
 #: model:ir.model.constraint,message:edi_oca.constraint_edi_configuration_trigger_code_uniq
 msgid "Code must be unique"
-msgstr ""
+msgstr "Il codice deve essere univoco"
 
 #. module: edi_oca
 #: model:ir.model.fields,field_description:edi_oca.field_edi_backend__company_id
@@ -439,7 +450,7 @@ msgstr "Configurazione"
 #. module: edi_oca
 #: model:ir.ui.menu,name:edi_oca.menu_edi_configuration
 msgid "Configurations"
-msgstr ""
+msgstr "Configurazioni"
 
 #. module: edi_oca
 #: model:ir.model,name:edi_oca.model_edi_exchange_record_create_wiz
@@ -501,13 +512,13 @@ msgstr "Gestore errore decodifica"
 #: model:ir.model.fields,help:edi_oca.field_edi_configuration__description
 #: model:ir.model.fields,help:edi_oca.field_edi_configuration_trigger__description
 msgid "Describe what the conf is for"
-msgstr ""
+msgstr "Descrive a cosa serve la configurazione"
 
 #. module: edi_oca
 #: model:ir.model.fields,field_description:edi_oca.field_edi_configuration__description
 #: model:ir.model.fields,field_description:edi_oca.field_edi_configuration_trigger__description
 msgid "Description"
-msgstr ""
+msgstr "Descrizione"
 
 #. module: edi_oca
 #: model:ir.model.fields,field_description:edi_oca.field_edi_exchange_record__direction
@@ -571,18 +582,18 @@ msgstr "Tipo backend EDI"
 #. module: edi_oca
 #: model_terms:ir.ui.view,arch_db:edi_oca.edi_configuration_view_form
 msgid "EDI Config Before Do"
-msgstr ""
+msgstr "Configurazione EDI prima dell'esecuzione"
 
 #. module: edi_oca
 #: model_terms:ir.ui.view,arch_db:edi_oca.edi_configuration_view_form
 msgid "EDI Config Do"
-msgstr ""
+msgstr "Esecuzione configurazione EDI"
 
 #. module: edi_oca
 #: model:ir.actions.act_window,name:edi_oca.act_open_edi_configuration_view
 #: model_terms:ir.ui.view,arch_db:edi_oca.edi_configuration_view_form
 msgid "EDI Configuration"
-msgstr ""
+msgstr "Configurazione EDI"
 
 #. module: edi_oca
 #: model_terms:ir.ui.view,arch_db:edi_oca.edi_exchange_record_view_form
@@ -661,7 +672,7 @@ msgstr "Configurazione EDI"
 #. module: edi_oca
 #: model_terms:ir.ui.view,arch_db:edi_oca.edi_configuration_view_search
 msgid "Edi Configuration"
-msgstr ""
+msgstr "Configurazione EDI"
 
 #. module: edi_oca
 #: model:ir.model.fields,field_description:edi_oca.field_edi_exchange_consumer_mixin__edi_has_form_config
@@ -808,7 +819,7 @@ msgstr "Errore scambio"
 #. module: edi_oca
 #: model:ir.model.fields,field_description:edi_oca.field_edi_exchange_record__exchange_error_traceback
 msgid "Exchange error traceback"
-msgstr ""
+msgstr "Traceback errore scambio"
 
 #. module: edi_oca
 #. odoo-python
@@ -1049,7 +1060,7 @@ msgstr ""
 #. module: edi_oca
 #: model:ir.model.fields,field_description:edi_oca.field_edi_exchange_record__has_exchange_file
 msgid "Has Exchange File"
-msgstr ""
+msgstr "Ha file di scambio"
 
 #. module: edi_oca
 #: model:ir.model.fields,field_description:edi_oca.field_edi_exchange_record__has_message
@@ -1117,7 +1128,7 @@ msgstr "Ignora"
 #. module: edi_oca
 #: model_terms:ir.ui.view,arch_db:edi_oca.edi_configuration_view_search
 msgid "Inactive"
-msgstr ""
+msgstr "Non attivo"
 
 #. module: edi_oca
 #: model:ir.ui.menu,name:edi_oca.menu_edi_exchange_record_inbound
@@ -1149,7 +1160,7 @@ msgstr "Canale lavoro"
 #. module: edi_oca
 #: model:ir.model.fields,field_description:edi_oca.field_edi_exchange_type__job_priority
 msgid "Job Priority"
-msgstr ""
+msgstr "Priorità lavoro"
 
 #. module: edi_oca
 #: model_terms:ir.ui.view,arch_db:edi_oca.edi_exchange_record_view_form
@@ -1223,13 +1234,15 @@ msgstr "Regole modello"
 #. module: edi_oca
 #: model:ir.model.fields,field_description:edi_oca.field_edi_configuration__model_name
 msgid "Model tech name"
-msgstr ""
+msgstr "Nome tecnico modello"
 
 #. module: edi_oca
 #: model:ir.model.fields,help:edi_oca.field_edi_configuration__model_id
 #: model:ir.model.fields,help:edi_oca.field_edi_configuration_trigger__model_id
 msgid "Model the conf applies to. Leave blank to apply for all models"
 msgstr ""
+"Modello a cui si applica la configurazione. Lasciare vuoto per applicare a "
+"tutti i modelli"
 
 #. module: edi_oca
 #: model:ir.model.fields,field_description:edi_oca.field_edi_backend__name
@@ -1309,7 +1322,7 @@ msgstr "Scambio padre"
 #: model_terms:ir.ui.view,arch_db:edi_oca.edi_configuration_view_form
 #, python-format
 msgid "Partners"
-msgstr ""
+msgstr "Partner"
 
 #. module: edi_oca
 #: model:ir.ui.menu,name:edi_oca.menu_edi_exchange_record_failed
@@ -1516,12 +1529,12 @@ msgstr "Esempio codice"
 #. module: edi_oca
 #: model:ir.model.fields,field_description:edi_oca.field_edi_configuration__snippet_before_do
 msgid "Snippet Before Do"
-msgstr ""
+msgstr "Esempio codice prima dell'esecuzione"
 
 #. module: edi_oca
 #: model:ir.model.fields,field_description:edi_oca.field_edi_configuration__snippet_do
 msgid "Snippet Do"
-msgstr ""
+msgstr "Esempio codice esecuzione"
 
 #. module: edi_oca
 #: model:ir.model.fields,help:edi_oca.field_edi_exchange_type_rule__enable_snippet
@@ -1540,6 +1553,7 @@ msgstr ""
 #: model:ir.model.fields,help:edi_oca.field_edi_configuration__snippet_before_do
 msgid "Snippet to validate the state and collect records to do"
 msgstr ""
+"Esempio di codice per validare lo stato e raccogliere i record da elaborare"
 
 #. module: edi_oca
 #: model_terms:ir.ui.view,arch_db:edi_oca.edi_exchange_record_view_search
@@ -1581,12 +1595,12 @@ msgstr ""
 #. module: edi_oca
 #: model:ir.model.fields,field_description:edi_oca.field_edi_configuration__trigger_id
 msgid "Trigger"
-msgstr ""
+msgstr "Trigger"
 
 #. module: edi_oca
 #: model:ir.model.fields,help:edi_oca.field_edi_configuration__trigger_id
 msgid "Trigger that activates this configuration"
-msgstr ""
+msgstr "Trigger che attiva questa configurazione"
 
 #. module: edi_oca
 #: model:ir.model.fields,field_description:edi_oca.field_edi_exchange_type_rule__type_id
@@ -1605,6 +1619,8 @@ msgid ""
 "Used to do something specific here.\n"
 "        Receives: operation, edi_action, vals, old_vals."
 msgstr ""
+"Utilizzato per eseguire un'operazione specifica qui.\n"
+"        Riceve: operation, edi_action, vals, old_vals."
 
 #. module: edi_oca
 #: model:ir.model.fields.selection,name:edi_oca.selection__edi_exchange_record__edi_exchange_state__input_pending
