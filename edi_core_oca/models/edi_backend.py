@@ -62,6 +62,12 @@ class EDIBackend(models.Model):
     Usecase: the web service you send the file to processes it on the fly.
     """
     )
+    test_mode = fields.Boolean(
+        help="Use this backend's test configuration instead of live partners."
+    )
+    test_mode_supported = fields.Boolean(
+        related="backend_type_id.test_mode_supported",
+    )
     active = fields.Boolean(default=True)
     company_id = fields.Many2one("res.company", string="Company")
     auto_archive_records_after_days = fields.Integer(
@@ -80,6 +86,29 @@ class EDIBackend(models.Model):
     @property
     def exchange_record_model(self):
         return self.env["edi.exchange.record"]
+
+    def get_conn_parameter(self, name, operation=None):
+        """Return the effective value of a connection parameter.
+
+        In test mode, whitelisted fields resolve to their ``test_``
+        counterpart when set (``test_<name>``), falling back to the
+        live value. Extend ``_edi_test_conn_param_fields`` to whitelist
+        more parameters; ``operation`` optionally identifies the
+        exchange flow for parameters that differ per operation.
+        """
+        self.ensure_one()
+        test_name = "test_" + name
+        if (
+            self.test_mode
+            and name in self._edi_test_conn_param_fields()
+            and test_name in self._fields
+        ):
+            return self[test_name] or self[name]
+        return self[name]
+
+    def _edi_test_conn_param_fields(self):
+        """Connection parameter field names eligible for test_ overrides."""
+        return []
 
     def create_record(self, type_code, values):
         """Create an exchange record for current backend.

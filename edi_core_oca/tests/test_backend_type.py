@@ -29,3 +29,7 @@ class EDIBackendTypeTestCase(EDIBackendCommonTestCase):
         self.assertEqual(
             new_type.code, f"{self.backend.backend_type_id.code}_copy_fixme"
         )
+
+    def test_test_mode_supported_from_type(self):
+        """Backends of a type without the flag report no test-mode support."""
+        self.assertFalse(self.backend.test_mode_supported)

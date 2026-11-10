@@ -168,3 +168,21 @@ Typical use cases:
 - Switching between EDI and email delivery based on partner
   preferences
 
+
+## Test mode
+
+Backends can run against a test environment instead of the live one.
+Support is declared per backend **type**: tick *Test Mode Supported*
+on the `edi.backend.type` record (connectors set it in their type
+data). The backend form then shows a **Test mode** checkbox and a
+warning banner while it is active; for unsupported types the toggle
+stays hidden.
+
+Copied or neutralized databases are safe by default:
+`data/neutralize.sql` enables test mode on every backend, so a restored
+database never talks to live trading partners by accident.
+
+What "test" means is transport-specific. `edi_storage_oca` resolves
+`test_*` directory fields and `test_storage_id` through
+`edi.backend.get_conn_parameter()`; other transports can whitelist
+their own connection parameters via `_edi_test_conn_param_fields()`.

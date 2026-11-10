@@ -6,6 +6,7 @@
             <list>
                 <field name="name" />
                 <field name="code" />
+                <field name="test_mode_supported" />
             </list>
         </field>
     </record>
@@ -17,6 +18,7 @@
                     <group name="config">
                         <field name="name" />
                         <field name="code" />
+                        <field name="test_mode_supported" />
                     </group>
                 </sheet>
             </form>

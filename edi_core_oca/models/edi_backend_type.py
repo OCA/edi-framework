@@ -18,6 +18,9 @@ class EDIBackendType(models.Model):
         required=True,
         inverse="_inverse_code",
     )
+    test_mode_supported = fields.Boolean(
+        help="Whether backends of this type can run in test mode.",
+    )
 
     _uniq_code = models.Constraint("unique(code)", "Backend type code must be unique!")
 
