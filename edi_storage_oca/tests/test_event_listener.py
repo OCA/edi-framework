@@ -3,10 +3,10 @@
 # Copyright 2026 ForgeFlow S.L. (https://www.forgeflow.com)
 # License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl).
 
-import base64
 from unittest import mock
 
 from odoo.orm.model_classes import add_to_registry
+from odoo.tools.binary import BinaryBytes
 
 from odoo.addons.edi_core_oca.tests.common import EDIBackendCommonTestCase
 
@@ -55,7 +55,7 @@ class TestStorageEventListener(EDIBackendCommonTestCase):
         vals = {
             "model": cls.partner._name,
             "res_id": cls.partner.id,
-            "exchange_file": base64.b64encode(b"1234"),
+            "exchange_file": BinaryBytes(b"1234"),
             "storage_id": cls.backend.storage_id.id,
         }
         cls.record = cls.backend.create_record("test_csv_input", vals)
@@ -66,12 +66,15 @@ class TestStorageEventListener(EDIBackendCommonTestCase):
         # Load fake models ->/
         from odoo.addons.edi_core_oca.tests.fake_models import EdiTestExecution
 
-        add_to_registry(cls.registry, EdiTestExecution)
-        cls.registry._setup_models__(cls.env.cr, ["edi.framework.test.execution"])
-        cls.registry.init_models(
-            cls.env.cr, ["edi.framework.test.execution"], {"models_to_check": True}
-        )
-        cls.addClassCleanup(cls.registry.__delitem__, "edi.framework.test.execution")
+        if "edi.framework.test.execution" not in cls.registry:
+            add_to_registry(cls.registry, EdiTestExecution)
+            cls.registry._setup_models__(cls.env.cr, ["edi.framework.test.execution"])
+            cls.registry.init_models(
+                cls.env.cr, ["edi.framework.test.execution"], {"models_to_check": True}
+            )
+            cls.addClassCleanup(
+                cls.registry.__delitem__, "edi.framework.test.execution"
+            )
         cls.ExecutionAbstractModel = cls.env["edi.framework.test.execution"]
         cls.model = cls.env["ir.model"]._get("edi.framework.test.execution")
         cls.exchange_type_in.process_model_id = cls.model

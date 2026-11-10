@@ -18,11 +18,11 @@ _logger = logging.getLogger(__name__)
 
 class EdiOcaStorageHandler(models.AbstractModel):
     _name = "edi.oca.storage.handler"
-    _inherit = [
+    _inherit = (
         "edi.oca.handler.send",
         "edi.oca.handler.receive",
         "edi.oca.handler.check",
-    ]
+    )
     _description = "Storage Handler for EDI"
 
     def send(self, exchange_record):
@@ -30,9 +30,14 @@ class EdiOcaStorageHandler(models.AbstractModel):
         if not result:
             # all good here
             return True
-        filedata = exchange_record.exchange_file
+        filedata = exchange_record._get_file_content(as_bytes=True) or b""
         path = self._get_remote_file_path(exchange_record, "pending")
-        utils.add_file(exchange_record.backend_id.storage_id, path.as_posix(), filedata)
+        utils.add_file(
+            exchange_record.backend_id.storage_id,
+            path.as_posix(),
+            filedata,
+            binary=True,
+        )
 
     def receive(self, exchange_record):
         return self._get_remote_file(
@@ -138,7 +143,7 @@ class EdiOcaStorageHandler(models.AbstractModel):
                 "%s done",
                 exchange_record.identifier,
             )
-            if not exchange_record.edi_exchange_state == "output_sent_and_processed":
+            if exchange_record.edi_exchange_state != "output_sent_and_processed":
                 exchange_record.edi_exchange_state = "output_sent_and_processed"
                 exchange_record._notify_done()
             return False

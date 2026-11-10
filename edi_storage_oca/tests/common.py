@@ -1,8 +1,9 @@
 # Copyright 2020 ACSONE SA/NV (<http://acsone.eu>)
 # License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl.html).
-import base64
 import functools
 from unittest import mock
+
+from odoo.tools.binary import BinaryBytes
 
 from odoo.addons.edi_core_oca.tests.common import EDIBackendCommonTestCase
 
@@ -42,7 +43,7 @@ class TestEDIStorageBase(EDIBackendCommonTestCase):
     @classmethod
     def _setup_records(cls):
         res = super()._setup_records()
-        cls.filedata = base64.b64encode(b"This is a simple file")
+        cls.filedata = BinaryBytes(b"This is a simple file")
         vals = {
             "model": cls.partner._name,
             "res_id": cls.partner.id,
@@ -118,7 +119,7 @@ class TestEDIStorageBase(EDIBackendCommonTestCase):
     def _mocked_backend_list_files(self, mocked_paths, storage, path, **kwargs):
         files = []
         path_length = len(path)
-        for p in mocked_paths.keys():
+        for p in mocked_paths:
             if path in p and path != p:
                 files.append(p[path_length:])
         return files
@@ -178,11 +179,15 @@ class TestEDIStorageBase(EDIBackendCommonTestCase):
                 self.backend.exchange_send(record)
 
     def _test_run_cron(self, mocked_paths, skip_sent=True):
-        with self._mock_fs_storage_add():
-            with self._mock_fs_storage_get(mocked_paths):
-                self.backend._cron_check_output_exchange_sync(skip_sent=skip_sent)
+        with (
+            self._mock_fs_storage_add(),
+            self._mock_fs_storage_get(mocked_paths),
+        ):
+            self.backend._cron_check_output_exchange_sync(skip_sent=skip_sent)
 
     def _test_run_cron_pending_input(self, mocked_paths):
-        with self._mock_fs_storage_add():
-            with self._mock_fs_storage_list_files(mocked_paths):
-                self.backend._storage_cron_check_pending_input()
+        with (
+            self._mock_fs_storage_add(),
+            self._mock_fs_storage_list_files(mocked_paths),
+        ):
+            self.backend._storage_cron_check_pending_input()

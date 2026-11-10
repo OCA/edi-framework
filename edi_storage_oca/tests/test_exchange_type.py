@@ -61,7 +61,7 @@ class EDIExchangeTypeTestCase(EDIBackendCommonTestCase):
 
         # Define config param
         prefix = "prefix/path/by/config/param"
-        self.env["ir.config_parameter"].sudo().set_param(
+        self.env["ir.config_parameter"].sudo().set_str(
             "prefix_path_config_param", prefix
         )
         self._do_test_storage_fullpath(prefix=prefix)

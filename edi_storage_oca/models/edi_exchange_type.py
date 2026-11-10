@@ -47,7 +47,7 @@ class EDIExchangeType(models.Model):
         path_config_param = storage_settings.get("path_config_param")
         if path_config_param:
             icp = self.env["ir.config_parameter"].sudo()
-            path = icp.get_param(path_config_param)
+            path = icp.get_str(path_config_param)
             if path:
                 return PurePath(path)
 
