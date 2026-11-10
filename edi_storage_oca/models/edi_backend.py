@@ -1,0 +1,200 @@
+# Copyright 2020 ACSONE SA
+# @author Simone Orsi <simahawk@gmail.com>
+# Copyright 2021 ForgeFlow S.L. (https://www.forgeflow.com)
+# License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl).
+
+import logging
+import os
+
+from odoo import fields, models
+
+from .. import utils
+
+_logger = logging.getLogger(__name__)
+
+
+class EDIBackend(models.Model):
+    _inherit = "edi.backend"
+
+    storage_id = fields.Many2one(
+        string="FS Storage",
+        comodel_name="fs.storage",
+        help="Storage for in-out files",
+        ondelete="restrict",
+    )
+    """
+    We assume the exchanges happen it 2 ways (input, output)
+    and we have a hierarchy of directory like:
+
+        from_A_to_B
+            |- pending
+            |- done
+            |- error
+        from_B_to_A
+            |- pending
+            |- done
+            |- error
+
+    where A and B are the partners exchanging data and they are in turn
+    sender and receiver and vice versa.
+    """
+    # TODO: these paths should probably be by type instead
+    # Here we can maybe set a common root folder for this exchange.
+    input_dir_pending = fields.Char(
+        "Input pending directory", help="Path to folder for pending operations"
+    )
+    input_dir_done = fields.Char(
+        "Input done directory", help="Path to folder for doneful operations"
+    )
+    input_dir_error = fields.Char(
+        "Input error directory", help="Path to folder for error operations"
+    )
+    output_dir_pending = fields.Char(
+        "Output pending directory", help="Path to folder for pending operations"
+    )
+    output_dir_done = fields.Char(
+        "Output done directory", help="Path to folder for doneful operations"
+    )
+    output_dir_error = fields.Char(
+        "Output error directory", help="Path to folder for error operations"
+    )
+
+    def _storage_cron_check_pending_input(self, **kw):
+        for backend in self:
+            backend._storage_check_pending_input(**kw)
+
+    def _storage_check_pending_input(self, **kw):
+        """Create new exchange records if new files found.
+
+        Collect input exchange types and for each of them,
+        check by pattern if the a new exchange record is required.
+        """
+        self.ensure_one()
+        if not self.storage_id or not self.input_dir_pending:
+            _logger.info(
+                "%s ignored: no storage and/or input directory specified.", self.name
+            )
+            return False
+
+        exchange_types = self.env["edi.exchange.type"].search(
+            self._storage_exchange_type_pending_input_domain()
+        )
+        for exchange_type in exchange_types:
+            # NOTE: this call might keep hanging the cron
+            # if the remote storage is slow (eg: too many files)
+            # We should probably run this code in a separate job per exchange type.
+            file_names = self._storage_get_input_filenames(exchange_type)
+            _logger.info(
+                "Processing exchange type '%s': found %s files to process",
+                exchange_type.display_name,
+                len(file_names),
+            )
+            for file_name in file_names:
+                self._storage_create_record_if_missing(exchange_type, file_name)
+        return True
+
+    def _storage_exchange_type_pending_input_domain(self):
+        """Domain for retrieving input exchange types."""
+        return [
+            ("backend_type_id", "=", self.backend_type_id.id),
+            ("direction", "=", "input"),
+            "|",
+            ("backend_id", "=", False),
+            ("backend_id", "=", self.id),
+        ]
+
+    def _storage_create_record_if_missing(self, exchange_type, remote_file_name):
+        """Create a new exchange record for given type and file name if missing."""
+        file_name = os.path.basename(remote_file_name)
+        extra_domain = [("exchange_filename", "=", file_name)]
+        existing = self._find_existing_exchange_records(
+            exchange_type, extra_domain=extra_domain, count_only=True
+        )
+        if existing:
+            return
+        record = self.create_record(
+            exchange_type.code,
+            self._storage_new_exchange_record_vals(file_name),
+        )
+        _logger.debug("%s: new exchange record generated.", self.name)
+        return record.identifier
+
+    def _storage_get_input_filenames(self, exchange_type):
+        full_input_dir_pending = exchange_type._storage_fullpath(
+            self.input_dir_pending
+        ).as_posix()
+        if not exchange_type.exchange_filename_pattern:
+            # If there is not pattern, return everything
+            filenames = [
+                x
+                for x in utils.list_files(self.storage_id, full_input_dir_pending)
+                if x.strip("/")
+            ]
+            return filenames
+
+        bits = [exchange_type.exchange_filename_pattern]
+        if exchange_type.exchange_file_ext:
+            bits.append(r"\." + exchange_type.exchange_file_ext)
+        pattern = "".join(bits)
+        return [
+            x
+            for x in utils.find_files(self.storage_id, pattern, full_input_dir_pending)
+            if x.strip("/")
+        ]
+
+    def _storage_new_exchange_record_vals(self, file_name):
+        return {
+            "exchange_filename": file_name,
+            "edi_exchange_state": "input_pending",
+            "storage_id": self.storage_id.id,
+        }
+
+    def _storage_on_edi_exchange_done(self, exchange_record):
+        """
+        Move an input file from the pending dir to the done dir.
+
+        Intended to be invoked from a global 'edi.configuration' snippet
+        bound to the 'on_edi_exchange_done' trigger.
+        """
+        self.ensure_one()
+        storage = exchange_record.storage_id
+        if exchange_record.direction != "input" or not storage:
+            return False
+        if not self.input_dir_done:
+            return False
+        file_name = exchange_record.exchange_filename
+        pending_dir = exchange_record.type_id._storage_fullpath(
+            self.input_dir_pending
+        ).as_posix()
+        done_dir = exchange_record.type_id._storage_fullpath(
+            self.input_dir_done
+        ).as_posix()
+        error_dir = exchange_record.type_id._storage_fullpath(
+            self.input_dir_error
+        ).as_posix()
+        res = utils.move_file(storage, pending_dir, done_dir, file_name)
+        if not res and self.input_dir_error:
+            res = utils.move_file(storage, error_dir, done_dir, file_name)
+        return res
+
+    def _storage_on_edi_exchange_error(self, exchange_record):
+        """
+        Move an input file from the pending dir to the error dir.
+
+        Intended to be invoked from a global 'edi.configuration' snippet
+        bound to the 'on_edi_exchange_error' trigger.
+        """
+        self.ensure_one()
+        storage = exchange_record.storage_id
+        if exchange_record.direction != "input" or not storage:
+            return False
+        if not self.input_dir_error:
+            return False
+        file_name = exchange_record.exchange_filename
+        pending_dir = exchange_record.type_id._storage_fullpath(
+            self.input_dir_pending
+        ).as_posix()
+        error_dir = exchange_record.type_id._storage_fullpath(
+            self.input_dir_error
+        ).as_posix()
+        return utils.move_file(storage, pending_dir, error_dir, file_name)

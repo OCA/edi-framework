@@ -1,0 +1,21 @@
+# Copyright 2020 ACSONE
+# @author: Simone Orsi <simahawk@gmail.com>
+# License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl).
+
+{
+    "name": "EDI Storage backend support",
+    "summary": "Base module to allow exchanging files via storage backend (eg: SFTP).",
+    "version": "20.0.1.0.0",
+    "development_status": "Beta",
+    "license": "LGPL-3",
+    "website": "https://github.com/OCA/edi-framework",
+    "author": "ACSONE,Odoo Community Association (OCA)",
+    "depends": ["edi_core_oca", "fs_storage"],
+    "data": [
+        "data/cron.xml",
+        "data/edi_configuration.xml",
+        "security/ir.access.csv",
+        "views/edi_backend_views.xml",
+    ],
+    "installable": True,
+}
