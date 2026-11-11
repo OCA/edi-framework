@@ -162,6 +162,8 @@ class EDIBackendTestValidateCase(EDIBackendCommonTestCase):
             [
                 {
                     "edi_exchange_state": "output_pending",
+                    "exchange_error": False,
+                    "exchange_error_traceback": False,
                 }
             ],
         )
