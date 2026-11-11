@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo noupdate="1">
+    <record id="max_size_kb_parameter" model="ir.config_parameter">
+        <field name="key">edi_exchange_file_db_oca.max_size_kb</field>
+        <field name="value">0</field>
+    </record>
+</odoo>
