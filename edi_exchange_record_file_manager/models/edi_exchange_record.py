@@ -90,7 +90,9 @@ class EDIExchangeRecord(models.Model):
         - the record contains a file
         - the record file can be updated (not "frozen")
         """
-        return bool(self.exchange_file) and not self.exchange_file_frozen
+        return bool(self.with_context(bin_size=True).exchange_file) and not (
+            self.exchange_file_frozen
+        )
 
     @api.depends("exchange_file_frozen", "edi_exchange_state")
     @api.depends_context("uid")  # Visibility depends on user access rights
