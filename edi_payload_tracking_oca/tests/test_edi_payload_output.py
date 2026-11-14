@@ -77,3 +77,22 @@ class TestEDIPayloadOutput(PayloadTrackingTestCase):
         record = self.record.with_user(user)
         record.edi_payload_set_output({"name": "by user"})
         self.assertEqual(record.edi_payload_get_output(), {"name": "by user"})
+
+    def test_has_changes_nothing_stored(self):
+        """A record never exported has changes, whatever the payload."""
+        self.assertTrue(self.record._edi_payload_has_changes({"name": "x"}))
+        self.assertTrue(self.record._edi_payload_has_changes({}))
+
+    def test_has_changes_same_values(self):
+        """A payload whose keys all hold the stored values has no changes."""
+        self.record.edi_payload_set_output({"name": "x", "qty": 1, "dim": {"l": 2}})
+        self.assertFalse(self.record._edi_payload_has_changes({"qty": 1}))
+        self.assertFalse(
+            self.record._edi_payload_has_changes({"name": "x", "dim": {"l": 2}})
+        )
+
+    def test_has_changes_new_value_or_key(self):
+        """A key with a new value, or not stored yet, is a change."""
+        self.record.edi_payload_set_output({"name": "x", "qty": 1})
+        self.assertTrue(self.record._edi_payload_has_changes({"qty": 2}))
+        self.assertTrue(self.record._edi_payload_has_changes({"lot": "A"}))

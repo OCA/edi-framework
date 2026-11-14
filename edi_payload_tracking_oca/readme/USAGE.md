@@ -10,7 +10,11 @@ Then, in the handlers of the exchange:
 
 - `record.edi_payload_get_output()` returns the payload stored for the record,
   or an empty dict if nothing was exported yet;
-- `record.edi_payload_set_output(payload)` replaces the stored payload.
+- `record.edi_payload_set_output(payload)` replaces the stored payload;
+- `record._edi_payload_has_changes(payload)` tells whether `payload` holds
+  anything not exported yet: true when nothing was exported, or when a key holds
+  a value different from the stored one. Override it to refine the comparison
+  for a model.
 
 When two transactions export the same record for the first time
 concurrently, the second one fails on the unique constraint. With
