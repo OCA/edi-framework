@@ -12,8 +12,36 @@ Each **Exchange Type** gains a *Queue* tab with optional settings:
 |---|---|
 | **Job channel** | Route jobs to a specific channel (e.g. `root.edi.high`). |
 | **Job priority** | Integer priority passed to the queue job (lower = higher priority). |
+| **Job description pattern** | Description of the queue jobs of the exchange records (see below). |
 | **Enable ETA Scheduling** | Toggle to activate daily job accumulation (see below). |
 | **Execution time** | Hour, minute, and timezone at which accumulated jobs are released. Visible only when ETA Scheduling is enabled. |
+
+## Job description
+
+By default, a queue job is described by the docstring of the delayed method.
+Set a **Job description pattern** on the exchange type to give the jobs of its
+exchange records a meaningful description, e.g.:
+
+    Process WMS inventory report exchange {identifier}
+
+The pattern uses Python `str.format` syntax with named placeholders only:
+
+- `{identifier}`: identifier of the exchange record;
+- `{external_identifier}`: external identifier of the exchange record;
+- `{type}`: name of the exchange type;
+- `{type_code}`: code of the exchange type;
+- `{backend}`: name of the backend;
+- `{record}`: name of the related record.
+
+Missing values are rendered as empty strings. Attribute or index access
+(e.g. `{identifier.__class__}`), positional fields and unknown placeholders are
+rejected when saving the exchange type.
+
+The description applies to all the jobs of the exchange record (generate, send,
+receive, process). A description returned by an override of the
+`action_exchange_<action>_job_options` methods takes precedence. Developers can
+add placeholders by extending `_job_description_placeholders` and
+`_job_description_values` on `edi.exchange.record`.
 
 ## Accumulating jobs until a fixed daily time
 
