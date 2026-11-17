@@ -336,6 +336,18 @@ class TestEDIExchangeRecordSecurity(EDIBackendCommonTestCase):
         exc_recs_model = self.env["edi.exchange.record"].with_user(self.user)
         self.assertEqual(exc_recs_model.search([("id", "in", exc_recs.ids)]), exc_recs)
 
+    def test_search_model_no_res_id(self):
+        # Exchange record never linked to a record (eg: processing failed
+        # before the record was created): visible with read access on the model,
+        # it is not handled as a deleted record
+        exchange_record = self.create_record()
+        exchange_record.res_id = 0
+        exc_rec_model = self.env["edi.exchange.record"].with_user(self.user)
+        domain = [("id", "=", exchange_record.id)]
+        self.assertEqual(0, exc_rec_model.search_count(domain))
+        self.user.write({"groups_id": [(4, self.group.id)]})
+        self.assertEqual(1, exc_rec_model.search_count(domain))
+
     def test_rule_search_pages(self):
         no_rule_record = self.env["edi.exchange.consumer.test"].create(
             {"name": "no_rule"}
