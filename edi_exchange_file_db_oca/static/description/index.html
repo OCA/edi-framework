@@ -1,0 +1,563 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="Docutils: https://docutils.sourceforge.io/" />
+<title>EDI Exchange File in Database</title>
+<style type="text/css">
+
+/*
+:Author: David Goodger (goodger@python.org)
+:Id: $Id: html4css1.css 9511 2024-01-13 09:50:07Z milde $
+:Copyright: This stylesheet has been placed in the public domain.
+
+Default cascading style sheet for the HTML output of Docutils.
+Despite the name, some widely supported CSS2 features are used.
+
+See https://docutils.sourceforge.io/docs/howto/html-stylesheets.html for how to
+customize this style sheet.
+*/
+
+/* used to remove borders from tables and images */
+.borderless, table.borderless td, table.borderless th {
+  border: 0 }
+
+table.borderless td, table.borderless th {
+  /* Override padding for "table.docutils td" with "! important".
+     The right padding separates the table cells. */
+  padding: 0 0.5em 0 0 ! important }
+
+.first {
+  /* Override more specific margin styles with "! important". */
+  margin-top: 0 ! important }
+
+.last, .with-subtitle {
+  margin-bottom: 0 ! important }
+
+.hidden {
+  display: none }
+
+.subscript {
+  vertical-align: sub;
+  font-size: smaller }
+
+.superscript {
+  vertical-align: super;
+  font-size: smaller }
+
+a.toc-backref {
+  text-decoration: none ;
+  color: black }
+
+blockquote.epigraph {
+  margin: 2em 5em ; }
+
+dl.docutils dd {
+  margin-bottom: 0.5em }
+
+object[type="image/svg+xml"], object[type="application/x-shockwave-flash"] {
+  overflow: hidden;
+}
+
+/* Uncomment (and remove this text!) to get bold-faced definition list terms
+dl.docutils dt {
+  font-weight: bold }
+*/
+
+div.abstract {
+  margin: 2em 5em }
+
+div.abstract p.topic-title {
+  font-weight: bold ;
+  text-align: center }
+
+div.admonition, div.attention, div.caution, div.danger, div.error,
+div.hint, div.important, div.note, div.tip, div.warning {
+  margin: 2em ;
+  border: medium outset ;
+  padding: 1em }
+
+div.admonition p.admonition-title, div.hint p.admonition-title,
+div.important p.admonition-title, div.note p.admonition-title,
+div.tip p.admonition-title {
+  font-weight: bold ;
+  font-family: sans-serif }
+
+div.attention p.admonition-title, div.caution p.admonition-title,
+div.danger p.admonition-title, div.error p.admonition-title,
+div.warning p.admonition-title, .code .error {
+  color: red ;
+  font-weight: bold ;
+  font-family: sans-serif }
+
+/* Uncomment (and remove this text!) to get reduced vertical space in
+   compound paragraphs.
+div.compound .compound-first, div.compound .compound-middle {
+  margin-bottom: 0.5em }
+
+div.compound .compound-last, div.compound .compound-middle {
+  margin-top: 0.5em }
+*/
+
+div.dedication {
+  margin: 2em 5em ;
+  text-align: center ;
+  font-style: italic }
+
+div.dedication p.topic-title {
+  font-weight: bold ;
+  font-style: normal }
+
+div.figure {
+  margin-left: 2em ;
+  margin-right: 2em }
+
+div.footer, div.header {
+  clear: both;
+  font-size: smaller }
+
+div.line-block {
+  display: block ;
+  margin-top: 1em ;
+  margin-bottom: 1em }
+
+div.line-block div.line-block {
+  margin-top: 0 ;
+  margin-bottom: 0 ;
+  margin-left: 1.5em }
+
+div.sidebar {
+  margin: 0 0 0.5em 1em ;
+  border: medium outset ;
+  padding: 1em ;
+  background-color: #ffffee ;
+  width: 40% ;
+  float: right ;
+  clear: right }
+
+div.sidebar p.rubric {
+  font-family: sans-serif ;
+  font-size: medium }
+
+div.system-messages {
+  margin: 5em }
+
+div.system-messages h1 {
+  color: red }
+
+div.system-message {
+  border: medium outset ;
+  padding: 1em }
+
+div.system-message p.system-message-title {
+  color: red ;
+  font-weight: bold }
+
+div.topic {
+  margin: 2em }
+
+h1.section-subtitle, h2.section-subtitle, h3.section-subtitle,
+h4.section-subtitle, h5.section-subtitle, h6.section-subtitle {
+  margin-top: 0.4em }
+
+h1.title {
+  text-align: center }
+
+h2.subtitle {
+  text-align: center }
+
+hr.docutils {
+  width: 75% }
+
+img.align-left, .figure.align-left, object.align-left, table.align-left {
+  clear: left ;
+  float: left ;
+  margin-right: 1em }
+
+img.align-right, .figure.align-right, object.align-right, table.align-right {
+  clear: right ;
+  float: right ;
+  margin-left: 1em }
+
+img.align-center, .figure.align-center, object.align-center {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+table.align-center {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.align-left {
+  text-align: left }
+
+.align-center {
+  clear: both ;
+  text-align: center }
+
+.align-right {
+  text-align: right }
+
+/* reset inner alignment in figures */
+div.align-right {
+  text-align: inherit }
+
+/* div.align-center * { */
+/*   text-align: left } */
+
+.align-top    {
+  vertical-align: top }
+
+.align-middle {
+  vertical-align: middle }
+
+.align-bottom {
+  vertical-align: bottom }
+
+ol.simple, ul.simple {
+  margin-bottom: 1em }
+
+ol.arabic {
+  list-style: decimal }
+
+ol.loweralpha {
+  list-style: lower-alpha }
+
+ol.upperalpha {
+  list-style: upper-alpha }
+
+ol.lowerroman {
+  list-style: lower-roman }
+
+ol.upperroman {
+  list-style: upper-roman }
+
+p.attribution {
+  text-align: right ;
+  margin-left: 50% }
+
+p.caption {
+  font-style: italic }
+
+p.credits {
+  font-style: italic ;
+  font-size: smaller }
+
+p.label {
+  white-space: nowrap }
+
+p.rubric {
+  font-weight: bold ;
+  font-size: larger ;
+  color: maroon ;
+  text-align: center }
+
+p.sidebar-title {
+  font-family: sans-serif ;
+  font-weight: bold ;
+  font-size: larger }
+
+p.sidebar-subtitle {
+  font-family: sans-serif ;
+  font-weight: bold }
+
+p.topic-title {
+  font-weight: bold }
+
+pre.address {
+  margin-bottom: 0 ;
+  margin-top: 0 ;
+  font: inherit }
+
+pre.literal-block, pre.doctest-block, pre.math, pre.code {
+  margin-left: 2em ;
+  margin-right: 2em }
+
+pre.code .ln { color: gray; } /* line numbers */
+pre.code, code { background-color: #eeeeee }
+pre.code .comment, code .comment { color: #5C6576 }
+pre.code .keyword, code .keyword { color: #3B0D06; font-weight: bold }
+pre.code .literal.string, code .literal.string { color: #0C5404 }
+pre.code .name.builtin, code .name.builtin { color: #352B84 }
+pre.code .deleted, code .deleted { background-color: #DEB0A1}
+pre.code .inserted, code .inserted { background-color: #A3D289}
+
+span.classifier {
+  font-family: sans-serif ;
+  font-style: oblique }
+
+span.classifier-delimiter {
+  font-family: sans-serif ;
+  font-weight: bold }
+
+span.interpreted {
+  font-family: sans-serif }
+
+span.option {
+  white-space: nowrap }
+
+span.pre {
+  white-space: pre }
+
+span.problematic, pre.problematic {
+  color: red }
+
+span.section-subtitle {
+  /* font-size relative to parent (h1..h6 element) */
+  font-size: 80% }
+
+table.citation {
+  border-left: solid 1px gray;
+  margin-left: 1px }
+
+table.docinfo {
+  margin: 2em 4em }
+
+table.docutils {
+  margin-top: 0.5em ;
+  margin-bottom: 0.5em }
+
+table.footnote {
+  border-left: solid 1px black;
+  margin-left: 1px }
+
+table.docutils td, table.docutils th,
+table.docinfo td, table.docinfo th {
+  padding-left: 0.5em ;
+  padding-right: 0.5em ;
+  vertical-align: top }
+
+table.docutils th.field-name, table.docinfo th.docinfo-name {
+  font-weight: bold ;
+  text-align: left ;
+  white-space: nowrap ;
+  padding-left: 0 }
+
+/* "booktabs" style (no vertical lines) */
+table.docutils.booktabs {
+  border: 0px;
+  border-top: 2px solid;
+  border-bottom: 2px solid;
+  border-collapse: collapse;
+}
+table.docutils.booktabs * {
+  border: 0px;
+}
+table.docutils.booktabs th {
+  border-bottom: thin solid;
+  text-align: left;
+}
+
+h1 tt.docutils, h2 tt.docutils, h3 tt.docutils,
+h4 tt.docutils, h5 tt.docutils, h6 tt.docutils {
+  font-size: 100% }
+
+ul.auto-toc {
+  list-style-type: none }
+
+</style>
+</head>
+<body>
+<div class="document" id="edi-exchange-file-in-database">
+<h1 class="title">EDI Exchange File in Database</h1>
+
+<!-- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!! This file is generated by oca-gen-addon-readme !!
+!! changes will be overwritten.                   !!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!! source digest: sha256:8e72ea86ccfb18fc3d93d3f584a29464a8538c75b2f56e0ed471067e3fd41571
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! -->
+<p><a class="reference external image-reference" href="https://odoo-community.org/page/development-status"><img alt="Beta" src="https://img.shields.io/badge/maturity-Beta-yellow.png" /></a> <a class="reference external image-reference" href="http://www.gnu.org/licenses/lgpl-3.0-standalone.html"><img alt="License: LGPL-3" src="https://img.shields.io/badge/licence-LGPL--3-blue.png" /></a> <a class="reference external image-reference" href="https://github.com/OCA/edi-framework/tree/17.0/edi_exchange_file_db_oca"><img alt="OCA/edi-framework" src="https://img.shields.io/badge/github-OCA%2Fedi--framework-lightgray.png?logo=github" /></a> <a class="reference external image-reference" href="https://translation.odoo-community.org/projects/edi-framework-17-0/edi-framework-17-0-edi_exchange_file_db_oca"><img alt="Translate me on Weblate" src="https://img.shields.io/badge/weblate-Translate%20me-F47D42.png" /></a> <a class="reference external image-reference" href="https://runboat.odoo-community.org/builds?repo=OCA/edi-framework&amp;target_branch=17.0"><img alt="Try me on Runboat" src="https://img.shields.io/badge/runboat-Try%20me-875A7B.png" /></a></p>
+<p>This module keeps the content of EDI exchange files in the database
+instead of the filestore, so a database restored without its filestore
+still holds every exchange payload. The <strong>Exchange file</strong> of an exchange
+record is still an attachment: only the place where that attachment
+keeps its content changes, from a filestore file to the database, so
+everything that reads, writes or searches exchange files works as
+before. It is enabled for every exchange type on installation, can be
+disabled per type, and a size limit keeps big files in the filestore.
+The exchange record form also shows the content of text files in a
+<strong>File Content</strong> tab, with JSON indented.</p>
+<p><strong>Table of contents</strong></p>
+<div class="contents local topic" id="contents">
+<ul class="simple">
+<li><a class="reference internal" href="#use-cases-context" id="toc-entry-1">Use Cases / Context</a></li>
+<li><a class="reference internal" href="#configuration" id="toc-entry-2">Configuration</a></li>
+<li><a class="reference internal" href="#usage" id="toc-entry-3">Usage</a></li>
+<li><a class="reference internal" href="#development" id="toc-entry-4">Development</a></li>
+<li><a class="reference internal" href="#known-issues-roadmap" id="toc-entry-5">Known issues / Roadmap</a></li>
+<li><a class="reference internal" href="#bug-tracker" id="toc-entry-6">Bug Tracker</a></li>
+<li><a class="reference internal" href="#credits" id="toc-entry-7">Credits</a><ul>
+<li><a class="reference internal" href="#authors" id="toc-entry-8">Authors</a></li>
+<li><a class="reference internal" href="#contributors" id="toc-entry-9">Contributors</a></li>
+<li><a class="reference internal" href="#maintainers" id="toc-entry-10">Maintainers</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="section" id="use-cases-context">
+<h1><a class="toc-backref" href="#toc-entry-1">Use Cases / Context</a></h1>
+<p>Databases are often restored without their filestore for development,
+debugging or testing: on a busy instance it can weigh far more than the
+database, and copying it makes every restore slower and heavier. Such a
+database keeps every exchange record but none of their files, so an
+exchange can no longer be inspected, reprocessed or replayed to
+reproduce an issue. EDI payloads are usually small and a negligible
+share of the filestore, so keeping their content in the database costs
+little.</p>
+</div>
+<div class="section" id="configuration">
+<h1><a class="toc-backref" href="#toc-entry-2">Configuration</a></h1>
+<p>No configuration is required: on installation every exchange type stores
+the content of its files in the database.</p>
+<p>To change it for one exchange type:</p>
+<ol class="arabic simple">
+<li>Go to <em>EDI &gt; Config &gt; Exchange types</em> and open the type.</li>
+<li>Untick <strong>Store File Content in Database</strong> to keep the content of its
+files in the filestore, or set <strong>Max File Content Size in Database
+(KB)</strong> so that bigger files keep their content in the filestore. 0
+uses the global limit.</li>
+</ol>
+<p>To set the global limit, go to <em>Settings &gt; Technical &gt; Parameters &gt;
+System Parameters</em> (developer mode) and edit
+<tt class="docutils literal">edi_exchange_file_db_oca.max_size_kb</tt>, in KB. The module creates it
+with <tt class="docutils literal">0</tt>, which means no limit.</p>
+<p>Both settings apply when a file is written: the files already stored
+keep their content where it is (see <strong>Usage</strong>).</p>
+</div>
+<div class="section" id="usage">
+<h1><a class="toc-backref" href="#toc-entry-3">Usage</a></h1>
+<p>Exchange files are handled as before: the module only changes where
+their content is kept.</p>
+<p>To read the content of an exchange file:</p>
+<ol class="arabic simple">
+<li>Go to <em>EDI &gt; Exchanges</em> and open an exchange record.</li>
+<li>Open the <strong>File Content</strong> tab. JSON is indented, and JSON and XML are
+highlighted; other text, such as CSV or EDIFACT, is shown as it is.
+Text that does not match the encoding of the exchange type is decoded
+with the encoding detected from its content.</li>
+</ol>
+<p>Binary files, such as PDF, images or spreadsheets, and files above 1 MB
+are not displayed: the tab shows their type, or their size limit, and
+they are downloaded from the <strong>Exchange file</strong> field.</p>
+<p>On installation, the content of the existing exchange files is moved
+from the filestore to the database, following the type settings. Files
+missing from the filestore, or whose content does not match their
+checksum, are left untouched. The server log reports how many files were
+moved and skipped. The moved filestore files are deleted by the regular
+filestore garbage collection.</p>
+<p>To move the existing files again later, for instance after enabling a
+type or raising its limit, run from an Odoo shell:</p>
+<pre class="code python literal-block">
+<span class="kn">from</span><span class="w"> </span><span class="nn">odoo.addons.edi_exchange_file_db_oca.hooks</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span><span class="w">
+</span>    <span class="n">move_exchange_file_contents_to_db</span><span class="p">,</span><span class="w">
+</span><span class="p">)</span><span class="w">
+
+</span><span class="n">move_exchange_file_contents_to_db</span><span class="p">(</span><span class="n">env</span><span class="p">)</span><span class="w">
+</span><span class="n">env</span><span class="o">.</span><span class="n">cr</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+</pre>
+<p>Uninstalling the module keeps every file readable, since Odoo reads the
+content of an attachment from the database or from the filestore,
+wherever it is; new files go to the filestore again. To move the stored
+content back to the filestore as well, run
+<tt class="docutils literal"><span class="pre">env[&quot;ir.attachment&quot;].force_storage()</span></tt> with the system parameter
+<tt class="docutils literal">ir_attachment.location</tt> set to <tt class="docutils literal">file</tt>.</p>
+</div>
+<div class="section" id="development">
+<h1><a class="toc-backref" href="#toc-entry-4">Development</a></h1>
+<p>Odoo decides where an attachment keeps its content in
+<tt class="docutils literal">ir.attachment._get_datas_related_values</tt>, from <tt class="docutils literal">_storage()</tt>, which
+knows neither the attachment’s model nor its field. The decision is
+therefore taken by the exchange record: <tt class="docutils literal">edi.exchange.record</tt> writes
+its <strong>Exchange file</strong> under the <tt class="docutils literal">edi_exchange_file_content_in_db</tt>
+context key, for which <tt class="docutils literal">ir.attachment._storage()</tt> returns <tt class="docutils literal">db</tt>.
+Records are grouped by decision and each group is written with the key
+set to <tt class="docutils literal">True</tt> or <tt class="docutils literal">False</tt>, so a value inherited from the caller never
+applies.</p>
+<p>The key is scoped to the writing of the file only:</p>
+<ul class="simple">
+<li>on creation, <tt class="docutils literal">_create</tt> is overridden rather than <tt class="docutils literal">create</tt>, so the
+key covers the insertion of the rows and of their attachments, but
+not the quick execution of the exchange that <tt class="docutils literal">edi_oca</tt> runs right
+after;</li>
+<li>on update, <tt class="docutils literal">write</tt> writes the other values first, then the file
+alone.</li>
+</ul>
+<p><tt class="docutils literal">edi.exchange.type._should_store_file_content_in_db(size)</tt> is the
+single decision point: it combines the type’s toggle with its size limit
+(the type’s own one, otherwise the global system parameter).</p>
+<p>Content written to the attachment without going through the field, such
+as <tt class="docutils literal">ir.attachment.force_storage()</tt>, follows the configured storage
+instead.</p>
+<p><tt class="docutils literal">hooks.move_exchange_file_contents_to_db</tt> moves the existing content.
+It selects the candidates in SQL, by batches, and asks their exchange
+type. It reads each file, checks it against the stored checksum, and
+writes the content with a batched SQL update: the checksum, size,
+mimetype and index of the attachment stay valid since the content does
+not change, and going through the ORM would recompute them for every
+attachment.</p>
+<p>The <strong>File Content</strong> tab decides between text and binary before
+decoding: a file is binary when <tt class="docutils literal">guess_mimetype</tt> recognises a binary
+signature (PDF, images, Office documents, archives), or when its first
+KB holds a NUL byte (except for UTF-16 and UTF-32 types). Decoding
+success alone is not a reliable signal, since a type in <tt class="docutils literal"><span class="pre">latin-1</span></tt>, or
+with the <tt class="docutils literal">replace</tt> error handler, decodes any byte sequence. The
+display limit is <tt class="docutils literal">_get_exchange_file_display_max_size()</tt>.</p>
+</div>
+<div class="section" id="known-issues-roadmap">
+<h1><a class="toc-backref" href="#toc-entry-5">Known issues / Roadmap</a></h1>
+<ul class="simple">
+<li>A default on the backend, to configure every type of a backend at
+once.</li>
+<li>From Odoo 19.0, writing an attachment with the database storage no
+longer marks its previous filestore file for garbage collection: the
+forward port must mark it itself.</li>
+<li>A preview of PDF and image exchange files in the exchange record
+form.</li>
+</ul>
+</div>
+<div class="section" id="bug-tracker">
+<h1><a class="toc-backref" href="#toc-entry-6">Bug Tracker</a></h1>
+<p>Bugs are tracked on <a class="reference external" href="https://github.com/OCA/edi-framework/issues">GitHub Issues</a>.
+In case of trouble, please check there if your issue has already been reported.
+If you spotted it first, help us to smash it by providing a detailed and welcomed
+<a class="reference external" href="https://github.com/OCA/edi-framework/issues/new?body=module:%20edi_exchange_file_db_oca%0Aversion:%2017.0%0A%0A**Steps%20to%20reproduce**%0A-%20...%0A%0A**Current%20behavior**%0A%0A**Expected%20behavior**">feedback</a>.</p>
+<p>Do not contact contributors directly about support or help with technical issues.</p>
+</div>
+<div class="section" id="credits">
+<h1><a class="toc-backref" href="#toc-entry-7">Credits</a></h1>
+<div class="section" id="authors">
+<h2><a class="toc-backref" href="#toc-entry-8">Authors</a></h2>
+<ul class="simple">
+<li>ForgeFlow</li>
+</ul>
+</div>
+<div class="section" id="contributors">
+<h2><a class="toc-backref" href="#toc-entry-9">Contributors</a></h2>
+<ul class="simple">
+<li><a class="reference external" href="https://www.forgeflow.com">ForgeFlow</a>:<ul>
+<li>Guillem Casassas &lt;<a class="reference external" href="mailto:guillem.casassas&#64;forgeflow.com">guillem.casassas&#64;forgeflow.com</a>&gt;</li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="section" id="maintainers">
+<h2><a class="toc-backref" href="#toc-entry-10">Maintainers</a></h2>
+<p>This module is maintained by the OCA.</p>
+<a class="reference external image-reference" href="https://odoo-community.org">
+<img alt="Odoo Community Association" src="https://odoo-community.org/logo.png" />
+</a>
+<p>OCA, or the Odoo Community Association, is a nonprofit organization whose
+mission is to support the collaborative development of Odoo features and
+promote its widespread use.</p>
+<p>Current <a class="reference external" href="https://odoo-community.org/page/maintainer-role">maintainer</a>:</p>
+<p><a class="reference external image-reference" href="https://github.com/GuillemCForgeFlow"><img alt="GuillemCForgeFlow" src="https://github.com/GuillemCForgeFlow.png?size=40px" /></a></p>
+<p>This module is part of the <a class="reference external" href="https://github.com/OCA/edi-framework/tree/17.0/edi_exchange_file_db_oca">OCA/edi-framework</a> project on GitHub.</p>
+<p>You are welcome to contribute. To learn how please visit <a class="reference external" href="https://odoo-community.org/page/Contribute">https://odoo-community.org/page/Contribute</a>.</p>
+</div>
+</div>
+</div>
+</body>
+</html>
