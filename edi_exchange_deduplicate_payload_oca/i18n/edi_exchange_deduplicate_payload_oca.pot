@@ -1,0 +1,50 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* edi_exchange_deduplicate_payload_oca
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 19.0\n"
+"Report-Msgid-Bugs-To: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: edi_exchange_deduplicate_payload_oca
+#: model:ir.model.fields,field_description:edi_exchange_deduplicate_payload_oca.field_edi_exchange_type__deduplicate_unchanged_payload
+msgid "Deduplicate unchanged payloads"
+msgstr ""
+
+#. module: edi_exchange_deduplicate_payload_oca
+#: model:ir.model.fields,field_description:edi_exchange_deduplicate_payload_oca.field_edi_backend__display_name
+#: model:ir.model.fields,field_description:edi_exchange_deduplicate_payload_oca.field_edi_exchange_type__display_name
+msgid "Display Name"
+msgstr ""
+
+#. module: edi_exchange_deduplicate_payload_oca
+#: model:ir.model.fields,help:edi_exchange_deduplicate_payload_oca.field_edi_exchange_type__deduplicate_unchanged_payload
+msgid ""
+"Do not send a payload holding nothing new compared with the payload exported"
+" for its record: the exchange is marked as obsolete instead. Only for "
+"records whose model tracks its exported payload "
+"(edi.payload.consumer.mixin). The payload must be a JSON object."
+msgstr ""
+
+#. module: edi_exchange_deduplicate_payload_oca
+#: model:ir.model,name:edi_exchange_deduplicate_payload_oca.model_edi_backend
+msgid "EDI Backend"
+msgstr ""
+
+#. module: edi_exchange_deduplicate_payload_oca
+#: model:ir.model,name:edi_exchange_deduplicate_payload_oca.model_edi_exchange_type
+msgid "EDI Exchange Type"
+msgstr ""
+
+#. module: edi_exchange_deduplicate_payload_oca
+#: model:ir.model.fields,field_description:edi_exchange_deduplicate_payload_oca.field_edi_backend__id
+#: model:ir.model.fields,field_description:edi_exchange_deduplicate_payload_oca.field_edi_exchange_type__id
+msgid "ID"
+msgstr ""
