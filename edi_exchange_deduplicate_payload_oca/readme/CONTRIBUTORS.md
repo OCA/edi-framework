@@ -1,0 +1,4 @@
+- [Camptocamp](https://www.camptocamp.com):
+  - Akim Juillerat \<<akim.juillerat@camptocamp.com>\>
+  - Iván Todorovich \<<ivan.todorovich@camptocamp.com>\>
+  - Simone Orsi \<<simone.orsi@camptocamp.com>\>
