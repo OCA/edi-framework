@@ -1,0 +1,3 @@
+Clear ``exchange_error`` and ``exchange_error_traceback`` when an output
+record is (re)generated successfully: after a failed generation or validation,
+a successful regenerate kept the old error until the record was sent.
