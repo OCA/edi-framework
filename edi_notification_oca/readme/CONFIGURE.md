@@ -1,12 +1,18 @@
-The module provides an ``edi.configuration`` entry named
-``Notify Users On Exchange Error``.
+Go to the **Notifications** page of an exchange type.
 
-You can review or adapt this configuration under EDI configurations if you need
-to change the trigger behavior or the executed snippets.
+To choose which notes are posted on the related records, edit the
+*Notes on related records* rule: remove the statuses whose note is not
+wanted, or archive the rule to keep only the error notes. Error notes
+(validation, send, receive and process errors, missing or erroneous
+acknowledgements) are always posted, so they cannot be selected on a
+*Note on related records* rule.
 
-To enable notifications for a specific exchange type:
+To schedule activities, add a rule of type *Activity on exchange record*:
 
-- enable *Notify On Process Error*
-- select an activity type in *Activity Type Used When Notify On Process Error*
-- assign recipients with *Notify Groups On Process Error* and/or
-  *Notify Users On Process Error*
+- select the statuses that schedule it, errors included;
+- select its activity type, and the users and/or groups the activities
+  are assigned to. The users of a group include the users of the groups
+  implying it.
+
+Only the statuses matching the direction of the exchange type can be
+selected (eg: *Sent* only for output types).

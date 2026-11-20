@@ -1,13 +1,16 @@
-This module creates activities for users when an exchange record's process fails.
+This module makes the notifications of exchange records configurable, per
+exchange type, through notification rules.
 
-It also installs an ``edi.configuration`` rule (``Notify Users On Exchange
-Error``) that calls ``edi.notification.tool`` on process errors.
+A rule reacts to one or more exchange statuses (generated, sent, send
+error, processed, process error, ACK missing, ...) and does one of the
+following:
 
-Exchange types must be configured properly to create such activities:
+- **Note on related records**: posts the status note on the records the
+  exchange is related to.
+- **Activity on exchange record**: schedules an activity on the exchange
+  record for the selected users and for the users of the selected groups
+  (eg: on process errors).
 
-- field "Notify On Process Error" must be checked to activate the feature
-  for the current exchange type
-- field "Activity Type Used When Notify On Process Error" is used to define
-  the type of the newly created activity
-- fields "Notify Groups On Process Error" and "Notify Users On Process Error" are used
-  to define the users that will be assigned to the newly created activity
+Each exchange type gets a default *Notes on related records* rule with
+every status, so installing the module changes nothing until the rules
+are edited. Error notes are always posted on the related records.

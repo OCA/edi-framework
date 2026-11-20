@@ -516,7 +516,7 @@ class EDIExchangeRecord(models.Model):
         Implementers can hook to this method to do something after any action ends.
         """
         if message:
-            self._notify_related_record(message)
+            self._notify_state(f"{action}_ok", message=message)
 
         # Trigger generic action complete event on exchange record
         event_name = f"{action}_complete"
@@ -524,6 +524,20 @@ class EDIExchangeRecord(models.Model):
         if self.related_record_exists:
             # Trigger specific event on related record
             self._trigger_edi_event(event_name, target=self.record)
+
+    def _notify_state(self, key, message=None, level="info"):
+        """Post the note of a status on the related records.
+
+        Single entry point of every note posted on the related records.
+
+        :param key: key of `_exchange_status_messages` the note is about
+            (eg: "send_ok", "process_ko", "ack_missing").
+        :param message: text of the note, defaults to the status message.
+        :param level: level of the note ("info", "warning" or "error").
+        """
+        self._notify_related_record(
+            message or self._exchange_status_message(key), level=level
+        )
 
     def _notify_related_record(self, message, level="info"):
         """Post notification on the original records."""
@@ -547,31 +561,23 @@ class EDIExchangeRecord(models.Model):
         )
 
     def _notify_done(self):
-        self._notify_related_record(self._exchange_status_message("process_ok"))
+        self._notify_state("process_ok")
         self._trigger_edi_event("done")
 
     def _notify_error(self, message_key):
-        self._notify_related_record(
-            self._exchange_status_message(message_key),
-            level="error",
-        )
+        self._notify_state(message_key, level="error")
         self._trigger_edi_event("error")
 
     def _notify_ack_received(self):
-        self._notify_related_record(self._exchange_status_message("ack_received"))
+        self._notify_state("ack_received")
         self._trigger_edi_event("done", suffix="ack_received")
 
     def _notify_ack_missing(self):
-        self._notify_related_record(
-            self._exchange_status_message("ack_missing"),
-            level="warning",
-        )
+        self._notify_state("ack_missing", level="warning")
         self._trigger_edi_event("done", suffix="ack_missing")
 
     def _notify_ack_received_error(self):
-        self._notify_related_record(
-            self._exchange_status_message("ack_received_error"),
-        )
+        self._notify_state("ack_received_error")
         self._trigger_edi_event("done", suffix="ack_received_error")
 
     def _search(self, domain, offset=0, limit=None, order=None, **kw) -> Query:

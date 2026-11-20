@@ -1,2 +1,4 @@
 - Duong (Tran Quoc) \<<duontq@troz.com>\>
 - Simone Orsi \<<simone.orsi@camptocamp.com>\>
+- [ForgeFlow](https://www.forgeflow.com):
+  - Guillem Casassas \<<guillem.casassas@forgeflow.com>\>
