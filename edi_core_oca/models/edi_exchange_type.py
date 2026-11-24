@@ -158,6 +158,7 @@ class EDIExchangeType(models.Model):
     rule_ids = fields.One2many(
         comodel_name="edi.exchange.type.rule",
         inverse_name="type_id",
+        context={"active_test": False},
         help="Rules to handle exchanges and UI automatically",
     )
     quick_exec = fields.Boolean(

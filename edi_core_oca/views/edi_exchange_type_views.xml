@@ -72,46 +72,51 @@
                     </group>
                     <notebook>
                         <page name="exec_handlers" string="Execution handlers">
-                            <group
-                                name="input_handlers"
-                                invisible="direction != 'input'"
-                            >
-                                <field
-                                    name="receive_model_id"
-                                    options="{'no_create': True}"
-                                />
-                                <field
-                                    name="process_model_id"
-                                    options="{'no_create': True}"
-                                    required="direction == 'input'"
-                                />
-                                <field
-                                    name="input_validate_model_id"
-                                    options="{'no_create': True}"
-                                />
-                            </group>
-                            <group
-                                name="output_handlers"
-                                invisible="direction != 'output'"
-                            >
-                                <field
-                                    name="generate_model_id"
-                                    options="{'no_create': True}"
-                                    required="direction == 'output' and exchange_file_auto_generate"
-                                />
-                                <field
-                                    name="send_model_id"
-                                    options="{'no_create': True}"
-                                    required="direction == 'output'"
-                                />
-                                <field
-                                    name="output_validate_model_id"
-                                    options="{'no_create': True}"
-                                />
-                                <field
-                                    name="check_model_id"
-                                    options="{'no_create': True}"
-                                />
+                            <group name="handlers_row">
+                                <group name="handlers_left">
+                                    <field
+                                        name="receive_model_id"
+                                        invisible="direction != 'input'"
+                                        options="{'no_create': True}"
+                                    />
+                                    <field
+                                        name="process_model_id"
+                                        invisible="direction != 'input'"
+                                        options="{'no_create': True}"
+                                        required="direction == 'input'"
+                                    />
+                                    <field
+                                        name="input_validate_model_id"
+                                        invisible="direction != 'input'"
+                                        options="{'no_create': True}"
+                                    />
+                                    <field
+                                        name="generate_model_id"
+                                        invisible="direction != 'output'"
+                                        options="{'no_create': True}"
+                                        required="direction == 'output' and exchange_file_auto_generate"
+                                    />
+                                    <field
+                                        name="send_model_id"
+                                        invisible="direction != 'output'"
+                                        options="{'no_create': True}"
+                                        required="direction == 'output'"
+                                    />
+                                    <field
+                                        name="output_validate_model_id"
+                                        invisible="direction != 'output'"
+                                        options="{'no_create': True}"
+                                    />
+                                    <field
+                                        name="check_model_id"
+                                        invisible="direction != 'output'"
+                                        options="{'no_create': True}"
+                                    />
+                                </group>
+                                <!-- Extension point: handler-specific modules
+                                     (eg. edi_webservice_oca) inject their own
+                                     settings here as a right-side column. -->
+                                <group name="handlers_right" />
                             </group>
                         </page>
                         <page
@@ -213,14 +218,7 @@
         <field name="view_mode">list,form</field>
         <field name="search_view_id" ref="edi_exchange_type_view_search" />
         <field name="domain">[]</field>
-        <!--
-          `active_test` here is fundamental to see archived `rule_ids`.
-          Reason: when related fields are loaded with a `read`
-          the ctx that you could set at field level on the view is lost.
-        -->
-        <field
-            name="context"
-        >{'search_default_filter_all': 1, 'active_test': False}</field>
+        <field name="context">{'search_default_filter_all': 1}</field>
     </record>
     <record
         model="ir.actions.act_window.view"
