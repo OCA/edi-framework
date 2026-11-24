@@ -5,7 +5,7 @@
     "name": "Edi Account",
     "summary": """
         Define EDI Configuration for Account Moves""",
-    "version": "19.0.1.0.0",
+    "version": "19.0.1.0.1",
     "license": "LGPL-3",
     "author": "Dixmit,Odoo Community Association (OCA)",
     "maintainers": ["etobella"],

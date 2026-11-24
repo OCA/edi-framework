@@ -61,10 +61,10 @@ Authors
 Contributors
 ------------
 
-- Enric Tobella <etobella@creublanca.es>
-- [APSL-Nagarro](https://apsl.tech):
+-  Enric Tobella <etobella@creublanca.es>
+-  [APSL-Nagarro](https://apsl.tech):
 
-  - Antoni Marroig <amarroig@apsl.net>
+   -  Antoni Marroig <amarroig@apsl.net>
 
 Maintainers
 -----------
