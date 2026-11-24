@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <menuitem
+        id="menu_edi_config_root"
+        name="EDI Purchase"
+        parent="purchase.menu_purchase_config"
+        sequence="35"
+    />
+
+    <menuitem
+        id="picking_edi_update_menu"
+        name="Delivery Order Update"
+        parent="edi_purchase_diapar_oca.menu_edi_config_root"
+        sequence="3"
+        action="edi_purchase_diapar_oca.picking_update_edi_action"
+    />
+
+    <menuitem
+        id="menu_action_supplier_price_list"
+        name="Price History"
+        parent="edi_purchase_diapar_oca.menu_edi_config_root"
+        sequence="10"
+        action="edi_purchase_diapar_oca.action_supplier_price_list"
+    />
+</odoo>

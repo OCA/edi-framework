@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="edi_exchange_template_output_view_form_inherit" model="ir.ui.view">
+        <field name="model">edi.exchange.template.output</field>
+        <field
+            name="inherit_id"
+            ref="edi_exchange_template_oca.edi_exchange_template_output_view_form"
+        />
+        <field name="arch" type="xml">
+            <field name="generator" position="after">
+                <field name="customer_code" />
+                <field name="constant_file_start" />
+                <field name="constant_file_end" />
+                <field name="vrp_code" />
+            </field>
+        </field>
+    </record>
+</odoo>

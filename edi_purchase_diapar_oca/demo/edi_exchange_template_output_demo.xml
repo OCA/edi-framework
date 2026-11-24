@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record
+        id="demo_edi_exchange_template_output_diapar"
+        model="edi.exchange.template.output"
+    >
+        <field name="name">Diapar Output Exchange Template</field>
+        <field
+            name="backend_type_id"
+            ref="edi_purchase_diapar_oca.demo_edi_backend_type_diapar"
+        />
+        <field
+            name="backend_id"
+            ref="edi_purchase_diapar_oca.demo_edi_backend_diapar"
+        />
+        <field name="code">diapar.output.exchange.template</field>
+        <field name="output_type">text</field>
+        <field name="generator">qweb</field>
+        <field
+            name="template_id"
+            ref="edi_purchase_diapar_oca.edi_exchange_template_output_diapar_3"
+        />
+        <field name="customer_code">33513</field>
+        <field name="vrp_code">03</field>
+        <field name="constant_file_start">HDIAPAR</field>
+        <field name="constant_file_end">*DIAPAR*DIAPAR</field>
+    </record>
+</odoo>

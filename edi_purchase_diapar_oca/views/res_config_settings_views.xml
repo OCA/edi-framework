@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="res_config_settings_view_form_purchase" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.purchase</field>
+        <field name="model">res.config.settings</field>
+        <field
+            name="inherit_id"
+            ref="purchase.res_config_settings_view_form_purchase"
+        />
+        <field name="arch" type="xml">
+            <xpath expr="//block[@name='matrix_setting_container']" position="after">
+                <block title="EDI Configuration" name="edi_configuration">
+                    <setting
+                        id="receipt_qty_policy"
+                        help="Policy to determine the quantity to be used in receipt when processing EDI file for purchase order"
+                    >
+                        <field name="edi_receipt_qty_policy" />
+                    </setting>
+                </block>
+            </xpath>
+        </field>
+    </record>
+</odoo>

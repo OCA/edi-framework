@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="edi_exchange_type_view_form_inherit" model="ir.ui.view">
+        <field name="name">edi.exchange.type.form.inherit</field>
+        <field name="model">edi.exchange.type</field>
+        <field name="inherit_id" ref="edi_core_oca.edi_exchange_type_view_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='encoding']" position="after">
+                <page name="mapping" string="Mapping">
+                    <field name="field_mapping_ids">
+                        <list editable="bottom">
+                            <field name="sequence" widget="handle" />
+                            <field name="position" />
+                            <field name="name" />
+                            <field
+                                name="mapping_field_id"
+                                options="{'no_create': True, 'no_open': True}"
+                            />
+                            <field name="sequence_start" />
+                            <field name="sequence_end" />
+                            <field name="is_numeric" />
+                            <field name="is_date" />
+                            <field name="decimal_precision" />
+                        </list>
+                    </field>
+                </page>
+            </xpath>
+            <field name="direction" position="after">
+                <field name="header_code" />
+                <field name="lines_code" />
+                <field name="delivery_sign" />
+            </field>
+        </field>
+    </record>
+</odoo>

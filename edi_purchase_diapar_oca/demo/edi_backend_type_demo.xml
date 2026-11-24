@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="demo_edi_backend_type_diapar" model="edi.backend.type">
+        <field name="name">DIAPAR</field>
+        <field name="code">diapar</field>
+    </record>
+
+    <record id="demo_edi_backend_diapar" model="edi.backend">
+        <field name="name">Diapar</field>
+        <field
+            name="backend_type_id"
+            ref="edi_purchase_diapar_oca.demo_edi_backend_type_diapar"
+        />
+        <field name="storage_id" ref="edi_purchase_diapar_oca.demo_fs_storage_diapar" />
+        <field name="input_dir_pending">IN/PENDING</field>
+        <field name="input_dir_done">IN/DONE</field>
+        <field name="input_dir_error">IN/ERROR</field>
+        <field name="output_dir_pending">OUT/PENDING</field>
+        <field name="output_dir_done">OUT/DONE</field>
+        <field name="output_dir_error">OUT/ERROR</field>
+    </record>
+</odoo>

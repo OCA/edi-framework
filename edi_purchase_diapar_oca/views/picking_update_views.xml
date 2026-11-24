@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="picking_update_todo_list_view_tree" model="ir.ui.view">
+        <field name="name">picking.update.tree</field>
+        <field name="model">picking.update</field>
+        <field name="arch" type="xml">
+            <list decoration-muted="done">
+                <field name="create_date" />
+                <field name="name" />
+                <field name="done" />
+            </list>
+        </field>
+    </record>
+
+    <record id="picking_update_todo_list_view_form" model="ir.ui.view">
+        <field name="name">picking.update.form</field>
+        <field name="model">picking.update</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button
+                        name="button_update_picking_order"
+                        type="object"
+                        class="oe_highlight"
+                        string="Update picking"
+                        invisible="done"
+                    />
+                </header>
+                <sheet>
+                    <group>
+                        <field name="name" />
+                        <field name="create_date" readonly="1" />
+                        <field name="done" />
+                    </group>
+                    <group
+                        string="Quantities to update (Contains only product updated from EDI )"
+                    >
+                        <field name="values_proposed_ids" nolabel="1">
+                            <list>
+                                <field name="product_id" />
+                                <field name="ordered_quantity" />
+                                <field name="product_qty" />
+                            </list>
+                        </field>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="picking_update_edi_action" model="ir.actions.act_window">
+        <field name="name">Delivery Order Update</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">picking.update</field>
+        <field name="view_mode">list,form</field>
+    </record>
+</odoo>
