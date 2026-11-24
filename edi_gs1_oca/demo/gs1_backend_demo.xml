@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- Copyright 2020 ACSONE SA/NV
+     License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
+<odoo>
+    <record id="demo_lsp_partner" model="res.partner">
+        <field name="name">GS1 Logistic Services Provider</field>
+        <field name="is_lsp" eval="True" />
+    </record>
+    <!-- Parties are set so that the backend is resolved from a delivery:
+         see `stock.picking._gs1_backend_domain` in edi_gs1_stock_oca. -->
+    <record id="edi_backend_gs1_default" model="edi.backend">
+        <field name="name">GS1 default</field>
+        <field name="backend_type_id" ref="backend_type_gs1" />
+        <field name="lsc_partner_id" ref="base.main_partner" />
+        <field name="lsp_partner_id" ref="demo_lsp_partner" />
+    </record>
+</odoo>
