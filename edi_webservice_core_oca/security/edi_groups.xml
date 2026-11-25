@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <!-- EDI users send files through webservices. -->
+    <record id="base_edi.group_edi_user" model="res.groups">
+        <field
+            name="implied_ids"
+            eval="[(4, ref('webservice_core.group_webservice_user'))]"
+        />
+    </record>
+</odoo>

@@ -34,3 +34,8 @@ On a webservice endpoint, the *Exchange Types* smart button lists the exchange t
 
 If you want to send data as bytes you can use the option send_as_bytes
 on the exchange type (same tab).
+
+The *EDI User* group implies the *Webservice User* group (see
+`webservice_core` README), so EDI users and queue jobs can send files
+through a webservice without having access to the webservice credentials.
+Other users sending exchanges need to be given the *Webservice User* group.

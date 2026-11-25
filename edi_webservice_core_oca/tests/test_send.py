@@ -90,3 +90,11 @@ class TestSend(TestEDIWebserviceCoreBase):
         responses.add(responses.POST, url, body="{}")
         result = self._get_handler().with_user(user).send(self.record.with_user(user))
         self.assertEqual(result, b"{}")
+
+    def test_edi_user_implies_webservice_user(self):
+        """The EDI User group gives the Webservice User group."""
+        group = self.env.ref("base_edi.group_edi_user")
+        self.assertIn(
+            self.env.ref("webservice_core.group_webservice_user"),
+            group.trans_implied_ids,
+        )
