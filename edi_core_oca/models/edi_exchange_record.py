@@ -619,6 +619,10 @@ class EDIExchangeRecord(models.Model):
                 self.env[model].check_access("read")
             except AccessError:  # no read access rights
                 continue
+            # Never linked to a record (eg: processing failed before creating it):
+            # nothing was deleted, the model access rights are enough.
+            # Must be handled before ``missing``, as ``missing.ids`` drops the 0 id.
+            allowed_ids.update(targets.pop(0, ()))
             recs = self.env[model].browse(list(targets))
             missing = recs - recs.exists()
             if missing:
