@@ -5,6 +5,8 @@ from urllib.parse import urlparse
 import responses
 from requests import PreparedRequest, Session
 
+from odoo.tests.common import new_test_user
+
 from .common import TestEDIWebserviceCoreBase
 
 
@@ -75,3 +77,24 @@ class TestSend(TestEDIWebserviceCoreBase):
         self.backend.exchange_send(self.record)
         self.assertEqual(len(responses.calls), 1)
         self.assertEqual(responses.calls[0].request.body, "This is a simple file")
+
+    @responses.activate
+    def test_send_as_non_admin_user(self):
+        """Sending works for a user that cannot read webservice endpoints."""
+        user = new_test_user(
+            self.env,
+            login="edi_ws_sender",
+            groups="base.group_user,base_edi.group_edi_user",
+        )
+        url = "https://foo.test/push/here"
+        responses.add(responses.POST, url, body="{}")
+        result = self._get_handler().with_user(user).send(self.record.with_user(user))
+        self.assertEqual(result, b"{}")
+
+    def test_edi_user_implies_webservice_user(self):
+        """The EDI User group gives the Webservice User group."""
+        group = self.env.ref("base_edi.group_edi_user")
+        self.assertIn(
+            self.env.ref("webservice_core.group_webservice_user"),
+            group.trans_implied_ids,
+        )
