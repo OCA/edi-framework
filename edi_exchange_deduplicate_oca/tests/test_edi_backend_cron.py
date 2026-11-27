@@ -33,7 +33,25 @@ class EDIBackendTestCronDeduplicationCase(EDIBackendTestCronCase):
         for record in records:
             self.assertEqual(record.edi_exchange_state, "obsolete")
         self.assertEqual(record1_3.edi_exchange_state, "output_sent")
-        self.backend._delete_obsolete_records()
+        with self.enter_registry_test_mode():
+            self.env.ref("base.autovacuum_job").method_direct_trigger()
         for record in records:
             self.assertFalse(record.exists())
         self.assertTrue(record1_3.exists())
+
+    @mute_logger(*LOGGERS)
+    def test_exchange_keep_obsolete_records(self):
+        self.exchange_type_out.write(
+            {
+                "exchange_file_auto_generate": True,
+                "deduplicate_on_exchange": True,
+                "delete_obsolete_records": False,
+            }
+        )
+        self.backend.create_record(
+            "test_csv_output", {"model": self.partner._name, "res_id": self.partner.id}
+        )
+        self.assertEqual(self.record1.edi_exchange_state, "obsolete")
+        with self.enter_registry_test_mode():
+            self.env.ref("base.autovacuum_job").method_direct_trigger()
+        self.assertTrue(self.record1.exists())

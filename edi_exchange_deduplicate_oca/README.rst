@@ -72,10 +72,8 @@ processed: its job does nothing.
   (comma-separated values from "edi_exchange_state").
 
 With all the types that have been enabled "Delete obsolete records"
-option, the cron will remove their obsolete records.
-
-- If the records are obsolete, delete them even if their type's flag has
-  been disabled.
+option, the daily database cleanup (autovacuum) removes their obsolete
+records.
 
 Bug Tracker
 ===========
