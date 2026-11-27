@@ -76,11 +76,6 @@ msgid "EDI exchange Record"
 msgstr "Record di scambio EDI"
 
 #. module: edi_exchange_deduplicate_oca
-#: model:ir.actions.server,name:edi_exchange_deduplicate_oca.cron_edi_backend_delete_obsolete_records_ir_actions_server
-msgid "EDI exchange delete obsolete records"
-msgstr "Scambio EDI cancella record obsoleti"
-
-#. module: edi_exchange_deduplicate_oca
 #: model:ir.model.fields,field_description:edi_exchange_deduplicate_oca.field_edi_exchange_record__edi_exchange_state
 msgid "Exchange state"
 msgstr "Stato scambio"
@@ -126,6 +121,9 @@ msgstr ""
 "corrispondenza dei record si basa esclusivamente sul tipo di scambio; ciò è "
 "ideale per i payload di tipo \"full-dump\", in cui conta solo l'ultimo "
 "record."
+
+#~ msgid "EDI exchange delete obsolete records"
+#~ msgstr "Scambio EDI cancella record obsoleti"
 
 #~ msgid ""
 #~ "Before sending an exchange record, check if a fresher one does not exist "
