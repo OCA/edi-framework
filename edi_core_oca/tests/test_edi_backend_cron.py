@@ -5,6 +5,7 @@
 from odoo.orm.model_classes import add_to_registry
 from odoo.tools import mute_logger
 
+from ..utils import EDIExchangeActionResult
 from .common import EDIBackendCommonTestCase
 
 LOGGERS = (
@@ -54,6 +55,34 @@ class EDIBackendTestCronCase(EDIBackendCommonTestCase):
         self.ExecutionAbstractModel.reset_faked("generate")
         self.ExecutionAbstractModel.reset_faked("send")
         self.ExecutionAbstractModel.reset_faked("check")
+
+    @mute_logger(*LOGGERS)
+    def test_check_state_logged(self):
+        """Each check of a sent exchange is logged on it.
+
+        Scenario:
+            1. Give the output type a checker, and mark an exchange as sent.
+            2. Run the cron, the service answering the exchange is done.
+        Expected:
+            - A note on the exchange says it was checked, and its new state.
+        """
+        self.exchange_type_out.check_model_id = self.model
+        self.record1.edi_exchange_state = "output_sent"
+        self.backend.with_context(
+            fake_update_values={"edi_exchange_state": "output_sent_and_processed"}
+        )._cron_check_output_exchange_sync(skip_sent=False)
+        self.assertIn("Exchange state checked", self.record1.message_ids[0].body)
+        self.assertIn("Sent and processed", self.record1.message_ids[0].body)
+
+    @mute_logger(*LOGGERS)
+    def test_check_state_logged_message(self):
+        """The message the checker returns is logged on the exchange."""
+        self.exchange_type_out.check_model_id = self.model
+        self.record1.edi_exchange_state = "output_sent_and_error"
+        self.backend.with_context(
+            fake_output=EDIExchangeActionResult(message="Rejected: wrong IBAN")
+        )._cron_check_output_exchange_sync()
+        self.assertIn("Rejected: wrong IBAN", self.record1.message_ids[0].body)
 
     @mute_logger(*LOGGERS)
     def test_exchange_generate_new_no_auto(self):
