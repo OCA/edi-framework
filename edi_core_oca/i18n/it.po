@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-09-03 09:23+0000\n"
+"PO-Revision-Date: 2026-11-27 13:46+0000\n"
 "Last-Translator: mymage <stefano.consolaro@mymage.it>\n"
 "Language-Team: none\n"
 "Language: it\n"
@@ -14,7 +14,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.15.2\n"
+"X-Generator: Weblate 2026.11.2\n"
 
 #. module: edi_core_oca
 #: model:ir.model.fields,help:edi_core_oca.field_edi_exchange_type__advanced_settings_edit
@@ -441,7 +441,7 @@ msgstr "Annulla"
 #. module: edi_core_oca
 #: model_terms:ir.ui.view,arch_db:edi_core_oca.edi_exchange_record_view_form
 msgid "Check state"
-msgstr ""
+msgstr "Controlla stato"
 
 #. module: edi_core_oca
 #: model:ir.model.fields,field_description:edi_core_oca.field_edi_exchange_type__check_model_id
@@ -1054,7 +1054,7 @@ msgstr "Identificatore esterno"
 #. module: edi_core_oca
 #: model:ir.model.fields,field_description:edi_core_oca.field_edi_exchange_record__external_state_checkable
 msgid "External State Checkable"
-msgstr ""
+msgstr "Stato esterno controllabile"
 
 #. module: edi_core_oca
 #: model:ir.ui.menu,name:edi_core_oca.menu_edi_exchange_record_pending
@@ -1790,12 +1790,12 @@ msgstr ""
 #. odoo-python
 #: code:addons/edi_core_oca/models/edi_exchange_record.py:0
 msgid "The state of %(record)s cannot be checked."
-msgstr ""
+msgstr "Lo stato di %(record)s non può essere controllato."
 
 #. module: edi_core_oca
 #: model:ir.model.fields,help:edi_core_oca.field_edi_exchange_record__external_state_checkable
 msgid "The state of the sent exchange can be checked manually."
-msgstr ""
+msgstr "Lo stato dello scambio inviato può essere controllato manualmente."
 
 #. module: edi_core_oca
 #: model:ir.model.fields,field_description:edi_core_oca.field_edi_configuration__trigger_id
