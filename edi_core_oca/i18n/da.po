@@ -435,6 +435,11 @@ msgid "Cancel"
 msgstr "Annullér"
 
 #. module: edi_core_oca
+#: model_terms:ir.ui.view,arch_db:edi_core_oca.edi_exchange_record_view_form
+msgid "Check state"
+msgstr ""
+
+#. module: edi_core_oca
 #: model:ir.model.fields,field_description:edi_core_oca.field_edi_exchange_type__check_model_id
 msgid "Checker"
 msgstr "Kontrollant"
@@ -1038,6 +1043,11 @@ msgstr "Udførelseshåndteringer"
 #: model:ir.model.fields,field_description:edi_core_oca.field_edi_exchange_record__external_identifier
 msgid "External Identifier"
 msgstr "Ekstern identifikator"
+
+#. module: edi_core_oca
+#: model:ir.model.fields,field_description:edi_core_oca.field_edi_exchange_record__external_state_checkable
+msgid "External State Checkable"
+msgstr ""
 
 #. module: edi_core_oca
 #: model:ir.ui.menu,name:edi_core_oca.menu_edi_exchange_record_pending
@@ -1755,6 +1765,17 @@ msgstr ""
 "Den relaterede post er ikke længere tilgængelig.\n"
 "                                    Overvej også at slette denne post eller "
 "rette dens relation."
+
+#. module: edi_core_oca
+#. odoo-python
+#: code:addons/edi_core_oca/models/edi_exchange_record.py:0
+msgid "The state of %(record)s cannot be checked."
+msgstr ""
+
+#. module: edi_core_oca
+#: model:ir.model.fields,help:edi_core_oca.field_edi_exchange_record__external_state_checkable
+msgid "The state of the sent exchange can be checked manually."
+msgstr ""
 
 #. module: edi_core_oca
 #: model:ir.model.fields,field_description:edi_core_oca.field_edi_configuration__trigger_id

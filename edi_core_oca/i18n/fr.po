@@ -377,6 +377,11 @@ msgid "Cancel"
 msgstr "Annuler"
 
 #. module: edi_core_oca
+#: model_terms:ir.ui.view,arch_db:edi_core_oca.edi_exchange_record_view_form
+msgid "Check state"
+msgstr ""
+
+#. module: edi_core_oca
 #: model:ir.model.fields,field_description:edi_core_oca.field_edi_exchange_type__check_model_id
 msgid "Checker"
 msgstr ""
@@ -978,6 +983,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:edi_core_oca.field_edi_exchange_record__external_identifier
 msgid "External Identifier"
 msgstr "Lien externe"
+
+#. module: edi_core_oca
+#: model:ir.model.fields,field_description:edi_core_oca.field_edi_exchange_record__external_state_checkable
+msgid "External State Checkable"
+msgstr ""
 
 #. module: edi_core_oca
 #: model:ir.ui.menu,name:edi_core_oca.menu_edi_exchange_record_pending
@@ -1683,6 +1693,17 @@ msgid ""
 "The related record is not available anymore.\n"
 "                                    Consider deleting this record too or "
 "fixing its relation."
+msgstr ""
+
+#. module: edi_core_oca
+#. odoo-python
+#: code:addons/edi_core_oca/models/edi_exchange_record.py:0
+msgid "The state of %(record)s cannot be checked."
+msgstr ""
+
+#. module: edi_core_oca
+#: model:ir.model.fields,help:edi_core_oca.field_edi_exchange_record__external_state_checkable
+msgid "The state of the sent exchange can be checked manually."
 msgstr ""
 
 #. module: edi_core_oca
