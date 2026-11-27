@@ -28,7 +28,11 @@ class TestEDIExchangeRecordFileManager(EDIExchangeRecordFileManagerCommon):
     def test_edit_flow(self):
         """Tests workflow ``setup`` -> ``edit`` -> ``done``"""
         wizard = self._create_wizard(
-            custom_values={"state": "setup", "mode": "edit_in_place"}
+            custom_values={
+                "state": "setup",
+                "mode": "edit_in_place",
+                "create_new_version": False,
+            }
         )
         record = wizard.exchange_record_id
         old_state = record.edi_exchange_state
@@ -51,6 +55,23 @@ class TestEDIExchangeRecordFileManager(EDIExchangeRecordFileManagerCommon):
             str(rc.records.body), "<p>File edited through file manager.</p>"
         )
 
+    def test_edit_creates_child_exchange_record_by_default(self):
+        wizard = self._create_wizard(
+            custom_values={"state": "setup", "mode": "edit_in_place"}
+        )
+        record = wizard.exchange_record_id
+        original_content = record._get_file_content()
+        self.assertTrue(wizard.create_new_version)
+        wizard.button_proceed()
+        wizard.file_content = "Edited child content"
+        with RC(self.env["edi.exchange.record"], [("parent_id", "=", record.id)]) as rc:
+            wizard.button_proceed()
+        child = rc.records
+        self.assertEqual(len(child), 1)
+        self.assertEqual(child._get_file_content(), "Edited child content")
+        self.assertEqual(record._get_file_content(), original_content)
+        self.assertEqual(record.edi_exchange_state, "cancelled")
+
     def test_edit_respects_exchange_type_encoding(self):
         """Checks that updating the file content respects the exchange encoding"""
         encoding = "ISO-8859-1"
@@ -61,7 +82,12 @@ class TestEDIExchangeRecordFileManager(EDIExchangeRecordFileManagerCommon):
             content="caffè".encode(encoding),
         )
         wizard = self._create_wizard(
-            record, custom_values={"state": "setup", "mode": "edit_in_place"}
+            record,
+            custom_values={
+                "state": "setup",
+                "mode": "edit_in_place",
+                "create_new_version": False,
+            },
         )
         wizard.button_proceed()
         self.assertEqual(wizard.file_content, "caffè")
@@ -79,7 +105,12 @@ class TestEDIExchangeRecordFileManager(EDIExchangeRecordFileManagerCommon):
             self.exchange_type_out.code, "output_sent_and_error", content="caffe"
         )
         wizard = self._create_wizard(
-            record, custom_values={"state": "setup", "mode": "edit_in_place"}
+            record,
+            custom_values={
+                "state": "setup",
+                "mode": "edit_in_place",
+                "create_new_version": False,
+            },
         )
         wizard.button_proceed()
         self.assertEqual(wizard.file_content, "caffe")
@@ -95,7 +126,11 @@ class TestEDIExchangeRecordFileManager(EDIExchangeRecordFileManagerCommon):
     def test_replace_flow(self):
         """Tests workflow ``setup`` -> ``replace`` -> ``done``"""
         wizard = self._create_wizard(
-            custom_values={"state": "setup", "mode": "download_and_replace"}
+            custom_values={
+                "state": "setup",
+                "mode": "download_and_replace",
+                "create_new_version": False,
+            }
         )
         record = wizard.exchange_record_id
         old_state = record.edi_exchange_state
@@ -120,13 +155,33 @@ class TestEDIExchangeRecordFileManager(EDIExchangeRecordFileManagerCommon):
             str(rc.records.body), "<p>File replaced through file manager.</p>"
         )
 
+    def test_replace_creates_child_exchange_record_by_default(self):
+        wizard = self._create_wizard(
+            custom_values={"state": "setup", "mode": "download_and_replace"}
+        )
+        record = wizard.exchange_record_id
+        original_content = record._get_file_content(as_bytes=True)
+        new_content = b"replacement child content"
+        self.assertTrue(wizard.create_new_version)
+        wizard.button_proceed()
+        wizard.new_file = base64.b64encode(new_content)
+        with RC(self.env["edi.exchange.record"], [("parent_id", "=", record.id)]) as rc:
+            wizard.button_proceed()
+        child = rc.records
+        self.assertEqual(len(child), 1)
+        self.assertEqual(child._get_file_content(as_bytes=True), new_content)
+        self.assertEqual(record._get_file_content(as_bytes=True), original_content)
+        self.assertEqual(record.edi_exchange_state, "cancelled")
+
     # ----------------------------------------------------------------------------------
     # Encoding validation on replace
     # ----------------------------------------------------------------------------------
 
     def test_replace_file_with_valid_encoding(self):
         self.exchange_type_in.encoding = "UTF-8"
-        wizard = self._create_wizard(custom_values={"state": "replace"})
+        wizard = self._create_wizard(
+            custom_values={"state": "replace", "create_new_version": False}
+        )
         record = wizard.exchange_record_id
         old_content = record._get_file_content(as_bytes=True)
         new_content = "Città e qualità".encode()
@@ -138,7 +193,9 @@ class TestEDIExchangeRecordFileManager(EDIExchangeRecordFileManagerCommon):
 
     def test_replace_file_with_invalid_encoding(self):
         self.exchange_type_in.encoding = "UTF-8"
-        wizard = self._create_wizard(custom_values={"state": "replace"})
+        wizard = self._create_wizard(
+            custom_values={"state": "replace", "create_new_version": False}
+        )
         record = wizard.exchange_record_id
         old_content = record._get_file_content(as_bytes=True)
         new_content = b"\xff\xfe"
@@ -230,3 +287,24 @@ class TestEDIExchangeRecordFileManager(EDIExchangeRecordFileManagerCommon):
                 )
                 wizard = self._create_wizard(record)
                 self.assertEqual(wizard._guess_ace_mode(), mode)
+
+    # ----------------------------------------------------------------------------------
+    # Fields stuff
+    # ----------------------------------------------------------------------------------
+
+    def test_create_new_exchange_record_info_message(self):
+        # Set env's lang to 'en_US' to test the info msg without i18n issues
+        self.env = self.env(context=dict(self.env.context, lang="en_US"))
+        wiz = self._create_wizard()
+        field_data = wiz._fields["create_new_version"].get_description(wiz.env)
+        msg = (
+            f"If field '{field_data['string']}' is flagged, a new Exchange Record"
+            " will be created with the provided file content, and the current"
+            " one will be cancelled."
+        )
+        self.assertTrue(wiz.create_new_version)
+        self.assertEqual(wiz.create_new_version_info_msg, msg)
+        wiz.create_new_version = False
+        self.assertEqual(wiz.create_new_version_info_msg, "")
+        wiz.create_new_version = True
+        self.assertEqual(wiz.create_new_version_info_msg, msg)

@@ -91,6 +91,7 @@ class EDIExchangeRecord(models.Model):
             # Common states
             ("new", "New"),
             ("validate_error", "Error on validation"),
+            ("cancelled", "Cancelled"),
             # output exchange states
             ("output_pending", "Waiting to be sent"),
             ("output_error_on_send", "error on send"),
