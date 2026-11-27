@@ -142,6 +142,11 @@ class EDIBackend(models.Model):
                 {
                     "exchange_file": base64.b64encode(output),
                     "edi_exchange_state": "output_pending",
+                    # Clear the error of a previous failed generation or
+                    # validation: a regenerated file starts clean (the
+                    # validation below sets it again if it still fails)
+                    "exchange_error": False,
+                    "exchange_error_traceback": False,
                 }
             )
         if output:
