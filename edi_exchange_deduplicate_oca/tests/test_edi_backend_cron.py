@@ -31,7 +31,7 @@ class EDIBackendTestCronDeduplicationCase(EDIBackendTestCronCase):
         records = self.record1 + record1_1 + record1_2
         self.backend._check_output_exchange_sync()
         for record in records:
-            self.assertEqual(record.edi_exchange_state, "obsolete")
+            self.assertEqual(record.edi_exchange_state, "cancelled")
         self.assertEqual(record1_3.edi_exchange_state, "output_sent")
         self.backend._delete_obsolete_records()
         for record in records:

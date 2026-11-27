@@ -5,7 +5,7 @@
     "name": "Edi Exchange Deduplicate OCA",
     "summary": """
         Introduce a deduplication mechanism at the sending step""",
-    "version": "18.0.1.0.0",
+    "version": "18.0.1.0.1",
     "license": "LGPL-3",
     "author": "Camptocamp,Odoo Community Association (OCA)",
     "maintainers": ["simahawk", "etobella"],

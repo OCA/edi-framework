@@ -7,12 +7,6 @@ from odoo import api, fields, models
 class EDIExchangeRecord(models.Model):
     _inherit = "edi.exchange.record"
 
-    edi_exchange_state = fields.Selection(
-        selection_add=[
-            ("obsolete", "Obsolete"),
-        ],
-        ondelete={"obsolete": "cascade"},
-    )
     block_obsolescence = fields.Boolean(
         default=False,
         help="Flag record that can never be marked as obsolete",
@@ -21,7 +15,7 @@ class EDIExchangeRecord(models.Model):
     @api.constrains("edi_exchange_state")
     def _constrain_edi_exchange_state(self):
         # Remove `obsolete` record for this check
-        self = self.filtered(lambda r: r.edi_exchange_state != "obsolete")
+        self = self.filtered(lambda r: r.edi_exchange_state != "cancelled")
         return super()._constrain_edi_exchange_state()
 
     @api.model_create_multi
@@ -34,7 +28,7 @@ class EDIExchangeRecord(models.Model):
             if check_obsoleted_record:
                 obsoleted_records = rec._edi_get_duplicates()
                 if obsoleted_records:
-                    obsoleted_records.edi_exchange_state = "obsolete"
+                    obsoleted_records.edi_exchange_state = "cancelled"
         return records
 
     def _edi_get_duplicates(self, count=False):
