@@ -16,7 +16,9 @@ class EDIExchangeRecordFileManager(models.TransientModel):
 
     Consists of 3 steps:
         1)   setup: the user can choose whether they want to edit the file in-place, or
-             download it and replace it with a new file
+             download it and replace it with a new file; also, they can select whether
+             the new file content should be stored in the original Exchange Record, or
+             a new one should be created instead (the old one will get cancelled)
         2.a) edit: if the user selected the "Edit" option during the setup, 2 fields are
              displayed:
                 * a text field containing the file content that the user can modify
@@ -84,6 +86,11 @@ class EDIExchangeRecordFileManager(models.TransientModel):
             ("download_and_replace", "Replace file"),
         ],
         default="edit_in_place",
+    )
+    create_new_version = fields.Boolean(default=True)
+    create_new_version_info_msg = fields.Text(
+        compute="_compute_create_new_version_info_msg",
+        store=False,  # Depends on user's language
     )
 
     # ``mode == "replace"``
@@ -229,20 +236,27 @@ class EDIExchangeRecordFileManager(models.TransientModel):
     # File encoding config (from Exchange Record's Type)
     # ----------------------------------------------------------------------------------
 
-    def _get_record_type_encoding(self) -> str:
+    def _get_record_type_encoding(self, exchange_record=None) -> str:
         """Retrieves the Exc Type expected text encoding"""
-        return self.exchange_record_id.type_id.encoding or "UTF-8"
+        if exchange_record is None:
+            exchange_record = self.exchange_record_id
+        return exchange_record.type_id.encoding or "UTF-8"
 
-    def _get_record_type_encoding_error_handler(self) -> str:
+    def _get_record_type_encoding_error_handler(
+        self, exchange_type=None, exchange_record=None
+    ) -> str:
         """Retrieves the Exc Type expected text encoding error handler
 
         NB: the handler depends on the exchange direction
         """
-        exc_type = self.exchange_record_id.type_id
-        if exc_type.direction == "input":
-            handler = exc_type.encoding_in_error_handler
+        if exchange_type is None:
+            if exchange_record is None:
+                exchange_record = self.exchange_record_id
+            exchange_type = exchange_record.type_id
+        if exchange_type.direction == "input":
+            handler = exchange_type.encoding_in_error_handler
         else:
-            handler = exc_type.encoding_out_error_handler
+            handler = exchange_type.encoding_out_error_handler
         return handler or "strict"
 
     # ----------------------------------------------------------------------------------
@@ -286,8 +300,9 @@ class EDIExchangeRecordFileManager(models.TransientModel):
 
     def _execute_edit(self):
         """Edits the file content of the Exchange Record"""
-        record = self.exchange_record_id
-        encoding = self._get_record_type_encoding()
+        record = self._execute_edit_get_exchange_record()
+        record._check_can_use_file_manager()
+        encoding = self._get_record_type_encoding(record)
         try:
             record._set_file_content(self.file_content, encoding=encoding)
         except (UnicodeError, LookupError) as exc:
@@ -299,7 +314,23 @@ class EDIExchangeRecordFileManager(models.TransientModel):
                     error=exc,
                 )
             ) from exc
-        record.message_post(body=self.env._("File edited through file manager."))
+        original = self.exchange_record_id
+        if record != original:
+            original.edi_exchange_state = "cancelled"
+        original.message_post(body=self.env._("File edited through file manager."))
+
+    def _execute_edit_get_exchange_record(self):
+        """Retrieves the Exchange Record where the edited file content will be stored
+
+        If ``create_new_version`` is ``True``, then ``_create_new_version()`` is
+        triggered to create a child Exchange Record; else, then current Exchange
+        Record is returned.
+
+        Hook method, can be overridden in depending modules
+        """
+        if self.create_new_version:
+            return self._create_new_version()
+        return self.exchange_record_id
 
     def _get_next_state_values_from_edit(self) -> api.ValuesType:
         """Proceeds from ``edit`` state to ``done``"""
@@ -310,7 +341,7 @@ class EDIExchangeRecordFileManager(models.TransientModel):
         """Replaces the file content of the Exchange Record"""
         if not self.new_file:
             raise UserError(self.env._("Please upload a new file"))
-        record = self.exchange_record_id
+        record = self._execute_replace_get_exchange_record()
         record._check_can_use_file_manager()
         # Check whether the new file is consistent w/ the exchange record encoding
         # NB: a successful ``decode`` does not prove that a file was originally encoded
@@ -320,8 +351,10 @@ class EDIExchangeRecordFileManager(models.TransientModel):
         # matters here: the replacement file must be strictly decodable using the
         # encoding configured on the exchange type. It cannot detect every case where a
         # file was technically encoded using a different but compatible encoding.
-        encoding = self._get_record_type_encoding()
-        encoding_error_handler = self._get_record_type_encoding_error_handler()
+        encoding = self._get_record_type_encoding(record)
+        encoding_error_handler = self._get_record_type_encoding_error_handler(
+            exchange_record=record
+        )
         try:
             content = base64.b64decode(self.new_file, validate=True)
             content.decode(encoding, errors=encoding_error_handler)
@@ -337,12 +370,73 @@ class EDIExchangeRecordFileManager(models.TransientModel):
             ) from exc
         # The filename of the exchange record is intentionally left untouched
         record.exchange_file = self.new_file
-        record.message_post(body=self.env._("File replaced through file manager."))
+        original = self.exchange_record_id
+        if record != original:
+            original.edi_exchange_state = "cancelled"
+        original.message_post(body=self.env._("File replaced through file manager."))
+
+    def _execute_replace_get_exchange_record(self):
+        """Retrieves the Exchange Record where the replaced file content will be stored
+
+        If ``create_new_version`` is ``True``, then ``_create_new_version()``
+        is triggered to create a child Exchange Record; else, then current Exchange
+        Record is returned.
+
+        Hook method, can be overridden in depending modules
+        """
+        if self.create_new_version:
+            return self._create_new_version()
+        return self.exchange_record_id
 
     def _get_next_state_values_from_replace(self) -> api.ValuesType:
         """Proceeds from ``replace`` state to ``done``"""
         # Clear the ``new_file`` after the Exc Rec file has been replaced
         return {"state": "done", "new_file": False}
+
+    def _create_new_version(self):
+        """Creates a child Exchange Record for the current one
+
+        Hook method, can be overridden in depending modules
+        """
+        return self.exchange_record_id.exchange_create_child_record(
+            **self._get_child_record_values()
+        )
+
+    def _get_child_record_values(self, parent_record=None) -> api.ValuesType:
+        """Prepares values for a child Exchange Record
+
+        Hook method, can be overridden in depending modules
+        """
+        self.ensure_one()
+        if parent_record is None:
+            parent_record = self.exchange_record_id
+        return {
+            # Inherit the state from the parent, or its state will be "new", and check
+            # ``_check_can_use_file_manager()`` will fail, raising error
+            "edi_exchange_state": parent_record.edi_exchange_state,
+            # Inherit also the parent file content and name, or it will have none; this
+            # would also trigger ``_check_can_use_file_manager()``
+            "exchange_file": parent_record.exchange_file,
+            "exchange_filename": parent_record.exchange_filename,
+        }
+
+    # ----------------------------------------------------------------------------------
+    # Fields stuff
+    # ----------------------------------------------------------------------------------
+
+    @api.depends("create_new_version")
+    @api.depends_context("uid", "lang")
+    def _compute_create_new_version_info_msg(self):
+        """Computes a display message to explain the ``create_new_version`` field"""
+        self.create_new_version_info_msg = ""
+        if with_info_msg := self.filtered("create_new_version"):
+            field = self._fields["create_new_version"]
+            with_info_msg.create_new_version_info_msg = self.env._(
+                "If field '%(field_descr)s' is flagged, a new Exchange Record"
+                " will be created with the provided file content, and the current"
+                " one will be cancelled.",
+                field_descr=field.get_description(self.env)["string"],
+            )
 
     # ----------------------------------------------------------------------------------
     # Other buttons and UI stuff

@@ -22,7 +22,15 @@
                                 widget="radio"
                                 required="state == 'setup'"
                             />
+                            <field name="create_new_version" />
                         </group>
+                        <div
+                            role="alert"
+                            class="alert alert-info"
+                            invisible="not create_new_version"
+                        >
+                            <field name="create_new_version_info_msg" nolabel="1" />
+                        </div>
                     </div>
                     <!-- State 2a: edit -->
                     <div name="state_edit" invisible="state != 'edit'">
