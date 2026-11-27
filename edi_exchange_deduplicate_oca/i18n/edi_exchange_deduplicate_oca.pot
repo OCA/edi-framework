@@ -71,11 +71,6 @@ msgid "EDI exchange Record"
 msgstr ""
 
 #. module: edi_exchange_deduplicate_oca
-#: model:ir.actions.server,name:edi_exchange_deduplicate_oca.cron_edi_backend_delete_obsolete_records_ir_actions_server
-msgid "EDI exchange delete obsolete records"
-msgstr ""
-
-#. module: edi_exchange_deduplicate_oca
 #: model:ir.model.fields,field_description:edi_exchange_deduplicate_oca.field_edi_exchange_record__edi_exchange_state
 msgid "Exchange state"
 msgstr ""
