@@ -8,8 +8,11 @@ import pytz
 from dateutil.relativedelta import relativedelta
 
 from odoo import api, fields, models
+from odoo.exceptions import ValidationError
 
 from odoo.addons.base.models.res_partner import _tz_get as timezone_selection
+
+from ..utils import render_job_description
 
 
 class EdiExchangeType(models.Model):
@@ -19,6 +22,14 @@ class EdiExchangeType(models.Model):
         comodel_name="queue.job.channel",
     )
     job_priority = fields.Integer()
+    job_description_pattern = fields.Char(
+        help="Description of the queue jobs of the exchange records of this type, "
+        "e.g. 'Process inventory report {identifier}'. "
+        "Available placeholders: {identifier}, {external_identifier}, "
+        "{type} (exchange type name), {type_code}, {backend} (backend name), "
+        "{record} (name of the related record). "
+        "Leave empty to keep the default job description.",
+    )
     job_eta_enabled = fields.Boolean(
         string="Enable ETA Scheduling",
         help="Accumulate all queue jobs for this exchange type and release them "
@@ -45,6 +56,25 @@ class EdiExchangeType(models.Model):
         help="ETA's timezone for jobs of this type",
         default=lambda self: self._get_default_eta_tz(),
     )
+
+    @api.constrains("job_description_pattern")
+    def _check_job_description_pattern(self):
+        """Ensure the job description pattern only uses allowed placeholders."""
+        placeholders = self.env["edi.exchange.record"]._job_description_placeholders()
+        dummy_values = dict.fromkeys(placeholders, "")
+        for rec in self.filtered("job_description_pattern"):
+            try:
+                render_job_description(rec.job_description_pattern, dummy_values)
+            except (ValueError, TypeError) as err:
+                raise ValidationError(
+                    self.env._(
+                        'Invalid job description pattern "%(pattern)s": %(error)s. '
+                        "Allowed placeholders: %(placeholders)s.",
+                        pattern=rec.job_description_pattern,
+                        error=err,
+                        placeholders=", ".join(f"{{{x}}}" for x in placeholders),
+                    )
+                ) from err
 
     @api.model
     def _get_default_eta_tz(self):
