@@ -69,7 +69,7 @@ class EDIDeduplicateTestCase(EDIBackendCommonTestCase):
         self.backend._check_output_exchange_sync()
         # Because we just sent the last record, so the others should be "obsolete"
         for record in records:
-            self.assertEqual(record.edi_exchange_state, "obsolete")
+            self.assertEqual(record.edi_exchange_state, "cancelled")
         self.assertEqual(record3.edi_exchange_state, "output_sent")
 
     @mute_logger(*LOGGERS)
@@ -139,6 +139,6 @@ class EDIDeduplicateTestCase(EDIBackendCommonTestCase):
         self.backend._check_output_exchange_sync()
         # Normally, record2 has been "obsolete"
         # But with block_obsolescence = True, it will be "output_sent" too
-        self.assertEqual(record1.edi_exchange_state, "obsolete")
+        self.assertEqual(record1.edi_exchange_state, "cancelled")
         self.assertEqual(record2.edi_exchange_state, "output_sent")
         self.assertEqual(record3.edi_exchange_state, "output_sent")

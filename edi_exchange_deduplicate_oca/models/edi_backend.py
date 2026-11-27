@@ -41,7 +41,7 @@ class EDIBackend(models.Model):
         """
         domain = [
             ("backend_id", "=", self.id),
-            ("edi_exchange_state", "=", "obsolete"),
+            ("edi_exchange_state", "=", "cancelled"),
         ]
         if record_ids:
             domain.append(("id", "in", record_ids))
